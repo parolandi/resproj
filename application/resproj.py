@@ -1,5 +1,5 @@
 
-import application.experiments
+import experiments.algebraic
 
 if __name__ == '__main__':
-    application.experiments.experiment3()
+    experiments.algebraic.experiment3()
