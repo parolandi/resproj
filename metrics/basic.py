@@ -1,8 +1,8 @@
 
-import model
+import models
 
 def residual_linear(p, x, measured):
-    residual = measured - model.algebraic.linear(p, x)
+    residual = measured - models.algebraic.linear(p, x)
     return residual
 
 def residual(parameters, independent, function, measured):
