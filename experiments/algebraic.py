@@ -17,19 +17,9 @@ def experiment1():
     estimate, cov, info, msg, err = leastsq(metrics.basic.residual_linear, 0.1, args=(x, measurements), full_output=True)
 
     results.report.print_least_squares_basic(estimate, info, err)
-    '''
-    matplotlib.pyplot.plot(x, models.algebraic.linear(estimate[0], x), x, measurements, "o", x, y)
-    matplotlib.pyplot.legend(["fit", "data", "true"])
-    matplotlib.pyplot.show()
-    '''
+    p = estimate[0]
+    results.plot.plot_least_squares(x, measurements, models.algebraic.linear(p, x), y)
 
-def experiment2():
-    x = arange(0.1, 1, 0.9 / 10)
-    y = models.algebraic.linear(2, x)
-    measurements = y + 0.1*data.generator.normal_distribution(len(y))
-
-    print(metrics.basic.residual(0.1, x, models.algebraic.linear, measurements))
-    
 def experiment3():
     x = arange(0.1, 1, 0.9 / 10)
     y = models.algebraic.linear(2, x)
@@ -42,9 +32,12 @@ def experiment3():
     results.report.print_least_squares_basic(estimate, info, err)
     p = estimate[0]
     results.plot.plot_least_squares(x, measurements, models.algebraic.linear(p, x), y)
-#    results.report.print_least_squares_detailed(estimate, cov, info, msg, err)
-    '''
-    matplotlib.pyplot.plot(x, models.algebraic.linear(estimate[0], x), x, measurements, "o", x, y)
-    matplotlib.pyplot.legend(["fit", "data", "true"])
-    matplotlib.pyplot.show()
-    '''
+
+# legacy
+# -----------------------------------------------------------------------------
+def experiment2():
+    x = arange(0.1, 1, 0.9 / 10)
+    y = models.algebraic.linear(2, x)
+    measurements = y + 0.1*data.generator.normal_distribution(len(y))
+
+    print(metrics.basic.residual(0.1, x, models.algebraic.linear, measurements))
