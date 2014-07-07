@@ -33,7 +33,9 @@ def experiment2():
 def experiment3():
     x = arange(0.1, 1, 0.9 / 10)
     y = models.algebraic.linear(2, x)
+    data.generator.set_seed(117)
     measurements = y + 0.1*data.generator.normal_distribution(len(y))
+    data.generator.unset_seed()
     
     estimate, cov_x, info, msg, err = leastsq(metrics.basic.residual, 0.1, args=(x, models.algebraic.linear, measurements), full_output=True)
 
