@@ -10,4 +10,3 @@ def sum_absolute_value_residuals(values):
     for value in values:
         sum_abs_res += math.fabs(value)
     return sum_abs_res
-        
