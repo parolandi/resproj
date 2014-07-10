@@ -114,6 +114,7 @@ def experiment8():
     result = solvers.least_squares.solve_slsqp(
         metrics.basic.sum_squared_residuals, models.algebraic.linear, initial_guess, x, measurements)
 
+    results.report.print_result(result)
     p = result.x
     results.plot.plot_least_squares(x, measurements, models.algebraic.linear(p, x), y)
     return
