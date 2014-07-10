@@ -7,5 +7,5 @@ def plot_least_squares(independent, measurements, predictions, actuals):
     y_meas = measurements
     y = actuals
     matplotlib.pyplot.plot(x, y_model, x, y_meas, "o", x, y)
-    matplotlib.pyplot.legend(["fit", "data", "true"])
+    matplotlib.pyplot.legend(["fit", "obs", "true"])
     matplotlib.pyplot.show()
