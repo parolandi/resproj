@@ -1,12 +1,18 @@
 
 import math
 
-def residual(parameters, independent, function, measured):
-    residual = measured - function(parameters, independent)
-    return residual
+def residuals(parameters, independent, function, measured):
+    res = measured - function(parameters, independent)
+    return res
+
+def sum_squared_residuals(parameters, independent, function, measured):
+    ssr = 0
+    for res in residuals(parameters, independent, function, measured):
+        ssr += res**2
+    return ssr
 
 def sum_absolute_value_residuals(values):
-    sum_abs_res = 0
+    sar = 0
     for value in values:
-        sum_abs_res += math.fabs(value)
-    return sum_abs_res
+        sar += math.fabs(value)
+    return sar
