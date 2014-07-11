@@ -8,6 +8,7 @@ if __name__ == '__main__':
     
     def doit():
         experiments.differentialalgebraic.experiment1()
+        experiments.differentialalgebraic.experiment2()
 
 
     def dothem():

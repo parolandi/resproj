@@ -23,7 +23,7 @@ def experiment3():
 
     results.report.print_least_squares_basic(estimate, info, err)
     p = estimate[0]
-    results.plot.plotit(x, measurements, models.algebraic.linear(p, x), y)
+    results.plot.plotfit(x, measurements, models.algebraic.linear(p, x), y)
 
 
 # linear regression
@@ -41,7 +41,7 @@ def experiment4():
 
     results.report.print_least_squares_detailed(estimate, cov, info, msg, err)
     p = estimate[0]
-    results.plot.plotit(x, measurements, models.algebraic.linear(p, x), y)
+    results.plot.plotfit(x, measurements, models.algebraic.linear(p, x), y)
 
 
 # linear regression
@@ -60,7 +60,7 @@ def experiment5():
 
     results.report.print_least_squares_detailed(estimate, cov, info, msg, err)
     p = estimate[0]
-    results.plot.plotit(x, measurements, models.algebraic.linear(p, x), y)
+    results.plot.plotfit(x, measurements, models.algebraic.linear(p, x), y)
 
 
 # quadratic regression
@@ -78,7 +78,7 @@ def experiment6():
 
     results.report.print_least_squares_detailed(estimate, cov, info, msg, err)
     p = estimate[0]
-    results.plot.plotit(x, measurements, models.algebraic.quadratic(p, x), y)
+    results.plot.plotfit(x, measurements, models.algebraic.quadratic(p, x), y)
 
 
 # quadratic regression
@@ -97,7 +97,7 @@ def experiment7():
 
     results.report.print_least_squares_detailed(estimate, cov, info, msg, err)
     p = estimate[0]
-    results.plot.plotit(x, measurements, models.algebraic.quadratic(p, x), y)
+    results.plot.plotfit(x, measurements, models.algebraic.quadratic(p, x), y)
 
 
 # linear regression
@@ -116,4 +116,4 @@ def experiment8():
 
     results.report.print_result(result)
     p = result.x
-    results.plot.plotit(x, measurements, models.algebraic.linear(p, x), y)
+    results.plot.plotfit(x, measurements, models.algebraic.linear(p, x), y)
