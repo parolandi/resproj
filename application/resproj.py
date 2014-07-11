@@ -2,15 +2,15 @@
 
 
 import experiments.algebraic
-import experiments.differentialalgebraic
+import experiments.differential_algebraic
 
 if __name__ == '__main__':
     
     def doit():
-#        experiments.differentialalgebraic.experiment1()
-#        experiments.differentialalgebraic.experiment2()
-        experiments.differentialalgebraic.experiment3()
-        experiments.differentialalgebraic.experiment4()
+#        experiments.differential_algebraic.experiment1()
+#        experiments.differential_algebraic.experiment2()
+        experiments.differential_algebraic.experiment3()
+        experiments.differential_algebraic.experiment4()
 
 
     def dothem():
