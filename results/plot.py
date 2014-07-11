@@ -21,7 +21,7 @@ def plottrajectoryandobservations(independent,  measurements, numerical, analyti
     matplotlib.pyplot.show()
     
 
-def plotrajectoryandpoint(independent,  analytical, singletime, singlevalue):
+def plotrajectoryandpoint(independent, analytical, singletime, singlevalue):
     x = independent
     y = analytical
     matplotlib.pyplot.plot(x, y, [singletime], [singlevalue], "o")
