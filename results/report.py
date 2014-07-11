@@ -98,3 +98,15 @@ def print_result(opt_res):
     print("Number Jacobian calls: ", opt_res["njev"])
     print("User message: ", opt_res["message"])
     print("------------------")
+
+
+integration_data = {
+    "number_of_time_steps": 0
+    }
+
+
+def print_integration_basic(info):
+    print("------------------")
+    print("Number of time steps: ", len(info["hu"]))
+    print("------------------")
+
