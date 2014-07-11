@@ -1,7 +1,7 @@
 
 import matplotlib.pyplot
 
-def plot_least_squares(independent, measurements, predictions, actuals):
+def plotit(independent, measurements, predictions, actuals):
     x = independent
     y_model = predictions
     y_meas = measurements
