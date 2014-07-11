@@ -7,8 +7,10 @@ import experiments.differentialalgebraic
 if __name__ == '__main__':
     
     def doit():
-        experiments.differentialalgebraic.experiment1()
-        experiments.differentialalgebraic.experiment2()
+#        experiments.differentialalgebraic.experiment1()
+#        experiments.differentialalgebraic.experiment2()
+        experiments.differentialalgebraic.experiment3()
+        experiments.differentialalgebraic.experiment4()
 
 
     def dothem():
@@ -23,4 +25,3 @@ if __name__ == '__main__':
     # just do it
     doit()
 #    dothem()
-    
