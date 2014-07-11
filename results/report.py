@@ -4,7 +4,6 @@ import collections
 
 import metrics.basic
 
-
 least_squares_solver_info = {
         "status": "",
         "status_code": 0,
@@ -99,4 +98,3 @@ def print_result(opt_res):
     print("Number Jacobian calls: ", opt_res["njev"])
     print("User message: ", opt_res["message"])
     print("------------------")
-    

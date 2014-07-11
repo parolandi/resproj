@@ -24,7 +24,7 @@ def experiment3():
     results.report.print_least_squares_basic(estimate, info, err)
     p = estimate[0]
     results.plot.plot_least_squares(x, measurements, models.algebraic.linear(p, x), y)
-    return
+
 
 # linear regression
 # print advanced
@@ -42,7 +42,7 @@ def experiment4():
     results.report.print_least_squares_detailed(estimate, cov, info, msg, err)
     p = estimate[0]
     results.plot.plot_least_squares(x, measurements, models.algebraic.linear(p, x), y)
-    return
+
 
 # linear regression
 # analytical jacobian
@@ -61,7 +61,7 @@ def experiment5():
     results.report.print_least_squares_detailed(estimate, cov, info, msg, err)
     p = estimate[0]
     results.plot.plot_least_squares(x, measurements, models.algebraic.linear(p, x), y)
-    return
+
 
 # quadratic regression
 # print advanced
@@ -79,7 +79,7 @@ def experiment6():
     results.report.print_least_squares_detailed(estimate, cov, info, msg, err)
     p = estimate[0]
     results.plot.plot_least_squares(x, measurements, models.algebraic.quadratic(p, x), y)
-    return
+
 
 # quadratic regression
 # analytical jacobian
@@ -98,7 +98,7 @@ def experiment7():
     results.report.print_least_squares_detailed(estimate, cov, info, msg, err)
     p = estimate[0]
     results.plot.plot_least_squares(x, measurements, models.algebraic.quadratic(p, x), y)
-    return
+
 
 # linear regression
 # slsqp
@@ -117,4 +117,3 @@ def experiment8():
     results.report.print_result(result)
     p = result.x
     results.plot.plot_least_squares(x, measurements, models.algebraic.linear(p, x), y)
-    return
