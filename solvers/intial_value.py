@@ -1,4 +1,5 @@
 
+import numpy
 import scipy.integrate
 
 import common.utilities
@@ -18,3 +19,24 @@ def compute_trajectory(alginputs, model, initial_condition, timepoints, paramete
     trajectory_t, info = solve_lsoda(model, initial_condition, timepoints, parameters, alginputs)
     trajectory = common.utilities.sliceit(trajectory_t)
     return trajectory[len(trajectory)-1]
+
+
+def solve_ode_lsoda(model, initial_condition, timepoints, parameters, alginputs):
+    integrator = scipy.integrate.ode(model)
+    integrator.set_f_params(parameters, alginputs)
+    integrator.set_integrator("lsoda")
+    integrator.set_initial_value(y=initial_condition, t=0.0)
+    
+    ii = 0
+    ts = []
+    ts.append(timepoints[ii])
+    ys = []
+    ys. append(numpy.array([initial_condition]))
+    tf = timepoints[len(timepoints)-1]
+    
+    while integrator.successful() and integrator.t < tf:
+        ii += 1
+        integrator.integrate(timepoints[ii])
+        ts.append(integrator.t)
+        ys.append(integrator.y)
+    return ts, ys

@@ -11,6 +11,7 @@ import solvers.dynamic_optimisation
 
 import models.analytical
 
+# integrate, basic
 def experiment1():
     t_if = numpy.arange(0.0, 1.0, 1.0 / 10)
     y0 = 0.0
@@ -27,6 +28,7 @@ def experiment1():
     results.report.print_integration_basic(info)
 
 
+# integrate, trajectory
 def experiment2():
     t_if = numpy.arange(0.0, 1.0, 1.0 / 10)
     y0 = 0.0
@@ -38,6 +40,7 @@ def experiment2():
     results.plot.plotrajectoryandpoint(t_if, models.analytical.exponential(p, t_if, y0, p*u), t, y) 
 
 
+# optimise, maximise
 def experiment3():
     t_if = numpy.arange(0.0, 1.0, 1.0 / 10)
     y0 = 0.0
@@ -57,6 +60,7 @@ def experiment3():
         t, solvers.intial_value.compute_trajectory(u, models.differential_algebraic.linear, y0, t_if, [p]))
 
 
+# optimise; minimise
 def experiment4():
     t_if = numpy.arange(0.0, 1.0, 1.0 / 10)
     y0 = 0.0
@@ -74,3 +78,19 @@ def experiment4():
     u = result.x
     results.plot.plotrajectoryandpoint(t_if, models.analytical.exponential(p, t_if, y0, p*u), \
         t, solvers.intial_value.compute_trajectory(u, models.differential_algebraic.linear, y0, t_if, [p]))
+
+
+# integrate, basic
+def experiment5():
+    t_if = numpy.arange(0.0, 1.0, 1.0 / 10)
+    y0 = 0.0
+    u = 1.0
+    p = 2.0
+    t, yt = solvers.intial_value.solve_ode_lsoda(models.differential_algebraic.linear_ty, y0, t_if, [p], [u])
+    y = common.utilities.sliceit(yt)
+
+    data.generator.set_seed(117)
+    measurements = y + 0.1*data.generator.normal_distribution(len(y))
+    data.generator.unset_seed()
+
+    results.plot.plottrajectoryandobservations(t, measurements, y, models.analytical.exponential(p, t, y0, p*u))

@@ -9,8 +9,10 @@ if __name__ == '__main__':
     def doit():
 #        experiments.differential_algebraic.experiment1()
 #        experiments.differential_algebraic.experiment2()
-        experiments.differential_algebraic.experiment3()
-        experiments.differential_algebraic.experiment4()
+#        experiments.differential_algebraic.experiment3()
+#        experiments.differential_algebraic.experiment4()
+        experiments.differential_algebraic.experiment5()
+        
 
 
     def dothem():
