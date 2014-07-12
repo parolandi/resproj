@@ -15,9 +15,15 @@ def solve_lsoda(model, initial_condition, timepoints, parameters, alginputs):
         printmessg=True, \
         ixpr=True)
     
-def compute_trajectory(alginputs, model, initial_condition, timepoints, parameters):
+
+def compute_trajectory(parameters, model, initial_condition, alginputs, timepoints):
     trajectory_t, info = solve_lsoda(model, initial_condition, timepoints, parameters, alginputs)
     trajectory = common.utilities.sliceit(trajectory_t)
+    return trajectory
+
+
+def compute_endpoint(alginputs, model, initial_condition, timepoints, parameters):
+    trajectory = compute_trajectory(alginputs, model, initial_condition, timepoints, parameters)
     return trajectory[len(trajectory)-1]
 
 

@@ -11,7 +11,8 @@ if __name__ == '__main__':
 #        experiments.differential_algebraic.experiment2()
 #        experiments.differential_algebraic.experiment3()
 #        experiments.differential_algebraic.experiment4()
-        experiments.differential_algebraic.experiment5()
+#        experiments.differential_algebraic.experiment5()
+        experiments.differential_algebraic.experiment6()
         
 
 

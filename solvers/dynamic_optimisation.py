@@ -9,9 +9,9 @@ def solve_slsqp_optimise_with_bounds(objective, model, initial_guess, initial_co
 
 
 def maximise_it(alginputs, model, initial_condition, timepoints, parameters):
-    return -1.0 * solvers.intial_value.compute_trajectory(alginputs, model, initial_condition, timepoints, parameters)
+    return -1.0 * solvers.intial_value.compute_endpoint(alginputs, model, initial_condition, timepoints, parameters)
 
 
 def minimise_it(alginputs, model, initial_condition, timepoints, parameters):
-    return solvers.intial_value.compute_trajectory(alginputs, model, initial_condition, timepoints, parameters)
+    return solvers.intial_value.compute_endpoint(alginputs, model, initial_condition, timepoints, parameters)
     
