@@ -4,6 +4,7 @@ import unittest
 import numpy
 
 import metrics.algebraic
+import metrics.ordinary_differential
 
 class test_metrics(unittest.TestCase):
 

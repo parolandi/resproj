@@ -3,11 +3,11 @@ import numpy
 import scipy.integrate
 
 import common.utilities
-import models.differential_algebraic
+import models.ordinary_differential
 
 def solve_lsoda(model, initial_condition, timepoints, parameters, alginputs):
     return scipy.integrate.odeint(
-        func=models.differential_algebraic.linear, \
+        func=models.ordinary_differential.linear, \
         y0=initial_condition, \
         t=timepoints, \
         args=(parameters, alginputs), \
