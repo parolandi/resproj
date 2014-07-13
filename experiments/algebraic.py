@@ -2,7 +2,7 @@
 from numpy import arange
 
 import data.generator
-import metrics.basic
+import metrics.algebraic
 import models.algebraic
 import results.report
 import results.plot
@@ -19,7 +19,7 @@ def experiment3():
     
     initial_guess = 0.1
     estimate, cov, info, msg, err = solvers.least_squares.solve_leastsq(
-        metrics.basic.residuals, models.algebraic.linear, initial_guess, x, measurements)
+        metrics.algebraic.residuals, models.algebraic.linear, initial_guess, x, measurements)
 
     results.report.print_least_squares_basic(estimate, info, err)
     p = estimate[0]
@@ -37,7 +37,7 @@ def experiment4():
     
     initial_guess = 0.1
     estimate, cov, info, msg, err = solvers.least_squares.solve_leastsq(
-        metrics.basic.residuals, models.algebraic.linear, initial_guess, x, measurements)
+        metrics.algebraic.residuals, models.algebraic.linear, initial_guess, x, measurements)
 
     results.report.print_least_squares_detailed(estimate, cov, info, msg, err)
     p = estimate[0]
@@ -56,7 +56,7 @@ def experiment5():
     
     initial_guess = 0.1
     estimate, cov, info, msg, err = solvers.least_squares.solve_leastsq_with_jacobian(
-        metrics.basic.residuals, models.algebraic.linear, models.algebraic.jacobian_linear, initial_guess, x, measurements)
+        metrics.algebraic.residuals, models.algebraic.linear, models.algebraic.jacobian_linear, initial_guess, x, measurements)
 
     results.report.print_least_squares_detailed(estimate, cov, info, msg, err)
     p = estimate[0]
@@ -74,7 +74,7 @@ def experiment6():
     
     initial_guess = 0.1
     estimate, cov, info, msg, err = solvers.least_squares.solve_leastsq(
-        metrics.basic.residuals, models.algebraic.quadratic, initial_guess, x, measurements)
+        metrics.algebraic.residuals, models.algebraic.quadratic, initial_guess, x, measurements)
 
     results.report.print_least_squares_detailed(estimate, cov, info, msg, err)
     p = estimate[0]
@@ -93,7 +93,7 @@ def experiment7():
     
     initial_guess = 0.1
     estimate, cov, info, msg, err = solvers.least_squares.solve_leastsq_with_jacobian(
-        metrics.basic.residuals, models.algebraic.quadratic, models.algebraic.jacobian_quadratic, initial_guess, x, measurements)
+        metrics.algebraic.residuals, models.algebraic.quadratic, models.algebraic.jacobian_quadratic, initial_guess, x, measurements)
 
     results.report.print_least_squares_detailed(estimate, cov, info, msg, err)
     p = estimate[0]
@@ -112,7 +112,7 @@ def experiment8():
     
     initial_guess = 0.1
     result = solvers.least_squares.solve_slsqp(
-        metrics.basic.sum_squared_residuals, models.algebraic.linear, initial_guess, x, measurements)
+        metrics.algebraic.sum_squared_residuals, models.algebraic.linear, initial_guess, x, measurements)
 
     results.report.print_result(result)
     p = result.x

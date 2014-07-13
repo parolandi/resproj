@@ -1,6 +1,4 @@
 
-import scipy.integrate
-
 # TODO: change to gain and time constant and first order
 def linear(diffstates, time, parameters, alginputs):
     assert(len(diffstates) == 1)
