@@ -5,31 +5,31 @@ import scipy.integrate
 import common.utilities
 import models.ordinary_differential
 
-def solve_lsoda(model, initial_condition, timepoints, parameters, alginputs):
+def solve_lsoda(model, initial_condition, timepoints, parameters, inputs):
     return scipy.integrate.odeint(
         func=models.ordinary_differential.linear, \
         y0=initial_condition, \
         t=timepoints, \
-        args=(parameters, alginputs), \
+        args=(parameters, inputs), \
         full_output=True, \
         printmessg=True, \
         ixpr=True)
     
 
-def compute_trajectory(parameters, model, initial_condition, alginputs, timepoints):
-    trajectory_t, info = solve_lsoda(model, initial_condition, timepoints, parameters, alginputs)
+def compute_trajectory(parameters, model, initial_condition, inputs, timepoints):
+    trajectory_t, info = solve_lsoda(model, initial_condition, timepoints, parameters, inputs)
     trajectory = common.utilities.sliceit(trajectory_t)
     return trajectory
 
 
-def compute_endpoint(alginputs, model, initial_condition, timepoints, parameters):
-    trajectory = compute_trajectory(alginputs, model, initial_condition, timepoints, parameters)
+def compute_endpoint(inputs, model, initial_condition, timepoints, parameters):
+    trajectory = compute_trajectory(inputs, model, initial_condition, timepoints, parameters)
     return trajectory[len(trajectory)-1]
 
 
-def solve_ode_lsoda(model, initial_condition, timepoints, parameters, alginputs):
+def solve_ode_lsoda(model, initial_condition, timepoints, parameters, inputs):
     integrator = scipy.integrate.ode(model)
-    integrator.set_f_params(parameters, alginputs)
+    integrator.set_f_params(parameters, inputs)
     integrator.set_integrator("lsoda")
     integrator.set_initial_value(y=initial_condition, t=0.0)
     

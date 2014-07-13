@@ -124,7 +124,7 @@ def experiment7():
     data.generator.unset_seed()
     
     initial_guess = 0.1
-    result = solvers.least_squares.solve_slsqp_diffalg(
+    result = solvers.least_squares.solve_slsqp_orddiff(
         metrics.ordinary_differential.sum_squared_residuals, models.ordinary_differential.linear, \
         initial_guess, [u], measurements, y0, t_if)
 
