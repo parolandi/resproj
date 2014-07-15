@@ -12,7 +12,7 @@ def solve_lsoda(model, initial_condition, timepoints, parameters, inputs):
         t=timepoints, \
         args=(parameters, inputs), \
         full_output=True, \
-        printmessg=True, \
+        printmessg=True,
         ixpr=True)
     
 
@@ -23,7 +23,7 @@ def compute_trajectory(parameters, model, initial_condition, inputs, timepoints)
 
 
 def compute_endpoint(inputs, model, initial_condition, timepoints, parameters):
-    trajectory = compute_trajectory(inputs, model, initial_condition, timepoints, parameters)
+    trajectory = compute_trajectory(parameters, model, initial_condition, inputs, timepoints)
     return trajectory[len(trajectory)-1]
 
 
