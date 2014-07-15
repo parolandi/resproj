@@ -3,11 +3,11 @@ import numpy
 import scipy.integrate
 
 import common.utilities
-import models.ordinary_differential
+#import models.ordinary_differential
 
 def solve_lsoda(model, initial_condition, timepoints, parameters, inputs):
     return scipy.integrate.odeint(
-        func=models.ordinary_differential.linear, \
+        func=model, \
         y0=initial_condition, \
         t=timepoints, \
         args=(parameters, inputs), \
@@ -46,3 +46,24 @@ def solve_ode_lsoda(model, initial_condition, timepoints, parameters, inputs):
         ts.append(integrator.t)
         ys.append(integrator.y)
     return ts, ys
+
+
+# -----------------------------------------------------------------------------
+
+def solve_lsoda_st(model, model_data, problem_data):
+    model_data["parameters"] =  problem_data["parameters"]
+    model_data["inputs"] = problem_data["inputs"]
+    return scipy.integrate.odeint(
+        func=model, \
+        y0=problem_data["initial_conditions"], \
+        t=problem_data["time"], \
+        args=(model_data["parameters"], model_data["inputs"]), \
+        full_output=True, \
+        printmessg=True, \
+        ixpr=True)
+
+
+def compute_trajectory_st(model, model_data, problem_data):
+    trajectory_t, info = solve_lsoda_st(model, model_data, problem_data)
+    trajectory = common.utilities.sliceit(trajectory_t)
+    return trajectory

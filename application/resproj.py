@@ -16,7 +16,6 @@ if __name__ == '__main__':
         experiments.ordinary_differential.experiment7()
         
 
-
     def dothem():
         experiments.algebraic.experiment3()
         experiments.algebraic.experiment4()
