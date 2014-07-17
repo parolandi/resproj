@@ -32,12 +32,12 @@ class TestInitialValueSolvers(unittest.TestCase):
 
     
     def test_solve_lsoda_st(self):
-        problem_instance = dict(models.ordinary_differential.problem_structure)
+        problem_instance = dict(models.model_data.problem_structure)
         problem_instance["initial_conditions"] = 0.0
         problem_instance["time"] = numpy.arange(0.0, 1.0, 1.0 / 10)
         problem_instance["parameters"] = [1.0]
         problem_instance["inputs"] = [1.0]
-        model_instance = dict(models.ordinary_differential.model_structure)
+        model_instance = dict(models.model_data.model_structure)
         model_instance["parameters"] = problem_instance["parameters"]
         model_instance["inputs"] = problem_instance["inputs"]
         model_instance["states"] = problem_instance["initial_conditions"]
@@ -59,12 +59,12 @@ class TestInitialValueSolvers(unittest.TestCase):
 
 
     def test_compute_trajectory_st(self):
-        problem_instance = dict(models.ordinary_differential.problem_structure)
+        problem_instance = dict(models.model_data.problem_structure)
         problem_instance["initial_conditions"] = 0.0
         problem_instance["time"] = numpy.arange(0.0, 1.0, 1.0 / 10)
         problem_instance["parameters"] = [1.0]
         problem_instance["inputs"] = [1.0]
-        model_instance = dict(models.ordinary_differential.model_structure)
+        model_instance = dict(models.model_data.model_structure)
         model_instance["parameters"] = problem_instance["parameters"]
         model_instance["inputs"] = problem_instance["inputs"]
         model_instance["states"] = problem_instance["initial_conditions"]

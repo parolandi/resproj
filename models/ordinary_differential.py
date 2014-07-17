@@ -1,6 +1,8 @@
 
 import numpy
 
+import models.model_data
+
 # TODO: change to gain and time constant and first order
 def linear(states, time, parameters, inputs):
     assert(len(states) == 1)
@@ -15,26 +17,6 @@ def linear_ty(time, states, parameters, inputs):
     assert(len(parameters) == 1)
     assert(len(inputs) == 1)
     return parameters[0] * inputs[0] - states[0]
-
-
-model_structure = {
-    "parameters": [],
-    "inputs": [],
-    "states": [],
-    "outputs": [],
-    "time": 0.0,
-    }
-
-
-problem_structure = {
-    "initial_conditions": [],
-    "time": [],
-    "performance_measure": "",
-    "model": "",
-    "parameters": [],
-    "inputs": [],
-    "outputs": [],
-    }
 
 
 def linear_st(y, t, instance):
@@ -79,4 +61,3 @@ def epo_receptor(states, time, params, inputs):
     d_dt["dEpo_i"] = v["7"]
     d_dt["dEpo_e"] = v["8"]
     return numpy.array([d_dt["Epo"], d_dt["EpoR"], d_dt["Epo_EpoR"], d_dt["Epo_EpoR_i"], d_dt["dEpo_i"], d_dt["dEpo_e"]])
-

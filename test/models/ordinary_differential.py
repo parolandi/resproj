@@ -8,7 +8,7 @@ import models.ordinary_differential
 class TestOrdinaryDifferentialModels(unittest.TestCase):
 
     def test_linear_st(self):
-        instance = dict(models.ordinary_differential.model_structure)
+        instance = dict(models.model_data.model_structure)
         instance["states"] = [1.0]
         instance["inputs"] = [1.0]
         instance["parameters"] = [1.0]
