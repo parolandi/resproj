@@ -1,8 +1,6 @@
 
 import numpy
 
-import models.model_data
-
 # TODO: change to gain and time constant and first order
 def linear(states, time, parameters, inputs):
     assert(len(states) == 1)
@@ -27,25 +25,47 @@ def linear_st(y, t, instance):
     return instance["parameters"][0] * instance["inputs"][0] - instance["states"][0]
 
 
-def epo_receptor(states, time, params, inputs):
-    d_dt = {
-        "Epo": 0.0,
-        "EpoR": 0.0,
-        "Epo_EpoR": 0.0,
-        "Epo_EpoR_i": 0.0,
-        "dEpo_i": 0.0,
-        "dEpi_e": 0.0,
-    }
-    v = {
-        "1": 0.0,
-        "2": 0.0,
-        "3": 0.0,
-        "4": 0.0,
-        "5": 0.0,
-        "6": 0.0,
-        "7": 0.0,
-        "8": 0.0,
-    }
+epo_receptor_default_parameters = {
+    "k_on": 0.00010496,
+    "k_off": 0.0172135,
+    "k_t": 0.0329366,
+    "k_e": 0.0748267,
+    "k_ex": 0.00993805,
+    "k_di": 0.00317871,
+    "k_de": 0.0164042,
+}
+
+
+epo_receptor_states = {
+    "Epo": 0.0,
+    "EpoR": 0.0,
+    "Epo_EpoR": 0.0,
+    "Epo_EpoR_i": 0.0,
+    "dEpo_i": 0.0,
+    "dEpo_e": 0.0,
+}
+
+
+epo_receptor_default_inputs = {
+    "B_max": 516,
+}
+
+
+epo_receptor_velocities = {
+    "1": 0.0,
+    "2": 0.0,
+    "3": 0.0,
+    "4": 0.0,
+    "5": 0.0,
+    "6": 0.0,
+    "7": 0.0,
+    "8": 0.0,
+}
+
+
+# dictionary-based model
+def epo_receptor_di(states, time, params, inputs):
+    v = epo_receptor_velocities
     v["1"] = params["k_on"]*states["Epo"]*states["EpoR"]
     v["2"] = params["k_off"]*states["Epo_EpoR"]
     v["3"] = params["k_t"]*inputs["B_max"]
@@ -54,6 +74,7 @@ def epo_receptor(states, time, params, inputs):
     v["6"] = params["k_ex"]*states["Epo_EpoR_i"]
     v["7"] = params["k_di"]*states["Epo_EpoR_i"]
     v["8"] = params["k_de"]*states["Epo_EpoR_i"] 
+    d_dt = epo_receptor_states
     d_dt["Epo"] = -v["1"]+v["2"]+v["6"]
     d_dt["EpoR"] = -v["1"]+v["2"]+v["3"]-v["4"]+v["6"]
     d_dt["Epo_EpoR"] = v["1"]-v["2"]-v["5"]
@@ -61,3 +82,50 @@ def epo_receptor(states, time, params, inputs):
     d_dt["dEpo_i"] = v["7"]
     d_dt["dEpo_e"] = v["8"]
     return numpy.array([d_dt["Epo"], d_dt["EpoR"], d_dt["Epo_EpoR"], d_dt["Epo_EpoR_i"], d_dt["dEpo_i"], d_dt["dEpo_e"]])
+
+
+params_i = {
+    "k_on": 0,
+    "k_off": 1,
+    "k_t": 2,
+    "k_e": 3,
+    "k_ex": 4,
+    "k_di": 5,
+    "k_de": 6,
+}
+
+
+states_i = {
+    "Epo": 0,
+    "EpoR": 1,
+    "Epo_EpoR": 2,
+    "Epo_EpoR_i": 3,
+    "dEpo_i": 4,
+    "dEpo_e": 5,
+}
+
+
+inputs_i = {
+    "B_max": 0,
+}
+
+
+# array-based model
+def epo_receptor(states, time, params, inputs):
+    v = numpy.zeros(len(epo_receptor_velocities))
+    v[0] = params[params_i["k_on"]]*states[states_i["Epo"]]*states[states_i["EpoR"]]
+    v[1] = params[params_i["k_off"]]*states[states_i["Epo_EpoR"]]
+    v[2] = params[params_i["k_t"]]*inputs[inputs_i["B_max"]]
+    v[3] = params[params_i["k_t"]]*states[states_i["EpoR"]]
+    v[4] = params[params_i["k_e"]]*states[states_i["Epo_EpoR"]]
+    v[5] = params[params_i["k_ex"]]*states[states_i["Epo_EpoR_i"]]
+    v[6] = params[params_i["k_di"]]*states[states_i["Epo_EpoR_i"]]
+    v[7] = params[params_i["k_de"]]*states[states_i["Epo_EpoR_i"]] 
+    d_dt = numpy.zeros(len(states))
+    d_dt[states_i["Epo"]] = -v[1-1]+v[2-1]+v[6-1]
+    d_dt[states_i["EpoR"]] = -v[1-1]+v[2-1]+v[3-1]-v[4-1]+v[6-1]
+    d_dt[states_i["Epo_EpoR"]] = v[1-1]-v[2-1]-v[5-1]
+    d_dt[states_i["Epo_EpoR_i"]] = v[5-1]-v[6-1]-v[7-1]-v[8-1]
+    d_dt[states_i["dEpo_i"]] = v[7-1]
+    d_dt[states_i["dEpo_e"]] = v[8-1]
+    return d_dt
