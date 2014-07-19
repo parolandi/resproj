@@ -1,7 +1,9 @@
+
 import unittest
 
 # TODO:I don't know why import does not work directly
 #import test.metrics.ordinary_differential
+from test.common.utilities import *
 from test.metrics.algebraic import *
 from test.metrics.ordinary_differential import *
 from test.models.ordinary_differential import *
