@@ -129,3 +129,54 @@ def epo_receptor(states, time, params, inputs):
     d_dt[states_i["dEpo_i"]] = v[7-1]
     d_dt[states_i["dEpo_e"]] = v[8-1]
     return d_dt
+
+
+# array-based model
+def epo_receptor_nonneg(states, time, params, inputs):
+    correct_states = True
+    correct_time_derivs = True
+    states_l = states
+    if correct_states:
+        if states[states_i["Epo"]] <= 0.0:
+            states[states_i["Epo"]] = 0.0
+        if states[states_i["EpoR"]] <= 0.0:
+            states[states_i["EpoR"]] = 0.0
+        if states[states_i["Epo_EpoR"]] <= 0.0:
+            states[states_i["Epo_EpoR"]] = 0.0
+        if states[states_i["Epo_EpoR_i"]] <= 0.0:
+            states[states_i["Epo_EpoR_i"]] = 0.0
+        if states[states_i["dEpo_i"]] <= 0.0:
+            states[states_i["dEpo_i"]] = 0.0
+        if states[states_i["dEpo_e"]] <= 0.0:
+            states[states_i["dEpo_e"]] = 0.0
+    v = numpy.zeros(len(epo_receptor_velocities))
+    v[0] = params[params_i["k_on"]]*states[states_i["Epo"]]*states[states_i["EpoR"]]
+    v[1] = params[params_i["k_off"]]*states[states_i["Epo_EpoR"]]
+    v[2] = params[params_i["k_t"]]*inputs[inputs_i["B_max"]]
+    v[3] = params[params_i["k_t"]]*states[states_i["EpoR"]]
+    v[4] = params[params_i["k_e"]]*states[states_i["Epo_EpoR"]]
+    v[5] = params[params_i["k_ex"]]*states[states_i["Epo_EpoR_i"]]
+    v[6] = params[params_i["k_di"]]*states[states_i["Epo_EpoR_i"]]
+    v[7] = params[params_i["k_de"]]*states[states_i["Epo_EpoR_i"]] 
+    d_dt = numpy.zeros(len(states))
+    d_dt[states_i["Epo"]] = -v[1-1]+v[2-1]+v[6-1]
+    d_dt[states_i["EpoR"]] = -v[1-1]+v[2-1]+v[3-1]-v[4-1]+v[6-1]
+    d_dt[states_i["Epo_EpoR"]] = v[1-1]-v[2-1]-v[5-1]
+    d_dt[states_i["Epo_EpoR_i"]] = v[5-1]-v[6-1]-v[7-1]-v[8-1]
+    d_dt[states_i["dEpo_i"]] = v[7-1]
+    d_dt[states_i["dEpo_e"]] = v[8-1]
+    if correct_time_derivs:
+        if states[states_i["Epo"]] <= 0.0 and d_dt[states_i["Epo"]] <= 0.0:
+            d_dt[states_i["Epo"]] = 0.0
+        if states[states_i["EpoR"]] <= 0.0 and d_dt[states_i["EpoR"]] <= 0.0:
+            d_dt[states_i["EpoR"]] = 0.0
+        if states[states_i["Epo_EpoR"]] <= 0.0 and d_dt[states_i["Epo_EpoR"]] <= 0.0:
+            d_dt[states_i["Epo_EpoR"]] = 0.0
+        if states[states_i["Epo_EpoR_i"]] <= 0.0 and d_dt[states_i["Epo_EpoR_i"]] <= 0.0:
+            d_dt[states_i["Epo_EpoR_i"]] = 0.0
+        if states[states_i["dEpo_i"]] <= 0.0 and d_dt[states_i["dEpo_i"]] <= 0.0:
+            d_dt[states_i["dEpo_i"]] = 0.0
+        if states[states_i["dEpo_e"]] <= 0.0 and d_dt[states_i["dEpo_e"]] <= 0.0:
+            d_dt[states_i["dEpo_e"]] = 0.0
+        states = states_l
+    return d_dt

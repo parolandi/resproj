@@ -75,7 +75,7 @@ class TestInitialValueSolvers(unittest.TestCase):
         [self.assertAlmostEqual(exp, act, 8) for exp, act in zip(expected, actual)]
 
 
-    def test_epo_receptor_solve_time_course(self):
+    def do_test_epo_receptor_solve_time_course(self, model):
         params = numpy.ones(len(models.ordinary_differential.params_i))
         for par in models.ordinary_differential.params_i.items():
             params[par[1]] = models.ordinary_differential.epo_receptor_default_parameters[par[0]]
@@ -95,8 +95,7 @@ class TestInitialValueSolvers(unittest.TestCase):
         problem_instance["parameters"] = model_instance["parameters"]
         problem_instance["inputs"] = model_instance["inputs"]
         problem_instance["states"] = model_instance["states"]
-        result = solvers.initial_value.compute_trajectory_st( \
-            models.ordinary_differential.epo_receptor, model_instance, problem_instance)
+        result = solvers.initial_value.compute_trajectory_st(model, model_instance, problem_instance)
         steady_state = result[len(times)-1] 
         actual = dict(models.ordinary_differential.epo_receptor_states)
         for item in models.ordinary_differential.states_i.items():
@@ -112,6 +111,11 @@ class TestInitialValueSolvers(unittest.TestCase):
         expected["Epo_EpoR_i"] = -1.90202E-017
         expected["dEpo_i"] = 329.542
         [self.assertAlmostEquals(actual[key], expected[key], 2) for key in models.ordinary_differential.epo_receptor_states.keys()]
+
+
+    def test_epo_receptor_solve_time_course(self):
+        self.do_test_epo_receptor_solve_time_course(models.ordinary_differential.epo_receptor)
+        self.do_test_epo_receptor_solve_time_course(models.ordinary_differential.epo_receptor_nonneg)
 
 
 if __name__ == "__main__":
