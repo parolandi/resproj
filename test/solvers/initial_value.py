@@ -98,23 +98,20 @@ class TestInitialValueSolvers(unittest.TestCase):
         result = solvers.initial_value.compute_trajectory_st( \
             models.ordinary_differential.epo_receptor, model_instance, problem_instance)
         steady_state = result[len(times)-1] 
-        actual = []
+        actual = dict(models.ordinary_differential.epo_receptor_states)
         for item in models.ordinary_differential.states_i.items():
+            key = item[0]
             index = item[1]
-            actual.append(steady_state[index])
-        copasi = models.ordinary_differential.states_i
+            actual[key] = steady_state[index]
+        expected = dict(models.ordinary_differential.epo_receptor_states)
         # copasi result @time=10,000
-        copasi["Epo"] = -6.32783E-018
-        copasi["dEpo_e"] = 1700.65
-        copasi["EpoR"] = 516
-        copasi["Epo_EpoR"] = -4.31186E-018
-        copasi["Epo_EpoR_i"] = -1.90202E-017
-        copasi["dEpo_i"] = 329.542
-        expected = []
-        for item in copasi.items():
-            value = item[1]
-            expected.append(value)
-        [self.assertAlmostEquals(act, exp, 2) for act, exp in zip(actual, expected)]
+        expected["Epo"] = -6.32783E-018
+        expected["dEpo_e"] = 1700.65
+        expected["EpoR"] = 516
+        expected["Epo_EpoR"] = -4.31186E-018
+        expected["Epo_EpoR_i"] = -1.90202E-017
+        expected["dEpo_i"] = 329.542
+        [self.assertAlmostEquals(actual[key], expected[key], 2) for key in models.ordinary_differential.epo_receptor_states.keys()]
 
 
 if __name__ == "__main__":

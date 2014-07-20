@@ -31,7 +31,6 @@ class TestOrdinaryDifferentialModels(unittest.TestCase):
 
     # TODO: disable because it gives different result depending on whether it is executed alone
     # or as part of the overall test suite
-    '''
     def test_epo_receptor_null(self):
         params = numpy.ones(len(models.ordinary_differential.params_i))
         for par in models.ordinary_differential.params_i.items():
@@ -39,11 +38,10 @@ class TestOrdinaryDifferentialModels(unittest.TestCase):
         model_instance = dict(models.model_data.model_structure)
         model_instance["parameters"] = numpy.asarray(params)
         model_instance["states"] = numpy.zeros(len(models.ordinary_differential.epo_receptor_states))
-        model_instance["inputs"] = numpy.array([0.0])
+        model_instance["inputs"] = numpy.zeros(len(models.ordinary_differential.epo_receptor_default_inputs))
         actual = models.ordinary_differential.epo_receptor(model_instance["states"], 0.0, model_instance["parameters"], model_instance["inputs"])
         expected = numpy.zeros(len(model_instance["states"]))
         [self.assertEquals(act, exp) for act, exp in zip(actual, expected)]
-    '''
 
     
 if __name__ == "__main__":
