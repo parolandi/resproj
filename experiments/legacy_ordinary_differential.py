@@ -19,7 +19,7 @@ def experiment1():
     u = 1.0
     p = 2.0
     yt, info = solvers.initial_value.solve_lsoda(models.ordinary_differential.linear, y0, t_if, [p], [u])
-    y = common.utilities.sliceit(yt)
+    y = common.utilities.sliceit_assnapshot(yt)
     
     data.generator.set_seed(117)
     measurements = y + 0.1*data.generator.normal_distribution(len(y))
@@ -88,7 +88,7 @@ def experiment5():
     u = 1.0
     p = 2.0
     t, yt = solvers.initial_value.solve_ode_lsoda(models.ordinary_differential.linear_ty, y0, t_if, [p], [u])
-    y = common.utilities.sliceit(yt)
+    y = common.utilities.sliceit_assnapshot(yt)
 
     data.generator.set_seed(117)
     measurements = y + 0.1*data.generator.normal_distribution(len(y))

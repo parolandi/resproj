@@ -1,7 +1,7 @@
 
 import numpy
 
-def sliceit(packed_vector):
+def sliceit_assnapshot(packed_vector):
     collection_of_points = []
     for points in packed_vector:
         stack_of_points = []
@@ -11,6 +11,6 @@ def sliceit(packed_vector):
     return collection_of_points
 
 
-def sliceit_asarray(packed_vector):
-    stack_of_points = sliceit(packed_vector)
+def sliceit_assnapshot_asarray(packed_vector):
+    stack_of_points = sliceit_assnapshot(packed_vector)
     return numpy.asarray(stack_of_points)

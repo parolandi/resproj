@@ -18,7 +18,7 @@ def solve_lsoda(model, initial_condition, timepoints, parameters, inputs):
 
 def compute_trajectory(parameters, model, initial_condition, inputs, timepoints):
     trajectory_t, info = solve_lsoda(model, initial_condition, timepoints, parameters, inputs)
-    trajectory = common.utilities.sliceit(trajectory_t)
+    trajectory = common.utilities.sliceit_assnapshot(trajectory_t)
     return trajectory
 
 
@@ -65,5 +65,5 @@ def solve_lsoda_st(model, model_data, problem_data):
 
 def compute_trajectory_st(model, model_data, problem_data):
     trajectory_t, info = solve_lsoda_st(model, model_data, problem_data)
-    trajectory = common.utilities.sliceit(trajectory_t)
+    trajectory = common.utilities.sliceit_assnapshot(trajectory_t)
     return trajectory

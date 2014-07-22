@@ -11,7 +11,7 @@ class TestUtilities(unittest.TestCase):
         aslice = [1, 2, 3, 4, 5]
         whole = []
         whole.append(aslice)
-        actual = common.utilities.sliceit(whole)
+        actual = common.utilities.sliceit_assnapshot(whole)
         expected = []
         expected.append(aslice)
         [self.assertEquals(exp, act) for exp, act in zip(expected[0], actual[0])]
@@ -21,7 +21,7 @@ class TestUtilities(unittest.TestCase):
         aslice = [1, 2, 3, 4, 5]
         whole = []
         whole.append(aslice)
-        actual = common.utilities.sliceit_asarray(whole)
+        actual = common.utilities.sliceit_assnapshot_asarray(whole)
         expected = []
         expected.append(numpy.asarray(aslice))
         [self.assertEquals(exp, act) for exp, act in zip(expected[0], actual[0])]
