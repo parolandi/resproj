@@ -16,6 +16,14 @@ def solve_slsqp(metric, model, initial_guess, inputs, outputs):
     return scipy.optimize.minimize(fun=metric, x0=initial_guess, args=(inputs, model, outputs), method='SLSQP')
 
 
+def solve_slsqp_st(metric, model, model_instance, problem_instance, algorithm_structure):
+    return scipy.optimize.minimize( \
+        fun=metric, \
+        x0=algorithm_structure["initial_guesses"], \
+        args=(model, model_instance, problem_instance), \
+        method=algorithm_structure["method"])
+
+
 def solve_slsqp_orddiff(metric, model, initial_guess, inputs, outputs, initial_conditions, t):
     return scipy.optimize.minimize( \
         fun=metric, x0=initial_guess, args=(model, t, inputs, initial_conditions, outputs), method='SLSQP')
