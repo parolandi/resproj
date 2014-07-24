@@ -1,4 +1,6 @@
 
+import numpy
+
 model_structure = {
     "parameters": [],
     "inputs": [],
@@ -10,10 +12,16 @@ model_structure = {
 
 problem_structure = {
     "initial_conditions": [],
+    # TODO: change to "times"
     "time": [],
     "performance_measure": "",
     "model": "",
     "parameters": [],
+    "parameter_indices": [],
     "inputs": [],
     "outputs": [],
+    "output_indices": [],
     }
+
+
+# TODO: problem model verificator and synchroniser
