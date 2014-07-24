@@ -26,13 +26,13 @@ def residuals_st(model, model_instance, problem_instance):
     
     # there is one residual per experiment
     res = numpy.empty(problem_instance["outputs"].shape)
+    states = 0
     for ii in range(problem_instance["outputs"].shape[series]):
         measured = outputs.take(ii, axis=series)
         predicted = model(model_instance["parameters"], inputs.take(ii, axis=series))
-        assert(measured.shape[0] == predicted.shape[0])
         # there is one residual per state (and per experiment)
-        res_s = numpy.empty(measured.shape[0])
-        for jj in range(measured.shape[0]):
+        res_s = numpy.empty(measured.shape[states])
+        for jj in range(measured.shape[states]):
             measured_s = measured[jj]
             predicted_s = predicted[problem_instance["output_indices"][jj]]
             res_s[jj] = numpy.subtract(measured_s, predicted_s)
