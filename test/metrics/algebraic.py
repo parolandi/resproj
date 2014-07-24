@@ -41,11 +41,12 @@ class TestAlgebraicMetrics(unittest.TestCase):
 
         problem_instance = dict(models.model_data.problem_structure)
         problem_instance["outputs"] = measured
+        problem_instance["output_indices"] = [0, 1]
         problem_instance["inputs"] = model_instance["inputs"]
 
-        expected = numpy.ones(len(measured)) * offset
+        expected = offset * numpy.ones(measured.shape)
         actual = metrics.algebraic.residuals_st(linear_2p2s_mock, model_instance, problem_instance)
-        [self.assertAlmostEqual(exp, act, 8) for exp, act in zip(expected, actual)]
+        [self.assertAlmostEqual(exp.all(), act.all(), 8) for exp, act in zip(expected, actual)]
 
 
     def test_sum_squared_residuals_st_linear_2p2s_without_dof(self):
@@ -58,9 +59,10 @@ class TestAlgebraicMetrics(unittest.TestCase):
 
         problem_instance = dict(models.model_data.problem_structure)
         problem_instance["outputs"] = measured
+        problem_instance["output_indices"] = [0, 1]
         problem_instance["inputs"] = model_instance["inputs"]
 
-        expected = offset * measured.size
+        expected = offset**2 * measured.size
         dof = []
         actual = metrics.algebraic.sum_squared_residuals_st(dof, linear_2p2s_mock, model_instance, problem_instance)
         self.assertAlmostEqual(expected, actual, 8)
@@ -76,10 +78,12 @@ class TestAlgebraicMetrics(unittest.TestCase):
 
         problem_instance = dict(models.model_data.problem_structure)
         problem_instance["outputs"] = measured
+        problem_instance["output_indices"] = [0, 1]
         problem_instance["inputs"] = model_instance["inputs"]
+        problem_instance["parameters"] = [model_instance["parameters"][0]]
         problem_instance["parameter_indices"] = [0]
 
-        expected = offset**2 * measured.shape[0]
+        expected = offset**2 * measured.size
         dof = numpy.ones(1) * offset
         actual = metrics.algebraic.sum_squared_residuals_st(dof, linear_2p2s_mock, model_instance, problem_instance)
         self.assertAlmostEqual(expected, actual, 8)
@@ -95,10 +99,12 @@ class TestAlgebraicMetrics(unittest.TestCase):
 
         problem_instance = dict(models.model_data.problem_structure)
         problem_instance["outputs"] = measured
+        problem_instance["output_indices"] = [0, 1]
         problem_instance["inputs"] = model_instance["inputs"]
+        problem_instance["parameters"] = [model_instance["parameters"][1]]
         problem_instance["parameter_indices"] = [1]
 
-        expected = offset**2 * measured.shape[0]
+        expected = offset**2 * measured.size
         dof = numpy.ones(1) * offset
         actual = metrics.algebraic.sum_squared_residuals_st(dof, linear_2p2s_mock, model_instance, problem_instance)
         self.assertAlmostEqual(expected, actual, 8)
