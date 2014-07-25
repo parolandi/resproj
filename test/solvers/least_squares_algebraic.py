@@ -39,7 +39,57 @@ class TestTestLeastSquaresSolversWithAlgebraicModels(unittest.TestCase):
         result = solvers.least_squares.solve_slsqp_st( \
             metrics.algebraic.sum_squared_residuals_st, linear_2p2s_mock, model_instance, problem_instance, algorithm_instance)
         actual = result.x
-        self.assertAlmostEqual(expected.all(), actual.all(), 8)
+        [self.assertAlmostEqual(exp, act, 8) for exp, act in zip(expected, actual)]
+
+
+    def test_solve_slsqp_st_linear_2p2s_with_dof_at_1(self):
+        measured = numpy.array([[2.0, 40], [4.0, 80], [6.0, 120]])
+
+        model_instance = dict(models.model_data.model_structure)
+        model_instance["parameters"] = numpy.array([1.0, 1.0])
+        model_instance["inputs"] = numpy.array([[1.0, 10], [2.0, 20], [3.0, 30]])
+
+        problem_instance = dict(models.model_data.problem_structure)
+        problem_instance["outputs"] = measured
+        problem_instance["output_indices"] = [0, 1]
+        problem_instance["inputs"] = model_instance["inputs"]
+        problem_instance["parameters"] = model_instance["parameters"]
+        problem_instance["parameter_indices"] = [0]
+
+        algorithm_instance = dict(solvers.solver_data.algorithm_structure)
+        algorithm_instance["method"] = 'SLSQP'
+        algorithm_instance["initial_guesses"] = numpy.array([1.0])
+
+        expected = numpy.array([2.0])
+        result = solvers.least_squares.solve_slsqp_st( \
+            metrics.algebraic.sum_squared_residuals_st, linear_2p2s_mock, model_instance, problem_instance, algorithm_instance)
+        actual = result.x
+        [self.assertAlmostEqual(exp, act, 8) for exp, act in zip(expected, actual)]
+
+
+    def test_solve_slsqp_st_linear_2p2s_with_dof_at_1_and_output_at_2(self):
+        measured = numpy.array([[40], [80], [120]])
+
+        model_instance = dict(models.model_data.model_structure)
+        model_instance["parameters"] = numpy.array([1.0, 1.0])
+        model_instance["inputs"] = numpy.array([[1.0, 10], [2.0, 20], [3.0, 30]])
+
+        problem_instance = dict(models.model_data.problem_structure)
+        problem_instance["outputs"] = measured
+        problem_instance["output_indices"] = [1]
+        problem_instance["inputs"] = model_instance["inputs"]
+        problem_instance["parameters"] = model_instance["parameters"]
+        problem_instance["parameter_indices"] = [0]
+
+        algorithm_instance = dict(solvers.solver_data.algorithm_structure)
+        algorithm_instance["method"] = 'SLSQP'
+        algorithm_instance["initial_guesses"] = numpy.array([1.0])
+
+        expected = numpy.array([1.0])
+        result = solvers.least_squares.solve_slsqp_st( \
+            metrics.algebraic.sum_squared_residuals_st, linear_2p2s_mock, model_instance, problem_instance, algorithm_instance)
+        actual = result.x
+        [self.assertAlmostEqual(exp, act, 8) for exp, act in zip(expected, actual)]
 
 
 if __name__ == "__main__":
