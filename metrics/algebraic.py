@@ -15,7 +15,6 @@ def sum_absolute_value_residuals(values):
     return math.fsum([math.fabs(value) for value in values])
 
 
-# TODO: use indices in problem instance to single-out problem-specific output structure!
 def residuals_st(model, model_instance, problem_instance):
     series = 0
     states_index = 1
@@ -40,7 +39,6 @@ def residuals_st(model, model_instance, problem_instance):
     return res
 
 
-# TODO: use indices in problem instance to single-out problem-specific output structure
 def sum_squared_residuals_st(dof, model, model_instance, problem_instance):
     assert(len(dof) == len(problem_instance["parameter_indices"]))
 
