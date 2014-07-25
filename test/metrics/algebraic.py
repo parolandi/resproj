@@ -46,7 +46,7 @@ class TestAlgebraicMetrics(unittest.TestCase):
 
         expected = offset * numpy.ones(measured.shape)
         actual = metrics.algebraic.residuals_st(linear_2p2s_mock, model_instance, problem_instance)
-        [self.assertAlmostEqual(exp.all(), act.all(), 8) for exp, act in zip(expected, actual)]
+        [[self.assertAlmostEqual(exp, act, 8) for exp, act in zip(exps, acts)] for exps, acts in zip(expected, actual)]
 
 
     def test_sum_squared_residuals_st_linear_2p2s_without_dof(self):
