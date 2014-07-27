@@ -14,3 +14,9 @@ def sliceit_assnapshot(packed_vector):
 def sliceit_assnapshot_asarray(packed_vector):
     stack_of_points = sliceit_assnapshot(packed_vector)
     return numpy.asarray(stack_of_points)
+
+
+def sliceit_astrajectory(packed_vector):
+    snapshots = numpy.asarray(packed_vector)
+    trajectories = numpy.transpose(snapshots)
+    return trajectories
