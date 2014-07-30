@@ -1,12 +1,10 @@
 
 import unittest
-
 import numpy
 
 import common.utilities
 import solvers.initial_value
 import models.model_data
-import models.ordinary_differential
 
 # states, time, parameters, inputs
 def linear_mock(x, t, p, u):

@@ -1,6 +1,5 @@
 
 import unittest
-
 import numpy
 
 import models.model_data
