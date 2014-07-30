@@ -13,9 +13,22 @@ def solve_leastsq_with_jacobian(metric, model, jacobian, initial_guess, inputs, 
 
 
 def solve_slsqp(metric, model, initial_guess, inputs, outputs):
-    return scipy.optimize.minimize(fun=metric, x0=initial_guess, args=(inputs, model, outputs), method='SLSQP')
+    return scipy.optimize.minimize( \
+        fun=metric, \
+        x0=initial_guess, \
+        args=(inputs, model, outputs), \
+        method='SLSQP')
 
 
+def solve_slsqp_orddiff(metric, model, initial_guess, inputs, outputs, initial_conditions, t):
+    return scipy.optimize.minimize( \
+        fun=metric, \
+        x0=initial_guess, \
+        args=(model, t, inputs, initial_conditions, outputs), \
+        method='SLSQP')
+
+
+# TODO: remove
 def solve_slsqp_st(metric, model, model_instance, problem_instance, algorithm_structure):
     return scipy.optimize.minimize( \
         fun=metric, \
@@ -24,18 +37,17 @@ def solve_slsqp_st(metric, model, model_instance, problem_instance, algorithm_st
         method=algorithm_structure["method"])
 
 
-def solve_slsqp_orddiff(metric, model, initial_guess, inputs, outputs, initial_conditions, t):
-    return scipy.optimize.minimize( \
-        fun=metric, x0=initial_guess, args=(model, t, inputs, initial_conditions, outputs), method='SLSQP')
-
-
+# TODO: rename
 def solve_slsqp_orddiff_st(metric, model, model_instance, problem_instance, algorithm_structure):
     diag = {
         "disp": False,
         }
+    # TODO: generalise
+    variable_bounds = [(0.0, 1.0)] * len(problem_instance["parameter_indices"])
     return scipy.optimize.minimize( \
         fun=metric, \
         x0=algorithm_structure["initial_guesses"], \
         args=(model, model_instance, problem_instance), \
         method=algorithm_structure["method"],
-        options = diag)
+        options = diag,
+        bounds = variable_bounds)
