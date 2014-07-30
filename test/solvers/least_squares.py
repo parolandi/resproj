@@ -30,14 +30,16 @@ class TestLeastSquaresSolvers(unittest.TestCase):
         problem_instance["parameters"] = [1.0]
         problem_instance["inputs"] = [1.0]
         problem_instance["outputs"] = measured
+        
         model_instance = dict(models.model_data.model_structure)
         model_instance["parameters"] = problem_instance["parameters"]
         model_instance["inputs"] = problem_instance["inputs"]
         model_instance["states"] = problem_instance["initial_conditions"]
         model_instance["time"] = 0.0
+        
         algorithm_instance = dict(solvers.solver_data.algorithm_structure)
         algorithm_instance["method"] = 'SLSQP'
-        algorithm_instance["initial_guess"] = numpy.array(0.1)
+        algorithm_instance["initial_guesses"] = numpy.array(0.1)
 
         expected = 1.0
         result = solvers.least_squares.solve_slsqp_orddiff_st( \
@@ -67,7 +69,7 @@ class TestLeastSquaresSolvers(unittest.TestCase):
 
         algorithm_instance = dict(solvers.solver_data.algorithm_structure)
         algorithm_instance["method"] = 'SLSQP'
-        algorithm_instance["initial_guess"] = problem_instance["parameters"]
+        algorithm_instance["initial_guesses"] = problem_instance["parameters"]
         
         result = solvers.least_squares.solve_slsqp_orddiff_st( \
             metrics.ordinary_differential.sum_squared_residuals_st, linear_2p2s_mock, model_instance, problem_instance, algorithm_instance)
