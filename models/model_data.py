@@ -21,6 +21,7 @@ problem_structure = {
     "inputs": [],
     "outputs": [],
     "output_indices": [],
+    "bounds": None,
     }
 
 

@@ -171,6 +171,7 @@ class Test(unittest.TestCase):
         problem_instance["states"] = model_instance["states"]
         problem_instance["outputs"] =  measured
         problem_instance["output_indices"] = [models.ordinary_differential.states_i["Epo"]]
+        problem_instance["bounds"] = [(0.0, 1.0)]
         
         algorithm_instance = dict(solvers.solver_data.algorithm_structure)
         algorithm_instance["method"] = numerical_method

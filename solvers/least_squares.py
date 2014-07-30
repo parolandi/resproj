@@ -42,12 +42,10 @@ def solve_slsqp_orddiff_st(metric, model, model_instance, problem_instance, algo
     diag = {
         "disp": False,
         }
-    # TODO: generalise
-    variable_bounds = [(0.0, 1.0)] * len(problem_instance["parameter_indices"])
     return scipy.optimize.minimize( \
         fun=metric, \
         x0=algorithm_structure["initial_guesses"], \
         args=(model, model_instance, problem_instance), \
         method=algorithm_structure["method"],
         options = diag,
-        bounds = variable_bounds)
+        bounds = problem_instance["bounds"])
