@@ -30,24 +30,22 @@ def simple_sum_squared_residuals_st(dof, model, model_instance, problem_instance
     return math.fsum(res**2 for res in simple_residuals_st(model, model_instance, problem_instance))
 
 
-# TODO: treat single state variable as special case
 def residuals_st(model, model_instance, problem_instance):
-    series = 0
-    states_index = 1
-    outputs = numpy.asarray(problem_instance["outputs"])
-    inputs = numpy.asarray(problem_instance["inputs"])
-#    assert(outputs.shape[states_index] == len(problem_instance["output_indices"])) 
-#    assert(outputs.shape[series] == inputs.shape[series])
-    
-    # there is one residual per experiment
-    # but for the moment there is also a single experiment
-    measured = outputs
-    res = numpy.empty(problem_instance["outputs"].shape)
-    time_series = 1
-    states = 0
+    # TODO: preconditions    
+    measured = numpy.asarray(problem_instance["outputs"])
     result = solvers.initial_value.compute_trajectory_st(model, model_instance, problem_instance)
     predicted = common.utilities.sliceit_astrajectory(result)
+    # there is one residual per experiment
+    # but for the moment there is also a single experiment
     # there is one residual per state (and per experiment)
+    res = 0
+    # TODO: more pythonic
+    if len(measured.shape) == 1:
+        measured_s = measured
+        predicted_s = predicted[problem_instance["output_indices"][0]]
+        res = numpy.subtract(measured_s, predicted_s)
+        return res
+    states = 0
     res = numpy.empty(measured.shape)
     for jj in range(measured.shape[states]):
         measured_s = measured[jj]
@@ -55,10 +53,10 @@ def residuals_st(model, model_instance, problem_instance):
         res[jj] = numpy.subtract(measured_s, predicted_s)
     return res
 
-# TODO: treat single state variable as special case
-def sum_squared_residuals_st(dof, model, model_instance, problem_instance):
-#    assert(len(dof) == len(problem_instance["parameter_indices"]))
 
+# TODO: compute state-wise and experiment-wise
+def sum_squared_residuals_st(dof, model, model_instance, problem_instance):
+    # TODO: preconditions
     # TODO: more pythonic
     if len(problem_instance["parameter_indices"]) > 0:
         for ii in range(len(dof)):
@@ -68,7 +66,9 @@ def sum_squared_residuals_st(dof, model, model_instance, problem_instance):
     
     # TODO: more pythonic
     res = 0.0
-    # TODO: compute state-wise and experiment-wise
+    if len(problem_instance["output_indices"]) == 1:
+        res = math.fsum(res**2 for res in residuals_st(model, model_instance, problem_instance))
+        return res
     for ii in range(len(problem_instance["outputs"])):
         res += math.fsum(res**2 for res in residuals_st(model, model_instance, problem_instance)[ii])
     return res
