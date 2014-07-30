@@ -30,8 +30,12 @@ def solve_slsqp_orddiff(metric, model, initial_guess, inputs, outputs, initial_c
 
 
 def solve_slsqp_orddiff_st(metric, model, model_instance, problem_instance, algorithm_structure):
+    diag = {
+        "disp": False,
+        }
     return scipy.optimize.minimize( \
         fun=metric, \
         x0=algorithm_structure["initial_guesses"], \
         args=(model, model_instance, problem_instance), \
-        method=algorithm_structure["method"])
+        method=algorithm_structure["method"],
+        options = diag)
