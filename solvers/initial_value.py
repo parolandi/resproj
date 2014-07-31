@@ -7,13 +7,13 @@ import common.utilities
 
 def solve_lsoda(model, initial_condition, timepoints, parameters, inputs):
     return scipy.integrate.odeint(
-        func=model, \
-        y0=initial_condition, \
-        t=timepoints, \
-        args=(parameters, inputs), \
-        full_output=True, \
-        printmessg=True,
-        ixpr=True)
+        func = model, \
+        y0 = initial_condition, \
+        t = timepoints, \
+        args = (parameters, inputs), \
+        full_output = True, \
+        printmessg = True,
+        ixpr = True)
     
 
 def compute_trajectory(parameters, model, initial_condition, inputs, timepoints):
@@ -54,13 +54,13 @@ def solve_lsoda_st(model, model_data, problem_data):
     model_data["parameters"] =  problem_data["parameters"]
     model_data["inputs"] = problem_data["inputs"]
     return scipy.integrate.odeint(
-        func=model, \
-        y0=problem_data["initial_conditions"], \
-        t=problem_data["time"], \
-        args=(model_data["parameters"], model_data["inputs"]), \
-        full_output=True, \
-        printmessg=True, \
-        ixpr=True)
+        func = model, \
+        y0 = problem_data["initial_conditions"], \
+        t = problem_data["time"], \
+        args = (model_data["parameters"], model_data["inputs"]), \
+        full_output = True, \
+        printmessg = False, \
+        ixpr = False)
 
 
 def compute_trajectory_st(model, model_data, problem_data):
