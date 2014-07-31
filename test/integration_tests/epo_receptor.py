@@ -226,6 +226,48 @@ class TestEpoModel(unittest.TestCase):
         self.assertAlmostEquals(actual, expected, 7)
 
     
+    # least-squares boilerplate
+    def do_test_epo_receptor_solve_least_squares_with_2p2s(self, numerical_method, offset, expected):
+        nominal = numpy.array([0.00010496, 0.0172135])
+        params = numpy.ones(len(models.ordinary_differential.params_i))
+        for par in models.ordinary_differential.params_i.items():
+            params[par[1]] = models.ordinary_differential.epo_receptor_default_parameters[par[0]]
+        inputs = numpy.ones(len(models.ordinary_differential.inputs_i))
+        for inp in models.ordinary_differential.inputs_i.items():
+            inputs[inp[1]] = models.ordinary_differential.epo_receptor_default_inputs[inp[0]]
+        measured = numpy.asarray([[2030.19, 638.782, 155.361, 37.5639, 10.2865, 2.90606, 0.82607, 0.235169, 0.0669758, 0.0190769,  0.00543388, 0.00154781, 0.000440884, 0.000125583, 3.57718E-005, 1.01894E-005], \
+                                  [    516, 231.297, 401.346, 488.432,  509.28, 514.182, 515.489,  515.855,   515.959,   515.988,     515.997,    515.999,         516,         516,          516,          516]])
+
+        model_instance = dict(models.model_data.model_structure)
+        model_instance["parameters"] = params
+        model_instance["inputs"] = inputs
+        model_instance["states"] = numpy.zeros(len(models.ordinary_differential.epo_receptor_states))
+
+        problem_instance = dict(models.model_data.problem_structure)
+        problem_instance["initial_conditions"] = numpy.zeros(len(models.ordinary_differential.epo_receptor_states))
+        problem_instance["initial_conditions"][models.ordinary_differential.states_i["Epo"]] = 2030.19
+        problem_instance["initial_conditions"][models.ordinary_differential.states_i["EpoR"]] = 516
+        times = numpy.arange(0.0, 1600.0, 100.0)
+        problem_instance["time"] = times
+        problem_instance["parameters"] = model_instance["parameters"]
+        problem_instance["parameter_indices"] = [models.ordinary_differential.params_i["k_on"], models.ordinary_differential.params_i["k_off"]]
+        problem_instance["inputs"] = model_instance["inputs"]
+        problem_instance["states"] = model_instance["states"]
+        problem_instance["outputs"] =  measured
+        problem_instance["output_indices"] = [models.ordinary_differential.states_i["Epo"], models.ordinary_differential.states_i["EpoR"]]
+        problem_instance["bounds"] = [(0.0, 1.0), (0.0, 1.0)]
+        
+        algorithm_instance = dict(solvers.solver_data.algorithm_structure)
+        algorithm_instance["method"] = numerical_method
+        algorithm_instance["initial_guesses"] = [nom * off for nom, off in zip(nominal, offset)]
+
+        result = result = solvers.least_squares.solve_slsqp_orddiff_st( \
+            metrics.ordinary_differential.sum_squared_residuals_st, \
+            models.ordinary_differential.epo_receptor, model_instance, problem_instance, algorithm_instance)
+        actual = result.x
+        [self.assertAlmostEquals(act, exp, 4) for act, exp in zip(actual, expected)]
+
+    
     # steady-state as nla; two model realisations
     def test_epo_receptor_solve_steady_state_nla(self):
         self.do_test_epo_receptor_solve_steady_state_nla(models.ordinary_differential.epo_receptor, -125.64718517054551)
@@ -244,22 +286,30 @@ class TestEpoModel(unittest.TestCase):
         self.do_test_epo_receptor_solve_time_course(models.ordinary_differential.epo_receptor_nonneg)
 
     
-    # nelder-mead algorithm
+    # nelder-mead algorithm; will ignore bounds
     def test_epo_receptor_solve_least_squares_neldermead(self):
         expected = 0.00010496
         self.do_test_epo_receptor_solve_least_squares_with_1s('Nelder-Mead', 0.01, expected)
         self.do_test_epo_receptor_solve_least_squares_with_1s('Nelder-Mead', -0.000103, expected)
         self.do_test_epo_receptor_solve_least_squares_with_2s('Nelder-Mead', 0.01, 0.02482037)
         self.do_test_epo_receptor_solve_least_squares_with_2s('Nelder-Mead', -0.000103, expected)
+        expected = [0.00010496, 0.0172135]
+        offset = [100, 100]
+        self.do_test_epo_receptor_solve_least_squares_with_2p2s('Nelder-Mead', offset, expected)
+        offset = [0.01, 0.01]
+        self.do_test_epo_receptor_solve_least_squares_with_2p2s('Nelder-Mead', offset, expected)
         
     
-    # powell algorithm
+    # powell algorithm; will ignore bounds
     def test_epo_receptor_solve_least_squares_powell(self):
-        expected = 0.00010496
 #        self.do_test_epo_receptor_solve_least_squares_with_1s('Powell', 0.01, 1.18865310)
         self.do_test_epo_receptor_solve_least_squares_with_1s('Powell', -0.000103, 0.93299266)        
 #        self.do_test_epo_receptor_solve_least_squares_with_2s('Powell', 0.01, expected)
 #        self.do_test_epo_receptor_solve_least_squares_with_2s('Powell', -0.000103, expected)        
+        offset = [100, 100]
+        self.do_test_epo_receptor_solve_least_squares_with_2p2s('Powell', offset, [0.0023652685045838558, 1.9623042035296498])
+        offset = [0.01, 0.01]
+        self.do_test_epo_receptor_solve_least_squares_with_2p2s('Powell', offset, [0.0029381055415990034, 2.4552348952850496])
 
     
     # l-bfgs-b algorithm
@@ -269,6 +319,11 @@ class TestEpoModel(unittest.TestCase):
         self.do_test_epo_receptor_solve_least_squares_with_1s('L-BFGS-B', -0.000103, expected)        
 #        self.do_test_epo_receptor_solve_least_squares_with_2s('L-BFGS-B', 0.01, 0.00530242)
         self.do_test_epo_receptor_solve_least_squares_with_2s('L-BFGS-B', -0.000103, expected)
+        expected = [0.00010496, 0.0172135]
+        offset = [100, 100]
+        self.do_test_epo_receptor_solve_least_squares_with_2p2s('L-BFGS-B', offset, [0.010496183184068142, 1.0])
+        offset = [0.01, 0.01]
+        self.do_test_epo_receptor_solve_least_squares_with_2p2s('L-BFGS-B', offset, [expected[0], 0.00020609349741760262])
 
             
     # tnc algorithm
@@ -278,11 +333,16 @@ class TestEpoModel(unittest.TestCase):
         self.do_test_epo_receptor_solve_least_squares_with_1s('TNC', -0.000103, expected)
         self.do_test_epo_receptor_solve_least_squares_with_2s('TNC', 0.01, 0.01 + 0.00010496)
         self.do_test_epo_receptor_solve_least_squares_with_2s('TNC', -0.000103, expected)
+        expected = [0.00010496, 0.0172135]
+        offset = [100, 100]
+        self.do_test_epo_receptor_solve_least_squares_with_2p2s('TNC', offset, [0.010496000000000227, 1.0])
+        offset = [0.01, 0.01]
+        self.do_test_epo_receptor_solve_least_squares_with_2p2s('TNC', offset, [expected[0], 0.00015256676453584417])
     
-    
+
 if __name__ == "__main__":
     unittest.main()
 #    suite = unittest.TestSuite()
-#    suite.addTest(TestEpoModel("test_epo_receptor_solve_least_squares_tnc"))
+#    suite.addTest(TestEpoModel(""))
 #    runner = unittest.TextTestRunner()
 #    runner.run(suite)
