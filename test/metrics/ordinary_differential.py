@@ -5,9 +5,6 @@ import numpy
 import metrics.ordinary_differential
 import models.model_data
 
-def linear_mock(x, t, p, u):
-    return p[0] * u[0]
-
 
 def linear_2p2s_mock(x, t, p, u):
     assert(len(x) == 2)

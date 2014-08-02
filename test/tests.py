@@ -13,6 +13,7 @@ from test.solvers.initial_value_legacy import *
 from test.solvers.nonlinear_algebraic import *
 from test.solvers.least_squares import *
 from test.solvers.least_squares_algebraic import *
+from test.solvers.least_squares_legacy import *
 
 if __name__ == '__main__':
     list_all = unittest.TestLoader().loadTestsFromTestCase()

@@ -4,7 +4,7 @@ import numpy
 
 import common.utilities
 import data.generator
-import metrics.ordinary_differential
+import metrics.ordinary_differential_legacy
 import models.analytical
 import models.ordinary_differential
 import results.plot
@@ -126,7 +126,7 @@ def experiment7():
     
     initial_guess = 0.1
     result = solvers.least_squares_legacy.solve_slsqp_orddiff(
-        metrics.ordinary_differential.sum_squared_residuals, models.ordinary_differential.linear, \
+        metrics.ordinary_differential_legacy.sum_squared_residuals, models.ordinary_differential.linear, \
         initial_guess, [u], measurements, y0, t_if)
 
     results.report.print_result(result)
