@@ -21,7 +21,7 @@ def linear_2p2s_mock(x, t, p, u):
 class TestLeastSquaresSolvers(unittest.TestCase):
 
 
-    def test_solve_slsqp_orddiff_st(self):
+    def test_solve_st(self):
         measured = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
         
         problem_instance = dict(models.model_data.problem_structure)
@@ -42,13 +42,13 @@ class TestLeastSquaresSolvers(unittest.TestCase):
         algorithm_instance["initial_guesses"] = numpy.array(0.1)
 
         expected = 1.0
-        result = solvers.least_squares.solve_slsqp_orddiff_st( \
+        result = solvers.least_squares.solve_st( \
             metrics.ordinary_differential.simple_sum_squared_residuals_st, linear_mock, model_instance, problem_instance, algorithm_instance)
         actual = result.x
         self.assertAlmostEqual(expected, actual, 8)
 
 
-    def test_solve_slsqp_orddiff_st_linear_2p2s(self):
+    def test_solve_st_linear_2p2s(self):
         measured = numpy.asarray([[0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], \
                                  [1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9]])
         
@@ -71,7 +71,7 @@ class TestLeastSquaresSolvers(unittest.TestCase):
         algorithm_instance["method"] = 'SLSQP'
         algorithm_instance["initial_guesses"] = problem_instance["parameters"]
         
-        result = solvers.least_squares.solve_slsqp_orddiff_st( \
+        result = solvers.least_squares.solve_st( \
             metrics.ordinary_differential.sum_squared_residuals_st, linear_2p2s_mock, model_instance, problem_instance, algorithm_instance)
         actual = result.x
         expected = numpy.array([1.0, 0.5])

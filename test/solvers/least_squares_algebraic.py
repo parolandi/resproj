@@ -17,7 +17,7 @@ def linear_2p2s_mock(p, x):
 class TestTestLeastSquaresSolversWithAlgebraicModels(unittest.TestCase):
 
 
-    def test_solve_slsqp_st_linear_2p2s(self):
+    def test_solve_st_linear_2p2s(self):
         measured = numpy.array([[2.0, 40], [4.0, 80], [6.0, 120]])
 
         model_instance = dict(models.model_data.model_structure)
@@ -36,13 +36,13 @@ class TestTestLeastSquaresSolversWithAlgebraicModels(unittest.TestCase):
         algorithm_instance["initial_guesses"] = numpy.array([1.0, 1.0])
 
         expected = numpy.array([2.0, 4.0])
-        result = solvers.least_squares.solve_slsqp_st( \
+        result = solvers.least_squares.solve_st( \
             metrics.algebraic.sum_squared_residuals_st, linear_2p2s_mock, model_instance, problem_instance, algorithm_instance)
         actual = result.x
         [self.assertAlmostEqual(exp, act, 8) for exp, act in zip(expected, actual)]
 
 
-    def test_solve_slsqp_st_linear_2p2s_with_dof_at_1(self):
+    def test_solve_st_linear_2p2s_with_dof_at_1(self):
         measured = numpy.array([[2.0, 40], [4.0, 80], [6.0, 120]])
 
         model_instance = dict(models.model_data.model_structure)
@@ -61,13 +61,13 @@ class TestTestLeastSquaresSolversWithAlgebraicModels(unittest.TestCase):
         algorithm_instance["initial_guesses"] = numpy.array([1.0])
 
         expected = numpy.array([2.0])
-        result = solvers.least_squares.solve_slsqp_st( \
+        result = solvers.least_squares.solve_st( \
             metrics.algebraic.sum_squared_residuals_st, linear_2p2s_mock, model_instance, problem_instance, algorithm_instance)
         actual = result.x
         [self.assertAlmostEqual(exp, act, 8) for exp, act in zip(expected, actual)]
 
 
-    def test_solve_slsqp_st_linear_2p2s_with_dof_at_1_and_output_at_2(self):
+    def test_solve_st_linear_2p2s_with_dof_at_1_and_output_at_2(self):
         measured = numpy.array([[40], [80], [120]])
 
         model_instance = dict(models.model_data.model_structure)
@@ -86,7 +86,7 @@ class TestTestLeastSquaresSolversWithAlgebraicModels(unittest.TestCase):
         algorithm_instance["initial_guesses"] = numpy.array([1.0])
 
         expected = numpy.array([1.0])
-        result = solvers.least_squares.solve_slsqp_st( \
+        result = solvers.least_squares.solve_st( \
             metrics.algebraic.sum_squared_residuals_st, linear_2p2s_mock, model_instance, problem_instance, algorithm_instance)
         actual = result.x
         [self.assertAlmostEqual(exp, act, 8) for exp, act in zip(expected, actual)]

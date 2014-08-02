@@ -177,7 +177,7 @@ class TestEpoModel(unittest.TestCase):
         algorithm_instance["method"] = numerical_method
         algorithm_instance["initial_guesses"] = nominal + offset
 
-        result = result = solvers.least_squares.solve_slsqp_orddiff_st( \
+        result = result = solvers.least_squares.solve_st( \
             metrics.ordinary_differential.sum_squared_residuals_st, \
             models.ordinary_differential.epo_receptor, model_instance, problem_instance, algorithm_instance)
         actual = result.x
@@ -219,7 +219,7 @@ class TestEpoModel(unittest.TestCase):
         algorithm_instance["method"] = numerical_method
         algorithm_instance["initial_guesses"] = nominal + offset
 
-        result = result = solvers.least_squares.solve_slsqp_orddiff_st( \
+        result = result = solvers.least_squares.solve_st( \
             metrics.ordinary_differential.sum_squared_residuals_st, \
             models.ordinary_differential.epo_receptor, model_instance, problem_instance, algorithm_instance)
         actual = result.x
@@ -261,7 +261,7 @@ class TestEpoModel(unittest.TestCase):
         algorithm_instance["method"] = numerical_method
         algorithm_instance["initial_guesses"] = [nom * off for nom, off in zip(nominal, offset)]
 
-        result = result = solvers.least_squares.solve_slsqp_orddiff_st( \
+        result = result = solvers.least_squares.solve_st( \
             metrics.ordinary_differential.sum_squared_residuals_st, \
             models.ordinary_differential.epo_receptor, model_instance, problem_instance, algorithm_instance)
         actual = result.x
