@@ -5,12 +5,13 @@ import numpy
 import common.utilities
 import data.generator
 import metrics.ordinary_differential
+import models.analytical
 import models.ordinary_differential
 import results.plot
 import solvers.initial_value
 import solvers.dynamic_optimisation
+import solvers.least_squares_legacy
 
-import models.analytical
 
 # integrate, basic
 def experiment1():
@@ -124,7 +125,7 @@ def experiment7():
     data.generator.unset_seed()
     
     initial_guess = 0.1
-    result = solvers.least_squares.solve_slsqp_orddiff(
+    result = solvers.least_squares_legacy.solve_slsqp_orddiff(
         metrics.ordinary_differential.sum_squared_residuals, models.ordinary_differential.linear, \
         initial_guess, [u], measurements, y0, t_if)
 

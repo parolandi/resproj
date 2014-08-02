@@ -6,7 +6,7 @@ import metrics.algebraic
 import models.algebraic
 import results.report
 import results.plot
-import solvers.least_squares
+import solvers.least_squares_legacy
 
 # linear regression
 # print basic
@@ -18,7 +18,7 @@ def experiment3():
     data.generator.unset_seed()
     
     initial_guess = 0.1
-    estimate, cov, info, msg, err = solvers.least_squares.solve_leastsq(
+    estimate, cov, info, msg, err = solvers.least_squares_legacy.solve_leastsq(
         metrics.algebraic.residuals, models.algebraic.linear, initial_guess, x, measurements)
 
     results.report.print_least_squares_basic(estimate, info, err)
@@ -36,7 +36,7 @@ def experiment4():
     data.generator.unset_seed()
     
     initial_guess = 0.1
-    estimate, cov, info, msg, err = solvers.least_squares.solve_leastsq(
+    estimate, cov, info, msg, err = solvers.least_squares_legacy.solve_leastsq(
         metrics.algebraic.residuals, models.algebraic.linear, initial_guess, x, measurements)
 
     results.report.print_least_squares_detailed(estimate, cov, info, msg, err)
@@ -55,7 +55,7 @@ def experiment5():
     data.generator.unset_seed()
     
     initial_guess = 0.1
-    estimate, cov, info, msg, err = solvers.least_squares.solve_leastsq_with_jacobian(
+    estimate, cov, info, msg, err = solvers.least_squares_legacy.solve_leastsq_with_jacobian(
         metrics.algebraic.residuals, models.algebraic.linear, models.algebraic.jacobian_linear, initial_guess, x, measurements)
 
     results.report.print_least_squares_detailed(estimate, cov, info, msg, err)
@@ -73,7 +73,7 @@ def experiment6():
     data.generator.unset_seed()
     
     initial_guess = 0.1
-    estimate, cov, info, msg, err = solvers.least_squares.solve_leastsq(
+    estimate, cov, info, msg, err = solvers.least_squares_legacy.solve_leastsq(
         metrics.algebraic.residuals, models.algebraic.quadratic, initial_guess, x, measurements)
 
     results.report.print_least_squares_detailed(estimate, cov, info, msg, err)
@@ -92,7 +92,7 @@ def experiment7():
     data.generator.unset_seed()
     
     initial_guess = 0.1
-    estimate, cov, info, msg, err = solvers.least_squares.solve_leastsq_with_jacobian(
+    estimate, cov, info, msg, err = solvers.least_squares_legacy.solve_leastsq_with_jacobian(
         metrics.algebraic.residuals, models.algebraic.quadratic, models.algebraic.jacobian_quadratic, initial_guess, x, measurements)
 
     results.report.print_least_squares_detailed(estimate, cov, info, msg, err)
@@ -111,7 +111,7 @@ def experiment8():
     data.generator.unset_seed()
     
     initial_guess = 0.1
-    result = solvers.least_squares.solve_slsqp(
+    result = solvers.least_squares_legacy.solve_slsqp(
         metrics.algebraic.sum_squared_residuals, models.algebraic.linear, initial_guess, x, measurements)
 
     results.report.print_result(result)
