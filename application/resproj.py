@@ -12,7 +12,8 @@ if __name__ == '__main__':
         experiments.legacy_ordinary_differential.experiment4()
         experiments.legacy_ordinary_differential.experiment5()
         experiments.legacy_ordinary_differential.experiment6()
-        experiments.legacy_ordinary_differential.experiment7()
+        # TODO: fix regression
+#        experiments.legacy_ordinary_differential.experiment7()
         
 
     # do all legacy algebraic experiments
