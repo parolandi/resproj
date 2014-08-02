@@ -8,6 +8,7 @@ from test.metrics.algebraic import *
 from test.metrics.ordinary_differential import *
 from test.models.ordinary_differential import *
 from test.solvers.initial_value import *
+from test.solvers.initial_value_legacy import *
 from test.solvers.nonlinear_algebraic import *
 from test.solvers.least_squares import *
 from test.solvers.least_squares_algebraic import *

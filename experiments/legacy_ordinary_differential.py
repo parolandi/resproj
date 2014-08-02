@@ -8,7 +8,7 @@ import metrics.ordinary_differential
 import models.analytical
 import models.ordinary_differential
 import results.plot
-import solvers.initial_value
+import solvers.initial_value_legacy
 import solvers.dynamic_optimisation
 import solvers.least_squares_legacy
 
@@ -19,7 +19,7 @@ def experiment1():
     y0 = 0.0
     u = 1.0
     p = 2.0
-    yt, info = solvers.initial_value.solve_lsoda(models.ordinary_differential.linear, y0, t_if, [p], [u])
+    yt, info = solvers.initial_value_legacy.solve_lsoda(models.ordinary_differential.linear, y0, t_if, [p], [u])
     y = common.utilities.sliceit_assnapshot(yt)
     
     data.generator.set_seed(117)
@@ -36,7 +36,7 @@ def experiment2():
     y0 = 0.0
     u = 1.0
     p = 2.0
-    y = solvers.initial_value.compute_endpoint([u], models.ordinary_differential.linear, y0, t_if, [p])
+    y = solvers.initial_value_legacy.compute_endpoint([u], models.ordinary_differential.linear, y0, t_if, [p])
     t = t_if[len(t_if)-1]
     
     results.plot.plotrajectoryandpoint(t_if, models.analytical.exponential(p, t_if, y0, p*u), t, y) 
@@ -59,7 +59,7 @@ def experiment3():
     results.report.print_result(result)
     u = result.x
     results.plot.plotrajectoryandpoint(t_if, models.analytical.exponential(p, t_if, y0, p*u), \
-        t, solvers.initial_value.compute_endpoint(u, models.ordinary_differential.linear, y0, t_if, [p]))
+        t, solvers.initial_value_legacy.compute_endpoint(u, models.ordinary_differential.linear, y0, t_if, [p]))
 
 
 # optimise; minimise
@@ -79,7 +79,7 @@ def experiment4():
     results.report.print_result(result)
     u = result.x
     results.plot.plotrajectoryandpoint(t_if, models.analytical.exponential(p, t_if, y0, p*u), \
-        t, solvers.initial_value.compute_endpoint(u, models.ordinary_differential.linear, y0, t_if, [p]))
+        t, solvers.initial_value_legacy.compute_endpoint(u, models.ordinary_differential.linear, y0, t_if, [p]))
 
 
 # integrate, basic
@@ -88,7 +88,7 @@ def experiment5():
     y0 = 0.0
     u = 1.0
     p = 2.0
-    t, yt = solvers.initial_value.solve_ode_lsoda(models.ordinary_differential.linear_ty, y0, t_if, [p], [u])
+    t, yt = solvers.initial_value_legacy.solve_ode_lsoda(models.ordinary_differential.linear_ty, y0, t_if, [p], [u])
     y = common.utilities.sliceit_assnapshot(yt)
 
     data.generator.set_seed(117)
@@ -104,7 +104,7 @@ def experiment6():
     y0 = 0.0
     u = 1.0
     p = 2.0
-    y = solvers.initial_value.compute_trajectory([p], models.ordinary_differential.linear, y0, [u], t_if)
+    y = solvers.initial_value_legacy.compute_trajectory([p], models.ordinary_differential.linear, y0, [u], t_if)
 
     data.generator.set_seed(117)
     measurements = y + 0.1*data.generator.normal_distribution(len(y))
@@ -118,7 +118,7 @@ def experiment7():
     y0 = 0.0
     u = 1.0
     p = 3.0
-    y = solvers.initial_value.compute_trajectory([p], models.ordinary_differential.linear, y0, [u], t_if)
+    y = solvers.initial_value_legacy.compute_trajectory([p], models.ordinary_differential.linear, y0, [u], t_if)
 
     data.generator.set_seed(117)
     measurements = y + 0.1*data.generator.normal_distribution(len(y))
