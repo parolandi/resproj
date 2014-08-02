@@ -4,9 +4,11 @@ import numpy
 
 import common.utilities
 import solvers.initial_value
+import solvers.initial_value_legacy
+
 
 def residuals(parameters, model, times, inputs, initial_conditions, measured):
-    res = measured - solvers.initial_value.compute_trajectory(parameters, model, initial_conditions, inputs, times)
+    res = measured - solvers.initial_value_legacy.compute_trajectory(parameters, model, initial_conditions, inputs, times)
     return res
 
 
