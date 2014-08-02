@@ -4,7 +4,9 @@ import scipy.integrate
 
 import common.utilities
 
-
+'''
+It calls odepack.lsoda to solve the initial value problem for stiff and non-stiff ode's
+'''
 def solve_lsoda(model, initial_condition, timepoints, parameters, inputs):
     return scipy.integrate.odeint(
         func = model, \
