@@ -1,6 +1,10 @@
 
 import scipy.optimize
 
+# TODO: validate use of data structure
+import solvers.solver_data
+
+
 # return scipy.OptimizeResult
 def solve(model, model_instance, problem_instance, algorithm_instance):
     t0 = 0.0

@@ -1,6 +1,7 @@
 
 import scipy.optimize
 
+# TODO: validate use of data structure
 import solvers.solver_data
 
 
