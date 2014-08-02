@@ -15,6 +15,7 @@ def linear_2p2s_mock(x, t, p, u):
     return dx_dt
 
 
+# TODO: test all algorithms with this simple case, non only SLSQP
 class TestLeastSquaresSolvers(unittest.TestCase):
 
 
@@ -43,9 +44,14 @@ class TestLeastSquaresSolvers(unittest.TestCase):
         
         result = solvers.least_squares.solve_st( \
             metrics.ordinary_differential.sum_squared_residuals_st, linear_2p2s_mock, model_instance, problem_instance, algorithm_instance)
-        actual = result.x
-        expected = numpy.array([1.0, 0.5])
-        [self.assertAlmostEqual(exp, act, 6) for exp, act in zip(expected, actual)]
+        estimate_actual = result.x
+        estimate_expected = numpy.array([1.0, 0.5])
+        [self.assertAlmostEqual(exp, act, 6) for exp, act in zip(estimate_expected, estimate_actual)]
+        
+        sum_sq_res_actual = metrics.ordinary_differential.sum_squared_residuals_st( \
+            estimate_actual, linear_2p2s_mock, model_instance, problem_instance)
+        sum_sq_res_expected = 0.0
+        self.assertAlmostEqual(sum_sq_res_expected, sum_sq_res_actual, 6)
 
 
 if __name__ == "__main__":
