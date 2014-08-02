@@ -5,6 +5,7 @@ import unittest
 #import test.metrics.ordinary_differential
 from test.common.utilities import *
 from test.metrics.algebraic import *
+from test.metrics.algebraic_legacy import *
 from test.metrics.ordinary_differential import *
 from test.models.ordinary_differential import *
 from test.solvers.initial_value import *

@@ -2,7 +2,7 @@
 from __future__ import print_function
 import collections
 
-import metrics.algebraic
+import metrics.algebraic_legacy
 
 least_squares_solver_info = {
         "status": "",
@@ -69,7 +69,7 @@ def print_least_squares_basic(estimates, info, err):
     ls_result = collections.defaultdict(dict)
     ls_result["status"] = to_friendly_string(err) 
     ls_result["parameter_estimates"] = estimates[0]
-    ls_result["objective_function"] = metrics.algebraic.sum_absolute_value_residuals(info["fvec"])
+    ls_result["objective_function"] = metrics.algebraic_legacy.sum_absolute_value_residuals(info["fvec"])
     print_basic(ls_result)
 
 
@@ -77,7 +77,7 @@ def print_least_squares_detailed(estimates, cov, info, msg, err):
     ls_result = collections.defaultdict(dict)
     ls_result["status"] = to_friendly_string(err) 
     ls_result["parameter_estimates"] = estimates[0]
-    ls_result["solver_info"]["objective_function"] = metrics.algebraic.sum_absolute_value_residuals(info["fvec"])
+    ls_result["solver_info"]["objective_function"] = metrics.algebraic_legacy.sum_absolute_value_residuals(info["fvec"])
     ls_result["solver_info"]["function_evaluations"] = info["nfev"]
     ls_result["solver_info"]["user_message"] = msg
     if ls_result["solver_info"].has_key("nfev"):
