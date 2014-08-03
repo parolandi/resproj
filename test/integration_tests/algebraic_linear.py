@@ -40,7 +40,21 @@ class TestLinear2p2s(unittest.TestCase):
         dof = len(measured) - len(problem_instance["parameter_indices"])
         actual = metrics.statistical_tests.calculate_two_sided_chi_squared_test_for_mean_sum_squared_residuals( \
             rms, dof, 0.90)
+        # three measurements are fine...
         self.assertTrue(actual)
+
+        measured = numpy.array([[1.0], [2.0], [3.0], [4.0], [5.0], [6.0]]) + offset
+        model_instance["inputs"] = numpy.array([[1.0, 10], [2.0, 20], [3.0, 30], [4.0, 40], [5.0, 50], [6.0, 60]])
+        problem_instance["outputs"] = measured
+        problem_instance["inputs"] = model_instance["inputs"]
+        dof = [1.0]
+        rss = metrics.algebraic.sum_squared_residuals_st(dof, linear_2p2s, model_instance, problem_instance)
+        rms = rss / len(measured)
+        dof = len(measured) - len(problem_instance["parameter_indices"])
+        actual = metrics.statistical_tests.calculate_two_sided_chi_squared_test_for_mean_sum_squared_residuals( \
+            rms, dof, 0.90)
+        # ... but six measurements are not fine
+        self.assertFalse(actual)
 
 
 if __name__ == "__main__":
