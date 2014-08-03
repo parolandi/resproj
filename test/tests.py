@@ -7,6 +7,7 @@ from test.common.utilities import *
 from test.metrics.algebraic import *
 from test.metrics.algebraic_legacy import *
 from test.metrics.ordinary_differential import *
+from test.metrics.statistical_tests import *
 from test.models.ordinary_differential import *
 from test.solvers.initial_value import *
 from test.solvers.initial_value_legacy import *
