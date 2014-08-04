@@ -3,17 +3,17 @@ import scipy.stats
 
 # TODO: unencrypt these user messages
 user_messages = {
-    "one_sided_chi_squared_test_values": "RMS value {}, chi-squared value: {}",
-    "one_sided_chi_squared_test_pass_oneliner": "OK! RMS is less than CHI2 value (this is a one-sided test; two-sided test recommended)",
+    "one_sided_chi_squared_test_values": "Sum of residuals value {}, chi-squared value: {}",
+    "one_sided_chi_squared_test_pass_oneliner": "OK! Sum of residuals is less than chi-squared value (this is a one-sided test; two-sided test recommended)",
     "one_sided_chi_squared_test_pass_description": "blah, blah",
-    "one_sided_chi_squared_test_fail_oneliner": "OOPS! RMS greater than CHI2 value (this is a one-sided test; two-sided test recommended)",
+    "one_sided_chi_squared_test_fail_oneliner": "OOPS! Sum of residuals greater than chi-squared value (this is a one-sided test; two-sided test recommended)",
     "one_sided_chi_squared_test_fail_description": "blah, blah",
-    "two_sided_chi_squared_test_values": "RMS value {}, chi-squared values: {}, {}",
-    "two_sided_chi_squared_test_pass_oneliner": "OK! RMS is within CHI2 values (this is the recommended two-sided test)",
+    "two_sided_chi_squared_test_values": "Sum of residuals value {}, chi-squared values: {}, {}",
+    "two_sided_chi_squared_test_pass_oneliner": "OK! Sum of residuals is within chi-squared values (this is the recommended two-sided test)",
     "two_sided_chi_squared_test_pass_description": "blah, blah",
-    "two_sided_chi_squared_test_fail_oneliner": "OOPS! RMS not within CHI2 values (this is the recommended two-sided test)",
-    "two_sided_chi_squared_test_fail_lower_oneliner": "OOPS! Too small RMS",
-    "two_sided_chi_squared_test_fail_upper_oneliner": "OOPS! Too large RMS",
+    "two_sided_chi_squared_test_fail_oneliner": "OOPS! Sum of residuals not within chi-squared values (this is the recommended two-sided test)",
+    "two_sided_chi_squared_test_fail_lower_oneliner": "OOPS! Too small sum of residuals",
+    "two_sided_chi_squared_test_fail_upper_oneliner": "OOPS! Too large sum of residuals",
     "two_sided_chi_squared_test_fail_description": "blah, blah",
     }
 
