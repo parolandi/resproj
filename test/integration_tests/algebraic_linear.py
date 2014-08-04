@@ -20,42 +20,57 @@ class TestLinear2p2s(unittest.TestCase):
         dof_index = 0
         output_index = 0
         
-        offset = -1
-        measured = numpy.array([[1.0], [2.0], [3.0]]) + offset
-
         model_instance = dict(models.model_data.model_structure)
         model_instance["parameters"] = numpy.array([2.0, 4.0])
         model_instance["inputs"] = numpy.array([[1.0, 10], [2.0, 20], [3.0, 30]])
 
         problem_instance = dict(models.model_data.problem_structure)
-        problem_instance["outputs"] = measured
         problem_instance["output_indices"] = [output_index]
         problem_instance["inputs"] = model_instance["inputs"]
         problem_instance["parameters"] = [model_instance["parameters"][dof_index]]
         problem_instance["parameter_indices"] = [dof_index]
 
         dof = [1.0]
-        rss = metrics.algebraic.sum_squared_residuals_st(dof, linear_2p2s, model_instance, problem_instance)
-        rms = rss / len(measured)
-        dof = len(measured) - len(problem_instance["parameter_indices"])
-        actual = metrics.statistical_tests.calculate_two_sided_chi_squared_test_for_mean_sum_squared_residuals( \
-            rms, dof, 0.90)
-        # three measurements are fine...
-        self.assertTrue(actual)
 
-        measured = numpy.array([[1.0], [2.0], [3.0], [4.0], [5.0], [6.0]]) + offset
-        model_instance["inputs"] = numpy.array([[1.0, 10], [2.0, 20], [3.0, 30], [4.0, 40], [5.0, 50], [6.0, 60]])
-        problem_instance["outputs"] = measured
-        problem_instance["inputs"] = model_instance["inputs"]
-        dof = [1.0]
-        rss = metrics.algebraic.sum_squared_residuals_st(dof, linear_2p2s, model_instance, problem_instance)
-        rms = rss / len(measured)
-        dof = len(measured) - len(problem_instance["parameter_indices"])
+        # one standard deviation
+        offset = -1
+        measured = numpy.array([[1.0], [2.0], [3.0]]) + offset
+        problem_instance["outputs"] = measured       
+        res = metrics.algebraic.sum_squared_residuals_st(dof, linear_2p2s, model_instance, problem_instance)
+        chi_dof = len(measured) - len(problem_instance["parameter_indices"])
         actual = metrics.statistical_tests.calculate_two_sided_chi_squared_test_for_mean_sum_squared_residuals( \
-            rms, dof, 0.90)
-        # ... but six measurements are not fine
+            res, chi_dof, 0.90)
+        self.assertTrue(actual)
+        # two standard deviations
+        offset = 2
+        measured = numpy.array([[1.0], [2.0], [3.0]]) + offset
+        problem_instance["outputs"] = measured
+        res = metrics.algebraic.sum_squared_residuals_st(dof, linear_2p2s, model_instance, problem_instance)
+        chi_dof = len(measured) - len(problem_instance["parameter_indices"])
+        actual = metrics.statistical_tests.calculate_two_sided_chi_squared_test_for_mean_sum_squared_residuals( \
+            res, chi_dof, 0.90)
         self.assertFalse(actual)
 
+        model_instance["inputs"] = numpy.array([[1.0, 10], [2.0, 20], [3.0, 30], [4.0, 40], [5.0, 50], [6.0, 60]])
+        problem_instance["inputs"] = model_instance["inputs"]
+        offset = -1
+        measured = numpy.array([[1.0], [2.0], [3.0], [4.0], [5.0], [6.0]]) + offset
+        problem_instance["outputs"] = measured
+        res = metrics.algebraic.sum_squared_residuals_st(dof, linear_2p2s, model_instance, problem_instance)
+        chi_dof = len(measured) - len(problem_instance["parameter_indices"])
+        actual = metrics.statistical_tests.calculate_two_sided_chi_squared_test_for_mean_sum_squared_residuals( \
+            res, chi_dof, 0.90)
+        self.assertTrue(actual)
+        offset = 2
+        measured = numpy.array([[1.0], [2.0], [3.0], [4.0], [5.0], [6.0]]) + offset
+        problem_instance["outputs"] = measured
+        res = metrics.algebraic.sum_squared_residuals_st(dof, linear_2p2s, model_instance, problem_instance)
+        chi_dof = len(measured) - len(problem_instance["parameter_indices"])
+        actual = metrics.statistical_tests.calculate_two_sided_chi_squared_test_for_mean_sum_squared_residuals( \
+            res, chi_dof, 0.90)
+        # three measurements are not fine...
+        self.assertFalse(actual)
 
+        
 if __name__ == "__main__":
     unittest.main()
