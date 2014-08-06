@@ -6,6 +6,7 @@ import common.utilities
 import solvers.initial_value
 
 
+# TODO: rename; remove _st
 def residuals_st(model, model_instance, problem_instance):
     # TODO: preconditions    
     measured = numpy.asarray(problem_instance["outputs"])
@@ -30,7 +31,19 @@ def residuals_st(model, model_instance, problem_instance):
     return res
 
 
+# TODO: rename and reuse
+def residuals_dof(dof, model, model_instance, problem_instance):
+    if len(problem_instance["parameter_indices"]) > 0:
+        for ii in range(len(dof)):
+            index = problem_instance["parameter_indices"][ii]
+            model_instance["parameters"][index] = dof[ii]
+            problem_instance["parameters"][ii] = dof[ii]
+
+    return residuals_st(model, model_instance, problem_instance)
+
+
 # TODO: compute state-wise and experiment-wise
+# TODO: rename; remove _st
 def sum_squared_residuals_st(dof, model, model_instance, problem_instance):
     # TODO: preconditions
     # TODO: more pythonic
