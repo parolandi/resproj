@@ -1,6 +1,11 @@
 
 import numpy
 
+# size a multidimensional list 
+def size_it(data):
+    return sum(map(len, data)) 
+
+
 def sliceit_assnapshot(packed_vector):
     collection_of_points = []
     for points in packed_vector:
