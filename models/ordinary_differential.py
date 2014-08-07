@@ -131,6 +131,16 @@ def epo_receptor(states, time, params, inputs):
     return d_dt
 
 
+def J_epo_receptor(dof, states, time, params, inputs):
+    assert(len(dof) == 1)
+    params[0] = dof[0]
+    J = numpy.zeros(len(states))
+    dv0_dp0 = states[states_i["Epo"]]*states[states_i["EpoR"]]
+    J[0] = -dv0_dp0 
+    J[1] = -dv0_dp0
+    J[2] = dv0_dp0
+    return J.transpose()
+    
 # array-based model
 def epo_receptor_nonneg(states, time, params, inputs):
     correct_states = True

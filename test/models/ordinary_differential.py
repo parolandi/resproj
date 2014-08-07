@@ -5,6 +5,7 @@ import numpy
 import models.model_data
 import models.ordinary_differential
 
+
 class TestOrdinaryDifferentialModels(unittest.TestCase):
 
     def test_linear_st(self):
@@ -43,5 +44,33 @@ class TestOrdinaryDifferentialModels(unittest.TestCase):
         [self.assertEquals(act, exp) for act, exp in zip(actual, expected)]
 
     
+    def test_J_epo_receptor_null_vector(self):
+        params = numpy.ones(len(models.ordinary_differential.params_i))
+        for par in models.ordinary_differential.params_i.items():
+            params[par[1]] = models.ordinary_differential.epo_receptor_default_parameters[par[0]]
+        model_instance = dict(models.model_data.model_structure)
+        model_instance["parameters"] = numpy.asarray(params)
+        model_instance["states"] = numpy.zeros(len(models.ordinary_differential.epo_receptor_states))
+        model_instance["inputs"] = numpy.zeros(len(models.ordinary_differential.epo_receptor_default_inputs))
+        actual = models.ordinary_differential.J_epo_receptor( \
+            [0.0], model_instance["states"], 0.0, model_instance["parameters"], model_instance["inputs"])
+        expected = numpy.zeros(len(model_instance["states"]))
+        [self.assertEquals(act, exp) for act, exp in zip(actual, expected)]
+
+
+    def test_J_epo_receptor_unit_vector(self):
+        params = numpy.ones(len(models.ordinary_differential.params_i))
+        for par in models.ordinary_differential.params_i.items():
+            params[par[1]] = models.ordinary_differential.epo_receptor_default_parameters[par[0]]
+        model_instance = dict(models.model_data.model_structure)
+        model_instance["parameters"] = numpy.asarray(params)
+        model_instance["states"] = numpy.ones(len(models.ordinary_differential.epo_receptor_states))
+        model_instance["inputs"] = numpy.ones(len(models.ordinary_differential.epo_receptor_default_inputs))
+        actual = models.ordinary_differential.J_epo_receptor( \
+            [1.0], model_instance["states"], 0.0, model_instance["parameters"], model_instance["inputs"])
+        expected = numpy.array([-1.0, -1.0, 1.0, 0.0, 0.0, 0.0])
+        [self.assertEquals(act, exp) for act, exp in zip(actual, expected)]
+
+
 if __name__ == "__main__":
     unittest.main()
