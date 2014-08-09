@@ -6,6 +6,7 @@ import unittest
 from test.common.utilities import *
 from test.metrics.algebraic import *
 from test.metrics.algebraic_legacy import *
+from test.metrics.confidence_measures import *
 from test.metrics.ordinary_differential import *
 from test.metrics.statistical_tests import *
 from test.models.ordinary_differential import *
