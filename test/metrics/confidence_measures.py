@@ -10,6 +10,15 @@ import metrics.confidence_measures
 class TestConfidenceMeasures(unittest.TestCase):
 
 
+    def test_compute_covariance_matrix_1s1p(self):
+        err = numpy.array([1.5])
+        cov_obs_err = numpy.dot(err, numpy.transpose(err))
+        sens = numpy.array([[2]])
+        actual = metrics.confidence_measures.compute_covariance_matrix(sens, cov_obs_err)
+        expected = 2*2/2.25
+        self.assertEqual(actual, expected)
+
+    
     def test_compute_covariance_matrix_1s2p(self):
         err = numpy.array([1, 0.5])
         cov_obs_err = numpy.dot(err, numpy.transpose(err))
@@ -19,6 +28,17 @@ class TestConfidenceMeasures(unittest.TestCase):
         self.assertEqual(actual, expected)
 
 
+    def test_compute_covariance_matrix_2s1p(self):
+        err = numpy.array([[1, 0.0], [0.0, 0.5]])
+        cov_obs_err = numpy.dot(err, numpy.transpose(err))
+        sens = numpy.array([[1], [0.5]])
+        actual = metrics.confidence_measures.compute_covariance_matrix(sens, cov_obs_err)
+        icv_dot_s = [1*1+0*0.5, 0*1+4*0.5]
+        st_dot_icv_dot_s = 1*icv_dot_s[0]+0.5*icv_dot_s[1]
+        expected = numpy.asarray(numpy.transpose(st_dot_icv_dot_s)) 
+        self.assertEqual(actual, expected)
+
+    
     def test_compute_covariance_matrix_2s2p(self):
         err = numpy.array([[1, 0.0], [0.0, 0.5]])
         cov_obs_err = numpy.dot(err, numpy.transpose(err))
