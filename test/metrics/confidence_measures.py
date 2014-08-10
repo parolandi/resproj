@@ -30,5 +30,7 @@ class TestConfidenceMeasures(unittest.TestCase):
         [[self.assertEqual(act, exp) for act, exp in zip(acts, exps)] for acts, exps in zip(actual, expected)]
 
 
+    # TODO: test non-diag
+
 if __name__ == "__main__":
     unittest.main()
