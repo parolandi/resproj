@@ -1,7 +1,8 @@
 
 import numpy.linalg
 
-
+# returns an array
+# TODO: it should probably return a matrix, given the function's name
 def compute_covariance_matrix(sensitivities, covariance_observation_errors):
     cov = 0
     if len(covariance_observation_errors.shape) == 0:
