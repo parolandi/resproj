@@ -72,6 +72,7 @@ def calculate_two_sided_chi_squared_test_for_mean_sum_squared_residuals(res, dof
 # dof: degrees-of-freedom
 # significance: probability
 # the significance is two-sided
+# TODO: convenience; vectorise for all parameters
 def calculate_two_sided_t_student_test_for_parameter_estimates(parameter_value, standard_error, dof, significance):
     common.exceptions.assert_throw(standard_error > 0.0)
     common.exceptions.assert_throw(parameter_value > 0.0)
