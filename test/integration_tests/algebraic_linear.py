@@ -85,6 +85,7 @@ class TestLinear2p2s(unittest.TestCase):
         # three measurements are not fine...
         self.assertFalse(actual)
 
+
     # TODO: test 1p2s
     # TODO: test 2p1s
     def test_linear_2p2s_with_dof_at_1_correlation_matrix(self):
@@ -122,6 +123,47 @@ class TestLinear2p2s(unittest.TestCase):
 
         # TODO: test non-diagonal covariance of observation errors matrix
         # TODO: test non-singular Jacobian matrix
+
+
+    def test_linear_2p2s_with_dof_at_1_two_sided_t_student(self):
+        dof_index = 0
+        output_index = 0
+        
+        model_instance = dict(models.model_data.model_structure)
+        model_instance["parameters"] = numpy.array([2.0, 4.0])
+        model_instance["inputs"] = numpy.array([[1.0, 10], [2.0, 20], [3.0, 30]])
+
+        problem_instance = dict(models.model_data.problem_structure)
+        problem_instance["output_indices"] = [output_index]
+        problem_instance["inputs"] = model_instance["inputs"]
+        problem_instance["parameters"] = [model_instance["parameters"][dof_index]]
+        problem_instance["parameter_indices"] = [dof_index]
+
+        dof = [1.0]
+
+        # three measurements
+        # one standard deviation
+        offset = -1
+        measured = numpy.array([[1.0], [2.0], [3.0]]) + offset
+        problem_instance["outputs"] = measured       
+        # TODO: use this residual to compute the true covariance matrix...
+        res = metrics.algebraic.sum_squared_residuals_st(dof, linear_2p2s, model_instance, problem_instance)
+        # ... for the time being use the identity
+        cov_obs_errs = numpy.identity(3)
+        sens = [J_linear_2p2s([dof[0], model_instance["parameters"][1]], x) for x in model_instance["inputs"]]
+        cov_param_est = metrics.confidence_measures.compute_covariance_matrix(sens, cov_obs_errs)
+        t_dof = len(measured) - len(problem_instance["parameter_indices"])
+        multiplier = 2.91998558036 * 0.99
+        param_est_values = cov_param_est[0][0] * multiplier
+        actual = metrics.statistical_tests.calculate_two_sided_t_student_test_for_parameter_estimates( \
+            param_est_values, cov_param_est[0][0], t_dof, 0.90)
+        self.assertFalse(actual)
+        multiplier = 2.91998558036 * 1.01
+        param_est_values = cov_param_est[0][0] * multiplier
+        actual = metrics.statistical_tests.calculate_two_sided_t_student_test_for_parameter_estimates( \
+            param_est_values, cov_param_est[0][0], t_dof, 0.90)
+        self.assertTrue(actual)
+
 
 if __name__ == "__main__":
     unittest.main()
