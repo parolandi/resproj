@@ -3,7 +3,12 @@ import numpy
 
 # size a multidimensional list 
 def size_it(data):
-    return sum(map(len, data)) 
+    size = 0
+    try:
+        size = sum(map(len, data))
+    except:
+        size = len(data)
+    return size
 
 
 def sliceit_assnapshot(packed_vector):
