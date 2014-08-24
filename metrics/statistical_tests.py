@@ -3,6 +3,7 @@ from __future__ import print_function
 import scipy.stats
 
 import common.exceptions
+import common.utilities
 
 
 # TODO: unencrypt these user messages
@@ -26,6 +27,13 @@ user_messages = {
     "two_sided_t_student_test_fail_oneliner": "OOPS! Student-t value is less than reference t-value",
     "two_sided_t_student_test_fail_description": "This means that the parameter has not been estimated with sufficient statistical confidence",
     }
+
+
+def calculate_degrees_of_freedom(measurements, parameters_to_be_estimated):
+    n = common.utilities.size_it(measurements)
+    k = len(parameters_to_be_estimated)
+    return n - k
+
 
 # TODO: validation of user input
 
