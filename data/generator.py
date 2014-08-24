@@ -1,4 +1,5 @@
 
+# TODO: migrate to scipy
 import numpy.random
 
 def set_seed(value):
