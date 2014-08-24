@@ -10,9 +10,11 @@ def solve_st(metric, model, model_instance, problem_instance, algorithm_structur
         "disp": False,
         }
     return scipy.optimize.minimize( \
-        fun=metric, \
-        x0=algorithm_structure["initial_guesses"], \
-        args=(model, model_instance, problem_instance), \
-        method=algorithm_structure["method"],
+        fun =     metric, \
+        x0 =      algorithm_structure["initial_guesses"], \
+        args =    (model, model_instance, problem_instance), \
+        method =  algorithm_structure["method"],
+        bounds =  problem_instance["bounds"],
+        callback = algorithm_structure["callback"],
         options = diag,
-        bounds = problem_instance["bounds"])
+        )
