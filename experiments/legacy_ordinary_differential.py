@@ -7,7 +7,7 @@ import data.generator
 import metrics.ordinary_differential_legacy
 import models.analytical
 import models.ordinary_differential
-import results.plot
+import results.plot_legacy
 import solvers.initial_value_legacy
 import solvers.dynamic_optimisation
 import solvers.least_squares_legacy
@@ -26,7 +26,7 @@ def experiment1():
     measurements = y + 0.1*data.generator.normal_distribution(len(y))
     data.generator.unset_seed()
 
-    results.plot.plottrajectoryandobservations(t_if, measurements, y, models.analytical.exponential(p, t_if, y0, p*u))
+    results.plot_legacy.plottrajectoryandobservations(t_if, measurements, y, models.analytical.exponential(p, t_if, y0, p*u))
     results.report.print_integration_basic(info)
 
 
@@ -39,7 +39,7 @@ def experiment2():
     y = solvers.initial_value_legacy.compute_endpoint([u], models.ordinary_differential.linear, y0, t_if, [p])
     t = t_if[len(t_if)-1]
     
-    results.plot.plotrajectoryandpoint(t_if, models.analytical.exponential(p, t_if, y0, p*u), t, y) 
+    results.plot_legacy.plotrajectoryandpoint(t_if, models.analytical.exponential(p, t_if, y0, p*u), t, y) 
 
 
 # optimise, maximise
@@ -58,7 +58,7 @@ def experiment3():
 
     results.report.print_result(result)
     u = result.x
-    results.plot.plotrajectoryandpoint(t_if, models.analytical.exponential(p, t_if, y0, p*u), \
+    results.plot_legacy.plotrajectoryandpoint(t_if, models.analytical.exponential(p, t_if, y0, p*u), \
         t, solvers.initial_value_legacy.compute_endpoint(u, models.ordinary_differential.linear, y0, t_if, [p]))
 
 
@@ -78,7 +78,7 @@ def experiment4():
 
     results.report.print_result(result)
     u = result.x
-    results.plot.plotrajectoryandpoint(t_if, models.analytical.exponential(p, t_if, y0, p*u), \
+    results.plot_legacy.plotrajectoryandpoint(t_if, models.analytical.exponential(p, t_if, y0, p*u), \
         t, solvers.initial_value_legacy.compute_endpoint(u, models.ordinary_differential.linear, y0, t_if, [p]))
 
 
@@ -95,7 +95,7 @@ def experiment5():
     measurements = y + 0.1*data.generator.normal_distribution(len(y))
     data.generator.unset_seed()
 
-    results.plot.plottrajectoryandobservations(t, measurements, y, models.analytical.exponential(p, t, y0, p*u))
+    results.plot_legacy.plottrajectoryandobservations(t, measurements, y, models.analytical.exponential(p, t, y0, p*u))
 
 
 # integrate, trajectory
@@ -110,7 +110,7 @@ def experiment6():
     measurements = y + 0.1*data.generator.normal_distribution(len(y))
     data.generator.unset_seed()
     
-    results.plot.plottrajectoryandobservations(t_if, measurements, y, models.analytical.exponential(p, t_if, y0, p*u)) 
+    results.plot_legacy.plottrajectoryandobservations(t_if, measurements, y, models.analytical.exponential(p, t_if, y0, p*u)) 
 
 
 def experiment7():
@@ -131,4 +131,4 @@ def experiment7():
 
     results.report.print_result(result)
     p = result.x
-    results.plot.plottrajectoryandobservations(t_if, measurements, y, models.analytical.exponential(p, t_if, y0, p*u))
+    results.plot_legacy.plottrajectoryandobservations(t_if, measurements, y, models.analytical.exponential(p, t_if, y0, p*u))
