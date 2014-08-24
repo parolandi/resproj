@@ -10,6 +10,7 @@ import models.model_data
 import results.plot
 import solvers.initial_value
 import solvers.least_squares
+import solvers.plot
 
 
 def linear_2p2s_mock(x, t, p, u):
@@ -111,7 +112,8 @@ class RunLinearOdeExperiments(unittest.TestCase):
             metrics.ordinary_differential.sum_squared_residuals_st, \
             linear_2p2s_mock, model_instance, problem_instance, algorithm_instance)
         estimate_actual = result.x
-
+        problem_instance["parameters"] = estimate_actual
+        
         # objective function
         sum_sq_res_actual = metrics.ordinary_differential.sum_squared_residuals_st( \
             estimate_actual, linear_2p2s_mock, model_instance, problem_instance)
@@ -121,7 +123,6 @@ class RunLinearOdeExperiments(unittest.TestCase):
             estimate_actual, linear_2p2s_mock, model_instance, problem_instance)
 
         # observables' trajectories
-        problem_instance["parameters"] = estimate_actual
         predicted_snapshots = solvers.initial_value.compute_trajectory_st( \
             linear_2p2s_mock, model_instance, problem_instance)
         predicted_values = common.utilities.sliceit_astrajectory(predicted_snapshots)
@@ -153,7 +154,53 @@ class RunLinearOdeExperiments(unittest.TestCase):
             results.plot.plot_errors_and_residuals(problem_instance["time"], meas_noise_traj, residuals_values)
     
 
-    def test_solve_st_linear_2p2s(self):
+    def do_explore_solution_path(self, dv_path, model_instance, problem_instance, stdev):
+        do_reporting = False
+        
+        iterations = []
+        objfunc_path = []
+        objfunc_contribs_path = []
+        ssr_path = []
+        ssr_contribs_path = []
+        iter = 0
+        for dvs in dv_path:
+            iterations.append(iter)
+
+            # objective function
+            sum_sq_res = metrics.ordinary_differential.sum_squared_residuals_st( \
+                dvs[0], linear_2p2s_mock, model_instance, problem_instance)
+            # objective-function contributions
+            sums_sq_res = metrics.ordinary_differential.sums_squared_residuals( \
+                dvs[0], linear_2p2s_mock, model_instance, problem_instance)
+            # global ssr test
+            dof = metrics.statistical_tests.calculate_degrees_of_freedom( \
+                problem_instance["outputs"], problem_instance["parameter_indices"])
+            test_chisquared = metrics.statistical_tests.calculate_two_sided_chi_squared_test_for_mean_sum_squared_residuals( \
+                sum_sq_res / stdev **2, dof, 0.95)
+            # observables' ssr test
+            dof = metrics.statistical_tests.calculate_degrees_of_freedom( \
+                problem_instance["outputs"][0], problem_instance["parameter_indices"])
+            tests_chisquared = []
+            tests_chisquared.append(metrics.statistical_tests.calculate_two_sided_chi_squared_test_for_mean_sum_squared_residuals( \
+                sums_sq_res[0] / stdev **2, dof, 0.95))
+            tests_chisquared.append(metrics.statistical_tests.calculate_two_sided_chi_squared_test_for_mean_sum_squared_residuals( \
+                sums_sq_res[1] / stdev **2, dof, 0.95))
+             
+            objfunc_path.append(sum_sq_res)
+            objfunc_contribs_path.append(sums_sq_res)
+            ssr_path.append(test_chisquared)
+            ssr_contribs_path.append(tests_chisquared)
+            
+            iter += 1
+
+        if do_reporting:
+            solvers.plot.plot_objective_function(iterations, objfunc_path)
+            solvers.plot.plot_objective_function_contributions(iterations, objfunc_contribs_path)
+            solvers.plot.plot_chi_squared_test(iterations, ssr_path)
+            solvers.plot.plot_chi_squared_tests(iterations, ssr_contribs_path)
+        
+
+    def test_workflow_st_linear_2p2s(self):
         # configure
         do_reporting = False
         
@@ -162,11 +209,14 @@ class RunLinearOdeExperiments(unittest.TestCase):
             stdev, act_meas_traj, exp_meas_traj, meas_noise_traj = self.do_setup()
 
         algorithm_instance = dict(solvers.solver_data.algorithm_structure)
-        algorithm_instance["method"] = 'Nelder-Mead'
+        logger = solvers.least_squares.DecisionVariableLogger()
+        algorithm_instance["callback"] = logger.log_decision_variables
         algorithm_instance["initial_guesses"] = problem_instance["parameters"]
+        algorithm_instance["method"] = 'Nelder-Mead'
         
         # whole data set
         self.do_workflow(model_instance, problem_instance, algorithm_instance, stdev, exp_meas_traj, meas_noise_traj, act_meas_traj)
+        self.do_explore_solution_path(logger.get_decision_variables(), model_instance, problem_instance, stdev)
         
         # slicing data
         tm, emt, tmte, mne, tv, evt, tmtv, mnv = self.do_slice_data(ref_problem_instance, exp_meas_traj, meas_noise_traj, act_meas_traj)
