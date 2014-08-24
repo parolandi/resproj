@@ -63,10 +63,29 @@ class TestLeastSquaresSolvers(unittest.TestCase):
         self.assertAlmostEqual(sum_sq_res_expected, sum_sq_res_actual, 6)
 
 
-    def test_solve_st_linear_2p2s_with_callback(self):
+    def test_solve_st_linear_2p2s_with_mock_callback(self):
         model_instance, problem_instance, algorithm_instance = self.do_setup()
         algorithm_instance["method"] = 'Nelder-Mead'
-        algorithm_instance["callback"] = lambda x: callbackit(x)
+        algorithm_instance["callback"] = callbackit
+        
+        result = solvers.least_squares.solve_st( \
+            metrics.ordinary_differential.sum_squared_residuals_st, linear_2p2s_mock, model_instance, problem_instance, algorithm_instance)
+        estimate_actual = result.x
+        estimate_expected = numpy.array([1.000011, 0.5000155])
+        [self.assertAlmostEqual(exp, act, 6) for exp, act in zip(estimate_expected, estimate_actual)]
+        
+        sum_sq_res_actual = metrics.ordinary_differential.sum_squared_residuals_st( \
+            estimate_actual, linear_2p2s_mock, model_instance, problem_instance)
+        sum_sq_res_expected = 0.0
+        self.assertAlmostEqual(sum_sq_res_expected, sum_sq_res_actual, 6)
+
+
+    # TODO: move into integration tests; this is not a unit-test
+    def test_solve_st_linear_2p2s_with_object_callback(self):
+        model_instance, problem_instance, algorithm_instance = self.do_setup()
+        algorithm_instance["method"] = 'Nelder-Mead'
+        logger = solvers.least_squares.DecisionVariableLogger()
+        algorithm_instance["callback"] = logger.log_decision_variables
         
         result = solvers.least_squares.solve_st( \
             metrics.ordinary_differential.sum_squared_residuals_st, linear_2p2s_mock, model_instance, problem_instance, algorithm_instance)

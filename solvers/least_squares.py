@@ -18,3 +18,17 @@ def solve_st(metric, model, model_instance, problem_instance, algorithm_structur
         callback = algorithm_structure["callback"],
         options = diag,
         )
+
+
+class DecisionVariableLogger():
+    
+    decision_variables = []
+    
+    def log_decision_variables(self, x):
+        self.decision_variables.append([x])
+        
+    def print_decision_variables(self):
+        print("Decision variables", self.decision_variables)
+        
+    def get_decision_variables(self):
+        return self.decision_variables
