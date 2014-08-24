@@ -103,7 +103,7 @@ class RunLinearOdeExperiments(unittest.TestCase):
     
     
     def do_workflow(self, model_instance, problem_instance, algorithm_instance, \
-        stdev, exp_meas_traj, meas_noise_traj, act_meas_traj):
+        stdev, meas_noise_traj, act_meas_traj):
         # config
         do_reporting = False
         
@@ -111,16 +111,15 @@ class RunLinearOdeExperiments(unittest.TestCase):
         result = solvers.least_squares.solve_st( \
             metrics.ordinary_differential.sum_squared_residuals_st, \
             linear_2p2s_mock, model_instance, problem_instance, algorithm_instance)
-        estimate_actual = result.x
-        problem_instance["parameters"] = estimate_actual
+        problem_instance["parameters"] = result.x
         
         # objective function
         sum_sq_res_actual = metrics.ordinary_differential.sum_squared_residuals_st( \
-            estimate_actual, linear_2p2s_mock, model_instance, problem_instance)
+            problem_instance["parameters"], linear_2p2s_mock, model_instance, problem_instance)
 
         # objective-function contributions
         sums_sq_res_actual = metrics.ordinary_differential.sums_squared_residuals( \
-            estimate_actual, linear_2p2s_mock, model_instance, problem_instance)
+            problem_instance["parameters"], linear_2p2s_mock, model_instance, problem_instance)
 
         # observables' trajectories
         predicted_snapshots = solvers.initial_value.compute_trajectory_st( \
@@ -133,23 +132,23 @@ class RunLinearOdeExperiments(unittest.TestCase):
 
         # global ssr test
         dof = metrics.statistical_tests.calculate_degrees_of_freedom( \
-            exp_meas_traj, problem_instance["parameter_indices"])
+            problem_instance["outputs"], problem_instance["parameter_indices"])
         self.assertTrue(metrics.statistical_tests.calculate_two_sided_chi_squared_test_for_mean_sum_squared_residuals( \
             sum_sq_res_actual / stdev **2, dof, 0.95))
         
         # observables' ssr test
         dof = metrics.statistical_tests.calculate_degrees_of_freedom( \
-            exp_meas_traj[0], problem_instance["parameter_indices"])
+            problem_instance["outputs"][0], problem_instance["parameter_indices"])
         self.assertTrue(metrics.statistical_tests.calculate_two_sided_chi_squared_test_for_mean_sum_squared_residuals( \
             sums_sq_res_actual[0] / stdev **2, dof, 0.95))
         self.assertTrue(metrics.statistical_tests.calculate_two_sided_chi_squared_test_for_mean_sum_squared_residuals( \
             sums_sq_res_actual[1] / stdev **2, dof, 0.95))
 
         if do_reporting:
-            print(estimate_actual)
+            print(problem_instance["parameters"])
             print(sum_sq_res_actual)
             print(sums_sq_res_actual)
-            results.plot.plot_fit(problem_instance["time"], exp_meas_traj, predicted_values, act_meas_traj)
+            results.plot.plot_fit(problem_instance["time"], problem_instance["outputs"], predicted_values, act_meas_traj)
             results.plot.plot_residuals(problem_instance["time"], residuals_values)
             results.plot.plot_errors_and_residuals(problem_instance["time"], meas_noise_traj, residuals_values)
     
@@ -215,7 +214,7 @@ class RunLinearOdeExperiments(unittest.TestCase):
         algorithm_instance["method"] = 'Nelder-Mead'
         
         # whole data set
-        self.do_workflow(model_instance, problem_instance, algorithm_instance, stdev, exp_meas_traj, meas_noise_traj, act_meas_traj)
+        self.do_workflow(model_instance, problem_instance, algorithm_instance, stdev, meas_noise_traj, act_meas_traj)
         self.do_explore_solution_path(logger.get_decision_variables(), model_instance, problem_instance, stdev)
         
         # slicing data
@@ -224,12 +223,12 @@ class RunLinearOdeExperiments(unittest.TestCase):
         # calibration data set
         problem_instance["outputs"] = emt
         problem_instance["time"] = tm
-        self.do_workflow(model_instance, problem_instance, algorithm_instance, stdev, emt, mne, tmte)
+        self.do_workflow(model_instance, problem_instance, algorithm_instance, stdev, mne, tmte)
 
         # validation data set
         problem_instance["outputs"] = evt
         problem_instance["time"] = tv
-        self.do_workflow(model_instance, problem_instance, algorithm_instance, stdev, evt, mnv, tmtv)
+        self.do_workflow(model_instance, problem_instance, algorithm_instance, stdev, mnv, tmtv)
        
         self.assertTrue(True)
 
