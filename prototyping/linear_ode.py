@@ -148,7 +148,7 @@ class RunLinearOdeExperiments(unittest.TestCase):
     
 
     def do_explore_solution_path(self, dv_path, model_instance, problem_instance, stdev):
-        do_reporting = False
+        do_reporting = True
         
         iterations = []
         objfunc_path = []
@@ -234,11 +234,13 @@ class RunLinearOdeExperiments(unittest.TestCase):
         problem_instance["outputs"] = emt
         problem_instance["time"] = tm
         self.do_workflow(model_instance, problem_instance, algorithm_instance, stdev, mne, tmte)
+        self.do_explore_solution_path(decision_variables model_instance, problem_instance, stdev)
 
         # validation data set
         problem_instance["outputs"] = evt
         problem_instance["time"] = tv
         self.do_workflow(model_instance, problem_instance, algorithm_instance, stdev, mnv, tmtv)
+        self.do_explore_solution_path(decision_variables model_instance, problem_instance, stdev)
        
         self.assertTrue(True)
 
