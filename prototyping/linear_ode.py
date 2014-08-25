@@ -107,12 +107,6 @@ class RunLinearOdeExperiments(unittest.TestCase):
         # config
         do_reporting = False
         
-        # least-squares
-        result = solvers.least_squares.solve_st( \
-            metrics.ordinary_differential.sum_squared_residuals_st, \
-            linear_2p2s_mock, model_instance, problem_instance, algorithm_instance)
-        problem_instance["parameters"] = result.x
-        
         # objective function
         sum_sq_res_actual = metrics.ordinary_differential.sum_squared_residuals_st( \
             problem_instance["parameters"], linear_2p2s_mock, model_instance, problem_instance)
@@ -214,13 +208,29 @@ class RunLinearOdeExperiments(unittest.TestCase):
         algorithm_instance["method"] = 'Nelder-Mead'
         
         # whole data set
+        # least-squares
+        result = solvers.least_squares.solve_st( \
+            metrics.ordinary_differential.sum_squared_residuals_st, \
+            linear_2p2s_mock, model_instance, problem_instance, algorithm_instance)
+        problem_instance["parameters"] = result.x
+        decision_variables = logger.get_decision_variables()
+
         self.do_workflow(model_instance, problem_instance, algorithm_instance, stdev, meas_noise_traj, act_meas_traj)
-        self.do_explore_solution_path(logger.get_decision_variables(), model_instance, problem_instance, stdev)
+        self.do_explore_solution_path(decision_variables, model_instance, problem_instance, stdev)
         
         # slicing data
         tm, emt, tmte, mne, tv, evt, tmtv, mnv = self.do_slice_data(ref_problem_instance, exp_meas_traj, meas_noise_traj, act_meas_traj)
 
         # calibration data set
+        # least-squares
+        logger = solvers.least_squares.DecisionVariableLogger()
+        algorithm_instance["callback"] = logger.log_decision_variables
+        result = solvers.least_squares.solve_st( \
+            metrics.ordinary_differential.sum_squared_residuals_st, \
+            linear_2p2s_mock, model_instance, problem_instance, algorithm_instance)
+        problem_instance["parameters"] = result.x
+        decision_variables = logger.get_decision_variables()
+        
         problem_instance["outputs"] = emt
         problem_instance["time"] = tm
         self.do_workflow(model_instance, problem_instance, algorithm_instance, stdev, mne, tmte)
