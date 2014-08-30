@@ -1,6 +1,8 @@
 
+import copy
 import unittest
 import numpy
+import matplotlib.pyplot
 
 import common.utilities
 import data.generator
@@ -8,6 +10,7 @@ import metrics.ordinary_differential
 import metrics.statistical_tests
 import models.model_data
 import results.plot
+import results.report_workflows
 import solvers.initial_value
 import solvers.least_squares
 import solvers.plot
@@ -68,7 +71,7 @@ class RunLinearOdeExperiments(unittest.TestCase):
             true_measurement_trajectories, experimental_measurement_trajectories, measurement_noise
 
 
-    def do_slice_data(self, ref_problem_instance, exp_meas_traj, meas_noise_traj, act_meas_traj):
+    def do_slice_data1(self, ref_problem_instance, exp_meas_traj, meas_noise_traj, act_meas_traj):
         emts = slice(0, len(exp_meas_traj[0]), 2)
         emt = []
         emt.append(exp_meas_traj[0][(emts)])
@@ -102,7 +105,77 @@ class RunLinearOdeExperiments(unittest.TestCase):
         return tm, emt, tmte, mne, tv, evt, tmtv, mnv  
     
     
-    def do_workflow(self, model_instance, problem_instance, algorithm_instance, \
+    def do_slice_data2(self, ref_problem_instance, exp_meas_traj, meas_noise_traj, act_meas_traj):
+        half = len(exp_meas_traj[0]) // 2
+        emts = slice(0, half, 1)
+        emt = []
+        emt.append(exp_meas_traj[0][(emts)])
+        emt.append(exp_meas_traj[1][(emts)])
+        tm = ref_problem_instance["time"][emts]
+        tmte = []
+        tmte.append(act_meas_traj[0][(emts)])
+        tmte.append(act_meas_traj[1][(emts)])
+        mne = []
+        mne.append(meas_noise_traj[0][emts])
+        mne.append(meas_noise_traj[1][emts])
+        
+        evts = slice(half, len(exp_meas_traj[0]), 1)
+        evt = []
+        evt.append([exp_meas_traj[0][0]])
+        evt[0].extend(exp_meas_traj[0][(evts)])
+        evt.append([exp_meas_traj[1][0]])
+        evt[1].extend(exp_meas_traj[1][(evts)])
+        tv = numpy.concatenate((numpy.array([ref_problem_instance["time"][0]]), numpy.array(ref_problem_instance["time"][evts])))
+        tmtv = []
+        tmtv.append([act_meas_traj[0][0]])
+        tmtv[0].extend(act_meas_traj[0][(evts)])
+        tmtv.append([act_meas_traj[1][0]])
+        tmtv[1].extend(act_meas_traj[1][(evts)])
+        mnv = []
+        mnv.append([meas_noise_traj[0][0]])
+        mnv[0].extend(meas_noise_traj[0][evts])
+        mnv.append([meas_noise_traj[1][0]])
+        mnv[1].extend(meas_noise_traj[1][evts])
+
+        return tm, emt, tmte, mne, tv, evt, tmtv, mnv  
+
+    
+    def do_slice_data3(self, ref_problem_instance, exp_meas_traj, meas_noise_traj, act_meas_traj):
+        half = len(exp_meas_traj[0]) // 2
+        emts = slice(half, len(exp_meas_traj[0]), 1)
+        emt = []
+        emt.append([exp_meas_traj[0][0]])
+        emt[0].extend(exp_meas_traj[0][emts])
+        emt.append([exp_meas_traj[1][0]])
+        emt[1].extend(exp_meas_traj[1][emts])
+        tm = numpy.concatenate((numpy.array([ref_problem_instance["time"][0]]), numpy.array(ref_problem_instance["time"][emts])))
+        tmte = []
+        tmte.append([act_meas_traj[0][0]])
+        tmte[0].extend(act_meas_traj[0][(emts)])
+        tmte.append([act_meas_traj[1][0]])
+        tmte[1].extend(act_meas_traj[1][(emts)])
+        mne = []
+        mne.append([meas_noise_traj[0][0]])
+        mne[0].extend(meas_noise_traj[0][emts])
+        mne.append([meas_noise_traj[1][0]])
+        mne[1].extend(meas_noise_traj[1][emts])
+        
+        evts = slice(0, half, 1)
+        evt = []
+        evt.append(exp_meas_traj[0][(evts)])
+        evt.append(exp_meas_traj[1][(evts)])
+        tv = ref_problem_instance["time"][evts]
+        tmtv = []
+        tmtv.append(act_meas_traj[0][(evts)])
+        tmtv.append(act_meas_traj[1][(evts)])
+        mnv = []
+        mnv.append(meas_noise_traj[0][evts])
+        mnv.append(meas_noise_traj[1][evts])
+
+        return tm, emt, tmte, mne, tv, evt, tmtv, mnv  
+
+    
+    def do_workflow(self, model_instance, problem_instance, \
         stdev, meas_noise_traj, act_meas_traj):
         # config
         do_reporting = False
@@ -127,16 +200,16 @@ class RunLinearOdeExperiments(unittest.TestCase):
         # global ssr test
         dof = metrics.statistical_tests.calculate_degrees_of_freedom( \
             problem_instance["outputs"], problem_instance["parameter_indices"])
-        self.assertTrue(metrics.statistical_tests.calculate_two_sided_chi_squared_test_for_mean_sum_squared_residuals( \
-            sum_sq_res_actual / stdev **2, dof, 0.95))
+        metrics.statistical_tests.calculate_two_sided_chi_squared_test_for_mean_sum_squared_residuals( \
+            sum_sq_res_actual / stdev **2, dof, 0.95)
         
         # observables' ssr test
         dof = metrics.statistical_tests.calculate_degrees_of_freedom( \
             problem_instance["outputs"][0], problem_instance["parameter_indices"])
-        self.assertTrue(metrics.statistical_tests.calculate_two_sided_chi_squared_test_for_mean_sum_squared_residuals( \
-            sums_sq_res_actual[0] / stdev **2, dof, 0.95))
-        self.assertTrue(metrics.statistical_tests.calculate_two_sided_chi_squared_test_for_mean_sum_squared_residuals( \
-            sums_sq_res_actual[1] / stdev **2, dof, 0.95))
+        metrics.statistical_tests.calculate_two_sided_chi_squared_test_for_mean_sum_squared_residuals( \
+            sums_sq_res_actual[0] / stdev **2, dof, 0.95)
+        metrics.statistical_tests.calculate_two_sided_chi_squared_test_for_mean_sum_squared_residuals( \
+            sums_sq_res_actual[1] / stdev **2, dof, 0.95)
 
         if do_reporting:
             print(problem_instance["parameters"])
@@ -148,7 +221,7 @@ class RunLinearOdeExperiments(unittest.TestCase):
     
 
     def do_explore_solution_path(self, dv_path, model_instance, problem_instance, stdev):
-        do_reporting = True
+        do_reporting = False
         
         iterations = []
         objfunc_path = []
@@ -186,25 +259,47 @@ class RunLinearOdeExperiments(unittest.TestCase):
             
             iter += 1
 
+        global fig
+        solvers.plot.set_plot_rows_and_cols(4, 2)
+        solvers.plot.get_objective_function_plot(fig, iterations, objfunc_path)
+        solvers.plot.get_objective_function_contributions_plot(fig, iterations, objfunc_contribs_path)
+
         if do_reporting:
             solvers.plot.plot_objective_function(iterations, objfunc_path)
             solvers.plot.plot_objective_function_contributions(iterations, objfunc_contribs_path)
             solvers.plot.plot_chi_squared_test(iterations, ssr_path)
             solvers.plot.plot_chi_squared_tests(iterations, ssr_contribs_path)
-        
+
+        workflow_results = dict(results.report_workflows.workflow_data)
+        workflow_results["params"] = copy.deepcopy(problem_instance["parameters"])
+        workflow_results["obj"] = objfunc_path
+        workflow_results["obj_contribs"] = objfunc_contribs_path
+        workflow_results["ssr"] = ssr_path
+        workflow_results["ssr_contribs"] = ssr_contribs_path
+
+        return workflow_results
 
     def test_workflow_st_linear_2p2s(self):
+        # globals
+        global fig
+        fig = solvers.plot.get_figure()
+        # TODO: user messages
+
         # configure
         do_reporting = False
+        do_results = True
         
         # setup
+        all_results = dict(results.report_workflows.workflow_results)
         ref_model_instance, ref_problem_instance, model_instance, problem_instance, \
             stdev, act_meas_traj, exp_meas_traj, meas_noise_traj = self.do_setup()
+        # TODO: why?
+        tt = copy.deepcopy(problem_instance["time"])
 
         algorithm_instance = dict(solvers.solver_data.algorithm_structure)
         logger = solvers.least_squares.DecisionVariableLogger()
         algorithm_instance["callback"] = logger.log_decision_variables
-        algorithm_instance["initial_guesses"] = problem_instance["parameters"]
+        algorithm_instance["initial_guesses"] = copy.deepcopy(ref_problem_instance["parameters"])
         algorithm_instance["method"] = 'Nelder-Mead'
         
         # whole data set
@@ -215,33 +310,46 @@ class RunLinearOdeExperiments(unittest.TestCase):
         problem_instance["parameters"] = result.x
         decision_variables = logger.get_decision_variables()
 
-        self.do_workflow(model_instance, problem_instance, algorithm_instance, stdev, meas_noise_traj, act_meas_traj)
-        self.do_explore_solution_path(decision_variables, model_instance, problem_instance, stdev)
+        self.do_workflow(model_instance, problem_instance, stdev, meas_noise_traj, act_meas_traj)
+        all_results["full"] = self.do_explore_solution_path(decision_variables, model_instance, problem_instance, stdev)
         
         # slicing data
-        tm, emt, tmte, mne, tv, evt, tmtv, mnv = self.do_slice_data(ref_problem_instance, exp_meas_traj, meas_noise_traj, act_meas_traj)
+        tm, emt, tmte, mne, tv, evt, tmtv, mnv = self.do_slice_data3(ref_problem_instance, exp_meas_traj, meas_noise_traj, act_meas_traj)
 
         # calibration data set
         # least-squares
+        problem_instance["outputs"] = emt
+        problem_instance["time"] = tm
+
         logger = solvers.least_squares.DecisionVariableLogger()
         algorithm_instance["callback"] = logger.log_decision_variables
+        algorithm_instance["initial_guesses"] = copy.deepcopy(ref_problem_instance["parameters"])
         result = solvers.least_squares.solve_st( \
             metrics.ordinary_differential.sum_squared_residuals_st, \
             linear_2p2s_mock, model_instance, problem_instance, algorithm_instance)
         problem_instance["parameters"] = result.x
         decision_variables = logger.get_decision_variables()
         
-        problem_instance["outputs"] = emt
-        problem_instance["time"] = tm
-        self.do_workflow(model_instance, problem_instance, algorithm_instance, stdev, mne, tmte)
-        self.do_explore_solution_path(decision_variables model_instance, problem_instance, stdev)
+        self.do_workflow(model_instance, problem_instance, stdev, mne, tmte)
+        all_results["calibration"] = self.do_explore_solution_path(decision_variables, model_instance, problem_instance, stdev)
 
         # validation data set
         problem_instance["outputs"] = evt
         problem_instance["time"] = tv
-        self.do_workflow(model_instance, problem_instance, algorithm_instance, stdev, mnv, tmtv)
-        self.do_explore_solution_path(decision_variables model_instance, problem_instance, stdev)
-       
+        self.do_workflow(model_instance, problem_instance, stdev, mnv, tmtv)
+        all_results["validation"] = self.do_explore_solution_path(decision_variables, model_instance, problem_instance, stdev)
+        
+        # validation and calibration data set
+        problem_instance["outputs"] = exp_meas_traj
+        problem_instance["time"] = tt
+        self.do_workflow(model_instance, problem_instance, stdev, meas_noise_traj, act_meas_traj)
+        all_results["calib+valid"] = self.do_explore_solution_path(decision_variables, model_instance, problem_instance, stdev)
+        
+        # results
+        if do_results:
+            solvers.plot.show_figure()
+        results.report_workflows.report_all(all_results)
+
         self.assertTrue(True)
 
 
