@@ -49,6 +49,10 @@ def increment_plot_count():
     return plot_count
 
 
+def get_plot_count():
+    return plot_count
+
+
 def set_plot_rows_and_cols(rows, cols):
     global no_rows
     global no_cols
@@ -64,9 +68,21 @@ def get_plot_rows_and_cols():
 
 def get_objective_function_plot(figure, iterations, values):
     no_rows, no_cols = get_plot_rows_and_cols()
-    sp = figure.add_subplot(no_rows, no_cols, increment_plot_count())
+    plot_count = increment_plot_count()
+    sp = figure.add_subplot(no_rows, no_cols, plot_count)
     sp.plot(iterations, values, 'o')
-    sp.legend("objective function")
+    if get_plot_count() <= no_cols:
+        sp.set_title("obj-func")
+    col_rank = plot_count // no_cols
+    row_rank = col_rank % no_rows
+    if  row_rank == 0:
+        sp.set_ylabel("full")
+    if  row_rank == 1:
+        sp.set_ylabel("calib")
+    if  row_rank == 2:
+        sp.set_ylabel("valid")
+    if  row_rank == 3:
+        sp.set_ylabel("calib+valid")
 
 
 def get_objective_function_contributions_plot(figure, iterations, values):
@@ -76,4 +92,5 @@ def get_objective_function_contributions_plot(figure, iterations, values):
     vals = numpy.transpose(values)
     for ii in range(len(vals)):
         sp.plot(iterations, vals[ii], 'o')
-    sp.legend("objective function contributions")
+    if get_plot_count() <= no_cols:
+        sp.set_title("obj-func-contribs")
