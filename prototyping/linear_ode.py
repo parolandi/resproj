@@ -9,6 +9,7 @@ import data.generator
 import metrics.ordinary_differential
 import metrics.statistical_tests
 import models.model_data
+import prototyping.statistical_inference
 import results.plot
 import results.report_workflows
 import solvers.initial_value
@@ -24,7 +25,96 @@ def linear_2p2s_mock(x, t, p, u):
     return dx_dt
 
 
+# note that in this particular case there is no dependence x
+def sensitivities_linear_2p2s_mock(s, t, p, u):
+    assert(len(s) == 4)
+    assert(len(p) == 2)
+    assert(len(u) == 2)
+    ds_dt = []
+    ds_dt.append(u[0] - s[0])
+    ds_dt.append(0.0)
+    ds_dt.append(0.0)
+    ds_dt.append(u[1] - s[3])
+    return ds_dt
+    
+    
 class RunLinearOdeExperiments(unittest.TestCase):
+
+    def test_sensitivities_linear_2p2s(self):
+        final_time = 2.0
+        intervals = 2
+        stdev = 0.2
+        times = numpy.array([0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
+#        times = numpy.array([0.0, 1.0])
+
+        sens_model_instance = dict(models.model_data.model_structure)
+        sens_model_instance["parameters"] = numpy.array([1.0, 2.0])
+        sens_model_instance["inputs"] = numpy.array([1.0, 2.0])
+        sens_model_instance["states"] = numpy.array([0.0, 0.0, 0.0, 0.0])
+        sens_model_instance["time"] = 0.0
+        
+        sens_problem_instance = dict(models.model_data.problem_structure)
+        sens_problem_instance["initial_conditions"] = numpy.array([0.0, 0.0, 0.0, 0.0])
+        sens_problem_instance["time"] = times
+        sens_problem_instance["parameters"] = numpy.array([1.0, 2.0])
+        sens_problem_instance["parameter_indices"] = numpy.array([0, 1])
+        sens_problem_instance["inputs"] = numpy.array([1.0, 2.0])
+        
+        measured = numpy.asarray(solvers.initial_value.compute_trajectory_st( \
+            sensitivities_linear_2p2s_mock, sens_model_instance, sens_problem_instance))
+        
+        true_measurement_trajectories = common.utilities.sliceit_astrajectory(measured)
+
+        no_params = len(sens_problem_instance["parameters"])
+        no_meas = len(sens_problem_instance["time"]) * no_params
+        flat = true_measurement_trajectories.flatten()
+        sm = numpy.asmatrix(flat.reshape((no_params, no_meas)).transpose())
+
+        h = sm.transpose().dot(sm)
+        print("H", h)
+        varcovar = numpy.linalg.inv(h)
+        print("VCM", varcovar)
+
+        # (b-b*)^T(P)^(-1)(b-b*)=ps^2F_(1-alpha)(p,n-p)
+        sys_model_instance = dict(models.model_data.model_structure)
+        sys_model_instance["parameters"] = numpy.array([1.0, 2.0])
+        sys_model_instance["inputs"] = numpy.array([1.0, 2.0])
+        sys_model_instance["states"] = numpy.array([10.0, 8.0])
+        sys_model_instance["time"] = 0.0
+        
+        sys_problem_instance = dict(models.model_data.problem_structure)
+        sys_problem_instance["initial_conditions"] = numpy.array([10.0, 8.0])
+        sys_problem_instance["time"] = times
+        sys_problem_instance["parameters"] = numpy.array([1.0, 2.0])
+        sys_problem_instance["parameter_indices"] = numpy.array([0, 1])
+        sys_problem_instance["inputs"] = numpy.array([1.0, 2.0])
+
+        true_snap = numpy.asarray(solvers.initial_value.compute_trajectory_st( \
+            linear_2p2s_mock, sys_model_instance, sys_problem_instance))
+        true_traj = common.utilities.sliceit_astrajectory(true_snap)
+
+        no_points = len(sens_problem_instance["time"])
+        meas_noise = numpy.zeros([2, no_points])
+        data.generator.set_seed(117)
+        meas_noise[0] = stdev * data.generator.normal_distribution(no_points)
+        meas_noise[1] = stdev * data.generator.normal_distribution(no_points)
+        data.generator.unset_seed()
+
+        meas_traj = true_traj + meas_noise
+        sys_problem_instance["outputs"] = meas_traj
+        sys_problem_instance["output_indices"] = numpy.array([0.0, 1.0])
+        
+        sum_sq_res_actual = metrics.ordinary_differential.sum_squared_residuals_st( \
+            sys_problem_instance["parameters"], linear_2p2s_mock, sys_model_instance, sys_problem_instance)
+        no_params = len(sys_problem_instance["parameters"])
+        no_meas = no_points * 2
+        est_stdev = sum_sq_res_actual / (no_meas - no_params)
+        significance = 0.9
+        radius = prototyping.statistical_inference.compute_confidence_ellipsoid_radius(no_params, no_meas, est_stdev, significance)
+        print("radius", radius)
+        print("r-p1", radius * varcovar[0,0])
+        print("r-p2", radius * varcovar[1,1])
+        
 
     def do_setup(self):
         final_time = 3.0
@@ -393,8 +483,8 @@ class RunLinearOdeExperiments(unittest.TestCase):
         
                 
 if __name__ == "__main__":
-    unittest.main()
-#    suite = unittest.TestSuite()
-#    suite.addTest(RunLinearOdeExperiments("test_montecarlo_st_linear_2p2s"))
-#    runner = unittest.TextTestRunner()
-#    runner.run(suite)
+#    unittest.main()
+    suite = unittest.TestSuite()
+    suite.addTest(RunLinearOdeExperiments("test_sensitivities_linear_2p2s"))
+    runner = unittest.TextTestRunner()
+    runner.run(suite)
