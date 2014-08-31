@@ -12,10 +12,10 @@ workflow_data = {
 
 
 workflow_results = {
-    "full": dict(workflow_data),
-    "calibration": dict(workflow_data),
-    "validation": dict(workflow_data),
-    "calib+valid": dict(workflow_data), 
+    "full": workflow_data,
+    "calibration": workflow_data,
+    "validation": workflow_data,
+    "calib+valid": workflow_data, 
     }
 
 
