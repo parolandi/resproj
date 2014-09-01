@@ -10,6 +10,7 @@ import metrics.ordinary_differential
 import metrics.statistical_tests
 import models.model_data
 import prototyping.statistical_inference
+import prototyping.estimation_matrices
 import results.plot
 import results.report_workflows
 import solvers.initial_value
@@ -60,15 +61,13 @@ class RunLinearOdeExperiments(unittest.TestCase):
         sens_problem_instance["parameter_indices"] = numpy.array([0, 1])
         sens_problem_instance["inputs"] = numpy.array([1.0, 2.0])
         
-        measured = numpy.asarray(solvers.initial_value.compute_trajectory_st( \
+        sens_snapshot = numpy.asarray(solvers.initial_value.compute_trajectory_st( \
             sensitivities_linear_2p2s_mock, sens_model_instance, sens_problem_instance))
-        
-        true_measurement_trajectories = common.utilities.sliceit_astrajectory(measured)
+        sens_trajectories = common.utilities.sliceit_astrajectory(sens_snapshot)
 
         no_params = len(sens_problem_instance["parameters"])
-        no_meas = len(sens_problem_instance["time"]) * no_params
-        flat = true_measurement_trajectories.flatten()
-        sm = numpy.asmatrix(flat.reshape((no_params, no_meas)).transpose())
+        no_timepoints = len(sens_problem_instance["time"])
+        sm = prototyping.estimation_matrices.prepare_sensitivity_matrix(no_params, no_timepoints, sens_trajectories)
 
         h = sm.transpose().dot(sm)
         print("H", h)
@@ -112,14 +111,21 @@ class RunLinearOdeExperiments(unittest.TestCase):
         significance = 0.9
         radius = prototyping.statistical_inference.compute_confidence_ellipsoid_radius(no_params, no_meas, est_stdev, significance)
         print("radius", radius)
-        print("r-p1", radius * varcovar[0,0])
-        print("r-p2", radius * varcovar[1,1])
+        r_p1 = radius * varcovar[0,0]
+        r_p2 = radius * varcovar[1,1]
+        print("r-p1", r_p1)
+        print("r-p2", r_p2)
         
+        self.assertAlmostEqual(r_p1, 0.0021714732894047291, 8)
+        self.assertAlmostEqual(r_p2, 0.0005428683223511824, 8)
+
 
     def do_setup(self):
         final_time = 3.0
         intervals = 30
         stdev = 0.2
+        
+        times = numpy.arange(0.0, final_time, final_time / intervals)
         
         ref_model_instance = dict(models.model_data.model_structure)
         ref_model_instance["parameters"] = numpy.array([1.0, 2.0])
@@ -129,7 +135,7 @@ class RunLinearOdeExperiments(unittest.TestCase):
         
         ref_problem_instance = dict(models.model_data.problem_structure)
         ref_problem_instance["initial_conditions"] = numpy.array([10.0, 8.0])
-        ref_problem_instance["time"] = numpy.arange(0.0, final_time, final_time / intervals)
+        ref_problem_instance["time"] = times
         ref_problem_instance["parameters"] = numpy.array([1.0, 2.0])
         ref_problem_instance["parameter_indices"] = numpy.array([0, 1])
         ref_problem_instance["inputs"] = numpy.array([1.0, 2.0])
@@ -157,8 +163,23 @@ class RunLinearOdeExperiments(unittest.TestCase):
         model_instance["states"] = problem_instance["initial_conditions"]
         model_instance["time"] = 0.0
         
-        return ref_model_instance, ref_problem_instance, model_instance, problem_instance, stdev, \
-            true_measurement_trajectories, experimental_measurement_trajectories, measurement_noise
+        sens_model_instance = dict(models.model_data.model_structure)
+        sens_model_instance["parameters"] = numpy.array([1.0, 2.0])
+        sens_model_instance["inputs"] = numpy.array([1.0, 2.0])
+        sens_model_instance["states"] = numpy.array([0.0, 0.0, 0.0, 0.0])
+        sens_model_instance["time"] = 0.0
+        
+        sens_problem_instance = dict(models.model_data.problem_structure)
+        sens_problem_instance["initial_conditions"] = numpy.array([0.0, 0.0, 0.0, 0.0])
+        sens_problem_instance["time"] = times
+        sens_problem_instance["parameters"] = numpy.array([1.0, 2.0])
+        sens_problem_instance["parameter_indices"] = numpy.array([0, 1])
+        sens_problem_instance["inputs"] = numpy.array([1.0, 2.0])
+
+        return ref_model_instance, ref_problem_instance, \
+            model_instance, problem_instance, \
+            sens_model_instance, sens_problem_instance, \
+            stdev, true_measurement_trajectories, experimental_measurement_trajectories, measurement_noise
 
 
     def do_slice_data1(self, ref_problem_instance, exp_meas_traj, meas_noise_traj, act_meas_traj):
@@ -266,6 +287,7 @@ class RunLinearOdeExperiments(unittest.TestCase):
 
     
     def do_workflow(self, model_instance, problem_instance, \
+        sens_model_instance, sens_problem_instance, \
         stdev, meas_noise_traj, act_meas_traj):
         # config
         do_reporting = False
@@ -301,10 +323,28 @@ class RunLinearOdeExperiments(unittest.TestCase):
         metrics.statistical_tests.calculate_two_sided_chi_squared_test_for_mean_sum_squared_residuals( \
             sums_sq_res_actual[1] / stdev **2, dof, 0.95)
 
+        # sensitivities and covariance matrix
+        sens_snapshot = numpy.asarray(solvers.initial_value.compute_trajectory_st( \
+            sensitivities_linear_2p2s_mock, sens_model_instance, sens_problem_instance))
+        sens_trajectories = common.utilities.sliceit_astrajectory(sens_snapshot)
+        no_params = len(sens_problem_instance["parameters"])
+        no_timepoints = len(sens_problem_instance["time"])
+        cov_matrix = prototyping.estimation_matrices.compute_covariance_matrix(no_params, no_timepoints, sens_trajectories)
+
+        # ellipsoid radius and confidence interval
+        no_meas = common.utilities.size_it(problem_instance["outputs"])
+        est_stdev = prototyping.statistical_inference.compute_measurements_standard_deviation( \
+            sum_sq_res_actual, no_params, no_meas)
+        ell_radius = prototyping.statistical_inference.compute_confidence_ellipsoid_radius( \
+            no_params, no_meas, est_stdev, 0.9)
+        confidence_intervals = prototyping.statistical_inference.compute_confidence_intervals( \
+            cov_matrix, ell_radius)
+
         if do_reporting:
             print(problem_instance["parameters"])
             print(sum_sq_res_actual)
             print(sums_sq_res_actual)
+            print(confidence_intervals)
             results.plot.plot_fit(problem_instance["time"], problem_instance["outputs"], predicted_values, act_meas_traj)
             results.plot.plot_residuals(problem_instance["time"], residuals_values)
             results.plot.plot_errors_and_residuals(problem_instance["time"], meas_noise_traj, residuals_values)
@@ -382,6 +422,7 @@ class RunLinearOdeExperiments(unittest.TestCase):
         # setup
         all_results = dict(results.report_workflows.workflow_results)
         ref_model_instance, ref_problem_instance, model_instance, problem_instance, \
+            sens_model_instance, sens_problem_instance, \
             stdev, act_meas_traj, exp_meas_traj, meas_noise_traj = self.do_setup()
         # TODO: why?
         tt = copy.deepcopy(problem_instance["time"])
@@ -400,7 +441,8 @@ class RunLinearOdeExperiments(unittest.TestCase):
         problem_instance["parameters"] = result.x
         decision_variables = logger.get_decision_variables()
 
-        self.do_workflow(model_instance, problem_instance, stdev, meas_noise_traj, act_meas_traj)
+        self.do_workflow(model_instance, problem_instance, sens_model_instance, sens_problem_instance, \
+            stdev, meas_noise_traj, act_meas_traj)
         all_results["full"] = self.do_explore_solution_path(decision_variables, model_instance, problem_instance, stdev)
         
         # slicing data
@@ -420,19 +462,19 @@ class RunLinearOdeExperiments(unittest.TestCase):
         problem_instance["parameters"] = result.x
         decision_variables = logger.get_decision_variables()
         
-        self.do_workflow(model_instance, problem_instance, stdev, mne, tmte)
+        self.do_workflow(model_instance, problem_instance, sens_model_instance, sens_problem_instance, stdev, mne, tmte)
         all_results["calibration"] = self.do_explore_solution_path(decision_variables, model_instance, problem_instance, stdev)
 
         # validation data set
         problem_instance["outputs"] = evt
         problem_instance["time"] = tv
-        self.do_workflow(model_instance, problem_instance, stdev, mnv, tmtv)
+        self.do_workflow(model_instance, problem_instance, sens_model_instance, sens_problem_instance, stdev, mnv, tmtv)
         all_results["validation"] = self.do_explore_solution_path(decision_variables, model_instance, problem_instance, stdev)
         
         # validation and calibration data set
         problem_instance["outputs"] = exp_meas_traj
         problem_instance["time"] = tt
-        self.do_workflow(model_instance, problem_instance, stdev, meas_noise_traj, act_meas_traj)
+        self.do_workflow(model_instance, problem_instance, sens_model_instance, sens_problem_instance, stdev, meas_noise_traj, act_meas_traj)
         all_results["calib+valid"] = self.do_explore_solution_path(decision_variables, model_instance, problem_instance, stdev)
         
         # results
@@ -448,7 +490,7 @@ class RunLinearOdeExperiments(unittest.TestCase):
         do_reporting = False
         
         # setup
-        rmi, rpi, mi, pi, \
+        rmi, rpi, mi, pi, smi, spi, \
             stdev, act_meas_traj, exp_meas_traj, meas_noise_traj = self.do_setup()
         
         stdev = 0.25
@@ -485,6 +527,6 @@ class RunLinearOdeExperiments(unittest.TestCase):
 if __name__ == "__main__":
 #    unittest.main()
     suite = unittest.TestSuite()
-    suite.addTest(RunLinearOdeExperiments("test_sensitivities_linear_2p2s"))
+    suite.addTest(RunLinearOdeExperiments("test_workflow_st_linear_2p2s"))
     runner = unittest.TextTestRunner()
     runner.run(suite)
