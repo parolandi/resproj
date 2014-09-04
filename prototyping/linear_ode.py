@@ -350,7 +350,7 @@ class RunLinearOdeExperiments(unittest.TestCase):
             results.plot.plot_errors_and_residuals(problem_instance["time"], meas_noise_traj, residuals_values)
     
 
-    def do_explore_solution_path(self, dv_path, model_instance, problem_instance, stdev):
+    def do_explore_solution_path(self, dv_path, model_instance, problem_instance, sens_model_instance, sens_problem_instance, stdev):
         do_reporting = False
         
         iterations = []
@@ -358,16 +358,19 @@ class RunLinearOdeExperiments(unittest.TestCase):
         objfunc_contribs_path = []
         ssr_path = []
         ssr_contribs_path = []
+        conf_intervs_path = []
+        dec_vars_path = []
         iter = 0
         for dvs in dv_path:
             iterations.append(iter)
 
+            dec_vars = dvs[0]
             # objective function
             sum_sq_res = metrics.ordinary_differential.sum_squared_residuals_st( \
-                dvs[0], linear_2p2s_mock, model_instance, problem_instance)
+                dec_vars, linear_2p2s_mock, model_instance, problem_instance)
             # objective-function contributions
             sums_sq_res = metrics.ordinary_differential.sums_squared_residuals( \
-                dvs[0], linear_2p2s_mock, model_instance, problem_instance)
+                dec_vars, linear_2p2s_mock, model_instance, problem_instance)
             # global ssr test
             dof = metrics.statistical_tests.calculate_degrees_of_freedom( \
                 problem_instance["outputs"], problem_instance["parameter_indices"])
@@ -381,24 +384,44 @@ class RunLinearOdeExperiments(unittest.TestCase):
                 sums_sq_res[0] / stdev **2, dof, 0.95))
             tests_chisquared.append(metrics.statistical_tests.calculate_two_sided_chi_squared_test_for_mean_sum_squared_residuals( \
                 sums_sq_res[1] / stdev **2, dof, 0.95))
-             
+            # sensitivities and covariance matrix
+            sens_snapshot = numpy.asarray(solvers.initial_value.compute_trajectory_st( \
+                sensitivities_linear_2p2s_mock, sens_model_instance, sens_problem_instance))
+            sens_trajectories = common.utilities.sliceit_astrajectory(sens_snapshot)
+            no_params = len(sens_problem_instance["parameters"])
+            no_timepoints = len(sens_problem_instance["time"])
+            cov_matrix = prototyping.estimation_matrices.compute_covariance_matrix(no_params, no_timepoints, sens_trajectories)
+            # ellipsoid radius and confidence interval
+            no_meas = common.utilities.size_it(problem_instance["outputs"])
+            est_stdev = prototyping.statistical_inference.compute_measurements_standard_deviation( \
+                sum_sq_res, no_params, no_meas)
+            ell_radius = prototyping.statistical_inference.compute_confidence_ellipsoid_radius( \
+                no_params, no_meas, est_stdev, 0.9)
+            confidence_intervals = prototyping.statistical_inference.compute_confidence_intervals( \
+                cov_matrix, ell_radius)
+
             objfunc_path.append(sum_sq_res)
             objfunc_contribs_path.append(sums_sq_res)
             ssr_path.append(test_chisquared)
             ssr_contribs_path.append(tests_chisquared)
+            conf_intervs_path.append(confidence_intervals)
+            dec_vars_path.append(dec_vars)
             
             iter += 1
 
         global fig
-        solvers.plot.set_plot_rows_and_cols(4, 2)
+        solvers.plot.set_plot_rows_and_cols(4, 4)
         solvers.plot.get_objective_function_plot(fig, iterations, objfunc_path)
         solvers.plot.get_objective_function_contributions_plot(fig, iterations, objfunc_contribs_path)
+        solvers.plot.get_parameter_estimates_plot(fig, iterations, dec_vars_path)
+        solvers.plot.get_confidence_intervals_plot(fig, iterations, conf_intervs_path)
 
         if do_reporting:
             solvers.plot.plot_objective_function(iterations, objfunc_path)
             solvers.plot.plot_objective_function_contributions(iterations, objfunc_contribs_path)
             solvers.plot.plot_chi_squared_test(iterations, ssr_path)
             solvers.plot.plot_chi_squared_tests(iterations, ssr_contribs_path)
+            # TODO confidence intervals
 
         workflow_results = dict(results.report_workflows.workflow_data)
         workflow_results["params"] = copy.deepcopy(problem_instance["parameters"])
@@ -406,8 +429,10 @@ class RunLinearOdeExperiments(unittest.TestCase):
         workflow_results["obj_contribs"] = objfunc_contribs_path
         workflow_results["ssr"] = ssr_path
         workflow_results["ssr_contribs"] = ssr_contribs_path
+        workflow_results["conf_intervs"] = conf_intervs_path
 
         return workflow_results
+
 
     def test_workflow_st_linear_2p2s(self):
         # globals
@@ -418,6 +443,7 @@ class RunLinearOdeExperiments(unittest.TestCase):
         # configure
         do_reporting = False
         do_results = True
+        dataset_id = '000111'
         
         # setup
         all_results = dict(results.report_workflows.workflow_results)
@@ -443,10 +469,16 @@ class RunLinearOdeExperiments(unittest.TestCase):
 
         self.do_workflow(model_instance, problem_instance, sens_model_instance, sens_problem_instance, \
             stdev, meas_noise_traj, act_meas_traj)
-        all_results["full"] = self.do_explore_solution_path(decision_variables, model_instance, problem_instance, stdev)
+        all_results["full"] = self.do_explore_solution_path( \
+            decision_variables, model_instance, problem_instance, sens_model_instance, sens_problem_instance, stdev)
         
         # slicing data
-        tm, emt, tmte, mne, tv, evt, tmtv, mnv = self.do_slice_data3(ref_problem_instance, exp_meas_traj, meas_noise_traj, act_meas_traj)
+        if dataset_id == '101010':
+            tm, emt, tmte, mne, tv, evt, tmtv, mnv = self.do_slice_data1(ref_problem_instance, exp_meas_traj, meas_noise_traj, act_meas_traj)
+        if dataset_id == '111000':
+            tm, emt, tmte, mne, tv, evt, tmtv, mnv = self.do_slice_data2(ref_problem_instance, exp_meas_traj, meas_noise_traj, act_meas_traj)
+        if dataset_id == '000111':
+            tm, emt, tmte, mne, tv, evt, tmtv, mnv = self.do_slice_data3(ref_problem_instance, exp_meas_traj, meas_noise_traj, act_meas_traj)
 
         # calibration data set
         # least-squares
@@ -463,22 +495,26 @@ class RunLinearOdeExperiments(unittest.TestCase):
         decision_variables = logger.get_decision_variables()
         
         self.do_workflow(model_instance, problem_instance, sens_model_instance, sens_problem_instance, stdev, mne, tmte)
-        all_results["calibration"] = self.do_explore_solution_path(decision_variables, model_instance, problem_instance, stdev)
+        all_results["calibration"] = self.do_explore_solution_path( \
+            decision_variables, model_instance, problem_instance, sens_model_instance, sens_problem_instance, stdev)
 
         # validation data set
         problem_instance["outputs"] = evt
         problem_instance["time"] = tv
         self.do_workflow(model_instance, problem_instance, sens_model_instance, sens_problem_instance, stdev, mnv, tmtv)
-        all_results["validation"] = self.do_explore_solution_path(decision_variables, model_instance, problem_instance, stdev)
+        all_results["validation"] = self.do_explore_solution_path( \
+            decision_variables, model_instance, problem_instance, sens_model_instance, sens_problem_instance, stdev)
         
         # validation and calibration data set
         problem_instance["outputs"] = exp_meas_traj
         problem_instance["time"] = tt
         self.do_workflow(model_instance, problem_instance, sens_model_instance, sens_problem_instance, stdev, meas_noise_traj, act_meas_traj)
-        all_results["calib+valid"] = self.do_explore_solution_path(decision_variables, model_instance, problem_instance, stdev)
+        all_results["calib+valid"] = self.do_explore_solution_path( \
+            decision_variables, model_instance, problem_instance, sens_model_instance, sens_problem_instance, stdev)
         
         # results
         if do_results:
+            fig.suptitle("Dataset-" + dataset_id)
             solvers.plot.show_figure()
         results.report_workflows.report_all(all_results)
 

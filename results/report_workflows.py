@@ -1,6 +1,6 @@
 
 from __future__ import print_function
-
+import math
 
 workflow_data = {
     "params": [],
@@ -8,6 +8,7 @@ workflow_data = {
     "obj_contribs": [],
     "ssr": [],
     "ssr_contribs": [],
+    "conf_intervs": [],
     }
 
 
@@ -44,3 +45,14 @@ def report_all(results):
           results["validation"]["obj_contribs"][len(results["validation"]["obj_contribs"])-1][0], \
           results["calibration"]["obj_contribs"][len(results["calibration"]["obj_contribs"])-1][1] +
           results["validation"]["obj_contribs"][len(results["validation"]["obj_contribs"])-1][1]])
+    print("Conf intervs", \
+          results["full"]["conf_intervs"][len(results["full"]["conf_intervs"])-1], \
+          results["calibration"]["conf_intervs"][len(results["calibration"]["conf_intervs"])-1], \
+          results["validation"]["conf_intervs"][len(results["validation"]["conf_intervs"])-1], \
+          results["calib+valid"]["conf_intervs"][len(results["calib+valid"]["conf_intervs"])-1], \
+          
+          [math.sqrt(results["calibration"]["conf_intervs"][len(results["calibration"]["conf_intervs"])-1][0] *
+          results["validation"]["conf_intervs"][len(results["validation"]["conf_intervs"])-1][0]), \
+          math.sqrt(results["calibration"]["conf_intervs"][len(results["calibration"]["conf_intervs"])-1][1] *
+          results["validation"]["conf_intervs"][len(results["validation"]["conf_intervs"])-1][1])])
+    
