@@ -94,3 +94,25 @@ def get_objective_function_contributions_plot(figure, iterations, values):
         sp.plot(iterations, vals[ii], 'o')
     if get_plot_count() <= no_cols:
         sp.set_title("obj-func-contribs")
+
+
+def get_confidence_intervals_plot(figure, iterations, values):
+    no_rows, no_cols = get_plot_rows_and_cols()
+    sp = figure.add_subplot(no_rows, no_cols, increment_plot_count())
+    
+    vals = numpy.transpose(values)
+    for ii in range(len(vals)):
+        sp.plot(iterations, vals[ii], 'o')
+    if get_plot_count() <= no_cols:
+        sp.set_title("conf intervs")
+
+
+def get_parameter_estimates_plot(figure, iterations, values):
+    no_rows, no_cols = get_plot_rows_and_cols()
+    sp = figure.add_subplot(no_rows, no_cols, increment_plot_count())
+    
+    vals = numpy.transpose(values)
+    for ii in range(len(vals)):
+        sp.plot(iterations, vals[ii], 'o')
+    if get_plot_count() <= no_cols:
+        sp.set_title("param ests")
