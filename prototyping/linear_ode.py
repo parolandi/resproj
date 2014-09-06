@@ -445,7 +445,7 @@ class RunLinearOdeExperiments(unittest.TestCase):
         # configure
         do_reporting = False
         do_results = True
-        dataset_id = '000111'
+        dataset_id = '101010'
         ig_multiplier = 1.0
         # key-CG, key-Nelder-Mead 
         slv_method = solvers.solver_data.nonlinear_algebraic_methods["key-CG"]
