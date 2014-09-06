@@ -147,7 +147,7 @@ class RunLinearOdeExperiments(unittest.TestCase):
         
         true_measurement_trajectories = common.utilities.sliceit_astrajectory(measured)
         
-        measurement_noise = numpy.zeros([2,intervals])
+        measurement_noise = numpy.zeros([2, intervals])
         data.generator.set_seed(117)
         measurement_noise[0] = stdev * data.generator.normal_distribution(intervals)
         measurement_noise[1] = stdev * data.generator.normal_distribution(intervals)
@@ -184,7 +184,7 @@ class RunLinearOdeExperiments(unittest.TestCase):
             stdev, true_measurement_trajectories, experimental_measurement_trajectories, measurement_noise
 
 
-    def do_slice_data1(self, ref_problem_instance, exp_meas_traj, meas_noise_traj, act_meas_traj):
+    def do_slice_data_101010(self, ref_problem_instance, exp_meas_traj, meas_noise_traj, act_meas_traj):
         emts = slice(0, len(exp_meas_traj[0]), 2)
         emt = []
         emt.append(exp_meas_traj[0][(emts)])
@@ -218,7 +218,7 @@ class RunLinearOdeExperiments(unittest.TestCase):
         return tm, emt, tmte, mne, tv, evt, tmtv, mnv  
     
     
-    def do_slice_data2(self, ref_problem_instance, exp_meas_traj, meas_noise_traj, act_meas_traj):
+    def do_slice_data_111000(self, ref_problem_instance, exp_meas_traj, meas_noise_traj, act_meas_traj):
         half = len(exp_meas_traj[0]) // 2
         emts = slice(0, half, 1)
         emt = []
@@ -253,7 +253,7 @@ class RunLinearOdeExperiments(unittest.TestCase):
         return tm, emt, tmte, mne, tv, evt, tmtv, mnv  
 
     
-    def do_slice_data3(self, ref_problem_instance, exp_meas_traj, meas_noise_traj, act_meas_traj):
+    def do_slice_data_000111(self, ref_problem_instance, exp_meas_traj, meas_noise_traj, act_meas_traj):
         half = len(exp_meas_traj[0]) // 2
         emts = slice(half, len(exp_meas_traj[0]), 1)
         emt = []
@@ -479,11 +479,11 @@ class RunLinearOdeExperiments(unittest.TestCase):
         
         # slicing data
         if dataset_id == '101010':
-            tm, emt, tmte, mne, tv, evt, tmtv, mnv = self.do_slice_data1(ref_problem_instance, exp_meas_traj, meas_noise_traj, act_meas_traj)
+            tm, emt, tmte, mne, tv, evt, tmtv, mnv = self.do_slice_data_101010(ref_problem_instance, exp_meas_traj, meas_noise_traj, act_meas_traj)
         if dataset_id == '111000':
-            tm, emt, tmte, mne, tv, evt, tmtv, mnv = self.do_slice_data2(ref_problem_instance, exp_meas_traj, meas_noise_traj, act_meas_traj)
+            tm, emt, tmte, mne, tv, evt, tmtv, mnv = self.do_slice_data_111000(ref_problem_instance, exp_meas_traj, meas_noise_traj, act_meas_traj)
         if dataset_id == '000111':
-            tm, emt, tmte, mne, tv, evt, tmtv, mnv = self.do_slice_data3(ref_problem_instance, exp_meas_traj, meas_noise_traj, act_meas_traj)
+            tm, emt, tmte, mne, tv, evt, tmtv, mnv = self.do_slice_data_000111(ref_problem_instance, exp_meas_traj, meas_noise_traj, act_meas_traj)
 
         # calibration data set
         # least-squares
@@ -610,6 +610,6 @@ class RunLinearOdeExperiments(unittest.TestCase):
 if __name__ == "__main__":
 #    unittest.main()
     suite = unittest.TestSuite()
-    suite.addTest(RunLinearOdeExperiments("test_montecarlo_multiple_optimisation_linear_2p2s"))
+    suite.addTest(RunLinearOdeExperiments("test_workflow_st_linear_2p2s"))
     runner = unittest.TextTestRunner()
     runner.run(suite)
