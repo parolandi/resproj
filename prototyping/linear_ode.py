@@ -2,6 +2,7 @@
 import copy
 import unittest
 import numpy
+import math
 import matplotlib.pyplot
 
 import common.utilities
@@ -16,6 +17,7 @@ import results.report_workflows
 import solvers.initial_value
 import solvers.least_squares
 import solvers.plot
+import solvers.solver_data
 
 
 def linear_2p2s_mock(x, t, p, u):
@@ -444,6 +446,9 @@ class RunLinearOdeExperiments(unittest.TestCase):
         do_reporting = False
         do_results = True
         dataset_id = '000111'
+        ig_multiplier = 1.0
+        # key-CG, key-Nelder-Mead 
+        slv_method = solvers.solver_data.nonlinear_algebraic_methods["key-CG"]
         
         # setup
         all_results = dict(results.report_workflows.workflow_results)
@@ -456,8 +461,8 @@ class RunLinearOdeExperiments(unittest.TestCase):
         algorithm_instance = dict(solvers.solver_data.algorithm_structure)
         logger = solvers.least_squares.DecisionVariableLogger()
         algorithm_instance["callback"] = logger.log_decision_variables
-        algorithm_instance["initial_guesses"] = copy.deepcopy(ref_problem_instance["parameters"])
-        algorithm_instance["method"] = 'Nelder-Mead'
+        algorithm_instance["initial_guesses"] = copy.deepcopy(ref_problem_instance["parameters"]) * ig_multiplier
+        algorithm_instance["method"] = slv_method
         
         # whole data set
         # least-squares
@@ -516,6 +521,7 @@ class RunLinearOdeExperiments(unittest.TestCase):
         if do_results:
             fig.suptitle("Dataset-" + dataset_id)
             solvers.plot.show_figure()
+        print(dataset_id)
         results.report_workflows.report_all(all_results)
 
         self.assertTrue(True)
