@@ -566,9 +566,50 @@ class RunLinearOdeExperiments(unittest.TestCase):
         self.assertTrue(True)
         
                 
+    def test_montecarlo_multiple_optimisation_linear_2p2s(self):
+        montecarlo_trials = 10
+        dynamic_range = 1E3
+        do_plotting = False
+        slv_method = solvers.solver_data.nonlinear_algebraic_methods["key-CG"]
+
+        ref_model_instance, ref_problem_instance, model_instance, problem_instance, \
+            sens_model_instance, sens_problem_instance, \
+            stdev, act_meas_traj, exp_meas_traj, meas_noise_traj = self.do_setup()
+
+        ig = copy.deepcopy(ref_problem_instance["parameters"])
+        algorithm_instance = dict(solvers.solver_data.algorithm_structure)
+        algorithm_instance["initial_guesses"] = ig
+        algorithm_instance["method"] = slv_method
+        
+        initial_guesses = []
+        initial_guesses.append((data.generator.uniform_distribution(montecarlo_trials) -0.5)*2*dynamic_range)
+        initial_guesses.append((data.generator.uniform_distribution(montecarlo_trials) -0.5)*2*dynamic_range)
+        decision_variables = []
+        for ii in range(montecarlo_trials):
+            ig0 = []
+            ig0.append(initial_guesses[0][ii])
+            ig0.append(initial_guesses[1][ii]) 
+            algorithm_instance["initial_guesses"] = ig0
+            result = solvers.least_squares.solve_st( \
+                metrics.ordinary_differential.sum_squared_residuals_st, \
+                linear_2p2s_mock, model_instance, problem_instance, algorithm_instance)
+            decision_variables.append(result.x)
+        dvs = common.utilities.sliceit_astrajectory(decision_variables)
+        mu = []
+        mu.append(numpy.average(dvs[0]))
+        mu.append(numpy.average(dvs[1]))
+        sigma = []
+        sigma.append(numpy.std(dvs[0]))
+        sigma.append(numpy.std(dvs[1]))
+        print("mu, sigma:", mu, sigma)
+        if do_plotting:
+            solvers.plot.plot_scatter(initial_guesses, [])
+            solvers.plot.plot_scatter(dvs, [])
+        
+        
 if __name__ == "__main__":
 #    unittest.main()
     suite = unittest.TestSuite()
-    suite.addTest(RunLinearOdeExperiments("test_workflow_st_linear_2p2s"))
+    suite.addTest(RunLinearOdeExperiments("test_montecarlo_multiple_optimisation_linear_2p2s"))
     runner = unittest.TextTestRunner()
     runner.run(suite)
