@@ -7,6 +7,16 @@ plot_count = 0
 no_rows = 0
 no_cols = 0
 
+
+def plot_scatter(values, dynamic_range):
+    pyplot.plot(values[0], values[1], 'o')
+    pyplot.legend("scatter")
+    if len(dynamic_range) > 0:
+        pyplot.xlim([-dynamic_range[0], dynamic_range[0]])
+        pyplot.ylim([-dynamic_range[1], dynamic_range[1]])
+    pyplot.show()
+
+
 def plot_objective_function(iterations, values):
     pyplot.plot(iterations, values, 'o')
     pyplot.legend("objective function")
