@@ -184,6 +184,27 @@ class RunLinearOdeExperiments(unittest.TestCase):
             stdev, true_measurement_trajectories, experimental_measurement_trajectories, measurement_noise
 
 
+    def do_apply_slicing_101010_ones(self, values):
+        ones = numpy.delete(values, numpy.s_[1::2])
+        return ones
+
+    
+    def do_apply_slicing_1010101_zeros(self, values):
+        zeros = numpy.delete(values, numpy.s_[0::2])
+        return zeros
+
+
+    def do_apply_slicing_110110_ones(self, values):
+        ones = numpy.delete(values, numpy.s_[2::3])
+        return ones
+
+    
+    def do_apply_slicing_110110_zeros(self, values):
+        vals = numpy.delete(values, numpy.s_[0::3])
+        zeros = numpy.delete(vals, numpy.s_[0::2])
+        return zeros
+
+
     def do_slice_data_101010(self, ref_problem_instance, exp_meas_traj, meas_noise_traj, act_meas_traj):
         emts = slice(0, len(exp_meas_traj[0]), 2)
         emt = []
@@ -217,6 +238,42 @@ class RunLinearOdeExperiments(unittest.TestCase):
 
         return tm, emt, tmte, mne, tv, evt, tmtv, mnv  
     
+    
+    def do_slice_data_110110(self, ref_problem_instance, exp_meas_traj, meas_noise_traj, act_meas_traj):
+        
+        emt = []
+        emt.append(self.do_apply_slicing_110110_ones(exp_meas_traj[0]))
+        emt.append(self.do_apply_slicing_110110_ones(exp_meas_traj[1]))
+        tm = self.do_apply_slicing_110110_ones(ref_problem_instance["time"])
+        tmte = []
+        tmte.append(self.do_apply_slicing_110110_ones(act_meas_traj[0]))
+        tmte.append(self.do_apply_slicing_110110_ones(act_meas_traj[1]))
+        mne = []
+        mne.append(self.do_apply_slicing_110110_ones(meas_noise_traj[0]))
+        mne.append(self.do_apply_slicing_110110_ones(meas_noise_traj[0]))
+        
+        evt = []
+        evt.append([exp_meas_traj[0][0]])
+        evt[0].extend(self.do_apply_slicing_110110_zeros(exp_meas_traj[0]))
+        evt.append([exp_meas_traj[1][0]])
+        evt[1].extend(self.do_apply_slicing_110110_zeros(exp_meas_traj[1]))
+        tv = numpy.concatenate(( \
+            numpy.array([ref_problem_instance["time"][0]]), \
+            self.do_apply_slicing_110110_zeros(ref_problem_instance["time"]) \
+            ))
+        tmtv = []
+        tmtv.append([act_meas_traj[0][0]])
+        tmtv[0].extend(self.do_apply_slicing_110110_zeros(act_meas_traj[0]))
+        tmtv.append([act_meas_traj[1][0]])
+        tmtv[1].extend(self.do_apply_slicing_110110_zeros(act_meas_traj[1]))
+        mnv = []
+        mnv.append([meas_noise_traj[0][0]])
+        mnv[0].extend(self.do_apply_slicing_110110_zeros(meas_noise_traj[0]))
+        mnv.append([meas_noise_traj[1][0]])
+        mnv[1].extend(self.do_apply_slicing_110110_zeros(meas_noise_traj[1]))
+
+        return tm, emt, tmte, mne, tv, evt, tmtv, mnv  
+
     
     def do_slice_data_111000(self, ref_problem_instance, exp_meas_traj, meas_noise_traj, act_meas_traj):
         half = len(exp_meas_traj[0]) // 2
@@ -445,10 +502,10 @@ class RunLinearOdeExperiments(unittest.TestCase):
         # configure
         do_reporting = False
         do_results = True
-        dataset_id = '101010'
+        dataset_id = '110110'
         ig_multiplier = 1.0
         # key-CG, key-Nelder-Mead 
-        slv_method = solvers.solver_data.nonlinear_algebraic_methods["key-CG"]
+        slv_method = solvers.solver_data.nonlinear_algebraic_methods["key-Nelder-Mead"]
         
         # setup
         all_results = dict(results.report_workflows.workflow_results)
@@ -484,6 +541,8 @@ class RunLinearOdeExperiments(unittest.TestCase):
             tm, emt, tmte, mne, tv, evt, tmtv, mnv = self.do_slice_data_111000(ref_problem_instance, exp_meas_traj, meas_noise_traj, act_meas_traj)
         if dataset_id == '000111':
             tm, emt, tmte, mne, tv, evt, tmtv, mnv = self.do_slice_data_000111(ref_problem_instance, exp_meas_traj, meas_noise_traj, act_meas_traj)
+        if dataset_id == '110110':
+            tm, emt, tmte, mne, tv, evt, tmtv, mnv = self.do_slice_data_110110(ref_problem_instance, exp_meas_traj, meas_noise_traj, act_meas_traj)
 
         # calibration data set
         # least-squares
@@ -605,8 +664,8 @@ class RunLinearOdeExperiments(unittest.TestCase):
         if do_plotting:
             solvers.plot.plot_scatter(initial_guesses, [])
             solvers.plot.plot_scatter(dvs, [])
-        
-        
+
+
 if __name__ == "__main__":
 #    unittest.main()
     suite = unittest.TestSuite()
