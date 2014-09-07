@@ -8,7 +8,9 @@ import solvers.initial_value
 
 # TODO: rename; remove _st
 def residuals_st(model, model_instance, problem_instance):
-    # TODO: preconditions    
+    # TODO: preconditions
+    assert(len(problem_instance["output_indices"]) > 0)
+    
     measured = numpy.asarray(problem_instance["outputs"])
     result = solvers.initial_value.compute_trajectory_st(model, model_instance, problem_instance)
     predicted = common.utilities.sliceit_astrajectory(result)
