@@ -1,5 +1,6 @@
 
 # TODO: migrate to scipy
+# TODO: rename to noise generator
 import numpy.random
 
 def set_seed(value):
