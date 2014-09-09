@@ -586,6 +586,8 @@ class RunLinearOdeExperiments(unittest.TestCase):
         self.assertTrue(True)
 
 
+    # this does a montecarlo randomisation of parameters
+    # and computes the residuals
     def test_montecarlo_st_linear_2p2s(self):
         # configure
         do_reporting = False
@@ -625,6 +627,8 @@ class RunLinearOdeExperiments(unittest.TestCase):
         self.assertTrue(True)
         
                 
+    # this does a montecarlo randomisation of initial guesses
+    # and solves the least-squares problem
     def test_montecarlo_multiple_optimisation_linear_2p2s(self):
         montecarlo_trials = 10
         dynamic_range = 1E3
