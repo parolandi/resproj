@@ -5,6 +5,8 @@ import numpy
 import math
 import matplotlib.pyplot
 
+import models.ordinary_differential
+
 import common.utilities
 import data.generator
 import metrics.ordinary_differential
@@ -19,28 +21,7 @@ import solvers.least_squares
 import solvers.plot
 import solvers.solver_data
 
-
-def linear_2p2s_mock(x, t, p, u):
-    assert(len(x) == 2)
-    assert(len(p) == 2)
-    assert(len(u) == 2)
-    dx_dt = p * u - x
-    return dx_dt
-
-
-# note that in this particular case there is no dependence x
-def sensitivities_linear_2p2s_mock(s, t, p, u):
-    assert(len(s) == 4)
-    assert(len(p) == 2)
-    assert(len(u) == 2)
-    ds_dt = []
-    ds_dt.append(u[0] - s[0])
-    ds_dt.append(0.0)
-    ds_dt.append(0.0)
-    ds_dt.append(u[1] - s[3])
-    return ds_dt
-    
-    
+   
 class RunLinearOdeExperiments(unittest.TestCase):
 
     def test_sensitivities_linear_2p2s(self):
@@ -64,7 +45,7 @@ class RunLinearOdeExperiments(unittest.TestCase):
         sens_problem_instance["inputs"] = numpy.array([1.0, 2.0])
         
         sens_snapshot = numpy.asarray(solvers.initial_value.compute_trajectory_st( \
-            sensitivities_linear_2p2s_mock, sens_model_instance, sens_problem_instance))
+            models.ordinary_differential.sensitivities_linear_2p2s, sens_model_instance, sens_problem_instance))
         sens_trajectories = common.utilities.sliceit_astrajectory(sens_snapshot)
 
         no_params = len(sens_problem_instance["parameters"])
@@ -91,7 +72,7 @@ class RunLinearOdeExperiments(unittest.TestCase):
         sys_problem_instance["inputs"] = numpy.array([1.0, 2.0])
 
         true_snap = numpy.asarray(solvers.initial_value.compute_trajectory_st( \
-            linear_2p2s_mock, sys_model_instance, sys_problem_instance))
+            models.ordinary_differential.linear_2p2s, sys_model_instance, sys_problem_instance))
         true_traj = common.utilities.sliceit_astrajectory(true_snap)
 
         no_points = len(sens_problem_instance["time"])
@@ -106,7 +87,8 @@ class RunLinearOdeExperiments(unittest.TestCase):
         sys_problem_instance["output_indices"] = numpy.array([0.0, 1.0])
         
         sum_sq_res_actual = metrics.ordinary_differential.sum_squared_residuals_st( \
-            sys_problem_instance["parameters"], linear_2p2s_mock, sys_model_instance, sys_problem_instance)
+            sys_problem_instance["parameters"], models.ordinary_differential.linear_2p2s, \
+            sys_model_instance, sys_problem_instance)
         no_params = len(sys_problem_instance["parameters"])
         no_meas = no_points * 2
         est_stdev = sum_sq_res_actual / (no_meas - no_params)
@@ -143,7 +125,7 @@ class RunLinearOdeExperiments(unittest.TestCase):
         ref_problem_instance["inputs"] = numpy.array([1.0, 2.0])
 
         measured = numpy.asarray(solvers.initial_value.compute_trajectory_st( \
-            linear_2p2s_mock, ref_model_instance, ref_problem_instance))
+            models.ordinary_differential.linear_2p2s, ref_model_instance, ref_problem_instance))
         
         true_measurement_trajectories = common.utilities.sliceit_astrajectory(measured)
         
@@ -353,20 +335,22 @@ class RunLinearOdeExperiments(unittest.TestCase):
         
         # objective function
         sum_sq_res_actual = metrics.ordinary_differential.sum_squared_residuals_st( \
-            problem_instance["parameters"], linear_2p2s_mock, model_instance, problem_instance)
+            problem_instance["parameters"], models.ordinary_differential.linear_2p2s, \
+            model_instance, problem_instance)
 
         # objective-function contributions
         sums_sq_res_actual = metrics.ordinary_differential.sums_squared_residuals( \
-            problem_instance["parameters"], linear_2p2s_mock, model_instance, problem_instance)
+            problem_instance["parameters"], models.ordinary_differential.linear_2p2s, \
+            model_instance, problem_instance)
 
         # observables' trajectories
         predicted_snapshots = solvers.initial_value.compute_trajectory_st( \
-            linear_2p2s_mock, model_instance, problem_instance)
+            models.ordinary_differential.linear_2p2s, model_instance, problem_instance)
         predicted_values = common.utilities.sliceit_astrajectory(predicted_snapshots)
         
         # residuals' trajectories
         residuals_values = metrics.ordinary_differential.residuals_st( \
-            linear_2p2s_mock, model_instance, problem_instance)
+            models.ordinary_differential.linear_2p2s, model_instance, problem_instance)
 
         # global ssr test
         dof = metrics.statistical_tests.calculate_degrees_of_freedom( \
@@ -384,7 +368,7 @@ class RunLinearOdeExperiments(unittest.TestCase):
 
         # sensitivities and covariance matrix
         sens_snapshot = numpy.asarray(solvers.initial_value.compute_trajectory_st( \
-            sensitivities_linear_2p2s_mock, sens_model_instance, sens_problem_instance))
+            models.ordinary_differential.sensitivities_linear_2p2s, sens_model_instance, sens_problem_instance))
         sens_trajectories = common.utilities.sliceit_astrajectory(sens_snapshot)
         no_params = len(sens_problem_instance["parameters"])
         no_timepoints = len(sens_problem_instance["time"])
@@ -426,10 +410,10 @@ class RunLinearOdeExperiments(unittest.TestCase):
             dec_vars = dvs[0]
             # objective function
             sum_sq_res = metrics.ordinary_differential.sum_squared_residuals_st( \
-                dec_vars, linear_2p2s_mock, model_instance, problem_instance)
+                dec_vars, models.ordinary_differential.linear_2p2s, model_instance, problem_instance)
             # objective-function contributions
             sums_sq_res = metrics.ordinary_differential.sums_squared_residuals( \
-                dec_vars, linear_2p2s_mock, model_instance, problem_instance)
+                dec_vars, models.ordinary_differential.linear_2p2s, model_instance, problem_instance)
             # global ssr test
             dof = metrics.statistical_tests.calculate_degrees_of_freedom( \
                 problem_instance["outputs"], problem_instance["parameter_indices"])
@@ -445,7 +429,7 @@ class RunLinearOdeExperiments(unittest.TestCase):
                 sums_sq_res[1] / stdev **2, dof, 0.95))
             # sensitivities and covariance matrix
             sens_snapshot = numpy.asarray(solvers.initial_value.compute_trajectory_st( \
-                sensitivities_linear_2p2s_mock, sens_model_instance, sens_problem_instance))
+                models.ordinary_differential.sensitivities_linear_2p2s, sens_model_instance, sens_problem_instance))
             sens_trajectories = common.utilities.sliceit_astrajectory(sens_snapshot)
             no_params = len(sens_problem_instance["parameters"])
             no_timepoints = len(sens_problem_instance["time"])
@@ -525,7 +509,7 @@ class RunLinearOdeExperiments(unittest.TestCase):
         # least-squares
         result = solvers.least_squares.solve_st( \
             metrics.ordinary_differential.sum_squared_residuals_st, \
-            linear_2p2s_mock, model_instance, problem_instance, algorithm_instance)
+            models.ordinary_differential.linear_2p2s, model_instance, problem_instance, algorithm_instance)
         problem_instance["parameters"] = result.x
         decision_variables = logger.get_decision_variables()
 
@@ -554,7 +538,7 @@ class RunLinearOdeExperiments(unittest.TestCase):
         algorithm_instance["initial_guesses"] = copy.deepcopy(ref_problem_instance["parameters"])
         result = solvers.least_squares.solve_st( \
             metrics.ordinary_differential.sum_squared_residuals_st, \
-            linear_2p2s_mock, model_instance, problem_instance, algorithm_instance)
+            models.ordinary_differential.linear_2p2s, model_instance, problem_instance, algorithm_instance)
         problem_instance["parameters"] = result.x
         decision_variables = logger.get_decision_variables()
         
@@ -608,12 +592,15 @@ class RunLinearOdeExperiments(unittest.TestCase):
         sums_mc_residuals = []
         for ii in range(len(mct)):
             pi["parameters"] = mct[ii]
-            snapshots = solvers.initial_value.compute_trajectory_st(linear_2p2s_mock, mi, pi)
+            snapshots = solvers.initial_value.compute_trajectory_st( \
+                models.ordinary_differential.linear_2p2s, mi, pi)
             trajectories = common.utilities.sliceit_astrajectory(snapshots)
             mc_outputs.append(trajectories)
-            residuals = metrics.ordinary_differential.residuals_st(linear_2p2s_mock, mi, pi)
+            residuals = metrics.ordinary_differential.residuals_st( \
+                models.ordinary_differential.linear_2p2s, mi, pi)
             mc_residuals.append(residuals)
-            sums = metrics.ordinary_differential.sums_squared_residuals(mct[ii], linear_2p2s_mock, mi, pi)
+            sums = metrics.ordinary_differential.sums_squared_residuals( \
+                mct[ii], models.ordinary_differential.linear_2p2s, mi, pi)
             sums_mc_residuals.append(sums)
 
         pairs = numpy.transpose(sums_mc_residuals)
@@ -655,7 +642,7 @@ class RunLinearOdeExperiments(unittest.TestCase):
             algorithm_instance["initial_guesses"] = ig0
             result = solvers.least_squares.solve_st( \
                 metrics.ordinary_differential.sum_squared_residuals_st, \
-                linear_2p2s_mock, model_instance, problem_instance, algorithm_instance)
+                models.ordinary_differential.linear_2p2s, model_instance, problem_instance, algorithm_instance)
             decision_variables.append(result.x)
         dvs = common.utilities.sliceit_astrajectory(decision_variables)
         mu = []
