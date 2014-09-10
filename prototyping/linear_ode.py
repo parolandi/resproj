@@ -13,7 +13,7 @@ import metrics.ordinary_differential
 import metrics.statistical_tests
 import models.model_data
 import prototyping.statistical_inference
-import prototyping.estimation_matrices
+import engine.estimation_matrices
 import results.plot
 import results.report_workflows
 import solvers.initial_value
@@ -50,7 +50,7 @@ class RunLinearOdeExperiments(unittest.TestCase):
 
         no_params = len(sens_problem_instance["parameters"])
         no_timepoints = len(sens_problem_instance["time"])
-        sm = prototyping.estimation_matrices.prepare_sensitivity_matrix(no_params, no_timepoints, sens_trajectories)
+        sm = engine.estimation_matrices.prepare_sensitivity_matrix(no_params, no_timepoints, sens_trajectories)
 
         h = sm.transpose().dot(sm)
         print("H", h)
@@ -372,7 +372,7 @@ class RunLinearOdeExperiments(unittest.TestCase):
         sens_trajectories = common.utilities.sliceit_astrajectory(sens_snapshot)
         no_params = len(sens_problem_instance["parameters"])
         no_timepoints = len(sens_problem_instance["time"])
-        cov_matrix = prototyping.estimation_matrices.compute_covariance_matrix(no_params, no_timepoints, sens_trajectories)
+        cov_matrix = engine.estimation_matrices.compute_covariance_matrix(no_params, no_timepoints, sens_trajectories)
 
         # ellipsoid radius and confidence interval
         no_meas = common.utilities.size_it(problem_instance["outputs"])
@@ -433,7 +433,7 @@ class RunLinearOdeExperiments(unittest.TestCase):
             sens_trajectories = common.utilities.sliceit_astrajectory(sens_snapshot)
             no_params = len(sens_problem_instance["parameters"])
             no_timepoints = len(sens_problem_instance["time"])
-            cov_matrix = prototyping.estimation_matrices.compute_covariance_matrix(no_params, no_timepoints, sens_trajectories)
+            cov_matrix = engine.estimation_matrices.compute_covariance_matrix(no_params, no_timepoints, sens_trajectories)
             # ellipsoid radius and confidence interval
             no_meas = common.utilities.size_it(problem_instance["outputs"])
             est_stdev = prototyping.statistical_inference.compute_measurements_standard_deviation( \
