@@ -12,7 +12,7 @@ import data.generator
 import metrics.ordinary_differential
 import metrics.statistical_tests
 import models.model_data
-import prototyping.statistical_inference
+import engine.statistical_inference
 import engine.estimation_matrices
 import results.plot
 import results.report_workflows
@@ -93,7 +93,7 @@ class RunLinearOdeExperiments(unittest.TestCase):
         no_meas = no_points * 2
         est_stdev = sum_sq_res_actual / (no_meas - no_params)
         significance = 0.9
-        radius = prototyping.statistical_inference.compute_confidence_ellipsoid_radius(no_params, no_meas, est_stdev, significance)
+        radius = engine.statistical_inference.compute_confidence_ellipsoid_radius(no_params, no_meas, est_stdev, significance)
         print("radius", radius)
         r_p1 = radius * varcovar[0,0]
         r_p2 = radius * varcovar[1,1]
@@ -376,11 +376,11 @@ class RunLinearOdeExperiments(unittest.TestCase):
 
         # ellipsoid radius and confidence interval
         no_meas = common.utilities.size_it(problem_instance["outputs"])
-        est_stdev = prototyping.statistical_inference.compute_measurements_standard_deviation( \
+        est_stdev = engine.statistical_inference.compute_measurements_standard_deviation( \
             sum_sq_res_actual, no_params, no_meas)
-        ell_radius = prototyping.statistical_inference.compute_confidence_ellipsoid_radius( \
+        ell_radius = engine.statistical_inference.compute_confidence_ellipsoid_radius( \
             no_params, no_meas, est_stdev, 0.9)
-        confidence_intervals = prototyping.statistical_inference.compute_confidence_intervals( \
+        confidence_intervals = engine.statistical_inference.compute_confidence_intervals( \
             cov_matrix, ell_radius)
 
         if do_reporting:
@@ -436,11 +436,11 @@ class RunLinearOdeExperiments(unittest.TestCase):
             cov_matrix = engine.estimation_matrices.compute_covariance_matrix(no_params, no_timepoints, sens_trajectories)
             # ellipsoid radius and confidence interval
             no_meas = common.utilities.size_it(problem_instance["outputs"])
-            est_stdev = prototyping.statistical_inference.compute_measurements_standard_deviation( \
+            est_stdev = engine.statistical_inference.compute_measurements_standard_deviation( \
                 sum_sq_res, no_params, no_meas)
-            ell_radius = prototyping.statistical_inference.compute_confidence_ellipsoid_radius( \
+            ell_radius = engine.statistical_inference.compute_confidence_ellipsoid_radius( \
                 no_params, no_meas, est_stdev, 0.9)
-            confidence_intervals = prototyping.statistical_inference.compute_confidence_intervals( \
+            confidence_intervals = engine.statistical_inference.compute_confidence_intervals( \
                 cov_matrix, ell_radius)
 
             objfunc_path.append(sum_sq_res)
