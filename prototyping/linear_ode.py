@@ -565,7 +565,7 @@ class RunLinearOdeExperiments(unittest.TestCase):
             fig.suptitle("Dataset-" + dataset_id)
             solvers.plot.show_figure()
         print(dataset_id)
-        results.report_workflows.report_all(all_results)
+        results.report_workflows.report_results(all_results)
 
         self.assertTrue(True)
 
