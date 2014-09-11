@@ -149,7 +149,7 @@ class TestExperiment01(unittest.TestCase):
             fig.suptitle("Dataset-" + dataset_id)
             solvers.plot.show_figure()
         print(dataset_id)
-        all_results = dict(results.report_workflows.workflow_results)
+        all_results = dict(workflows.workflow_data.workflow_results)
         all_results["full"] = path_results
         results.report_workflows.report_data(path_results)
 

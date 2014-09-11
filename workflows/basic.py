@@ -9,21 +9,7 @@ import engine.estimation_matrices
 import engine.statistical_inference
 import results.plot
 import solvers.initial_value
-
-
-#return sum_sq_res, sums_sq_res, residuals_values, ssr_test, ssr_tests, \
-#    cov_matrix, est_stdev, ell_radius, confidence_intervals
-point_results = {
-    "ssr": 0.0,
-    "ssrs": [],
-    "ress_vals": [],
-    "ssr_test": False,
-    "ssrs_tests": [],
-    "cov_matrix": None,
-    "est_stdev": 0.0,
-    "ell_radius": 0.0,
-    "conf_intvs": [],
-    }
+import workflows.workflow_data
 
 
 # TODO: do workflow fitting, do workflow no fitting
@@ -102,7 +88,7 @@ def do_workflow_at_solution_point(model, model_instance, problem_instance, \
         results.plot.plot_residuals(problem_instance["time"], residuals_values)
         results.plot.plot_errors_and_residuals(problem_instance["time"], meas_noise_traj, residuals_values)
         
-    workflow_results = dict(point_results)
+    workflow_results = dict(workflows.workflow_data.point_results)
     workflow_results["ssr"] = sum_sq_res
     workflow_results["ssrs"] = sums_sq_res
     workflow_results["ress_vals"] = residuals_values
@@ -197,14 +183,14 @@ def do_workflow_at_solution_path(model, model_instance, problem_instance, \
         solvers.plot.plot_chi_squared_tests(iterations, ssr_contribs_path)
         # TODO confidence intervals
 
-    workflow_results = dict(results.report_workflows.workflow_data)
+    workflow_results = dict(workflows.workflow_data.workflow_data)
     workflow_results["params"] = copy.deepcopy(problem_instance["parameters"])
     workflow_results["obj"] = objfunc_path
     workflow_results["obj_contribs"] = objfunc_contribs_path
     workflow_results["ssr"] = ssr_path
     workflow_results["ssr_contribs"] = ssr_contribs_path
     workflow_results["conf_intervs"] = conf_intervs_path
-    algo_stats = dict(results.report_workflows.algorithmic_statistics)
+    algo_stats = dict(workflows.workflow_data.algorithmic_statistics)
     algo_stats["iters"] = iter
     workflow_results["algo_stats"] = algo_stats
 

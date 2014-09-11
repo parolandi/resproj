@@ -20,6 +20,7 @@ import solvers.initial_value
 import solvers.least_squares
 import solvers.plot
 import solvers.solver_data
+import workflows.workflow_data
 
    
 class RunLinearOdeExperiments(unittest.TestCase):
@@ -466,7 +467,7 @@ class RunLinearOdeExperiments(unittest.TestCase):
             solvers.plot.plot_chi_squared_tests(iterations, ssr_contribs_path)
             # TODO confidence intervals
 
-        workflow_results = dict(results.report_workflows.workflow_data)
+        workflow_results = dict(workflows.workflow_data.workflow_data)
         workflow_results["params"] = copy.deepcopy(problem_instance["parameters"])
         workflow_results["obj"] = objfunc_path
         workflow_results["obj_contribs"] = objfunc_contribs_path
@@ -492,7 +493,7 @@ class RunLinearOdeExperiments(unittest.TestCase):
         slv_method = solvers.solver_data.nonlinear_algebraic_methods["key-Nelder-Mead"]
         
         # setup
-        all_results = dict(results.report_workflows.workflow_results)
+        all_results = dict(workflows.workflow_data.workflow_results)
         ref_model_instance, ref_problem_instance, model_instance, problem_instance, \
             sens_model_instance, sens_problem_instance, \
             stdev, act_meas_traj, exp_meas_traj, meas_noise_traj = self.do_setup()

@@ -2,28 +2,6 @@
 from __future__ import print_function
 import math
 
-algorithmic_statistics = {
-    "iters": 0,
-    }
-
-workflow_data = {
-    "params": [],
-    "obj": [],
-    "obj_contribs": [],
-    "ssr": [],
-    "ssr_contribs": [],
-    "conf_intervs": [],
-    "algo_stats": algorithmic_statistics,
-    }
-
-
-workflow_results = {
-    "full": workflow_data,
-    "calibration": workflow_data,
-    "validation": workflow_data,
-    "calib+valid": workflow_data, 
-    }
-
 
 def report_data(it):
     print("Params", it["params"])
