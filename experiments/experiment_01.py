@@ -8,6 +8,14 @@ import models.model_data
 import models.ordinary_differential
 import solvers.initial_value
 
+#TODO
+import results.report_workflows
+import metrics.ordinary_differential
+import solvers.plot
+import solvers.solver_data
+import solvers.least_squares
+import workflows.basic
+
 
 class TestExperiment01(unittest.TestCase):
 
@@ -77,10 +85,74 @@ class TestExperiment01(unittest.TestCase):
             stdev, true_measurement_trajectories, experimental_measurement_trajectories, measurement_noise
 
     
-    def testName(self):
-        pass
+    def test_do_experiment_01(self):
+        # TODO: user messages
+
+        # configure
+        dataset_id = "1234"
+        do_results = True
+        ig_multiplier = 1.0
+        # use... key-CG, key-Nelder-Mead 
+        slv_method = solvers.solver_data.nonlinear_algebraic_methods["key-Nelder-Mead"]
+        
+        # setup
+        model_instance, problem_instance, sens_model_instance, sens_problem_instance, \
+            stdev, act_meas_traj, exp_meas_traj, meas_noise_traj = self.do_setup()
+
+        algorithm_instance = dict(solvers.solver_data.algorithm_structure)
+        logger = solvers.least_squares.DecisionVariableLogger()
+        algorithm_instance["callback"] = logger.log_decision_variables
+        algorithm_instance["initial_guesses"] = copy.deepcopy(problem_instance["parameters"]) * ig_multiplier
+        algorithm_instance["method"] = slv_method
+        
+        # whole data set
+        # least-squares
+        result = solvers.least_squares.solve_st( \
+            metrics.ordinary_differential.sum_squared_residuals_st, \
+            models.ordinary_differential.linear_2p2s, model_instance, problem_instance, algorithm_instance)
+        problem_instance["parameters"] = result.x
+        solution_path = logger.get_decision_variables()
+
+        point_results = workflows.basic.do_workflow_at_solution_point( \
+                models.ordinary_differential.linear_2p2s, model_instance, problem_instance, \
+                models.ordinary_differential.sensitivities_linear_2p2s, sens_model_instance, sens_problem_instance, \
+                stdev, meas_noise_traj, act_meas_traj)
+        
+        # TODO: refactor, extract
+        actual = 1.66318438177
+        self.assertAlmostEquals(point_results["ssr"], actual, 10)
+        actual = [0.671178063893324, 0.992006317875997]
+        [self.assertAlmostEquals(i, j, 10) for i, j in zip(point_results["ssrs"], actual)]
+        # TODO: ress_vals
+        actual = True
+        self.assertEquals(point_results["ssr_test"], actual)
+        actual = [True, True]
+        [self.assertEquals(i, j) for i, j in zip(point_results["ssrs_tests"], actual)]
+        # TODO: cov_matrix
+        # TODO: est_stdev
+        # TODO: ell_radius
+        actual = [0.000253734589, 0.0000634336473]
+        [self.assertAlmostEquals(i, j, 10) for i, j in zip(point_results["conf_intvs"], actual)]
+       
+        fig = solvers.plot.get_figure()
+        path_results = workflows.basic.do_workflow_at_solution_path( \
+                models.ordinary_differential.linear_2p2s, model_instance, problem_instance, \
+                models.ordinary_differential.sensitivities_linear_2p2s, sens_model_instance, sens_problem_instance, \
+                stdev, solution_path, fig)
+        
+        # TODO: extract
+        actual = 24
+        self.assertEquals(path_results["algo_stats"]["iters"], actual)
+
+        # results
+        if do_results:
+            fig.suptitle("Dataset-" + dataset_id)
+            solvers.plot.show_figure()
+        print(dataset_id)
+        all_results = dict(results.report_workflows.workflow_results)
+        all_results["full"] = path_results
+        results.report_workflows.report_data(path_results)
 
 
 if __name__ == "__main__":
-    #import sys;sys.argv = ['', 'Test.testName']
     unittest.main()
