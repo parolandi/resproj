@@ -1,19 +1,19 @@
+
 import unittest
 import copy
 import numpy
 
 import common.utilities
+import data.data_splicing
 import data.generator
+import metrics.ordinary_differential
 import models.model_data
 import models.ordinary_differential
-import solvers.initial_value
-
-#TODO
 import results.report_workflows
-import metrics.ordinary_differential
+import solvers.initial_value
+import solvers.least_squares
 import solvers.plot
 import solvers.solver_data
-import solvers.least_squares
 import workflows.basic
 
 
@@ -84,8 +84,32 @@ class TestExperiment01(unittest.TestCase):
         return model_instance, problem_instance, sens_model_instance, sens_problem_instance, \
             stdev, true_measurement_trajectories, experimental_measurement_trajectories, measurement_noise
 
+
+    def do_test_point(self, point_results):
+        # TODO: refactor, extract
+        actual = 1.66318438177
+        self.assertAlmostEquals(point_results["ssr"], actual, 10)
+        actual = [0.671178063893324, 0.992006317875997]
+        [self.assertAlmostEquals(i, j, 10) for i, j in zip(point_results["ssrs"], actual)]
+        # TODO: ress_vals
+        actual = True
+        self.assertEquals(point_results["ssr_test"], actual)
+        actual = [True, True]
+        [self.assertEquals(i, j) for i, j in zip(point_results["ssrs_tests"], actual)]
+        # TODO: cov_matrix
+        # TODO: est_stdev
+        # TODO: ell_radius
+        actual = [0.000253734589, 0.0000634336473]
+        [self.assertAlmostEquals(i, j, 10) for i, j in zip(point_results["conf_intvs"], actual)]
+        
+
+    def do_test_path(self, path_results):
+        actual = 24
+        self.assertEquals(path_results["algo_stats"]["iters"], actual)
+
     
-    def test_do_experiment_01(self):
+    # TODO: do deep copies    
+    def do_experiment(self, data_splicer):
         # TODO: user messages
 
         # configure
@@ -98,6 +122,8 @@ class TestExperiment01(unittest.TestCase):
         # setup
         model_instance, problem_instance, sens_model_instance, sens_problem_instance, \
             stdev, act_meas_traj, exp_meas_traj, meas_noise_traj = self.do_setup()
+        # TODO: use deep copies
+        full_time = problem_instance["time"]
 
         algorithm_instance = dict(solvers.solver_data.algorithm_structure)
         logger = solvers.least_squares.DecisionVariableLogger()
@@ -116,23 +142,9 @@ class TestExperiment01(unittest.TestCase):
         point_results = workflows.basic.do_workflow_at_solution_point( \
                 models.ordinary_differential.linear_2p2s, model_instance, problem_instance, \
                 models.ordinary_differential.sensitivities_linear_2p2s, sens_model_instance, sens_problem_instance, \
-                stdev, meas_noise_traj, act_meas_traj)
+                stdev, problem_instance["outputs"], act_meas_traj)
         
-        # TODO: refactor, extract
-        actual = 1.66318438177
-        self.assertAlmostEquals(point_results["ssr"], actual, 10)
-        actual = [0.671178063893324, 0.992006317875997]
-        [self.assertAlmostEquals(i, j, 10) for i, j in zip(point_results["ssrs"], actual)]
-        # TODO: ress_vals
-        actual = True
-        self.assertEquals(point_results["ssr_test"], actual)
-        actual = [True, True]
-        [self.assertEquals(i, j) for i, j in zip(point_results["ssrs_tests"], actual)]
-        # TODO: cov_matrix
-        # TODO: est_stdev
-        # TODO: ell_radius
-        actual = [0.000253734589, 0.0000634336473]
-        [self.assertAlmostEquals(i, j, 10) for i, j in zip(point_results["conf_intvs"], actual)]
+        self.do_test_point(point_results)
        
         fig = solvers.plot.get_figure()
         path_results = workflows.basic.do_workflow_at_solution_path( \
@@ -140,18 +152,93 @@ class TestExperiment01(unittest.TestCase):
                 models.ordinary_differential.sensitivities_linear_2p2s, sens_model_instance, sens_problem_instance, \
                 stdev, solution_path, fig)
         
-        # TODO: extract
-        actual = 24
-        self.assertEquals(path_results["algo_stats"]["iters"], actual)
+        self.do_test_path(path_results)
+
+        all_results = dict(workflows.workflow_data.workflow_results)
+        all_results["full"] = path_results
+
+        dataset = data_splicer(problem_instance["time"], exp_meas_traj, meas_noise_traj, act_meas_traj)
+    
+        # calibration data set
+        # least-squares
+        problem_instance["outputs"] = dataset["calib"]["meas"]
+        problem_instance["time"] = dataset["calib"]["time"]
+
+        logger = solvers.least_squares.DecisionVariableLogger()
+        algorithm_instance["callback"] = logger.log_decision_variables
+        algorithm_instance["initial_guesses"] = copy.deepcopy(problem_instance["parameters"])
+        result = solvers.least_squares.solve_st( \
+            metrics.ordinary_differential.sum_squared_residuals_st, \
+            models.ordinary_differential.linear_2p2s, model_instance, problem_instance, algorithm_instance)
+        problem_instance["parameters"] = result.x
+        solution_path = logger.get_decision_variables()
+        
+        point_results = workflows.basic.do_workflow_at_solution_point( \
+                models.ordinary_differential.linear_2p2s, model_instance, problem_instance, \
+                models.ordinary_differential.sensitivities_linear_2p2s, sens_model_instance, sens_problem_instance, \
+                stdev, problem_instance["outputs"], dataset["calib"]["true"])
+
+        # TODO: test
+        
+        path_results = workflows.basic.do_workflow_at_solution_path( \
+                models.ordinary_differential.linear_2p2s, model_instance, problem_instance, \
+                models.ordinary_differential.sensitivities_linear_2p2s, sens_model_instance, sens_problem_instance, \
+                stdev, solution_path, fig)
+
+        # TODO: test
+
+        all_results["calibration"] = path_results
+        
+        # validation data set
+        problem_instance["outputs"] = dataset["valid"]["meas"]
+        problem_instance["time"] = dataset["valid"]["time"]
+
+        point_results = workflows.basic.do_workflow_at_solution_point( \
+                models.ordinary_differential.linear_2p2s, model_instance, problem_instance, \
+                models.ordinary_differential.sensitivities_linear_2p2s, sens_model_instance, sens_problem_instance, \
+                stdev, problem_instance["outputs"], dataset["valid"]["true"])
+
+        # TODO: test
+        
+        path_results = workflows.basic.do_workflow_at_solution_path( \
+                models.ordinary_differential.linear_2p2s, model_instance, problem_instance, \
+                models.ordinary_differential.sensitivities_linear_2p2s, sens_model_instance, sens_problem_instance, \
+                stdev, solution_path, fig)
+
+        # TODO: test
+
+        all_results["validation"] = path_results
+                
+        # validation and calibration data sets
+        problem_instance["outputs"] = exp_meas_traj
+        problem_instance["time"] = full_time
+
+        point_results = workflows.basic.do_workflow_at_solution_point( \
+                models.ordinary_differential.linear_2p2s, model_instance, problem_instance, \
+                models.ordinary_differential.sensitivities_linear_2p2s, sens_model_instance, sens_problem_instance, \
+                stdev, problem_instance["outputs"], act_meas_traj)
+
+        # TODO: test
+        
+        path_results = workflows.basic.do_workflow_at_solution_path( \
+                models.ordinary_differential.linear_2p2s, model_instance, problem_instance, \
+                models.ordinary_differential.sensitivities_linear_2p2s, sens_model_instance, sens_problem_instance, \
+                stdev, solution_path, fig)
+
+        # TODO: test
+
+        all_results["calib+valid"] = path_results
 
         # results
         if do_results:
             fig.suptitle("Dataset-" + dataset_id)
             solvers.plot.show_figure()
         print(dataset_id)
-        all_results = dict(workflows.workflow_data.workflow_results)
-        all_results["full"] = path_results
-        results.report_workflows.report_data(path_results)
+        results.report_workflows.report_results(all_results)
+
+
+    def test_do_experiment_01_at_conditions_111000(self):
+        self.do_experiment(data.data_splicing.splice_data_with_pattern_111000)
 
 
 if __name__ == "__main__":
