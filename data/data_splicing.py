@@ -2,6 +2,22 @@
 import copy
 import numpy
 
+
+pseudo_experimental_dataset = {
+    "time": [],
+    # measurements subject to noise
+    "meas": [],
+    "true": [],
+    "noise": [],
+    }
+
+
+calib_valid_data = {
+    "calib": dict(pseudo_experimental_dataset),
+    "valid": dict(pseudo_experimental_dataset),
+    }
+
+
 # TODO: assert shapes
 def splice_data_with_pattern_111000_get_ones(values):
     half = len(values) // 2
@@ -16,6 +32,23 @@ def splice_data_with_pattern_111000_get_zeros(values):
         values[slice(half, len(values), 1)]))
     return zeros
 
+
+# TODO: noise
+# TODO: true
+def splice_data_with_pattern_111000(times, meas, noise, true):
+    datasets = dict(calib_valid_data)
+    calib_meas = []
+    for ii in range(len(meas)):
+        calib_meas.append(splice_data_with_pattern_111000_get_ones(meas[ii]))
+    datasets["calib"]["meas"] = calib_meas
+    datasets["calib"]["time"] = splice_data_with_pattern_111000_get_ones(times)
+    valid_meas = []
+    for ii in range(len(meas)):
+        valid_meas.append(splice_data_with_pattern_111000_get_zeros(meas[ii]))
+    datasets["valid"]["meas"] = valid_meas
+    datasets["valid"]["time"] = splice_data_with_pattern_111000_get_zeros(times)
+    return datasets
+    
 
 def splice_data_with_pattern_000111_get_ones(values):
     half = len(values) // 2
@@ -54,3 +87,5 @@ def splice_data_with_pattern_110110_get_zeros(values):
         [copy.deepcopy(values[0])],
         numpy.delete(vals, numpy.s_[0::2])))
     return zeros
+
+
