@@ -18,6 +18,23 @@ calib_valid_data = {
     }
 
 
+# TODO: noise
+# TODO: true
+def splice_data_with_pattern(splicer_ones, splicer_zeros, times, meas, noise, true):
+    datasets = dict(calib_valid_data)
+    calib_meas = []
+    for ii in range(len(meas)):
+        calib_meas.append(splicer_ones(meas[ii]))
+    datasets["calib"]["meas"] = calib_meas
+    datasets["calib"]["time"] = splicer_ones(times)
+    valid_meas = []
+    for ii in range(len(meas)):
+        valid_meas.append(splicer_zeros(meas[ii]))
+    datasets["valid"]["meas"] = valid_meas
+    datasets["valid"]["time"] = splicer_zeros(times)
+    return datasets
+
+
 # TODO: assert shapes
 def splice_data_with_pattern_111000_get_ones(values):
     half = len(values) // 2
@@ -33,20 +50,9 @@ def splice_data_with_pattern_111000_get_zeros(values):
     return zeros
 
 
-# TODO: noise
-# TODO: true
 def splice_data_with_pattern_111000(times, meas, noise, true):
-    datasets = dict(calib_valid_data)
-    calib_meas = []
-    for ii in range(len(meas)):
-        calib_meas.append(splice_data_with_pattern_111000_get_ones(meas[ii]))
-    datasets["calib"]["meas"] = calib_meas
-    datasets["calib"]["time"] = splice_data_with_pattern_111000_get_ones(times)
-    valid_meas = []
-    for ii in range(len(meas)):
-        valid_meas.append(splice_data_with_pattern_111000_get_zeros(meas[ii]))
-    datasets["valid"]["meas"] = valid_meas
-    datasets["valid"]["time"] = splice_data_with_pattern_111000_get_zeros(times)
+    datasets = splice_data_with_pattern(splice_data_with_pattern_111000_get_ones, \
+        splice_data_with_pattern_111000_get_zeros, times, meas, noise, true)
     return datasets
     
 
@@ -62,6 +68,12 @@ def splice_data_with_pattern_000111_get_zeros(values):
     half = len(values) // 2
     ones = values[slice(0, half, 1)]
     return ones
+
+
+def splice_data_with_pattern_000111(times, meas, noise, true):
+    datasets = splice_data_with_pattern(splice_data_with_pattern_000111_get_ones, \
+        splice_data_with_pattern_000111_get_zeros, times, meas, noise, true)
+    return datasets
 
 
 def splice_data_with_pattern_101010_get_ones(values):
