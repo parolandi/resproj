@@ -46,6 +46,8 @@ def plot_chi_squared_tests(iterations, values):
 
 
 def get_figure():
+    global plot_count
+    plot_count = 0
     return pyplot.figure()
 
 
