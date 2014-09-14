@@ -22,7 +22,8 @@ def solve_st(metric, model, model_instance, problem_instance, algorithm_structur
 
 class DecisionVariableLogger():
     
-    decision_variables = []
+    def __init__(self):
+        self.decision_variables = []
     
     def log_decision_variables(self, x):
         self.decision_variables.append([x])
