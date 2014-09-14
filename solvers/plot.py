@@ -3,9 +3,10 @@ import matplotlib.pyplot as pyplot
 import numpy
 
 
-plot_count = 0
+figure_count = 0
 no_rows = 0
 no_cols = 0
+plot_count = 0
 
 
 def plot_scatter(values, dynamic_range):
@@ -46,9 +47,11 @@ def plot_chi_squared_tests(iterations, values):
 
 
 def get_figure():
+    global figure_count
+    figure_count += 1
     global plot_count
     plot_count = 0
-    return pyplot.figure()
+    return pyplot.figure(figure_count)
 
 
 def show_figure():
