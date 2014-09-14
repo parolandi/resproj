@@ -13,6 +13,7 @@ pseudo_experimental_dataset = {
 
 
 calib_valid_data = {
+    "id": "",
     "calib": dict(pseudo_experimental_dataset),
     "valid": dict(pseudo_experimental_dataset),
     }
@@ -53,6 +54,7 @@ def splice_data_with_pattern_111000_get_zeros(values):
 def splice_data_with_pattern_111000(times, meas, noise, true):
     datasets = splice_data_with_pattern(splice_data_with_pattern_111000_get_ones, \
         splice_data_with_pattern_111000_get_zeros, times, meas, noise, true)
+    datasets["id"] = "111000"
     return datasets
     
 
@@ -73,6 +75,7 @@ def splice_data_with_pattern_000111_get_zeros(values):
 def splice_data_with_pattern_000111(times, meas, noise, true):
     datasets = splice_data_with_pattern(splice_data_with_pattern_000111_get_ones, \
         splice_data_with_pattern_000111_get_zeros, times, meas, noise, true)
+    datasets["id"] = "000111"
     return datasets
 
 
@@ -86,6 +89,13 @@ def splice_data_with_pattern_101010_get_zeros(values):
         [copy.deepcopy(values[0])],
         numpy.delete(values, numpy.s_[0::2])))
     return zeros
+
+
+def splice_data_with_pattern_101010(times, meas, noise, true):
+    datasets = splice_data_with_pattern(splice_data_with_pattern_101010_get_ones, \
+        splice_data_with_pattern_101010_get_zeros, times, meas, noise, true)
+    datasets["id"] = "101010"
+    return datasets
 
 
 def splice_data_with_pattern_110110_get_ones(values):
