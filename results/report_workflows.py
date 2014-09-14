@@ -3,6 +3,7 @@ from __future__ import print_function
 import math
 
 
+# it: workflow_data
 def report_data(it):
     print("Params", it["params"])
     print("Obj", it["obj"][len(it["obj"])-1])
@@ -10,6 +11,7 @@ def report_data(it):
     print("Conf intervs", it["conf_intervs"][len(it["conf_intervs"])-1])
     
 
+#it : workflow_results
 def report_results(it):
     print("Label", "Full", "Calib", "Valid", "Calib+Valid", "Sum")
     
