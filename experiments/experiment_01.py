@@ -113,7 +113,6 @@ class TestExperiment01(unittest.TestCase):
         # TODO: user messages
 
         # configure
-        dataset_id = "1234"
         do_results = True
         ig_multiplier = 1.0
         # use... key-CG, key-Nelder-Mead 
@@ -231,9 +230,9 @@ class TestExperiment01(unittest.TestCase):
 
         # results
         if do_results:
-            fig.suptitle("Dataset-" + dataset_id)
+            fig.suptitle("Dataset-" + dataset["id"])
             solvers.plot.show_figure()
-        print(dataset_id)
+        print(dataset["id"])
         results.report_workflows.report_results(all_results)
 
 
