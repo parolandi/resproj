@@ -245,5 +245,9 @@ class TestExperiment01(unittest.TestCase):
         self.do_experiment(data.data_splicing.splice_data_with_pattern_000111)
 
 
+    def test_do_experiment_01_at_conditions_101010(self):
+        self.do_experiment(data.data_splicing.splice_data_with_pattern_101010)
+
+
 if __name__ == "__main__":
     unittest.main()
