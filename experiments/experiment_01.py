@@ -136,6 +136,7 @@ class TestExperiment01(unittest.TestCase):
             metrics.ordinary_differential.sum_squared_residuals_st, \
             models.ordinary_differential.linear_2p2s, model_instance, problem_instance, algorithm_instance)
         problem_instance["parameters"] = result.x
+        sens_problem_instance["parameters"] = result.x
         solution_path = logger.get_decision_variables()
 
         point_results = workflows.basic.do_workflow_at_solution_point( \
@@ -160,6 +161,9 @@ class TestExperiment01(unittest.TestCase):
     
         # calibration data set
         # least-squares
+        model_instance, problem_instance, sens_model_instance, sens_problem_instance, \
+            stdev, act_meas_traj, exp_meas_traj, meas_noise_traj = self.do_setup()
+
         problem_instance["outputs"] = dataset["calib"]["meas"]
         problem_instance["time"] = dataset["calib"]["time"]
 
@@ -170,6 +174,7 @@ class TestExperiment01(unittest.TestCase):
             metrics.ordinary_differential.sum_squared_residuals_st, \
             models.ordinary_differential.linear_2p2s, model_instance, problem_instance, algorithm_instance)
         problem_instance["parameters"] = result.x
+        sens_problem_instance["parameters"] = result.x
         solution_path = logger.get_decision_variables()
         
         point_results = workflows.basic.do_workflow_at_solution_point( \
