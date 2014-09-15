@@ -48,3 +48,22 @@ def report_results(it):
           math.sqrt(it["calibration"]["conf_intervs"][len(it["calibration"]["conf_intervs"])-1][1] *
           it["validation"]["conf_intervs"][len(it["validation"]["conf_intervs"])-1][1])])
     
+    
+def output_results_full(it):
+    print("Obj...")
+    print(it["full"]["obj"])
+    print(it["calibration"]["obj"])
+    print(it["validation"]["obj"])
+    print(it["calib+valid"]["obj"])
+
+    print("Obj contribs...")
+    print(it["full"]["obj_contribs"])
+    print(it["calibration"]["obj_contribs"])
+    print(it["validation"]["obj_contribs"])
+    print(it["calib+valid"]["obj_contribs"])
+
+    print("Conf intervs...")
+    print(it["full"]["conf_intervs"])
+    print(it["calibration"]["conf_intervs"])
+    print(it["validation"]["conf_intervs"])
+    print(it["calib+valid"]["conf_intervs"])
