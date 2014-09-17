@@ -1,5 +1,6 @@
 
 import matplotlib.pyplot as pyplot
+import matplotlib.ticker
 import numpy
 
 
@@ -7,7 +8,7 @@ figure_count = 0
 no_rows = 0
 no_cols = 0
 plot_count = 0
-
+major_spacing = 1
 
 def plot_scatter(values, dynamic_range):
     pyplot.plot(values[0], values[1], 'o')
@@ -98,6 +99,8 @@ def get_objective_function_plot(figure, iterations, values):
         sp.set_ylabel("valid")
     if  row_rank == 3:
         sp.set_ylabel("calib+valid")
+    sp.xaxis.set_major_locator(matplotlib.ticker.MaxNLocator(nbins=5, integer=True))
+    sp.yaxis.set_major_formatter(matplotlib.ticker.ScalarFormatter(useOffset=False))
 
 
 def get_objective_function_contributions_plot(figure, iterations, values):
@@ -109,6 +112,7 @@ def get_objective_function_contributions_plot(figure, iterations, values):
         sp.plot(iterations, vals[ii], 'o')
     if get_plot_count() <= no_cols:
         sp.set_title("obj-func-contribs")
+    sp.xaxis.set_major_locator(matplotlib.ticker.MaxNLocator(nbins=5, integer=True))
 
 
 def get_confidence_intervals_plot(figure, iterations, values):
@@ -117,9 +121,10 @@ def get_confidence_intervals_plot(figure, iterations, values):
     
     vals = numpy.transpose(values)
     for ii in range(len(vals)):
-        sp.plot(iterations, vals[ii], 'o')
+        sp.plot(iterations, vals[ii] * 10000, 'o')
     if get_plot_count() <= no_cols:
-        sp.set_title("conf intervs")
+        sp.set_title("conf intervs(x10^5)")
+    sp.xaxis.set_major_locator(matplotlib.ticker.MaxNLocator(nbins=5, integer=True))
 
 
 def get_parameter_estimates_plot(figure, iterations, values):
@@ -131,3 +136,4 @@ def get_parameter_estimates_plot(figure, iterations, values):
         sp.plot(iterations, vals[ii], 'o')
     if get_plot_count() <= no_cols:
         sp.set_title("param ests")
+    sp.xaxis.set_major_locator(matplotlib.ticker.MaxNLocator(nbins=5, integer=True))
