@@ -17,6 +17,7 @@ def solve_st(metric, model, model_instance, problem_instance, algorithm_structur
         bounds =  problem_instance["bounds"],
         callback = algorithm_structure["callback"],
         options = diag,
+        tol = algorithm_structure["tolerance"],
         )
 
 

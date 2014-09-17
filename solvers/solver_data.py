@@ -5,7 +5,7 @@ algorithm_structure = {
     "callback": None,
     "initial_guesses": numpy.empty(1),
     "method": "",
-    "tolerance": 0.0,
+    "tolerance": None,
     }
 
 nonlinear_algebraic_methods = {

@@ -115,8 +115,9 @@ class TestExperiment01(unittest.TestCase):
         # configure
         do_results = True
         ig_multiplier = 1.0
-        # use... key-CG, key-Nelder-Mead 
-        slv_method = solvers.solver_data.nonlinear_algebraic_methods["key-Nelder-Mead"]
+        # or "key-Nelder-Mead" 
+        slv_method = solvers.solver_data.nonlinear_algebraic_methods["key-CG"]
+        tolerance = 1E-8
         
         # setup
         model_instance, problem_instance, sens_model_instance, sens_problem_instance, \
@@ -129,6 +130,8 @@ class TestExperiment01(unittest.TestCase):
         algorithm_instance["callback"] = logger.log_decision_variables
         algorithm_instance["initial_guesses"] = copy.deepcopy(problem_instance["parameters"]) * ig_multiplier
         algorithm_instance["method"] = slv_method
+        algorithm_instance["tolerance"] = tolerance
+        
         
         # whole data set
         # least-squares
@@ -171,7 +174,6 @@ class TestExperiment01(unittest.TestCase):
         logger = solvers.least_squares.DecisionVariableLogger()
         algorithm_instance["callback"] = logger.log_decision_variables
         algorithm_instance["initial_guesses"] = copy.deepcopy(problem_instance["parameters"])
-
         logger.log_decision_variables(algorithm_instance["initial_guesses"])
         result = solvers.least_squares.solve_st( \
             metrics.ordinary_differential.sum_squared_residuals_st, \
@@ -240,6 +242,7 @@ class TestExperiment01(unittest.TestCase):
         if do_results:
             fig.suptitle("Dataset-" + dataset["id"])
             solvers.plot.show_figure()
+        print(slv_method)
         print(dataset["id"])
         results.report_workflows.report_results(all_results)
 
