@@ -132,6 +132,7 @@ class TestExperiment01(unittest.TestCase):
         
         # whole data set
         # least-squares
+        logger.log_decision_variables(algorithm_instance["initial_guesses"])
         result = solvers.least_squares.solve_st( \
             metrics.ordinary_differential.sum_squared_residuals_st, \
             models.ordinary_differential.linear_2p2s, model_instance, problem_instance, algorithm_instance)
@@ -170,6 +171,8 @@ class TestExperiment01(unittest.TestCase):
         logger = solvers.least_squares.DecisionVariableLogger()
         algorithm_instance["callback"] = logger.log_decision_variables
         algorithm_instance["initial_guesses"] = copy.deepcopy(problem_instance["parameters"])
+
+        logger.log_decision_variables(algorithm_instance["initial_guesses"])
         result = solvers.least_squares.solve_st( \
             metrics.ordinary_differential.sum_squared_residuals_st, \
             models.ordinary_differential.linear_2p2s, model_instance, problem_instance, algorithm_instance)
