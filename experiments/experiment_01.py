@@ -16,9 +16,13 @@ import solvers.plot
 import solvers.solver_data
 import workflows.basic
 
-
 class TestExperiment01(unittest.TestCase):
 
+
+    experiment_setup = {
+        "data_splicing": None,
+        "algorithm_setting": "",
+    }
 
     def do_setup(self):
         # configuration
@@ -109,14 +113,14 @@ class TestExperiment01(unittest.TestCase):
 
     
     # TODO: do deep copies    
-    def do_experiment(self, data_splicer):
+    def do_experiment(self, config):
         # TODO: user messages
 
         # configure
         do_results = True
         ig_multiplier = 1.0
         # or "key-Nelder-Mead" 
-        slv_method = solvers.solver_data.nonlinear_algebraic_methods["key-CG"]
+        slv_method = solvers.solver_data.nonlinear_algebraic_methods[config["algorithm_setting"]]
         tolerance = 1E-8
         
         # setup
@@ -161,7 +165,7 @@ class TestExperiment01(unittest.TestCase):
         all_results = dict(workflows.workflow_data.workflow_results)
         all_results["full"] = path_results
 
-        dataset = data_splicer(problem_instance["time"], exp_meas_traj, meas_noise_traj, act_meas_traj)
+        dataset = config["data_splicing"](problem_instance["time"], exp_meas_traj, meas_noise_traj, act_meas_traj)
     
         # calibration data set
         # least-squares
@@ -247,16 +251,46 @@ class TestExperiment01(unittest.TestCase):
         results.report_workflows.report_results(all_results)
 
 
-    def test_do_experiment_01_at_conditions_111000(self):
-        self.do_experiment(data.data_splicing.splice_data_with_pattern_111000)
+    def test_do_experiment_01_at_conditions_111000_with_CG(self):
+        config = dict(self.experiment_setup)
+        config["data_splicing"] = data.data_splicing.splice_data_with_pattern_111000
+        config["algorithm_setting"] = "key-CG" 
+        self.do_experiment(config)
 
 
-    def test_do_experiment_01_at_conditions_000111(self):
-        self.do_experiment(data.data_splicing.splice_data_with_pattern_000111)
+    def test_do_experiment_01_at_conditions_000111_with_CG(self):
+        config = dict(self.experiment_setup)
+        config["data_splicing"] = data.data_splicing.splice_data_with_pattern_000111
+        config["algorithm_setting"] = "key-CG" 
+        self.do_experiment(config)
 
 
-    def test_do_experiment_01_at_conditions_101010(self):
-        self.do_experiment(data.data_splicing.splice_data_with_pattern_101010)
+    def test_do_experiment_01_at_conditions_101010_with_CG(self):
+        config = dict(self.experiment_setup)
+        config["data_splicing"] = data.data_splicing.splice_data_with_pattern_101010
+        config["algorithm_setting"] = "key-CG" 
+        self.do_experiment(config)
+
+
+    def test_do_experiment_01_at_conditions_111000_with_NM(self):
+        config = dict(self.experiment_setup)
+        config["data_splicing"] = data.data_splicing.splice_data_with_pattern_111000
+        config["algorithm_setting"] = "key-Nelder-Mead" 
+        self.do_experiment(config)
+
+
+    def test_do_experiment_01_at_conditions_000111_with_NM(self):
+        config = dict(self.experiment_setup)
+        config["data_splicing"] = data.data_splicing.splice_data_with_pattern_000111
+        config["algorithm_setting"] = "key-Nelder-Mead" 
+        self.do_experiment(config)
+
+
+    def test_do_experiment_01_at_conditions_101010_with_NM(self):
+        config = dict(self.experiment_setup)
+        config["data_splicing"] = data.data_splicing.splice_data_with_pattern_101010
+        config["algorithm_setting"] = "key-Nelder-Mead" 
+        self.do_experiment(config)
 
 
 if __name__ == "__main__":
