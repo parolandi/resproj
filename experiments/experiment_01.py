@@ -91,7 +91,12 @@ class TestExperiment01(unittest.TestCase):
             stdev, true_measurement_trajectories, experimental_measurement_trajectories, measurement_noise
 
 
-    def do_test_point(self, point_results):
+    def do_test_point(self, point_results, baseline):
+        expected = baseline["params"]
+        actual = point_results["params"]
+        [self.assertAlmostEquals(exp, acts, 8) for exp, acts in zip(expected, actual)]
+        
+        '''
         # TODO: refactor, extract
         actual = 1.66318438177
         self.assertAlmostEquals(point_results["ssr"], actual, 10)
@@ -107,7 +112,7 @@ class TestExperiment01(unittest.TestCase):
         # TODO: ell_radius
         actual = [0.000253734589, 0.0000634336473]
         [self.assertAlmostEquals(i, j, 10) for i, j in zip(point_results["conf_intvs"], actual)]
-        
+        '''
 
     def do_test_path(self, path_results, baseline):
         expected = baseline["algo_stats"]["iters"]
@@ -154,8 +159,9 @@ class TestExperiment01(unittest.TestCase):
                 models.ordinary_differential.linear_2p2s, model_instance, problem_instance, \
                 models.ordinary_differential.sensitivities_linear_2p2s, sens_model_instance, sens_problem_instance, \
                 stdev, problem_instance["outputs"], act_meas_traj)
+        point_results["params"] = result.x
         
-#        self.do_test_point(point_results)
+        self.do_test_point(point_results, baseline["full"])
 
         fig = solvers.plot.get_figure()
 
@@ -194,8 +200,9 @@ class TestExperiment01(unittest.TestCase):
                 models.ordinary_differential.linear_2p2s, model_instance, problem_instance, \
                 models.ordinary_differential.sensitivities_linear_2p2s, sens_model_instance, sens_problem_instance, \
                 stdev, problem_instance["outputs"], dataset["calib"]["true"])
+        point_results["params"] = result.x
 
-        # TODO: test
+        self.do_test_point(point_results, baseline["calibration"])
         
         path_results = workflows.basic.do_workflow_at_solution_path( \
                 models.ordinary_differential.linear_2p2s, model_instance, problem_instance, \
@@ -215,7 +222,7 @@ class TestExperiment01(unittest.TestCase):
                 models.ordinary_differential.sensitivities_linear_2p2s, sens_model_instance, sens_problem_instance, \
                 stdev, problem_instance["outputs"], dataset["valid"]["true"])
 
-        # TODO: test
+#        self.do_test_point(point_results, baseline["validation"])
         
         path_results = workflows.basic.do_workflow_at_solution_path( \
                 models.ordinary_differential.linear_2p2s, model_instance, problem_instance, \
@@ -305,8 +312,10 @@ class TestExperiment01(unittest.TestCase):
 
     def setup_test_baseline_experiment_01_at_conditions_111000_with_CG(self):
         baseline = dict(workflows.workflow_data.workflow_results)
+        baseline["full"]["params"] = [1.05280058,  2.05003397]
+        baseline["calibration"]["params"] = [1.01362744,  2.03093039]
         baseline["full"]["algo_stats"]["iters"] = 4
-        baseline["calibration"]["algo_stats"]["iters"] = 5
+        baseline["calib+valid"]["algo_stats"]["iters"] = 5
         baseline["validation"]["algo_stats"]["iters"] = 5
         baseline["calib+valid"]["algo_stats"]["iters"] = 5
         return baseline
@@ -314,6 +323,8 @@ class TestExperiment01(unittest.TestCase):
 
     def setup_test_baseline_experiment_01_at_conditions_000111_with_CG(self):
         baseline = dict(workflows.workflow_data.workflow_results)
+        baseline["full"]["params"] = [1.05280058,  2.05003397]
+        baseline["calibration"]["params"] = [1.06600027,  2.05647111]
         baseline["full"]["algo_stats"]["iters"] = 4
         baseline["calibration"]["algo_stats"]["iters"] = 4
         baseline["validation"]["algo_stats"]["iters"] = 4
@@ -323,6 +334,8 @@ class TestExperiment01(unittest.TestCase):
 
     def setup_test_baseline_experiment_01_at_conditions_101010_with_CG(self):
         baseline = dict(workflows.workflow_data.workflow_results)
+        baseline["full"]["params"] = [1.05280058,  2.05003397]
+        baseline["calibration"]["params"] = [1.08223643,  1.99708962]
         baseline["full"]["algo_stats"]["iters"] = 4
         baseline["calibration"]["algo_stats"]["iters"] = 5
         baseline["validation"]["algo_stats"]["iters"] = 5
@@ -332,6 +345,8 @@ class TestExperiment01(unittest.TestCase):
 
     def setup_test_baseline_experiment_01_at_conditions_111000_with_NM(self):
         baseline = dict(workflows.workflow_data.workflow_results)
+        baseline["full"]["params"] = [1.05280045,  2.05003397]
+        baseline["calibration"]["params"] = [1.01362739,  2.03093042]
         algo_stats = dict(workflows.workflow_data.algorithmic_statistics)
         algo_stats["iters"] = 58
         baseline["full"]["algo_stats"] = algo_stats
@@ -343,6 +358,8 @@ class TestExperiment01(unittest.TestCase):
 
     def setup_test_baseline_experiment_01_at_conditions_000111_with_NM(self):
         baseline = dict(workflows.workflow_data.workflow_results)
+        baseline["full"]["params"] = [1.05280045,  2.05003397]
+        baseline["calibration"]["params"] = [1.06600026,  2.05647111]
         algo_stats = dict(workflows.workflow_data.algorithmic_statistics)
         algo_stats["iters"] = 58
         baseline["full"]["algo_stats"] = algo_stats
@@ -354,6 +371,8 @@ class TestExperiment01(unittest.TestCase):
 
     def setup_test_baseline_experiment_01_at_conditions_101010_with_NM(self):
         baseline = dict(workflows.workflow_data.workflow_results)
+        baseline["full"]["params"] = [1.05280045,  2.05003397]
+        baseline["calibration"]["params"] = [1.08223647,  1.99708961]
         algo_stats = dict(workflows.workflow_data.algorithmic_statistics)
         algo_stats["iters"] = 58
         baseline["full"]["algo_stats"] = algo_stats

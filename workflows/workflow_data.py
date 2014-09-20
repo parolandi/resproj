@@ -2,6 +2,7 @@
 #return sum_sq_res, sums_sq_res, residuals_values, ssr_test, ssr_tests, \
 #    cov_matrix, est_stdev, ell_radius, confidence_intervals
 point_results = {
+    "params": [],
     "ssr": 0.0,
     "ssrs": [],
     "ress_vals": [],
