@@ -26,13 +26,15 @@ workflow_data = {
     "ssr": [],
     "ssr_contribs": [],
     "conf_intervs": [],
-    "algo_stats": algorithmic_statistics,
+    "algo_stats": dict(algorithmic_statistics),
     }
 
 
 workflow_results = {
-    "full": workflow_data,
-    "calibration": workflow_data,
-    "validation": workflow_data,
-    "calib+valid": workflow_data, 
+    "full": dict(workflow_data),
+    "calibration": dict(workflow_data),
+    "validation": dict(workflow_data),
+    "calib+valid": dict(workflow_data), 
     }
+
+# TODO: there is something wrong with the use of these datastructures

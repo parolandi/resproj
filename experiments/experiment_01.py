@@ -16,6 +16,7 @@ import solvers.plot
 import solvers.solver_data
 import workflows.basic
 
+
 class TestExperiment01(unittest.TestCase):
 
 
@@ -23,6 +24,7 @@ class TestExperiment01(unittest.TestCase):
         "data_splicing": None,
         "algorithm_setting": "",
     }
+
 
     def do_setup(self):
         # configuration
@@ -107,13 +109,14 @@ class TestExperiment01(unittest.TestCase):
         [self.assertAlmostEquals(i, j, 10) for i, j in zip(point_results["conf_intvs"], actual)]
         
 
-    def do_test_path(self, path_results):
-        actual = 24
-        self.assertEquals(path_results["algo_stats"]["iters"], actual)
+    def do_test_path(self, path_results, baseline):
+        expected = baseline["algo_stats"]["iters"]
+        actual = path_results["algo_stats"]["iters"]
+        self.assertEquals(expected, actual)
 
     
     # TODO: do deep copies    
-    def do_experiment(self, config):
+    def do_experiment(self, config, baseline):
         # TODO: user messages
 
         # configure
@@ -136,7 +139,6 @@ class TestExperiment01(unittest.TestCase):
         algorithm_instance["method"] = slv_method
         algorithm_instance["tolerance"] = tolerance
         
-        
         # whole data set
         # least-squares
         logger.log_decision_variables(algorithm_instance["initial_guesses"])
@@ -153,14 +155,15 @@ class TestExperiment01(unittest.TestCase):
                 stdev, problem_instance["outputs"], act_meas_traj)
         
 #        self.do_test_point(point_results)
-       
+
         fig = solvers.plot.get_figure()
+
         path_results = workflows.basic.do_workflow_at_solution_path( \
                 models.ordinary_differential.linear_2p2s, model_instance, problem_instance, \
                 models.ordinary_differential.sensitivities_linear_2p2s, sens_model_instance, sens_problem_instance, \
                 stdev, solution_path, fig)
-        
-#        self.do_test_path(path_results)
+
+        self.do_test_path(path_results, baseline["full"])
 
         all_results = dict(workflows.workflow_data.workflow_results)
         all_results["full"] = path_results
@@ -198,7 +201,7 @@ class TestExperiment01(unittest.TestCase):
                 models.ordinary_differential.sensitivities_linear_2p2s, sens_model_instance, sens_problem_instance, \
                 stdev, solution_path, fig)
 
-        # TODO: test
+        self.do_test_path(path_results, baseline["calibration"])
 
         all_results["calibration"] = path_results
         
@@ -218,7 +221,7 @@ class TestExperiment01(unittest.TestCase):
                 models.ordinary_differential.sensitivities_linear_2p2s, sens_model_instance, sens_problem_instance, \
                 stdev, solution_path, fig)
 
-        # TODO: test
+#        self.do_test_path(path_results, baseline["validation"])
 
         all_results["validation"] = path_results
                 
@@ -238,7 +241,7 @@ class TestExperiment01(unittest.TestCase):
                 models.ordinary_differential.sensitivities_linear_2p2s, sens_model_instance, sens_problem_instance, \
                 stdev, solution_path, fig)
 
-        # TODO: test
+#        self.do_test_path(path_results, baseline["calib+valid"])
 
         all_results["calib+valid"] = path_results
 
@@ -255,42 +258,108 @@ class TestExperiment01(unittest.TestCase):
         config = dict(self.experiment_setup)
         config["data_splicing"] = data.data_splicing.splice_data_with_pattern_111000
         config["algorithm_setting"] = "key-CG" 
-        self.do_experiment(config)
+        baseline = self.setup_test_baseline_experiment_01_at_conditions_111000_with_CG()
+        self.do_experiment(config, baseline)
 
 
     def test_do_experiment_01_at_conditions_000111_with_CG(self):
         config = dict(self.experiment_setup)
         config["data_splicing"] = data.data_splicing.splice_data_with_pattern_000111
-        config["algorithm_setting"] = "key-CG" 
-        self.do_experiment(config)
+        config["algorithm_setting"] = "key-CG"
+        baseline = self.setup_test_baseline_experiment_01_at_conditions_000111_with_CG()
+        self.do_experiment(config, baseline)
 
 
     def test_do_experiment_01_at_conditions_101010_with_CG(self):
         config = dict(self.experiment_setup)
         config["data_splicing"] = data.data_splicing.splice_data_with_pattern_101010
-        config["algorithm_setting"] = "key-CG" 
-        self.do_experiment(config)
+        config["algorithm_setting"] = "key-CG"
+        baseline = self.setup_test_baseline_experiment_01_at_conditions_101010_with_CG()
+        self.do_experiment(config, baseline)
 
 
     def test_do_experiment_01_at_conditions_111000_with_NM(self):
         config = dict(self.experiment_setup)
         config["data_splicing"] = data.data_splicing.splice_data_with_pattern_111000
-        config["algorithm_setting"] = "key-Nelder-Mead" 
-        self.do_experiment(config)
+        config["algorithm_setting"] = "key-Nelder-Mead"
+        baseline = self.setup_test_baseline_experiment_01_at_conditions_111000_with_NM() 
+        self.do_experiment(config, baseline)
 
 
     def test_do_experiment_01_at_conditions_000111_with_NM(self):
         config = dict(self.experiment_setup)
         config["data_splicing"] = data.data_splicing.splice_data_with_pattern_000111
-        config["algorithm_setting"] = "key-Nelder-Mead" 
-        self.do_experiment(config)
+        config["algorithm_setting"] = "key-Nelder-Mead"
+        baseline = self.setup_test_baseline_experiment_01_at_conditions_000111_with_NM()
+        self.do_experiment(config, baseline)
 
 
     def test_do_experiment_01_at_conditions_101010_with_NM(self):
         config = dict(self.experiment_setup)
         config["data_splicing"] = data.data_splicing.splice_data_with_pattern_101010
-        config["algorithm_setting"] = "key-Nelder-Mead" 
-        self.do_experiment(config)
+        config["algorithm_setting"] = "key-Nelder-Mead"
+        baseline = self.setup_test_baseline_experiment_01_at_conditions_101010_with_NM()
+        self.do_experiment(config, baseline)
+
+
+    def setup_test_baseline_experiment_01_at_conditions_111000_with_CG(self):
+        baseline = dict(workflows.workflow_data.workflow_results)
+        baseline["full"]["algo_stats"]["iters"] = 4
+        baseline["calibration"]["algo_stats"]["iters"] = 5
+        baseline["validation"]["algo_stats"]["iters"] = 5
+        baseline["calib+valid"]["algo_stats"]["iters"] = 5
+        return baseline
+    
+
+    def setup_test_baseline_experiment_01_at_conditions_000111_with_CG(self):
+        baseline = dict(workflows.workflow_data.workflow_results)
+        baseline["full"]["algo_stats"]["iters"] = 4
+        baseline["calibration"]["algo_stats"]["iters"] = 4
+        baseline["validation"]["algo_stats"]["iters"] = 4
+        baseline["calib+valid"]["algo_stats"]["iters"] = 4
+        return baseline
+
+
+    def setup_test_baseline_experiment_01_at_conditions_101010_with_CG(self):
+        baseline = dict(workflows.workflow_data.workflow_results)
+        baseline["full"]["algo_stats"]["iters"] = 4
+        baseline["calibration"]["algo_stats"]["iters"] = 5
+        baseline["validation"]["algo_stats"]["iters"] = 5
+        baseline["calib+valid"]["algo_stats"]["iters"] = 5
+        return baseline
+
+
+    def setup_test_baseline_experiment_01_at_conditions_111000_with_NM(self):
+        baseline = dict(workflows.workflow_data.workflow_results)
+        algo_stats = dict(workflows.workflow_data.algorithmic_statistics)
+        algo_stats["iters"] = 58
+        baseline["full"]["algo_stats"] = algo_stats
+        baseline["calibration"]["algo_stats"]["iters"] = 50
+        baseline["validation"]["algo_stats"]["iters"] = 50
+        baseline["calib+valid"]["algo_stats"]["iters"] = 50
+        return baseline
+    
+
+    def setup_test_baseline_experiment_01_at_conditions_000111_with_NM(self):
+        baseline = dict(workflows.workflow_data.workflow_results)
+        algo_stats = dict(workflows.workflow_data.algorithmic_statistics)
+        algo_stats["iters"] = 58
+        baseline["full"]["algo_stats"] = algo_stats
+        baseline["calibration"]["algo_stats"]["iters"] = 55
+        baseline["validation"]["algo_stats"]["iters"] = 55
+        baseline["calib+valid"]["algo_stats"]["iters"] = 55
+        return baseline
+
+
+    def setup_test_baseline_experiment_01_at_conditions_101010_with_NM(self):
+        baseline = dict(workflows.workflow_data.workflow_results)
+        algo_stats = dict(workflows.workflow_data.algorithmic_statistics)
+        algo_stats["iters"] = 58
+        baseline["full"]["algo_stats"] = algo_stats
+        baseline["calibration"]["algo_stats"]["iters"] = 53
+        baseline["validation"]["algo_stats"]["iters"] = 53
+        baseline["calib+valid"]["algo_stats"]["iters"] = 53
+        return baseline
 
 
 if __name__ == "__main__":
