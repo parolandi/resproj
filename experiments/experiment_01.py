@@ -130,12 +130,13 @@ class TestExperiment01(unittest.TestCase):
         model_instance, problem_instance, sens_model_instance, sens_problem_instance, \
             stdev, act_meas_traj, exp_meas_traj, meas_noise_traj = self.do_setup()
         # TODO: use deep copies
-        full_time = problem_instance["time"]
+        full_time = copy.deepcopy(problem_instance["time"])
+        intial_guesses = copy.deepcopy(problem_instance["parameters"]) * ig_multiplier
 
         algorithm_instance = dict(solvers.solver_data.algorithm_structure)
         logger = solvers.least_squares.DecisionVariableLogger()
         algorithm_instance["callback"] = logger.log_decision_variables
-        algorithm_instance["initial_guesses"] = copy.deepcopy(problem_instance["parameters"]) * ig_multiplier
+        algorithm_instance["initial_guesses"] = intial_guesses
         algorithm_instance["method"] = slv_method
         algorithm_instance["tolerance"] = tolerance
         
@@ -180,7 +181,7 @@ class TestExperiment01(unittest.TestCase):
 
         logger = solvers.least_squares.DecisionVariableLogger()
         algorithm_instance["callback"] = logger.log_decision_variables
-        algorithm_instance["initial_guesses"] = copy.deepcopy(problem_instance["parameters"])
+        algorithm_instance["initial_guesses"] = intial_guesses
         logger.log_decision_variables(algorithm_instance["initial_guesses"])
         result = solvers.least_squares.solve_st( \
             metrics.ordinary_differential.sum_squared_residuals_st, \
