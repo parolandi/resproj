@@ -151,15 +151,15 @@ class TestExperiment01(unittest.TestCase):
         result = solvers.least_squares.solve_st( \
             metrics.ordinary_differential.sum_squared_residuals_st, \
             models.ordinary_differential.linear_2p2s, model_instance, problem_instance, algorithm_instance)
-        problem_instance["parameters"] = result.x
-        sens_problem_instance["parameters"] = result.x
+        problem_instance["parameters"] = copy.deepcopy(result.x)
+        sens_problem_instance["parameters"] = copy.deepcopy(result.x)
         solution_path = logger.get_decision_variables()
 
         point_results = workflows.basic.do_workflow_at_solution_point( \
                 models.ordinary_differential.linear_2p2s, model_instance, problem_instance, \
                 models.ordinary_differential.sensitivities_linear_2p2s, sens_model_instance, sens_problem_instance, \
                 stdev, problem_instance["outputs"], act_meas_traj)
-        point_results["params"] = result.x
+        point_results["params"] = copy.deepcopy(result.x)
         
         self.do_test_point(point_results, baseline["full"])
 
@@ -192,15 +192,15 @@ class TestExperiment01(unittest.TestCase):
         result = solvers.least_squares.solve_st( \
             metrics.ordinary_differential.sum_squared_residuals_st, \
             models.ordinary_differential.linear_2p2s, model_instance, problem_instance, algorithm_instance)
-        problem_instance["parameters"] = result.x
-        sens_problem_instance["parameters"] = result.x
+        problem_instance["parameters"] = copy.deepcopy(result.x)
+        sens_problem_instance["parameters"] = copy.deepcopy(result.x)
         solution_path = logger.get_decision_variables()
         
         point_results = workflows.basic.do_workflow_at_solution_point( \
                 models.ordinary_differential.linear_2p2s, model_instance, problem_instance, \
                 models.ordinary_differential.sensitivities_linear_2p2s, sens_model_instance, sens_problem_instance, \
                 stdev, problem_instance["outputs"], dataset["calib"]["true"])
-        point_results["params"] = result.x
+        point_results["params"] = copy.deepcopy(result.x)
 
         self.do_test_point(point_results, baseline["calibration"])
         
@@ -221,6 +221,7 @@ class TestExperiment01(unittest.TestCase):
                 models.ordinary_differential.linear_2p2s, model_instance, problem_instance, \
                 models.ordinary_differential.sensitivities_linear_2p2s, sens_model_instance, sens_problem_instance, \
                 stdev, problem_instance["outputs"], dataset["valid"]["true"])
+        point_results["params"] = copy.deepcopy(result.x)
 
 #        self.do_test_point(point_results, baseline["validation"])
         
@@ -241,6 +242,7 @@ class TestExperiment01(unittest.TestCase):
                 models.ordinary_differential.linear_2p2s, model_instance, problem_instance, \
                 models.ordinary_differential.sensitivities_linear_2p2s, sens_model_instance, sens_problem_instance, \
                 stdev, problem_instance["outputs"], act_meas_traj)
+        point_results["params"] = copy.deepcopy(result.x)
 
         # TODO: test
         
@@ -311,20 +313,20 @@ class TestExperiment01(unittest.TestCase):
 
 
     def setup_test_baseline_experiment_01_at_conditions_111000_with_CG(self):
-        baseline = dict(workflows.workflow_data.workflow_results)
-        baseline["full"]["params"] = [1.05280058,  2.05003397]
-        baseline["calibration"]["params"] = [1.01362744,  2.03093039]
+        baseline = copy.deepcopy(workflows.workflow_data.workflow_results)
+        baseline["full"]["params"] = [1.05280058, 2.05003397]
+        baseline["calibration"]["params"] = [1.01362744, 2.03093039]
         baseline["full"]["algo_stats"]["iters"] = 4
-        baseline["calib+valid"]["algo_stats"]["iters"] = 5
+        baseline["calibration"]["algo_stats"]["iters"] = 5
         baseline["validation"]["algo_stats"]["iters"] = 5
         baseline["calib+valid"]["algo_stats"]["iters"] = 5
         return baseline
     
 
     def setup_test_baseline_experiment_01_at_conditions_000111_with_CG(self):
-        baseline = dict(workflows.workflow_data.workflow_results)
-        baseline["full"]["params"] = [1.05280058,  2.05003397]
-        baseline["calibration"]["params"] = [1.06600027,  2.05647111]
+        baseline = copy.deepcopy(workflows.workflow_data.workflow_results)
+        baseline["full"]["params"] = [1.05280058, 2.05003397]
+        baseline["calibration"]["params"] = [1.06600027, 2.05647111]
         baseline["full"]["algo_stats"]["iters"] = 4
         baseline["calibration"]["algo_stats"]["iters"] = 4
         baseline["validation"]["algo_stats"]["iters"] = 4
@@ -333,9 +335,9 @@ class TestExperiment01(unittest.TestCase):
 
 
     def setup_test_baseline_experiment_01_at_conditions_101010_with_CG(self):
-        baseline = dict(workflows.workflow_data.workflow_results)
-        baseline["full"]["params"] = [1.05280058,  2.05003397]
-        baseline["calibration"]["params"] = [1.08223643,  1.99708962]
+        baseline = copy.deepcopy(workflows.workflow_data.workflow_results)
+        baseline["full"]["params"] = [1.05280058, 2.05003397]
+        baseline["calibration"]["params"] = [1.08223643, 1.99708962]
         baseline["full"]["algo_stats"]["iters"] = 4
         baseline["calibration"]["algo_stats"]["iters"] = 5
         baseline["validation"]["algo_stats"]["iters"] = 5
@@ -344,12 +346,10 @@ class TestExperiment01(unittest.TestCase):
 
 
     def setup_test_baseline_experiment_01_at_conditions_111000_with_NM(self):
-        baseline = dict(workflows.workflow_data.workflow_results)
-        baseline["full"]["params"] = [1.05280045,  2.05003397]
-        baseline["calibration"]["params"] = [1.01362739,  2.03093042]
-        algo_stats = dict(workflows.workflow_data.algorithmic_statistics)
-        algo_stats["iters"] = 58
-        baseline["full"]["algo_stats"] = algo_stats
+        baseline = copy.deepcopy(workflows.workflow_data.workflow_results)
+        baseline["full"]["params"] = [1.05280045, 2.05003397]
+        baseline["calibration"]["params"] = [1.01362739, 2.03093042]
+        baseline["full"]["algo_stats"]["iters"] = 58
         baseline["calibration"]["algo_stats"]["iters"] = 50
         baseline["validation"]["algo_stats"]["iters"] = 50
         baseline["calib+valid"]["algo_stats"]["iters"] = 50
@@ -357,12 +357,10 @@ class TestExperiment01(unittest.TestCase):
     
 
     def setup_test_baseline_experiment_01_at_conditions_000111_with_NM(self):
-        baseline = dict(workflows.workflow_data.workflow_results)
-        baseline["full"]["params"] = [1.05280045,  2.05003397]
-        baseline["calibration"]["params"] = [1.06600026,  2.05647111]
-        algo_stats = dict(workflows.workflow_data.algorithmic_statistics)
-        algo_stats["iters"] = 58
-        baseline["full"]["algo_stats"] = algo_stats
+        baseline = copy.deepcopy(workflows.workflow_data.workflow_results)
+        baseline["full"]["params"] = [1.05280045, 2.05003397]
+        baseline["calibration"]["params"] = [1.06600026, 2.05647111]
+        baseline["full"]["algo_stats"]["iters"] = 58
         baseline["calibration"]["algo_stats"]["iters"] = 55
         baseline["validation"]["algo_stats"]["iters"] = 55
         baseline["calib+valid"]["algo_stats"]["iters"] = 55
@@ -370,12 +368,10 @@ class TestExperiment01(unittest.TestCase):
 
 
     def setup_test_baseline_experiment_01_at_conditions_101010_with_NM(self):
-        baseline = dict(workflows.workflow_data.workflow_results)
-        baseline["full"]["params"] = [1.05280045,  2.05003397]
-        baseline["calibration"]["params"] = [1.08223647,  1.99708961]
-        algo_stats = dict(workflows.workflow_data.algorithmic_statistics)
-        algo_stats["iters"] = 58
-        baseline["full"]["algo_stats"] = algo_stats
+        baseline = copy.deepcopy(workflows.workflow_data.workflow_results)
+        baseline["full"]["params"] = [1.05280045, 2.05003397]
+        baseline["calibration"]["params"] = [1.08223647, 1.99708961]
+        baseline["full"]["algo_stats"]["iters"] = 58
         baseline["calibration"]["algo_stats"]["iters"] = 53
         baseline["validation"]["algo_stats"]["iters"] = 53
         baseline["calib+valid"]["algo_stats"]["iters"] = 53

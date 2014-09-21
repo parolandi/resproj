@@ -1,4 +1,6 @@
 
+import copy
+
 #return sum_sq_res, sums_sq_res, residuals_values, ssr_test, ssr_tests, \
 #    cov_matrix, est_stdev, ell_radius, confidence_intervals
 point_results = {
@@ -32,10 +34,8 @@ workflow_data = {
 
 
 workflow_results = {
-    "full": dict(workflow_data),
-    "calibration": dict(workflow_data),
-    "validation": dict(workflow_data),
-    "calib+valid": dict(workflow_data), 
+    "full": copy.deepcopy(workflow_data),
+    "calibration": copy.deepcopy(workflow_data),
+    "validation": copy.deepcopy(workflow_data),
+    "calib+valid": copy.deepcopy(workflow_data), 
     }
-
-# TODO: there is something wrong with the use of these datastructures
