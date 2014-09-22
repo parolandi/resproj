@@ -100,6 +100,11 @@ class TestExperiment01(unittest.TestCase):
         actual = point_results["ssr"]
         self.assertAlmostEquals(expected, actual, 8)
         
+        expected = baseline["conf_intervs"]
+        actual = point_results["conf_intvs"]
+        [self.assertAlmostEquals(exp, acts, 8) for exp, acts in zip(expected, actual)]
+        
+        
         '''
         # TODO: refactor, extract
         actual = 1.66318438177
@@ -326,6 +331,10 @@ class TestExperiment01(unittest.TestCase):
         baseline["calibration"]["obj"] = 1.03788036995
         baseline["validation"]["obj"] = 0.840418151025
         baseline["calib+valid"]["obj"] = 1.70969400227
+        baseline["full"]["conf_intervs"] = [2.53734575e-04, 6.34336437e-05]
+        baseline["calibration"]["conf_intervs"] = [0.00044277, 0.00011069]
+        baseline["validation"]["conf_intervs"] = [2.51482289e-04, 6.28705722e-05]
+        baseline["calib+valid"]["conf_intervs"] = [2.68123978e-04, 6.70309946e-05]
         baseline["full"]["algo_stats"]["iters"] = 4
         baseline["calibration"]["algo_stats"]["iters"] = 5
         baseline["validation"]["algo_stats"]["iters"] = 5
@@ -343,6 +352,10 @@ class TestExperiment01(unittest.TestCase):
         baseline["calibration"]["obj"] = 0.778236553861
         baseline["validation"]["obj"] = 1.05883316623
         baseline["calib+valid"]["obj"] = 1.66846517362
+        baseline["full"]["conf_intervs"] = [2.53734575e-04, 6.34336437e-05]
+        baseline["calibration"]["conf_intervs"] = [2.15645207e-04, 5.39113017e-05]
+        baseline["validation"]["conf_intervs"] = [0.00046083, 0.00011521]
+        baseline["calib+valid"]["conf_intervs"] = [2.55348417e-04, 6.38371043e-05]
         baseline["full"]["algo_stats"]["iters"] = 4
         baseline["calibration"]["algo_stats"]["iters"] = 4
         baseline["validation"]["algo_stats"]["iters"] = 4
@@ -360,6 +373,10 @@ class TestExperiment01(unittest.TestCase):
         baseline["calibration"]["obj"] = 0.739034729562
         baseline["validation"]["obj"] = 1.28037159968
         baseline["calib+valid"]["obj"] = 1.85080177458
+        baseline["full"]["conf_intervs"] = [2.53734575e-04, 6.34336437e-05]
+        baseline["calibration"]["conf_intervs"] = [2.24500192e-04, 5.61250479e-05]
+        baseline["validation"]["conf_intervs"] = [0.0005837, 0.00014592]
+        baseline["calib+valid"]["conf_intervs"] = [3.14209052e-04, 7.85522631e-05]
         baseline["full"]["algo_stats"]["iters"] = 4
         baseline["calibration"]["algo_stats"]["iters"] = 5
         baseline["validation"]["algo_stats"]["iters"] = 5
@@ -377,6 +394,10 @@ class TestExperiment01(unittest.TestCase):
         baseline["calibration"]["obj"] = 1.03788036995
         baseline["validation"]["obj"] = 0.840418133228
         baseline["calib+valid"]["obj"] = 1.70969398447
+        baseline["full"]["conf_intervs"] = [2.53734575e-04, 6.34336437e-05]
+        baseline["calibration"]["conf_intervs"] = [0.00044277, 0.00011069]
+        baseline["validation"]["conf_intervs"] = [2.51482278e-04, 6.28705696e-05]
+        baseline["calib+valid"]["conf_intervs"] = [2.68123973e-04, 6.70309932e-05]
         baseline["full"]["algo_stats"]["iters"] = 58
         baseline["calibration"]["algo_stats"]["iters"] = 50
         baseline["validation"]["algo_stats"]["iters"] = 50
@@ -394,6 +415,10 @@ class TestExperiment01(unittest.TestCase):
         baseline["calibration"]["obj"] = 0.778236553861
         baseline["validation"]["obj"] = 1.05883316523
         baseline["calib+valid"]["obj"] = 1.66846517261
+        baseline["full"]["conf_intervs"] = [2.53734575e-04, 6.34336437e-05]
+        baseline["calibration"]["conf_intervs"] = [2.15645207e-04, 5.39113017e-05]
+        baseline["validation"]["conf_intervs"] = [0.00046083, 0.00011521]
+        baseline["calib+valid"]["conf_intervs"] = [2.55348417e-04, 6.38371042e-05]
         baseline["full"]["algo_stats"]["iters"] = 58
         baseline["calibration"]["algo_stats"]["iters"] = 55
         baseline["validation"]["algo_stats"]["iters"] = 55
@@ -411,6 +436,10 @@ class TestExperiment01(unittest.TestCase):
         baseline["calibration"]["obj"] = 0.739034729562
         baseline["validation"]["obj"] = 1.28037170474
         baseline["calib+valid"]["obj"] = 1.85080187965
+        baseline["full"]["conf_intervs"] = [2.53734575e-04, 6.34336437e-05]
+        baseline["calibration"]["conf_intervs"] = [2.24500192e-04, 5.61250479e-05]
+        baseline["validation"]["conf_intervs"] = [0.0005837, 0.00014592]
+        baseline["calib+valid"]["conf_intervs"] = [3.14209088e-04, 7.85522720e-05]
         baseline["full"]["algo_stats"]["iters"] = 58
         baseline["calibration"]["algo_stats"]["iters"] = 53
         baseline["validation"]["algo_stats"]["iters"] = 53
