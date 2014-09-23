@@ -1,6 +1,15 @@
 
 import numpy
 
+
+# delete the initial point
+def exclude_initial_point(values):
+    values_excluding_initial = []
+    for ii in range(len(values)):
+        values_excluding_initial.append(numpy.delete(values[ii], 0))
+    return values_excluding_initial
+
+
 # size a multidimensional list 
 def size_it(data):
     size = 0

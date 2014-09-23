@@ -10,6 +10,15 @@ model_structure = {
     }
 
 
+# defines the approach used for initial conditions
+# estimate: this initial condition will be estimated and its contribution calculated; a decision variable must exist
+# exclude: the point will be the exact initial condition; its contribution will not be computed 
+# include: the point will be the exact initial condition; its contribution will be computed
+problem_formulation = {
+    "initial_conditions": ("estimate", "exclude", "include")
+    }
+
+
 problem_structure = {
     "initial_conditions": [],
     # TODO: change to "times"
@@ -22,6 +31,8 @@ problem_structure = {
     "outputs": [],
     "output_indices": [],
     "bounds": None,
+    # TODO: establish dedicated "problem_formulation"
+    "initial": ("estimate", "exclude", "include"),
     }
 
 
