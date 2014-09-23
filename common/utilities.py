@@ -3,7 +3,11 @@ import numpy
 
 
 # delete the initial point
+# returns a numpy array
 def exclude_initial_point(values):
+    if len(values) == 1:
+        return numpy.delete(values, 0)
+
     values_excluding_initial = []
     for ii in range(len(values)):
         values_excluding_initial.append(numpy.delete(values[ii], 0))

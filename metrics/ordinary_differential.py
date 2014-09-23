@@ -6,20 +6,14 @@ import common.utilities
 import solvers.initial_value
 
 
-def handle_initial_point(values, problem_instance):
-    if problem_instance["initial"] == "exclude":
-        values = common.utilities.exclude_initial_point(values)
-    return values
-    
-
 # TODO: rename; remove "_st"
 def residuals_st(model, model_instance, problem_instance):
     # TODO: preconditions
     assert(len(problem_instance["output_indices"]) > 0)
     
     measured = numpy.asarray(problem_instance["outputs"])
-    including_initial_value = solvers.initial_value.compute_timecourse_trajectories(model, model_instance, problem_instance)
-    predicted = handle_initial_point(including_initial_value, problem_instance)
+    predicted = solvers.initial_value.compute_timecourse_trajectories( \
+        model, model_instance, problem_instance)
 
     # there is one residual per experiment
     # but for the moment there is also a single experiment
