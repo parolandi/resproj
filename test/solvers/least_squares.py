@@ -16,7 +16,7 @@ def linear_2p2s_mock(x, t, p, u):
 
 
 def callbackit(x):
-    print("calling-back")
+    print("unit-test: calling-back")
 
 
 # TODO: test all algorithms with this simple case, non only SLSQP
