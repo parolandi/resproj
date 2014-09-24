@@ -278,24 +278,6 @@ class TestExperiment01(unittest.TestCase):
         actual = point_results["conf_intvs"]
         [self.assertAlmostEquals(exp, acts, 8) for exp, acts in zip(expected, actual)]
         
-        
-        '''
-        # TODO: refactor, extract
-        actual = 1.66318438177
-        self.assertAlmostEquals(point_results["ssr"], actual, 10)
-        actual = [0.671178063893324, 0.992006317875997]
-        [self.assertAlmostEquals(i, j, 10) for i, j in zip(point_results["ssrs"], actual)]
-        # TODO: ress_vals
-        actual = True
-        self.assertEquals(point_results["ssr_test"], actual)
-        actual = [True, True]
-        [self.assertEquals(i, j) for i, j in zip(point_results["ssrs_tests"], actual)]
-        # TODO: cov_matrix
-        # TODO: est_stdev
-        # TODO: ell_radius
-        actual = [0.000253734589, 0.0000634336473]
-        [self.assertAlmostEquals(i, j, 10) for i, j in zip(point_results["conf_intvs"], actual)]
-        '''
 
     def do_test_path(self, path_results, baseline):
         expected = baseline["algo_stats"]["iters"]
