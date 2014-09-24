@@ -87,8 +87,8 @@ class TestOrdinaryDifferentialMetrics(unittest.TestCase):
         problem_instance["initial"] = "exclude"
         
         offset = 1.0
-        measured = numpy.asarray([[0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0], \
-                                  [1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0]]) + offset
+        measured = numpy.asarray([[0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0], \
+                                  [1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0]]) + offset
         problem_instance["outputs"] = measured
         problem_instance["output_indices"] = [0, 1]
         problem_instance["time"] = numpy.linspace(0.0, 1.0, 11, endpoint=True)
@@ -105,8 +105,8 @@ class TestOrdinaryDifferentialMetrics(unittest.TestCase):
         problem_instance["initial"] = "exclude"
         
         offset = 3.0
-        measured = numpy.asarray([[0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0], \
-                                  [1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0]]) + offset
+        measured = numpy.asarray([[0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0], \
+                                  [1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0]]) + offset
         problem_instance["outputs"] = measured
         problem_instance["output_indices"] = [0, 1]
         problem_instance["time"] = numpy.linspace(0.0, 1.0, 11, endpoint=True)
@@ -114,7 +114,7 @@ class TestOrdinaryDifferentialMetrics(unittest.TestCase):
         dof = []
         actual = metrics.ordinary_differential.sum_squared_residuals_st( \
             dof, linear_2p2s_mock, model_instance, problem_instance)
-        expected = offset**2 * measured.size
+        expected = offset**2 * (measured.size-2)
         self.assertAlmostEqual(expected, actual, 8)
 
     
@@ -124,7 +124,7 @@ class TestOrdinaryDifferentialMetrics(unittest.TestCase):
         problem_instance["initial"] = "exclude"
 
         offset = 3.0
-        measured = numpy.asarray([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]) + offset
+        measured = numpy.asarray([0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]) + offset
         problem_instance["outputs"] = measured
         problem_instance["output_indices"] = [0]
         problem_instance["time"] = numpy.linspace(0.0, 1.0, 11, endpoint=True)
@@ -132,7 +132,7 @@ class TestOrdinaryDifferentialMetrics(unittest.TestCase):
         dof = []
         actual = metrics.ordinary_differential.sum_squared_residuals_st( \
             dof, linear_2p2s_mock, model_instance, problem_instance)
-        expected = offset**2 * measured.size
+        expected = offset**2 * (measured.size-1)
         self.assertAlmostEqual(expected, actual, 8)
 
 
