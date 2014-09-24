@@ -1,17 +1,29 @@
 
 import numpy
 
+import common.exceptions
+
 
 # delete the initial point
 # returns a numpy array
-def exclude_initial_point(values):
-    if len(values) == 1:
-        return numpy.delete(values, 0)
-
-    values_excluding_initial = []
-    for ii in range(len(values)):
-        values_excluding_initial.append(numpy.delete(values[ii], 0))
-    return values_excluding_initial
+# fully unit-tested
+def exclude_initial_point(points):
+    try:
+        values = numpy.asarray(points)
+        # it is an array
+        dims = len(values.shape)
+        common.exceptions.assert_throw(dims > 0 and dims <3)
+        if dims > 1:
+            # multiple inner lists
+            # efficiency: http://stackoverflow.com/questions/12299124/how-to-use-numpy-vstack
+            values_excluding_initial = []
+            for ii in range(len(values)):
+                values_excluding_initial.append(numpy.delete(values[ii], 0))
+            return numpy.asarray(values_excluding_initial)
+        else:
+            return numpy.delete(values, 0)
+    except:
+        common.exceptions.assert_throw(False) 
 
 
 # size a multidimensional list 
