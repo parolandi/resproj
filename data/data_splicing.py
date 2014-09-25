@@ -39,15 +39,17 @@ def splice_data_with_pattern(splicer_ones, splicer_zeros, times, meas, noise, tr
 # TODO: assert shapes
 def splice_data_with_pattern_111000_get_ones(values):
     half = len(values) // 2
-    ones = values[slice(0, half, 1)]
+    remainder = len(values) % 2
+    ones = values[slice(0, half+remainder, 1)]
     return ones
 
 
 def splice_data_with_pattern_111000_get_zeros(values):
     half = len(values) // 2
+    remainder = len(values) % 2
     zeros = numpy.concatenate(( \
         [copy.deepcopy(values[0])], \
-        values[slice(half, len(values), 1)]))
+        values[slice(half+remainder, len(values), 1)]))
     return zeros
 
 
@@ -60,15 +62,17 @@ def splice_data_with_pattern_111000(times, meas, noise, true):
 
 def splice_data_with_pattern_000111_get_ones(values):
     half = len(values) // 2
+    remainder = len(values) % 2
     zeros = numpy.concatenate(( \
         [copy.deepcopy(values[0])], \
-        values[slice(half, len(values), 1)]))
+        values[slice(half+remainder, len(values), 1)]))
     return zeros
 
 
 def splice_data_with_pattern_000111_get_zeros(values):
     half = len(values) // 2
-    ones = values[slice(0, half, 1)]
+    remainder = len(values) % 2
+    ones = values[slice(0, half+remainder, 1)]
     return ones
 
 
