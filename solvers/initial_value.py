@@ -23,6 +23,9 @@ def solve_lsoda_st(model, model_data, problem_data):
     return scipy.integrate.odeint(
         func        = model, \
         y0          = problem_data["initial_conditions"], \
+        # A sequence of time points for which to solve for y.
+        # The initial value point should be the first element of this sequence.
+        # http://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.odeint.html#scipy.integrate.odeint
         t           = problem_data["time"], \
         args        = (model_data["parameters"], model_data["inputs"]), \
         full_output = True, \
