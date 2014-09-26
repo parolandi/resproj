@@ -118,3 +118,51 @@ def splice_data_with_pattern_110110_get_zeros(values):
         [copy.deepcopy(values[0])],
         numpy.delete(vals, numpy.s_[0::2])))
     return zeros
+
+
+def splice_data_with_pattern_110110(times, meas, noise, true):
+    datasets = splice_data_with_pattern(splice_data_with_pattern_110110_get_ones, \
+        splice_data_with_pattern_110110_get_zeros, times, meas, noise, true)
+    datasets["id"] = format_dataset_id("110110", str(len(times)))
+    return datasets
+
+
+def splice_data_with_pattern_101101_get_ones(values):
+    ones = numpy.delete(values, numpy.s_[1::3])
+    return ones
+
+
+def splice_data_with_pattern_101101_get_zeros(values):
+    vals = numpy.delete(values, numpy.s_[0::3])
+    zeros = numpy.concatenate(( \
+        [copy.deepcopy(values[0])],
+        numpy.delete(vals, numpy.s_[1::2])))
+    return zeros
+
+
+def splice_data_with_pattern_101101(times, meas, noise, true):
+    datasets = splice_data_with_pattern(splice_data_with_pattern_101101_get_ones, \
+        splice_data_with_pattern_101101_get_zeros, times, meas, noise, true)
+    datasets["id"] = format_dataset_id("101101", str(len(times)))
+    return datasets
+
+
+def splice_data_with_pattern_011011_get_ones(values):
+    vals = numpy.delete(values, numpy.s_[0::3])
+    ones = numpy.concatenate(( \
+        [copy.deepcopy(values[0])],
+        vals))
+    return ones
+
+
+def splice_data_with_pattern_011011_get_zeros(values):
+    vals = numpy.delete(values, numpy.s_[1::3])
+    zeros = numpy.delete(vals, numpy.s_[1::2])
+    return zeros
+
+
+def splice_data_with_pattern_011011(times, meas, noise, true):
+    datasets = splice_data_with_pattern(splice_data_with_pattern_011011_get_ones, \
+        splice_data_with_pattern_011011_get_zeros, times, meas, noise, true)
+    datasets["id"] = format_dataset_id("011011", str(len(times)))
+    return datasets

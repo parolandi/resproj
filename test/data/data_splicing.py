@@ -104,5 +104,53 @@ class TestDataSplicing(unittest.TestCase):
         [self.assertEquals(zero, act) for zero, act in zip(zeros, actual)]
 
 
+    def test_splice_data_with_pattern_101101_even(self):
+        values = numpy.arange(10)
+        
+        ones = data.data_splicing.splice_data_with_pattern_101101_get_ones(values)
+        actual = numpy.asarray([0,2,3,5,6,8,9])
+        [self.assertEquals(one, act) for one, act in zip(ones, actual)]
+        
+        zeros = data.data_splicing.splice_data_with_pattern_101101_get_zeros(values)
+        actual = numpy.asarray([0,1,4,7,10])
+        [self.assertEquals(zero, act) for zero, act in zip(zeros, actual)]
+
+
+    def test_splice_data_with_pattern_101101_odd(self):
+        values = numpy.arange(11)
+        
+        ones = data.data_splicing.splice_data_with_pattern_101101_get_ones(values)
+        actual = numpy.asarray([0,2,3,5,6,8,9,11])
+        [self.assertEquals(one, act) for one, act in zip(ones, actual)]
+        
+        zeros = data.data_splicing.splice_data_with_pattern_101101_get_zeros(values)
+        actual = numpy.asarray([0,1,4,7,10])
+        [self.assertEquals(zero, act) for zero, act in zip(zeros, actual)]
+
+    
+    def test_splice_data_with_pattern_011011_even(self):
+        values = numpy.arange(10)
+        
+        ones = data.data_splicing.splice_data_with_pattern_011011_get_ones(values)
+        actual = numpy.asarray([0,1,2,4,5,7,8,10])
+        [self.assertEquals(one, act) for one, act in zip(ones, actual)]
+        
+        zeros = data.data_splicing.splice_data_with_pattern_011011_get_zeros(values)
+        actual = numpy.asarray([0,3,6,9])
+        [self.assertEquals(zero, act) for zero, act in zip(zeros, actual)]
+
+
+    def test_splice_data_with_pattern_011011_odd(self):
+        values = numpy.arange(11)
+        
+        ones = data.data_splicing.splice_data_with_pattern_011011_get_ones(values)
+        actual = numpy.asarray([0,1,2,4,5,7,8,10,11])
+        [self.assertEquals(one, act) for one, act in zip(ones, actual)]
+        
+        zeros = data.data_splicing.splice_data_with_pattern_011011_get_zeros(values)
+        actual = numpy.asarray([0,3,6,9])
+        [self.assertEquals(zero, act) for zero, act in zip(zeros, actual)]
+
+
 if __name__ == "__main__":
     unittest.main()
