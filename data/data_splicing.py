@@ -19,6 +19,10 @@ calib_valid_data = {
     }
 
 
+def format_dataset_id(pattern, dim):
+    return "-p-" + pattern + "-n-" + dim
+    
+
 # TODO: noise
 # TODO: true
 def splice_data_with_pattern(splicer_ones, splicer_zeros, times, meas, noise, true):
@@ -56,7 +60,8 @@ def splice_data_with_pattern_111000_get_zeros(values):
 def splice_data_with_pattern_111000(times, meas, noise, true):
     datasets = splice_data_with_pattern(splice_data_with_pattern_111000_get_ones, \
         splice_data_with_pattern_111000_get_zeros, times, meas, noise, true)
-    datasets["id"] = "111000"
+    datasets["id"] = format_dataset_id("111000", str(len(times)))
+    # WIP: add warning on diff len()
     return datasets
     
 
@@ -79,7 +84,7 @@ def splice_data_with_pattern_000111_get_zeros(values):
 def splice_data_with_pattern_000111(times, meas, noise, true):
     datasets = splice_data_with_pattern(splice_data_with_pattern_000111_get_ones, \
         splice_data_with_pattern_000111_get_zeros, times, meas, noise, true)
-    datasets["id"] = "000111"
+    datasets["id"] = format_dataset_id("000111", str(len(times)))
     return datasets
 
 
@@ -98,7 +103,7 @@ def splice_data_with_pattern_101010_get_zeros(values):
 def splice_data_with_pattern_101010(times, meas, noise, true):
     datasets = splice_data_with_pattern(splice_data_with_pattern_101010_get_ones, \
         splice_data_with_pattern_101010_get_zeros, times, meas, noise, true)
-    datasets["id"] = "101010"
+    datasets["id"] = format_dataset_id("101010", str(len(times)))
     return datasets
 
 
@@ -113,5 +118,3 @@ def splice_data_with_pattern_110110_get_zeros(values):
         [copy.deepcopy(values[0])],
         numpy.delete(vals, numpy.s_[0::2])))
     return zeros
-
-
