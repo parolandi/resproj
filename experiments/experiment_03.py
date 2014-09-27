@@ -20,9 +20,27 @@ import workflows.basic
 class TestExperiment03(unittest.TestCase):
 
 
-    def test_do_experiment_at_conditions_111000_and_30_points_with_CG(self):
+    def test_do_experiment_at_conditions_110110_and_30_points_with_CG(self):
         config = dict(self.experiment_setup)
-        config["data_splicing"] = data.data_splicing.splice_data_with_pattern_111000
+        config["data_splicing"] = data.data_splicing.splice_data_with_pattern_110110
+        config["algorithm_setting"] = "key-CG"
+        config["number_of_intervals"] = 30
+        _ = None
+        self.do_experiment(config, _)
+
+    
+    def test_do_experiment_at_conditions_101101_and_30_points_with_CG(self):
+        config = dict(self.experiment_setup)
+        config["data_splicing"] = data.data_splicing.splice_data_with_pattern_101101
+        config["algorithm_setting"] = "key-CG"
+        config["number_of_intervals"] = 30
+        _ = None
+        self.do_experiment(config, _)
+
+    
+    def test_do_experiment_at_conditions_011011_and_30_points_with_CG(self):
+        config = dict(self.experiment_setup)
+        config["data_splicing"] = data.data_splicing.splice_data_with_pattern_011011
         config["algorithm_setting"] = "key-CG"
         config["number_of_intervals"] = 30
         _ = None

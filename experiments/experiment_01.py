@@ -427,7 +427,7 @@ class TestExperiment01(unittest.TestCase):
 
         # results
         if do_results:
-            fig.suptitle("Dataset-" + dataset["id"] + " & " + slv_method)
+            fig.suptitle("Dataset" + dataset["id"] + "-s-" + slv_method)
             solvers.plot.show_figure()
         print(slv_method)
         print(dataset["id"])

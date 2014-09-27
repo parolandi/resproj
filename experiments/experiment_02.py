@@ -176,8 +176,8 @@ class TestExperiment02(unittest.TestCase):
         all_results["full"] = path_results
 
         dataset = config["data_splicing"](problem_instance["time"], exp_meas_traj, meas_noise_traj, act_meas_traj)
-        id = dataset["id"]
-        dataset["id"] = id + "-n-" + str(config["number_of_intervals"])
+#        id = dataset["id"]
+#        dataset["id"] = id + "-n-" + str(config["number_of_intervals"])
     
         # calibration data set
         # least-squares
@@ -259,7 +259,7 @@ class TestExperiment02(unittest.TestCase):
 
         # results
         if do_results:
-            fig.suptitle("Dataset-" + dataset["id"] + " & " + slv_method)
+            fig.suptitle("Dataset" + dataset["id"] + "-s-" + slv_method)
             solvers.plot.show_figure()
         print(slv_method)
         print(dataset["id"])
