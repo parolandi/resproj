@@ -157,7 +157,8 @@ def do_experiment(self, config, baseline):
             stdev, problem_instance["outputs"], act_meas_traj)
     point_results["params"] = copy.deepcopy(result.x)
     
-    do_test_point(self, point_results, baseline["full"])
+    if baseline is not None:
+        do_test_point(self, point_results, baseline["full"])
 
     fig = solvers.plot.get_figure()
 
@@ -166,7 +167,8 @@ def do_experiment(self, config, baseline):
             models.ordinary_differential.sensitivities_linear_2p2s, sens_model_instance, sens_problem_instance, \
             stdev, solution_path, fig)
 
-    do_test_path(self, path_results, baseline["full"])
+    if baseline is not None:
+        do_test_path(self, path_results, baseline["full"])
 
     all_results = dict(workflows.workflow_data.workflow_results)
     all_results["full"] = path_results
@@ -198,14 +200,16 @@ def do_experiment(self, config, baseline):
             stdev, problem_instance["outputs"], dataset["calib"]["true"])
     point_results["params"] = copy.deepcopy(result.x)
 
-    do_test_point(self, point_results, baseline["calibration"])
+    if baseline is not None:
+        do_test_point(self, point_results, baseline["calibration"])
     
     path_results = workflows.basic.do_workflow_at_solution_path( \
             models.ordinary_differential.linear_2p2s, model_instance, problem_instance, \
             models.ordinary_differential.sensitivities_linear_2p2s, sens_model_instance, sens_problem_instance, \
             stdev, solution_path, fig)
 
-    do_test_path(self, path_results, baseline["calibration"])
+    if baseline is not None:
+        do_test_path(self, path_results, baseline["calibration"])
 
     all_results["calibration"] = path_results
     
@@ -219,14 +223,16 @@ def do_experiment(self, config, baseline):
             stdev, problem_instance["outputs"], dataset["valid"]["true"])
     point_results["params"] = copy.deepcopy(result.x)
 
-    do_test_point(self, point_results, baseline["validation"])
+    if baseline is not None:
+        do_test_point(self, point_results, baseline["validation"])
     
     path_results = workflows.basic.do_workflow_at_solution_path( \
             models.ordinary_differential.linear_2p2s, model_instance, problem_instance, \
             models.ordinary_differential.sensitivities_linear_2p2s, sens_model_instance, sens_problem_instance, \
             stdev, solution_path, fig)
 
-    do_test_path(self, path_results, baseline["validation"])
+    if baseline is not None:
+        do_test_path(self, path_results, baseline["validation"])
 
     all_results["validation"] = path_results
             
@@ -240,14 +246,16 @@ def do_experiment(self, config, baseline):
             stdev, problem_instance["outputs"], act_meas_traj)
     point_results["params"] = copy.deepcopy(result.x)
 
-    do_test_point(self, point_results, baseline["calib+valid"])
+    if baseline is not None:
+        do_test_point(self, point_results, baseline["calib+valid"])
     
     path_results = workflows.basic.do_workflow_at_solution_path( \
             models.ordinary_differential.linear_2p2s, model_instance, problem_instance, \
             models.ordinary_differential.sensitivities_linear_2p2s, sens_model_instance, sens_problem_instance, \
             stdev, solution_path, fig)
 
-    do_test_path(self, path_results, baseline["calib+valid"])
+    if baseline is not None:
+        do_test_path(self, path_results, baseline["calib+valid"])
 
     all_results["calib+valid"] = path_results
 
