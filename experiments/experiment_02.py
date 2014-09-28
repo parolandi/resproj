@@ -1,10 +1,8 @@
 import unittest
 
-import copy
 
 import data.data_splicing
 import experiments.experiment
-import workflows.workflow_data
 
 
 NM_method = "key-Nelder-Mead"

@@ -1,11 +1,9 @@
 
 import unittest
 
-import copy
 
 import data.data_splicing
 import experiments.experiment
-import workflows.workflow_data
 
 
 number_of_intervals = 30

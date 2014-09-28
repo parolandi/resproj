@@ -60,7 +60,6 @@ def sums_squared_residuals(dof, model, model_instance, problem_instance):
             problem_instance["parameters"][ii] = dof[ii]
 
     sum_res = []
-    residuals = residuals_st(model, model_instance, problem_instance)
     if len(problem_instance["output_indices"]) == 1:
         sum_res.append(math.fsum(res**2 for res in residuals_st(model, model_instance, problem_instance)))
         return sum_res

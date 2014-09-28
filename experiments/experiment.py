@@ -63,7 +63,7 @@ def do_setup(config):
     no_states = len(model_instance["states"])
     data.generator.set_seed(117)
     measurement_noise = []
-    for ii in range(no_states):
+    for _ in range(no_states):
         measurement_noise.append(stdev * data.generator.normal_distribution(intervals+1))
     data.generator.unset_seed()
     
