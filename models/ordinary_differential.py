@@ -133,7 +133,7 @@ inputs_i = {
     "B_max": 0,
 }
 
-
+# TODO: extract into dedicated module
 # array-based model
 def epo_receptor(states, time, params, inputs):
     v = numpy.zeros(len(epo_receptor_velocities))
