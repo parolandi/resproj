@@ -7,10 +7,16 @@ import numpy
 
 import common.utilities as cu
 import models.model_data
+#import results.plot as rps
+import results.plot_tiles as rpt
 import solvers.initial_value
 
 
 class TestExperiment04(unittest.TestCase):
+
+
+    def setup(self):
+        return "modelB"
 
 
     def do_get_published_data(self):
@@ -24,6 +30,8 @@ class TestExperiment04(unittest.TestCase):
         
 
     def test_WIP(self):
+        model = self.setup()
+        
         t = numpy.linspace(0.0, 20.0, 100)
         p = numpy.ones(len(mk.pmap))
         for par in mk.pmap.items():
@@ -48,10 +56,16 @@ class TestExperiment04(unittest.TestCase):
         problem_data["parameters"] = copy.deepcopy(p)
         problem_data["inputs"] = copy.deepcopy(u)
 
-        solvers.initial_value.compute_timecourse_trajectories( \
-            mk.evaluate_modelB, model_data, problem_data)
-        self.do_get_published_data()
+        model_func = None
+        if model is "modelA":
+            model_func = mk.evaluate_modelA
+        else:
+            model_func = mk.evaluate_modelB
+        trajectories = solvers.initial_value.compute_timecourse_trajectories( \
+            model_func, model_data, problem_data)
+        time, observations = self.do_get_published_data()
         
+        rpt.plot_fit(time, observations, t, trajectories, labels, model)
 
 
 if __name__ == "__main__":
