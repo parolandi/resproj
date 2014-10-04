@@ -1,6 +1,8 @@
 
 import matplotlib.pyplot as pp
 
+# TODO: rename to plot single
+
 
 def plot_errors_and_residuals(independent,  errors, residuals):
     # TODO assertions
@@ -16,7 +18,7 @@ def plot_errors_and_residuals(independent,  errors, residuals):
     pp.show()
 
 
-def plot_fit(independent,  measurements, predictions, actuals):
+def plot_fit(independent, measurements, predictions, actuals):
     # TODO assertions
     
     x = independent
