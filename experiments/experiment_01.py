@@ -8,19 +8,23 @@ import experiments.experiment
 import workflows.workflow_data
 
 
-number_of_intervals = 30
-NM_method = "key-Nelder-Mead"
-CG_method = "key-CG"
-
-
+'''
+Examine the effect of changing the data splicing pattern between
+different interpolation and extrapolation "extremes", using 30 points
+and both CG and NM methods
+'''
 class TestExperiment01(unittest.TestCase):
 
+
+    number_of_intervals = 30
+    NM_method = "key-Nelder-Mead"
+    CG_method = "key-CG"
 
     def test_do_experiment_01_at_conditions_111000_with_CG(self):
         config = dict(experiments.experiment.experiment_setup)
         config["data_splicing"] = data.data_splicing.splice_data_with_pattern_111000
-        config["algorithm_setting"] = CG_method 
-        config["number_of_intervals"] = number_of_intervals
+        config["algorithm_setting"] = self.CG_method 
+        config["number_of_intervals"] = self.number_of_intervals
         baseline = self.setup_test_baseline_experiment_01_at_conditions_111000_with_CG()
         experiments.experiment.do_experiment(self, config, baseline)
 
@@ -28,8 +32,8 @@ class TestExperiment01(unittest.TestCase):
     def test_do_experiment_01_at_conditions_000111_with_CG(self):
         config = dict(experiments.experiment.experiment_setup)
         config["data_splicing"] = data.data_splicing.splice_data_with_pattern_000111
-        config["algorithm_setting"] = CG_method
-        config["number_of_intervals"] = number_of_intervals
+        config["algorithm_setting"] = self.CG_method
+        config["number_of_intervals"] = self.number_of_intervals
         baseline = self.setup_test_baseline_experiment_01_at_conditions_000111_with_CG()
         experiments.experiment.do_experiment(self, config, baseline)
 
@@ -37,8 +41,8 @@ class TestExperiment01(unittest.TestCase):
     def test_do_experiment_01_at_conditions_101010_with_CG(self):
         config = dict(experiments.experiment.experiment_setup)
         config["data_splicing"] = data.data_splicing.splice_data_with_pattern_101010
-        config["algorithm_setting"] = CG_method
-        config["number_of_intervals"] = number_of_intervals
+        config["algorithm_setting"] = self.CG_method
+        config["number_of_intervals"] = self.number_of_intervals
         baseline = self.setup_test_baseline_experiment_01_at_conditions_101010_with_CG()
         experiments.experiment.do_experiment(self, config, baseline)
 
@@ -46,8 +50,8 @@ class TestExperiment01(unittest.TestCase):
     def test_do_experiment_01_at_conditions_111000_with_NM(self):
         config = dict(experiments.experiment.experiment_setup)
         config["data_splicing"] = data.data_splicing.splice_data_with_pattern_111000
-        config["algorithm_setting"] = NM_method
-        config["number_of_intervals"] = number_of_intervals
+        config["algorithm_setting"] = self.NM_method
+        config["number_of_intervals"] = self.number_of_intervals
         baseline = self.setup_test_baseline_experiment_01_at_conditions_111000_with_NM() 
         experiments.experiment.do_experiment(self, config, baseline)
 
@@ -55,8 +59,8 @@ class TestExperiment01(unittest.TestCase):
     def test_do_experiment_01_at_conditions_000111_with_NM(self):
         config = dict(experiments.experiment.experiment_setup)
         config["data_splicing"] = data.data_splicing.splice_data_with_pattern_000111
-        config["algorithm_setting"] = NM_method
-        config["number_of_intervals"] = number_of_intervals
+        config["algorithm_setting"] = self.NM_method
+        config["number_of_intervals"] = self.number_of_intervals
         baseline = self.setup_test_baseline_experiment_01_at_conditions_000111_with_NM()
         experiments.experiment.do_experiment(self, config, baseline)
 
@@ -64,8 +68,8 @@ class TestExperiment01(unittest.TestCase):
     def test_do_experiment_01_at_conditions_101010_with_NM(self):
         config = dict(experiments.experiment.experiment_setup)
         config["data_splicing"] = data.data_splicing.splice_data_with_pattern_101010
-        config["algorithm_setting"] = NM_method
-        config["number_of_intervals"] = number_of_intervals
+        config["algorithm_setting"] = self.NM_method
+        config["number_of_intervals"] = self.number_of_intervals
         baseline = self.setup_test_baseline_experiment_01_at_conditions_101010_with_NM()
         experiments.experiment.do_experiment(self, config, baseline)
 
@@ -197,4 +201,5 @@ class TestExperiment01(unittest.TestCase):
 
     
 if __name__ == "__main__":
+    experiments.experiment.set_showing_plots(True)
     unittest.main()
