@@ -16,7 +16,7 @@ def linear_2p2s_mock(x, t, p, u):
 
 
 def callbackit(x):
-    print("calling-back")
+    print("unit-test: calling-back")
 
 
 # TODO: test all algorithms with this simple case, non only SLSQP
@@ -46,13 +46,15 @@ class TestLeastSquaresSolvers(unittest.TestCase):
         algorithm_instance["initial_guesses"] = problem_instance["parameters"]
 
         return model_instance, problem_instance, algorithm_instance
-    
-    def test_solve_st_linear_2p2s(self):
+
+
+    def test_solve_st_linear_2p2s_include_initial(self):
         model_instance, problem_instance, algorithm_instance = self.do_setup()
         algorithm_instance["method"] = 'SLSQP'
         
         result = solvers.least_squares.solve_st( \
-            metrics.ordinary_differential.sum_squared_residuals_st, linear_2p2s_mock, model_instance, problem_instance, algorithm_instance)
+            metrics.ordinary_differential.sum_squared_residuals_st, linear_2p2s_mock, \
+            model_instance, problem_instance, algorithm_instance)
         estimate_actual = result.x
         estimate_expected = numpy.array([1.0, 0.5])
         [self.assertAlmostEqual(exp, act, 6) for exp, act in zip(estimate_expected, estimate_actual)]
@@ -69,7 +71,8 @@ class TestLeastSquaresSolvers(unittest.TestCase):
         algorithm_instance["callback"] = callbackit
         
         result = solvers.least_squares.solve_st( \
-            metrics.ordinary_differential.sum_squared_residuals_st, linear_2p2s_mock, model_instance, problem_instance, algorithm_instance)
+            metrics.ordinary_differential.sum_squared_residuals_st, linear_2p2s_mock, \
+            model_instance, problem_instance, algorithm_instance)
         estimate_actual = result.x
         estimate_expected = numpy.array([1.000011, 0.5000155])
         [self.assertAlmostEqual(exp, act, 6) for exp, act in zip(estimate_expected, estimate_actual)]
@@ -88,7 +91,8 @@ class TestLeastSquaresSolvers(unittest.TestCase):
         algorithm_instance["callback"] = logger.log_decision_variables
         
         result = solvers.least_squares.solve_st( \
-            metrics.ordinary_differential.sum_squared_residuals_st, linear_2p2s_mock, model_instance, problem_instance, algorithm_instance)
+            metrics.ordinary_differential.sum_squared_residuals_st, linear_2p2s_mock, \
+            model_instance, problem_instance, algorithm_instance)
         estimate_actual = result.x
         estimate_expected = numpy.array([1.000011, 0.5000155])
         [self.assertAlmostEqual(exp, act, 6) for exp, act in zip(estimate_expected, estimate_actual)]
@@ -99,5 +103,26 @@ class TestLeastSquaresSolvers(unittest.TestCase):
         self.assertAlmostEqual(sum_sq_res_expected, sum_sq_res_actual, 6)
 
 
+    def test_solve_st_linear_2p2s_exclude_initial(self):
+        model_instance, problem_instance, algorithm_instance = self.do_setup()
+        algorithm_instance["method"] = 'SLSQP'
+        problem_instance["outputs"][0][0] = 10
+        problem_instance["outputs"][1][0] = 10
+        # with these tampered-with values, only "exclude" succeeds
+        problem_instance["initial"] = "exclude"
+        
+        result = solvers.least_squares.solve_st( \
+            metrics.ordinary_differential.sum_squared_residuals_st, linear_2p2s_mock, \
+            model_instance, problem_instance, algorithm_instance)
+        estimate_actual = result.x
+        estimate_expected = numpy.array([1.0, 0.5])
+        [self.assertAlmostEqual(exp, act, 6) for exp, act in zip(estimate_expected, estimate_actual)]
+        
+        sum_sq_res_actual = metrics.ordinary_differential.sum_squared_residuals_st( \
+            estimate_actual, linear_2p2s_mock, model_instance, problem_instance)
+        sum_sq_res_expected = 0.0
+        self.assertAlmostEqual(sum_sq_res_expected, sum_sq_res_actual, 6)
+        
+        
 if __name__ == "__main__":
     unittest.main()

@@ -29,21 +29,18 @@ def compute_confidence_ellipsoid_radius(no_params, no_meas, est_stdev, significa
 
     return radius
 
-
+# TODO: documentation
 def compute_measurements_standard_deviation(ssr, no_params, no_meas):
     return ssr / (no_meas - no_params)
 
 
+# TODO: documentation
 def compute_confidence_intervals(covariance_matrix, ellipsoid_radius):
+    assert(isinstance(ellipsoid_radius, float))
+    assert(len(covariance_matrix) > 0)
+    
     no_params = len(covariance_matrix)
     confidence_intervals = numpy.zeros(no_params)
     for ii in range(no_params):
         confidence_intervals[ii] = ellipsoid_radius * covariance_matrix[ii, ii]
     return confidence_intervals
-    
-    
-# TODO: transform into proper unit tests
-if __name__ == '__main__':
-    actual = compute_confidence_ellipsoid_radius(2, 3, 0.5, 0.90)
-    assert(math.fabs(actual - 24.75) < 1E-6)
-    

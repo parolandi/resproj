@@ -5,24 +5,27 @@ import scipy.optimize
 import solvers.solver_data
 
 
+# TODO: rename; remove _st
 def solve_st(metric, model, model_instance, problem_instance, algorithm_structure):
     diag = {
         "disp": False,
         }
     return scipy.optimize.minimize( \
-        fun =     metric, \
-        x0 =      algorithm_structure["initial_guesses"], \
-        args =    (model, model_instance, problem_instance), \
-        method =  algorithm_structure["method"],
-        bounds =  problem_instance["bounds"],
-        callback = algorithm_structure["callback"],
-        options = diag,
+        args =     (model, model_instance, problem_instance), \
+        bounds =   problem_instance["bounds"], \
+        callback = algorithm_structure["callback"], \
+        fun =      metric, \
+        method =   algorithm_structure["method"], \
+        options =  diag, \
+        tol =      algorithm_structure["tolerance"], \
+        x0 =       algorithm_structure["initial_guesses"], \
         )
 
 
 class DecisionVariableLogger():
     
-    decision_variables = []
+    def __init__(self):
+        self.decision_variables = []
     
     def log_decision_variables(self, x):
         self.decision_variables.append([x])

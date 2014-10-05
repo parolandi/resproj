@@ -25,6 +25,30 @@ def linear_st(y, t, instance):
     return instance["parameters"][0] * instance["inputs"][0] - instance["states"][0]
 
 
+def linear_2p2s(x, t, p, u):
+    assert(len(x) == 2)
+    assert(len(p) == 2)
+    assert(len(u) == 2)
+    
+    dx_dt = p * u - x
+    return dx_dt
+
+
+# note that in this particular case there is no dependence x
+# that's the reason we can compute the sensitivities so trivially
+def sensitivities_linear_2p2s(s, t, p, u):
+    assert(len(s) == 4)
+    assert(len(p) == 2)
+    assert(len(u) == 2)
+    
+    ds_dt = []
+    ds_dt.append(u[0] - s[0])
+    ds_dt.append(0.0)
+    ds_dt.append(0.0)
+    ds_dt.append(u[1] - s[3])
+    return ds_dt
+
+# TODO: perhpas move to epo_receptor module?
 epo_receptor_default_parameters = {
     "k_on": 0.00010496,
     "k_off": 0.0172135,
@@ -109,7 +133,7 @@ inputs_i = {
     "B_max": 0,
 }
 
-
+# TODO: extract into dedicated module
 # array-based model
 def epo_receptor(states, time, params, inputs):
     v = numpy.zeros(len(epo_receptor_velocities))

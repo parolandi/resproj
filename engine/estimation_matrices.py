@@ -34,5 +34,4 @@ def calculate_covariance_matrix(sensitivity_matrix):
     return covariance_matrix
 
 
-# TODO: add proper unit tests
-# TODO: another calculation of the covariance matrix already exists    
+# TODO: another calculation of the covariance matrix already exists
