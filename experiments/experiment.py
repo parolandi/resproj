@@ -21,7 +21,20 @@ experiment_setup = {
     "algorithm_setting": "",
 }
 
+
+show_plots = False
+
+# value: boolean
+def set_showing_plots(value):
+    global show_plots
+    show_plots = value
     
+
+def get_showing_plots():
+    global show_plots
+    return show_plots
+
+
 def do_setup(config):
     # configuration
     final_time = 3.0
@@ -89,7 +102,6 @@ def do_setup(config):
         stdev, true_measurement_trajectories, experimental_measurement_trajectories, measurement_noise
 
 
-
 # TODO: re-enable regression testing
 def do_test_point(self, point_results, baseline):
     return
@@ -121,7 +133,7 @@ def do_experiment(self, config, baseline):
     # TODO: user messages
 
     # configure
-    do_results = True
+    show_plots = get_showing_plots()
     ig_multiplier = 1.0
     # or "key-Nelder-Mead" 
     slv_method = solvers.solver_data.nonlinear_algebraic_methods[config["algorithm_setting"]]
@@ -260,7 +272,7 @@ def do_experiment(self, config, baseline):
     all_results["calib+valid"] = path_results
 
     # results
-    if do_results:
+    if show_plots:
         fig.suptitle("Dataset" + dataset["id"] + "-s-" + slv_method)
         solvers.plot.show_figure()
     print(slv_method)
