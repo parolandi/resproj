@@ -15,7 +15,7 @@ import solvers.initial_value
 class TestExperiment04(unittest.TestCase):
 
 
-    def setup(self):
+    def config(self):
         return "modelB"
 
 
@@ -29,22 +29,30 @@ class TestExperiment04(unittest.TestCase):
         return trajectories[0], trajectories[1:]
         
 
-    def test_WIP(self):
-        model = self.setup()
+    def do_setup(self):
+        model = self.config()
+        model_func = None
+        if model is "modelA":
+            model_func = mk.evaluate_modelA
+        else:
+            model_func = mk.evaluate_modelB
         
         t = numpy.linspace(0.0, 20.0, 100)
+        
         p = numpy.ones(len(mk.pmap))
         for par in mk.pmap.items():
             p[par[1]] = mk.pvec[par[0]]
+        
         u = numpy.ones(len(mk.umap))
         for inp in mk.umap.items():
             u[inp[1]] = mk.uvec_0h[inp[0]]
+        
         x = numpy.ones(len(mk.xmap))
         labels = [""] * len(x)
         for ste in mk.xmap.items():
             x[ste[1]] = mk.xvec[ste[0]]
             labels[ste[1]] = ste[0]
-
+        
         model_data = dict(models.model_data.model_structure)
         model_data["parameters"] = copy.deepcopy(p)
         model_data["inputs"] = copy.deepcopy(u)
@@ -56,16 +64,18 @@ class TestExperiment04(unittest.TestCase):
         problem_data["parameters"] = copy.deepcopy(p)
         problem_data["inputs"] = copy.deepcopy(u)
 
-        model_func = None
-        if model is "modelA":
-            model_func = mk.evaluate_modelA
-        else:
-            model_func = mk.evaluate_modelB
+        return model_func, model_data, problem_data, labels
+
+
+    def test_simulate(self):
+        model_func, model_data, problem_data, labels = self.do_setup()
+
         trajectories = solvers.initial_value.compute_timecourse_trajectories( \
             model_func, model_data, problem_data)
         time, observations = self.do_get_published_data()
         
-        rpt.plot_fit(time, observations, t, trajectories, labels, model)
+        tt = problem_data["time"]
+        rpt.plot_fit(time, observations, tt, trajectories, labels, self.config())
 
 
 if __name__ == "__main__":
