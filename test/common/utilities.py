@@ -75,7 +75,7 @@ class TestUtilities(unittest.TestCase):
         
         
     def test_exclude_initial_point_list_2d(self):
-        values = numpy.asarray([[0, 1, 2, 3, 4], [10, 11, 12, 13, 14]])
+        values = [[0, 1, 2, 3, 4], [10, 11, 12, 13, 14]]
         actual = common.utilities.exclude_initial_point(values)
         expected = numpy.asarray([[1, 2, 3, 4], [11, 12, 13, 14]])
         [self.assertEquals(exp, act) for exp, act in zip(expected[0], actual[0])]
@@ -87,6 +87,18 @@ class TestUtilities(unittest.TestCase):
             self.assertTrue(False)
 
 
+    def test_exclude_initial_point_nested_list_1d(self):
+        values = [[0, 1, 2, 3, 4]]
+        actual = common.utilities.exclude_initial_point(values)
+        expected = numpy.asarray([[1, 2, 3, 4]])
+        [self.assertEquals(exp, act) for exp, act in zip(expected[0], actual[0])]
+        try:
+            actual.shape
+            self.assertTrue(True)
+        except:
+            self.assertTrue(False)
+
+    
     def test_exclude_initial_point_unknown_type_raises_exception(self):
         values = None
         try:
