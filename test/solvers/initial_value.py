@@ -49,6 +49,7 @@ class TestInitialValueSolvers(unittest.TestCase):
         
         result, _ = solvers.initial_value.solve_lsoda_st(linear_mock, model_instance, problem_instance)
         actual = common.utilities.sliceit_assnapshot(result)
+        # TODO: transform to snapshot
         expected = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
         [self.assertAlmostEqual(exp, act, 8) for exp, act in zip(expected, actual)]
 
@@ -57,6 +58,7 @@ class TestInitialValueSolvers(unittest.TestCase):
         model_instance, problem_instance = self.do_setup_include_initial()
                 
         actual = solvers.initial_value.compute_trajectory_st(linear_mock, model_instance, problem_instance)
+        # TODO: transform to snapshot
         expected = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
         [self.assertAlmostEqual(exp, act, 8) for exp, act in zip(expected, actual)]
 
@@ -78,8 +80,8 @@ class TestInitialValueSolvers(unittest.TestCase):
         problem_instance["initial"] = "exclude"
                 
         actual = solvers.initial_value.compute_timecourse_trajectories(linear_mock, model_instance, problem_instance)
-        expected = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
-        [self.assertAlmostEqual(exp, act, 8) for exp, act in zip(expected, actual)]
+        expected = [[0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]]
+        [self.assertAlmostEqual(exp, act, 8) for exp, act in zip(expected[0], actual[0])]
 
 
 if __name__ == "__main__":
