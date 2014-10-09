@@ -72,11 +72,12 @@ def sums_squared_residuals(dof, model, model_instance, problem_instance):
 
 # TODO: compute state-wise and experiment-wise
 # TODO: rename; remove "_st"
+# dof: a list/array or None
 def sum_squared_residuals_st(dof, model, model_instance, problem_instance):
     # TODO: preconditions
     # TODO: more pythonic
     
-    if len(problem_instance["parameter_indices"]) > 0:
+    if dof is not None and len(problem_instance["parameter_indices"]) > 0:
         for ii in range(len(dof)):
             index = problem_instance["parameter_indices"][ii]
             model_instance["parameters"][index] = dof[ii]
