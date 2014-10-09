@@ -20,6 +20,7 @@ def residuals_st(model, model_instance, problem_instance):
     measured = handle_initial_point(numpy.asarray(problem_instance["outputs"]), problem_instance)
     predicted = solvers.initial_value.compute_timecourse_trajectories( \
         model, model_instance, problem_instance)
+    assert(measured.shape == predicted.shape)
 
     # there is one residual per experiment
     # but for the moment there is also a single experiment
@@ -32,8 +33,9 @@ def residuals_st(model, model_instance, problem_instance):
         res = numpy.subtract(measured_s, predicted_s)
         return res
     states = 0
+    
     res = numpy.empty(measured.shape)
-    for jj in range(measured.shape[states]):
+    for jj in range(len(problem_instance["output_indices"])):
         measured_s = measured[jj]
         predicted_s = predicted[problem_instance["output_indices"][jj]]
         res[jj] = numpy.subtract(measured_s, predicted_s)
@@ -73,6 +75,7 @@ def sums_squared_residuals(dof, model, model_instance, problem_instance):
 def sum_squared_residuals_st(dof, model, model_instance, problem_instance):
     # TODO: preconditions
     # TODO: more pythonic
+    
     if len(problem_instance["parameter_indices"]) > 0:
         for ii in range(len(dof)):
             index = problem_instance["parameter_indices"][ii]
