@@ -1,8 +1,10 @@
 
 import unittest
+import solvers.least_squares
+
+import copy
 import numpy
 
-import solvers.least_squares
 import metrics.ordinary_differential
 import models.model_data
 
@@ -37,7 +39,7 @@ class TestLeastSquaresSolvers(unittest.TestCase):
         problem_instance["output_indices"] = [0, 1]
 
         model_instance = dict(models.model_data.model_structure)
-        model_instance["parameters"] = problem_instance["parameters"]
+        model_instance["parameters"] = copy.deepcopy(problem_instance["parameters"])
         model_instance["inputs"] = problem_instance["inputs"]
         model_instance["states"] = problem_instance["initial_conditions"]
         model_instance["time"] = 0.0
@@ -123,6 +125,28 @@ class TestLeastSquaresSolvers(unittest.TestCase):
         sum_sq_res_expected = 0.0
         self.assertAlmostEqual(sum_sq_res_expected, sum_sq_res_actual, 6)
         
+    
+    def test_solve_st_linear_2p2s_1dof_include_initial(self):
+        model_instance, problem_instance, algorithm_instance = self.do_setup()
+        algorithm_instance["method"] = 'SLSQP'
         
+        model_instance["parameters"][1] = 0.5
+        problem_instance["parameters"] = [0.1]
+        problem_instance["parameter_indices"] = [0]
+        algorithm_instance["initial_guesses"] = [copy.deepcopy(problem_instance["parameters"][0])]
+                
+        result = solvers.least_squares.solve_st( \
+            metrics.ordinary_differential.sum_squared_residuals_st, linear_2p2s_mock, \
+            model_instance, problem_instance, algorithm_instance)
+        estimate_actual = result.x
+        estimate_expected = [1.0]
+        [self.assertAlmostEqual(exp, act, 5) for exp, act in zip(estimate_expected, estimate_actual)]
+        
+        sum_sq_res_actual = metrics.ordinary_differential.sum_squared_residuals_st( \
+            estimate_actual, linear_2p2s_mock, model_instance, problem_instance)
+        sum_sq_res_expected = 0.0
+        self.assertAlmostEqual(sum_sq_res_expected, sum_sq_res_actual, 6)
+    
+
 if __name__ == "__main__":
     unittest.main()
