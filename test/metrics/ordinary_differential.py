@@ -58,7 +58,7 @@ class TestOrdinaryDifferentialMetrics(unittest.TestCase):
         problem_instance["outputs"] = measured
         problem_instance["output_indices"] = [0, 1]
         
-        dof = []
+        dof = None
         actual = metrics.ordinary_differential.sum_squared_residuals_st( \
             dof, linear_2p2s_mock, model_instance, problem_instance)
         expected = offset**2 * measured.size
@@ -74,7 +74,7 @@ class TestOrdinaryDifferentialMetrics(unittest.TestCase):
         problem_instance["outputs"] = measured
         problem_instance["output_indices"] = [0]
         
-        dof = []
+        dof = None
         actual = metrics.ordinary_differential.sum_squared_residuals_st( \
             dof, linear_2p2s_mock, model_instance, problem_instance)
         expected = offset**2 * measured.size
@@ -111,7 +111,7 @@ class TestOrdinaryDifferentialMetrics(unittest.TestCase):
         problem_instance["output_indices"] = [0, 1]
         problem_instance["time"] = numpy.linspace(0.0, 1.0, 11, endpoint=True)
         
-        dof = []
+        dof = None
         actual = metrics.ordinary_differential.sum_squared_residuals_st( \
             dof, linear_2p2s_mock, model_instance, problem_instance)
         expected = offset**2 * (measured.size-2)
@@ -129,7 +129,7 @@ class TestOrdinaryDifferentialMetrics(unittest.TestCase):
         problem_instance["output_indices"] = [0]
         problem_instance["time"] = numpy.linspace(0.0, 1.0, 11, endpoint=True)
         
-        dof = []
+        dof = None
         actual = metrics.ordinary_differential.sum_squared_residuals_st( \
             dof, linear_2p2s_mock, model_instance, problem_instance)
         expected = offset**2 * (measured.size-1)

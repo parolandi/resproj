@@ -7,6 +7,9 @@ import solvers.solver_data
 
 # TODO: rename; remove _st
 def solve_st(metric, model, model_instance, problem_instance, algorithm_structure):
+    assert(len(problem_instance["parameter_indices"]) == len(algorithm_structure["initial_guesses"]))
+    #TODO: preconditions
+    
     diag = {
         "disp": False,
         }

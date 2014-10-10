@@ -17,7 +17,7 @@ class TestInitialValueSolvers(unittest.TestCase):
     
     def do_setup(self):
         problem_instance = dict(models.model_data.problem_structure)
-        problem_instance["initial_conditions"] = 0.0
+        problem_instance["initial_conditions"] = [0.0]
         problem_instance["parameters"] = [1.0]
         problem_instance["inputs"] = [1.0]
         
