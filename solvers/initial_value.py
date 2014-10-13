@@ -42,8 +42,7 @@ Warning: it will unconditionally include the initial point
 def compute_trajectory_st(model, model_data, problem_data):
     # TODO: preconditions
     snapshot, _ = solve_lsoda_st(model, model_data, problem_data)
-    trajectory = common.utilities.sliceit_assnapshot(snapshot)
-    return trajectory
+    return snapshot
 
 
 '''

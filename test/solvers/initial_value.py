@@ -128,7 +128,7 @@ class TestInitialValueSolvers(unittest.TestCase):
         [self.assertAlmostEqual(exp, act, 8) for exp, act in zip(expected[1], actual[1])]
 
 
-    def test_linear_2p2s_compute_trajectory_st_include_initial(self):
+    def test_linear_2p2s_compute_timecourse_trajectories_include_initial(self):
         model_instance, problem_instance = self.do_setup_2p2s()
         problem_instance["time"] = numpy.linspace(0.0, 1.0, 10, endpoint=False)
         
