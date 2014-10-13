@@ -15,18 +15,20 @@ import solvers.initial_value
 class TestExperiment04(unittest.TestCase):
 
 
+    def __init__(self):
+        self.do_plotting = False
+        
+
     def config(self):
         return "modelB"
 
 
     def do_get_published_data(self):
         # TODO: handle gracefully
-        published_data = open("C:/documents/resproj/bench/data.txt", 'r')
+        published_data = open("C:/documents/resproj/bench/data_time_0_20.txt", 'r')
         data = numpy.loadtxt(published_data)
         trajectories_without_V = cu.sliceit_astrajectory(data)
-        trajectories = numpy.insert( \
-            trajectories_without_V, 1, numpy.ones(trajectories_without_V[0].shape), 0)
-        return trajectories[0], trajectories[1:]
+        return trajectories_without_V[0], trajectories_without_V[1:]
         
 
     def do_setup(self):
@@ -37,7 +39,7 @@ class TestExperiment04(unittest.TestCase):
         else:
             model_func = mk.evaluate_modelB
         
-        t = numpy.linspace(0.0, 20.0, 100)
+        tt = numpy.linspace(0.0, 20.0, 11, endpoint=True)
         
         p = numpy.ones(len(mk.pmap))
         for par in mk.pmap.items():
@@ -60,22 +62,26 @@ class TestExperiment04(unittest.TestCase):
         
         problem_data = dict(models.model_data.problem_structure)
         problem_data["initial_conditions"] = copy.deepcopy(x)
-        problem_data["time"] = t
+        problem_data["time"] = tt
         problem_data["parameters"] = copy.deepcopy(p)
         problem_data["inputs"] = copy.deepcopy(u)
 
         return model_func, model_data, problem_data, labels
 
 
+    '''
+    Simulate at nominal point and plot fit 
+    '''
     def test_simulate(self):
         model_func, model_data, problem_data, labels = self.do_setup()
 
         trajectories = solvers.initial_value.compute_timecourse_trajectories( \
             model_func, model_data, problem_data)
         time, observations = self.do_get_published_data()
-        
         tt = problem_data["time"]
-        rpt.plot_fit(time, observations, tt, trajectories, labels, self.config())
+        
+        if self.do_plotting:
+            rpt.plot_fit(time, observations, tt, trajectories, labels, self.config())
 
 
 if __name__ == "__main__":
