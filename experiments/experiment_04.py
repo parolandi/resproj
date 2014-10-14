@@ -151,6 +151,9 @@ class TestExperiment04(unittest.TestCase):
             rpt.plot_fit(time, observations, tt, trajectories_raw[1:], labels[1:], self.config())
             rpt.plot_fit(time, observations, tt, trajectories_fit[1:], labels[1:], self.config())
             
+        actual = ssr_fit
+        expected = 0.02110518634231577
+        self.assertAlmostEqual(actual, expected, 12)
         # TODO add regression test point
 
 
