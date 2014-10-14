@@ -3,16 +3,16 @@ import numpy
 
 
 pmap = {
-    "Yxs": 0,
+    "Yxs": 0, #
     "r1max": 1,
     "KS": 2,
-    "k2": 3,
+    "k2": 3, #
     "KM1": 4,
-    "KIA": 5,
+    "KIA": 5, # 
     "r3max": 6,
     "KM2": 7,
-    "ksynmax": 8,
-    "KIB": 9,
+    "ksynmax": 8, #
+    "KIB": 9, #
     }
 
 

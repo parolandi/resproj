@@ -3,6 +3,7 @@ import matplotlib.pyplot as pp
 
 
 # TODO: parameterise, generalise
+# WIP: needs to be re-worked
 def plot_fit(independent_meas, measurements, independent_pred, predictions, titles, title):
     # TODO assertions
     

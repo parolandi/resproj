@@ -11,7 +11,8 @@ def solve_st(metric, model, model_instance, problem_instance, algorithm_structur
     #TODO: preconditions
     
     diag = {
-        "disp": False,
+        "disp": True,
+#        "maxiter": 100,
         }
     return scipy.optimize.minimize( \
         args =     (model, model_instance, problem_instance), \

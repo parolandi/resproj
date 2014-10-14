@@ -115,7 +115,8 @@ class TestExperiment04(unittest.TestCase):
         algo_data["initial_guesses"] = copy.deepcopy(initial_guesses) 
         logger = sl.DecisionVariableLogger()
         algo_data["callback"] = logger.log_decision_variables
-        algo_data["method"] = sd.nonlinear_algebraic_methods["key-Nelder-Mead"]
+        algo_data["method"] = 'L-BFGS-B'
+        problem_data["bounds"] = [(0,None), (0,None), (0,None), (0,None), (0,None)]  
 
         result = sl.solve_st(mo.sum_squared_residuals_st, model_func, model_data, problem_data, algo_data)
         problem_data["parameters"] = result.x

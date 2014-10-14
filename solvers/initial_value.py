@@ -50,6 +50,7 @@ Computes the dynamic trajectories (or "time course") corresponding to the initia
 It conditionally includes/excludes the initial point
 '''
 # TODO: return numpy.array()
+# TODO: let problem_data count and use to override model_data
 def compute_timecourse_trajectories(model, model_data, problem_data):
     # TODO: preconditions
     snapshots = compute_trajectory_st(model, model_data, problem_data)
