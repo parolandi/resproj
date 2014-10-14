@@ -6,17 +6,21 @@ import copy
 import numpy
 
 import common.utilities as cu
+import metrics.ordinary_differential as mo
 import models.model_data
 #import results.plot as rps
 import results.plot_tiles as rpt
-import solvers.initial_value
+import solvers.initial_value as si
+import solvers.least_squares as sl
+import solvers.solver_data as sd
 
+do_plotting = True
 
 class TestExperiment04(unittest.TestCase):
 
 
-    def __init__(self):
-        self.do_plotting = False
+#    def __init__(self):
+#        self.do_plotting = False
         
 
     def config(self):
@@ -75,13 +79,57 @@ class TestExperiment04(unittest.TestCase):
     def test_simulate(self):
         model_func, model_data, problem_data, labels = self.do_setup()
 
-        trajectories = solvers.initial_value.compute_timecourse_trajectories( \
-            model_func, model_data, problem_data)
+        trajectories = si.compute_timecourse_trajectories(model_func, model_data, problem_data)
         time, observations = self.do_get_published_data()
         tt = problem_data["time"]
         
-        if self.do_plotting:
+        if do_plotting:
             rpt.plot_fit(time, observations, tt, trajectories, labels, self.config())
+
+
+    '''
+    Calibrate using experimental data 
+    '''
+    def test_calibrate(self):
+        model_func, model_data, problem_data, labels = self.do_setup()
+        time, observations = self.do_get_published_data()
+        
+        problem_data["output_indices"] = [1, 2, 3, 4, 5]
+        problem_data["outputs"] = observations
+        tt = problem_data["time"]
+        
+        ssr_raw = mo.sum_squared_residuals_st(None, model_func, model_data, problem_data)
+        trajectories_raw = si.compute_timecourse_trajectories(model_func, model_data, problem_data)
+
+        problem_data["parameter_indices"] = [0, 3, 5, 8, 9]
+        initial_guesses = []
+        for ii in range(len(problem_data["parameter_indices"])):
+            initial_guesses.append(problem_data["parameters"][problem_data["parameter_indices"][ii]])
+        problem_data["parameters"] = copy.deepcopy(initial_guesses)
+
+        algo_data = dict(sd.algorithm_structure)
+        algo_data["initial_guesses"] = copy.deepcopy(initial_guesses) 
+        logger = sl.DecisionVariableLogger()
+        algo_data["callback"] = logger.log_decision_variables
+        # WIP: try sd.nonlinear_algebraic_methods["key-CG"]
+        algo_data["method"] = sd.nonlinear_algebraic_methods["key-Nelder-Mead"]  
+
+        result = sl.solve_st(mo.sum_squared_residuals_st, model_func, model_data, problem_data, algo_data)
+        problem_data["parameters"] = result.x
+        # need to do this here because problem data is kind of ignored
+        for ii in range(len(problem_data["parameter_indices"])):
+            model_data["parameters"][problem_data["parameter_indices"][ii]] = result.x[ii]
+
+        trajectories_fit = si.compute_timecourse_trajectories(model_func, model_data, problem_data)
+        ssr_fit = mo.sum_squared_residuals_st(result.x, model_func, model_data, problem_data)
+                
+        print("initial_guesses: ", initial_guesses)
+        print("result         : ", result.x)
+        print("ssr (raw): ", ssr_raw)        
+        print("ssr (fit): ", ssr_fit)
+        if do_plotting:
+            rpt.plot_fit(time, observations, tt, trajectories_raw[1:], labels, self.config())
+            rpt.plot_fit(time, observations, tt, trajectories_fit[1:], labels, self.config())
 
 
 if __name__ == "__main__":
