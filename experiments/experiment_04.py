@@ -90,6 +90,20 @@ class TestExperiment04(unittest.TestCase):
 
 
     '''
+    Compute sum squared residuals 
+    '''
+    def test_metric(self):
+        model_func, model_data, problem_data, _ = self.do_setup()
+        _, observations = self.do_get_published_data()
+
+        problem_data["output_indices"] = [1, 2, 3, 4, 5]
+        problem_data["outputs"] = observations
+        actual = mo.sum_squared_residuals_st(None, model_func, model_data, problem_data)
+        expected = 0.21821064985875785
+        self.assertAlmostEqual(actual, expected, 12)
+
+    
+    '''
     Calibrate using experimental data 
     '''
     '''
