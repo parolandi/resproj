@@ -14,13 +14,13 @@ import solvers.initial_value as si
 import solvers.least_squares as sl
 import solvers.solver_data as sd
 
-do_plotting = True
 
 class TestExperiment04(unittest.TestCase):
 
 
-#    def __init__(self):
-#        self.do_plotting = False
+    def __init__(self, *args, **kwargs):
+        super(TestExperiment04, self).__init__(*args, **kwargs)
+        self.do_plotting = False
         
 
     def config(self):
@@ -83,12 +83,16 @@ class TestExperiment04(unittest.TestCase):
         time, observations = self.do_get_published_data()
         tt = problem_data["time"]
         
-        if do_plotting:
+        if self.do_plotting:
             rpt.plot_fit(time, observations, tt, trajectories, labels, self.config())
 
 
     '''
     Calibrate using experimental data 
+    '''
+    '''
+    It appears to work with Nelder-Mead, Powell, L-BFGS-B and TNC
+    It doesn't work with CG
     '''
     def test_calibrate(self):
         model_func, model_data, problem_data, labels = self.do_setup()
@@ -111,8 +115,7 @@ class TestExperiment04(unittest.TestCase):
         algo_data["initial_guesses"] = copy.deepcopy(initial_guesses) 
         logger = sl.DecisionVariableLogger()
         algo_data["callback"] = logger.log_decision_variables
-        # WIP: try sd.nonlinear_algebraic_methods["key-CG"]
-        algo_data["method"] = sd.nonlinear_algebraic_methods["key-Nelder-Mead"]  
+        algo_data["method"] = sd.nonlinear_algebraic_methods["key-Nelder-Mead"]
 
         result = sl.solve_st(mo.sum_squared_residuals_st, model_func, model_data, problem_data, algo_data)
         problem_data["parameters"] = result.x
@@ -127,7 +130,7 @@ class TestExperiment04(unittest.TestCase):
         print("result         : ", result.x)
         print("ssr (raw): ", ssr_raw)        
         print("ssr (fit): ", ssr_fit)
-        if do_plotting:
+        if self.do_plotting:
             rpt.plot_fit(time, observations, tt, trajectories_raw[1:], labels, self.config())
             rpt.plot_fit(time, observations, tt, trajectories_fit[1:], labels, self.config())
 
