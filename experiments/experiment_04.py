@@ -84,7 +84,9 @@ class TestExperiment04(unittest.TestCase):
         tt = problem_data["time"]
         
         if self.do_plotting:
-            rpt.plot_fit(time, observations, tt, trajectories, labels, self.config())
+            rpt.plot_fit(time, observations, tt, trajectories[1:], labels[1:], self.config())
+            
+        # TODO add regression test point
 
 
     '''
@@ -132,8 +134,10 @@ class TestExperiment04(unittest.TestCase):
         print("ssr (raw): ", ssr_raw)        
         print("ssr (fit): ", ssr_fit)
         if self.do_plotting:
-            rpt.plot_fit(time, observations, tt, trajectories_raw[1:], labels, self.config())
-            rpt.plot_fit(time, observations, tt, trajectories_fit[1:], labels, self.config())
+            rpt.plot_fit(time, observations, tt, trajectories_raw[1:], labels[1:], self.config())
+            rpt.plot_fit(time, observations, tt, trajectories_fit[1:], labels[1:], self.config())
+            
+        # TODO add regression test point
 
 
 if __name__ == "__main__":
