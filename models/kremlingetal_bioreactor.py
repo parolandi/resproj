@@ -101,7 +101,8 @@ yvec = {
 # u: inputs
 def evaluate(x, t, p, u, model_form):
     for ii in range(len(x)):
-        assert (x[ii] >= 0)
+        if x[ii] < 0:
+            x[ii] = 0.0
     
     Mw = 342.3 * 1E-6 # molar mass of substrate
     # [g/umol] = [g/mol] * [mol/umol]
