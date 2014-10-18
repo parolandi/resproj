@@ -2,8 +2,8 @@
 import copy
 import unittest
 import numpy
-import math
-import matplotlib.pyplot
+#import math
+#import matplotlib.pyplot
 
 import models.ordinary_differential
 
@@ -26,8 +26,8 @@ import workflows.workflow_data
 class RunLinearOdeExperiments(unittest.TestCase):
 
     def test_sensitivities_linear_2p2s(self):
-        final_time = 2.0
-        intervals = 2
+#        final_time = 2.0
+#        intervals = 2
         stdev = 0.2
         times = numpy.array([0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
 #        times = numpy.array([0.0, 1.0])
@@ -404,7 +404,7 @@ class RunLinearOdeExperiments(unittest.TestCase):
         ssr_contribs_path = []
         conf_intervs_path = []
         dec_vars_path = []
-        iter = 0
+#        iter = 0
         for dvs in dv_path:
             iterations.append(iter)
 
@@ -485,7 +485,7 @@ class RunLinearOdeExperiments(unittest.TestCase):
         # TODO: user messages
 
         # configure
-        do_reporting = False
+#        do_reporting = False
         do_results = True
         dataset_id = '110110'
         ig_multiplier = 1.0
@@ -494,7 +494,7 @@ class RunLinearOdeExperiments(unittest.TestCase):
         
         # setup
         all_results = dict(workflows.workflow_data.workflow_results)
-        ref_model_instance, ref_problem_instance, model_instance, problem_instance, \
+        _, ref_problem_instance, model_instance, problem_instance, \
             sens_model_instance, sens_problem_instance, \
             stdev, act_meas_traj, exp_meas_traj, meas_noise_traj = self.do_setup()
         # TODO: why?
@@ -578,8 +578,8 @@ class RunLinearOdeExperiments(unittest.TestCase):
         do_reporting = False
         
         # setup
-        rmi, rpi, mi, pi, smi, spi, \
-            stdev, act_meas_traj, exp_meas_traj, meas_noise_traj = self.do_setup()
+        rmi, _, mi, pi, _, _, \
+            _, _, _, _ = self.do_setup()
         
         stdev = 0.25
         NS = 20
@@ -623,9 +623,9 @@ class RunLinearOdeExperiments(unittest.TestCase):
         do_plotting = False
         slv_method = solvers.solver_data.nonlinear_algebraic_methods["key-CG"]
 
-        ref_model_instance, ref_problem_instance, model_instance, problem_instance, \
-            sens_model_instance, sens_problem_instance, \
-            stdev, act_meas_traj, exp_meas_traj, meas_noise_traj = self.do_setup()
+        _, ref_problem_instance, model_instance, problem_instance, \
+            _, _, \
+            _, _, _, _ = self.do_setup()
 
         ig = copy.deepcopy(ref_problem_instance["parameters"])
         algorithm_instance = dict(solvers.solver_data.algorithm_structure)
