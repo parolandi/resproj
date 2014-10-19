@@ -1,4 +1,7 @@
 
+import copy
+
+
 import data.generator as dg
 import metrics.ordinary_differential as mod
 import solvers.least_squares as sls
@@ -13,9 +16,20 @@ montecarlo_multiple_optimisation_params = {
     }
 
 
-montecarlo_multiple_optimisation_result = {
+inf_obj_func = 1E10
+
+
+solution_point = {
     "decision_variables": [],
-    "success": [],
+    "objective_function": inf_obj_func,
+    }
+
+
+# TODO: success
+montecarlo_multiple_optimisation_result = {
+    "all": [],
+    "local": [],
+    "global": dict(solution_point)
     }
 
 
@@ -45,7 +59,17 @@ def montecarlo_multiple_least_squares(model, problem, algorithm):
         subsolver_algorithm["initial_guesses"] = initial_guesses
         trial_result = sls.solve_st( \
             mod.sum_squared_residuals_st, model["model"], model, problem, subsolver_algorithm)
-        result["decision_variables"].append(trial_result.x)
-        result["success"].append(trial_result.success)
+        sp_copy = copy.deepcopy(solution_point)
+        trial_point = dict(sp_copy)
+        trial_point["decision_variables"] = trial_result.x
+        obj_fun = inf_obj_func
+        if trial_result.success:
+            obj_fun = mod.sum_squared_residuals_st(trial_result.x, model["model"], model, problem) 
+        trial_point["objective_function"] = copy.deepcopy(obj_fun)
+        result["all"].append(trial_point)
+        if trial_result.success:
+            result["local"].append(trial_point)
+        if trial_result.success and obj_fun < result["global"]["objective_function"]:
+            result["global"] = trial_point
 
     return result

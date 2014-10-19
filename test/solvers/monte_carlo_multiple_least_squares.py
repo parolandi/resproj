@@ -66,7 +66,7 @@ class TestMonteCarloMultipleLeastSquares(unittest.TestCase):
         algorithm["decision_variable_ranges"] = [(-1E3, 1E3), (-1E3, 1E3)]
         algorithm["subsolver_params"]["method"] = "Nelder-Mead" 
         result = smls.montecarlo_multiple_least_squares(model, problem, algorithm)
-        actual = result["decision_variables"]
+        actual = [result["all"][ii]["decision_variables"] for ii in range(len(result["all"]))]
         expected = [[ 1.05282639,  2.05005982], \
                     [ 1.05282858,  2.05003897], \
                     [ 1.05275895,  2.05005285], \
@@ -78,6 +78,28 @@ class TestMonteCarloMultipleLeastSquares(unittest.TestCase):
                     [ 1.05283625,  2.05002302], \
                     [ 1.05279885,  2.05000861]]
         [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(actual[0], expected[0])]
+        actual = [result["local"][ii]["decision_variables"] for ii in range(len(result["all"]))]
+        [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(actual[0], expected[0])]
+        actual = [result["all"][ii]["objective_function"] for ii in range(len(result["all"]))]
+        expected = [1.6631843863164841, \
+                    1.6631843481473494, \
+                    1.6631843832488837, \
+                    1.6631843555286938, \
+                    1.6631843384988318, \
+                    1.6631843835388989, \
+                    1.6631844266617666, \
+                    1.6631843645773818, \
+                    1.6631843616303503, \
+                    1.6631843742734829]
+        [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(actual, expected)]
+        actual = [result["local"][ii]["objective_function"] for ii in range(len(result["all"]))]
+        [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(actual, expected)]
+        actual = result["global"]["objective_function"]
+        expected = 1.6631843384988318
+        self.assertAlmostEquals(actual, expected, 8)
+        actual = result["global"]["decision_variables"]
+        expected = [ 1.05278463,  2.05003175]
+        [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(actual, expected)]
 
 
 if __name__ == "__main__":
