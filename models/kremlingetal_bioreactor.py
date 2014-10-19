@@ -22,11 +22,11 @@ pvec = {
     "KS": 0.4437, # umol/g DW - Table 2
     "k2": 6E6, # L/h - Table 9
     "KM1": 12.2, #umol/g DW - Table 2
-    "KIA": 0.01, #umol/g DW - Table 9
+    "KIA": 10.0, #umol/g DW - Table 9
     "r3max": 3E6, # umol/g DW - Table 2
     "KM2": 10.0, # umol/g DW - Table 2
     "ksynmax": 0.0168, #umol/g/h DW - Table 9
-    "KIB": 10.0, #umol/g DW - Table 9
+    "KIB": 0.01, #umol/g DW - Table 9
     }
 
 
@@ -100,6 +100,9 @@ yvec = {
 # p: parameters
 # u: inputs
 def evaluate(x, t, p, u, model_form):
+    for ii in range(len(x)):
+        assert (x[ii] >= 0)
+    
     Mw = 342.3 * 1E-6 # molar mass of substrate
     # [g/umol] = [g/mol] * [mol/umol]
 
