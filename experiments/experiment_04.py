@@ -122,17 +122,17 @@ class TestExperiment04(unittest.TestCase):
         trajectories_raw = si.compute_timecourse_trajectories(model_func, model_data, problem_data)
 
         problem_data["parameter_indices"] = [0, 3, 5, 8, 9]
+        problem_data["parameters"] = numpy.zeros(len(problem_data["parameter_indices"]))
+        problem_data["bounds"] = [(0,None), (0,None), (0,None), (0,None), (0,None)]
+        
+        algo_data = dict(sd.algorithm_structure)
         initial_guesses = []
         for ii in range(len(problem_data["parameter_indices"])):
-            initial_guesses.append(problem_data["parameters"][problem_data["parameter_indices"][ii]])
-        problem_data["parameters"] = copy.deepcopy(initial_guesses)
-
-        algo_data = dict(sd.algorithm_structure)
+            initial_guesses.append(model_data["parameters"][problem_data["parameter_indices"][ii]])
         algo_data["initial_guesses"] = copy.deepcopy(initial_guesses) 
         logger = sl.DecisionVariableLogger()
         algo_data["callback"] = logger.log_decision_variables
         algo_data["method"] = 'Nelder-Mead'
-        problem_data["bounds"] = [(0,None), (0,None), (0,None), (0,None), (0,None)]  
 
         result = sl.solve_st(mo.sum_squared_residuals_st, model_func, model_data, problem_data, algo_data)
         problem_data["parameters"] = result.x
