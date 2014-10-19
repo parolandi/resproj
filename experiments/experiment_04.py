@@ -21,10 +21,11 @@ class TestExperiment04(unittest.TestCase):
     def __init__(self, *args, **kwargs):
         super(TestExperiment04, self).__init__(*args, **kwargs)
         self.do_plotting = False
+        self.model_key = "modelB"
         
 
-    def config(self):
-        return "modelB"
+    def do_config(self, model_key):
+        self.model_key = model_key
 
 
     def do_get_published_data(self):
@@ -36,7 +37,7 @@ class TestExperiment04(unittest.TestCase):
         
 
     def do_setup(self):
-        model = self.config()
+        model = self.model_key
         model_func = None
         if model is "modelA":
             model_func = mk.evaluate_modelA
@@ -72,7 +73,7 @@ class TestExperiment04(unittest.TestCase):
 
         return model_func, model_data, problem_data, labels
 
-
+    
     '''
     Simulate at nominal point and plot fit 
     '''
@@ -84,9 +85,12 @@ class TestExperiment04(unittest.TestCase):
         tt = problem_data["time"]
         
         if self.do_plotting:
-            rpt.plot_fit(time, observations, tt, trajectories[1:], labels[1:], self.config())
-            
-        # TODO add regression test point
+            rpt.plot_fit(time, observations, tt, trajectories[1:], labels[1:], self.model_key)
+        
+        endpoint = len(trajectories[0])-1
+        actual = [trajectories[ii][endpoint] for ii in range(1, len(trajectories))]
+        expected = [0.39384222, 0.07740635, 0.23982609, 0.01189731, 0.03081916]
+        [self.assertAlmostEquals(act, exp) for act, exp in zip(actual, expected)]
 
 
     '''
@@ -99,16 +103,12 @@ class TestExperiment04(unittest.TestCase):
         problem_data["output_indices"] = [1, 2, 3, 4, 5]
         problem_data["outputs"] = observations
         actual = mo.sum_squared_residuals_st(None, model_func, model_data, problem_data)
-        expected = 0.21821064985875785
+        expected = 0.045095700772591826
         self.assertAlmostEqual(actual, expected, 12)
 
     
     '''
     Calibrate using experimental data 
-    '''
-    '''
-    It appears to work with Nelder-Mead, Powell, L-BFGS-B and TNC
-    It doesn't work with CG
     '''
     def test_calibrate(self):
         model_func, model_data, problem_data, labels = self.do_setup()
@@ -131,7 +131,7 @@ class TestExperiment04(unittest.TestCase):
         algo_data["initial_guesses"] = copy.deepcopy(initial_guesses) 
         logger = sl.DecisionVariableLogger()
         algo_data["callback"] = logger.log_decision_variables
-        algo_data["method"] = 'L-BFGS-B'
+        algo_data["method"] = 'Nelder-Mead'
         problem_data["bounds"] = [(0,None), (0,None), (0,None), (0,None), (0,None)]  
 
         result = sl.solve_st(mo.sum_squared_residuals_st, model_func, model_data, problem_data, algo_data)
@@ -148,11 +148,11 @@ class TestExperiment04(unittest.TestCase):
         print("ssr (raw): ", ssr_raw)        
         print("ssr (fit): ", ssr_fit)
         if self.do_plotting:
-            rpt.plot_fit(time, observations, tt, trajectories_raw[1:], labels[1:], self.config())
-            rpt.plot_fit(time, observations, tt, trajectories_fit[1:], labels[1:], self.config())
+            rpt.plot_fit(time, observations, tt, trajectories_raw[1:], labels[1:], self.model_key)
+            rpt.plot_fit(time, observations, tt, trajectories_fit[1:], labels[1:], self.model_key)
             
         actual = ssr_fit
-        expected = 0.02110518634231577
+        expected = 0.020948632939275735
         self.assertAlmostEqual(actual, expected, 12)
         # TODO add regression test point
 
