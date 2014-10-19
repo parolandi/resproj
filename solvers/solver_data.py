@@ -1,11 +1,28 @@
 
 import numpy
 
+solver_settings = {
+    "disp": None,
+    "maxiter": None,
+    "eps": None,
+    "ftol": None,
+    }
+
+
+def prune_solver_settings(settings):
+    pruned_settings = {}
+    for k, v in settings.items():
+        if v is not None:
+            pruned_settings[k] = v
+    return pruned_settings
+    
+
 algorithm_structure = {
     "callback": None,
     "initial_guesses": numpy.empty(1),
     "method": "",
     "tolerance": None,
+    "solver_settings": None,
     }
 
 # TODO: clone as nonlinear programming methods too
