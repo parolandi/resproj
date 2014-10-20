@@ -146,10 +146,10 @@ class TestExperiment04(unittest.TestCase):
         trajectories_fit = si.compute_timecourse_trajectories(model_func, model_data, problem_data)
         ssr_fit = mo.sum_squared_residuals_st(result.x, model_func, model_data, problem_data)
                 
-        print("initial_guesses: ", initial_guesses)
-        print("result         : ", result.x)
-        print("ssr (raw): ", ssr_raw)        
-        print("ssr (fit): ", ssr_fit)
+        print("initial guesses:    ", initial_guesses)
+        print("parameter estimates:", result.x.tolist())
+        print("ssr (raw):          ", ssr_raw)        
+        print("ssr (fit):          ", ssr_fit)
         if self.do_plotting:
             rpt.plot_fit(time, observations, tt, trajectories_raw[1:], labels[1:], self.model_key)
             rpt.plot_fit(time, observations, tt, trajectories_fit[1:], labels[1:], self.model_key)
@@ -197,9 +197,9 @@ class TestExperiment04(unittest.TestCase):
 
         print("wall time:", wall_time)
         print("nominal parameter values:   ", nom_param_vals)
-        print("optimal parameter estimates:", opt_param_est)
-        print("ssr (raw): ", ssr_raw)        
-        print("ssr (fit): ", ssr_fit)        
+        print("optimal parameter estimates:", opt_param_est.tolist())
+        print("ssr (raw):                  ", ssr_raw)        
+        print("ssr (fit):                  ", ssr_fit)        
         if self.do_plotting:
             rpt.plot_fit(times, observations, tt, trajectories_raw[1:], labels[1:], self.model_key)
             rpt.plot_fit(times, observations, tt, trajectories_fit[1:], labels[1:], self.model_key)
