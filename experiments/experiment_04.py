@@ -4,6 +4,7 @@ import models.kremlingetal_bioreactor as mk
 
 import copy
 import numpy
+import time
 
 import common.utilities as cu
 import metrics.ordinary_differential as mo
@@ -13,6 +14,8 @@ import results.plot_tiles as rpt
 import solvers.initial_value as si
 import solvers.least_squares as sl
 import solvers.solver_data as sd
+
+import solvers.monte_carlo_multiple_least_squares as smls
 
 
 class TestExperiment04(unittest.TestCase):
@@ -157,5 +160,63 @@ class TestExperiment04(unittest.TestCase):
         # TODO add regression test point
 
 
+    '''
+    Calibrate using experimental data; use globalisation 
+    '''
+    def test_calibrate_global(self):
+        model_func, model_data, problem_data, labels = self.do_setup()
+        times, observations = self.do_get_published_data()
+        
+        problem_data["output_indices"] = [1, 2, 3, 4, 5]
+        problem_data["outputs"] = observations
+        tt = problem_data["time"]
+        
+        ssr_raw = mo.sum_squared_residuals_st(None, model_func, model_data, problem_data)
+        trajectories_raw = si.compute_timecourse_trajectories(model_func, model_data, problem_data)
+
+        problem_data["parameter_indices"] = [0, 3, 5, 8, 9]
+        problem_data["parameters"] = numpy.zeros(len(problem_data["parameter_indices"]))
+        problem_data["bounds"] = [(0,None), (0,None), (0,None), (0,None), (0,None)]
+        model_data["model"] = model_func
+        nom_param_vals = []
+        for ii in range(len(problem_data["parameter_indices"])):
+            nom_param_vals.append(model_data["parameters"][problem_data["parameter_indices"][ii]])
+        
+        algorithm = dict(smls.montecarlo_multiple_optimisation_params)
+        algorithm["number_of_trials"] = 25
+        algorithm["decision_variable_ranges"] = [(0,7.23232059e-05*10), (0,6.00000000e+06*10), (0,1.00000000e+01*10), (0,1.67959956e-02*10), (0,1.00866368e-02*10)]
+        algorithm["subsolver_params"]["method"] = "Nelder-Mead"
+
+        wall_time0 = time.time() 
+        result = smls.montecarlo_multiple_least_squares(model_data, problem_data, algorithm)
+        wall_time = time.time() - wall_time0
+        opt_param_est = result["global"]["decision_variables"]
+        
+        trajectories_fit = si.compute_timecourse_trajectories(model_func, model_data, problem_data)
+        ssr_fit = mo.sum_squared_residuals_st(opt_param_est, model_func, model_data, problem_data)
+
+        print("wall time:", wall_time)
+        print("nominal parameter values:   ", nom_param_vals)
+        print("optimal parameter estimates:", opt_param_est)
+        print("ssr (raw): ", ssr_raw)        
+        print("ssr (fit): ", ssr_fit)        
+        if self.do_plotting:
+            rpt.plot_fit(times, observations, tt, trajectories_raw[1:], labels[1:], self.model_key)
+            rpt.plot_fit(times, observations, tt, trajectories_fit[1:], labels[1:], self.model_key)
+
+        self.assertTrue(len(result["local"]) == 8)
+        actual = result["global"]["objective_function"]
+        expected = 0.021119404945328022
+        self.assertAlmostEquals(actual, expected, 12)
+
+
 if __name__ == "__main__":
-    unittest.main()
+    run_slow_tests = True
+    suite = unittest.TestSuite()
+    suite.addTest(TestExperiment04("test_simulate"))
+    suite.addTest(TestExperiment04("test_metric"))
+    suite.addTest(TestExperiment04("test_calibrate"))
+    if run_slow_tests:
+        suite.addTest(TestExperiment04("test_calibrate_global"))
+    runner = unittest.TextTestRunner()
+    runner.run(suite)
