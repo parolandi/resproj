@@ -16,17 +16,48 @@ pmap = {
     }
 
 
+# Table 2 and Table 9, with correction following contact with Andreas
 pvec = {
-    "Yxs": 7E-5, # g/umol - Table 9
-    "r1max": 2.4E4, # umol/g/h DW - Table 2
-    "KS": 0.4437, # umol/g DW - Table 2
-    "k2": 6E6, # L/h - Table 9
-    "KM1": 12.2, #umol/g DW - Table 2
-    "KIA": 10.0, #umol/g DW - Table 9
-    "r3max": 3E6, # umol/g DW - Table 2
-    "KM2": 10.0, # umol/g DW - Table 2
-    "ksynmax": 0.0168, #umol/g/h DW - Table 9
-    "KIB": 0.01, #umol/g DW - Table 9
+    "Yxs": 7E-5,       # g/umol      - Table 9
+    "r1max": 2.4E4,    # umol/g/h DW - Table 2
+    "KS": 0.4437,      # umol/g DW   - Table 2
+    "k2": 6E6,         # L/h         - Table 9
+    "KM1": 12.2,       # umol/g DW   - Table 2
+    "KIA": 10.0,       # umol/g DW   - Table 9
+    "r3max": 3E6,      # umol/g DW   - Table 2
+    "KM2": 10.0,       # umol/g DW   - Table 2
+    "ksynmax": 0.0168, # umol/g/h DW - Table 9
+    "KIB": 0.01,       # umol/g DW   - Table 9
+    }
+
+
+# Table 2 and Table 3; modelA
+pvec_table3_modelA = {
+    "Yxs": 6.968E-5,   # g/umol      - Table 3
+    "r1max": 2.4E4,    # umol/g/h DW - Table 2
+    "KS": 0.4437,      # umol/g DW   - Table 2
+    "k2": 5.988E6,     # L/h         - Table 3
+    "KM1": 12.2,       # umol/g DW   - Table 2
+    "KIA": 0.104,      # umol/g DW   - Table 3
+    "r3max": 3E6,      # umol/g DW   - Table 2
+    "KM2": 10.0,       # umol/g DW   - Table 2
+    "ksynmax": 7.2E-3, # umol/g/h DW - Table 3
+    "KIB": 0.0,        # umol/g DW   - Table 3
+    }
+
+
+# Table 2 and Table 3; modelB
+pvec_table3_modelB = {
+    "Yxs": 7.031E-5,   # g/umol      - Table 3
+    "r1max": 2.4E4,    # umol/g/h DW - Table 2
+    "KS": 0.4437,      # umol/g DW   - Table 2
+    "k2": 5.559E6,     # L/h         - Table 3
+    "KM1": 12.2,       # umol/g DW   - Table 2
+    "KIA": 0.0,        # umol/g DW   - Table 3
+    "r3max": 3E6,      # umol/g DW   - Table 2
+    "KM2": 10.0,       # umol/g DW   - Table 2
+    "ksynmax": 8.2E-3, # umol/g/h DW - Table 3
+    "KIB": 0.166,      # umol/g DW   - Table 3
     }
 
 
