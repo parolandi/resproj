@@ -183,7 +183,7 @@ class TestExperiment04(unittest.TestCase):
             nom_param_vals.append(model_data["parameters"][problem_data["parameter_indices"][ii]])
         
         algorithm = dict(smls.montecarlo_multiple_optimisation_params)
-        algorithm["number_of_trials"] = 25
+        algorithm["number_of_trials"] = 5
         algorithm["decision_variable_ranges"] = [(0,7.23232059e-05*10), (0,6.00000000e+06*10), (0,1.00000000e+01*10), (0,1.67959956e-02*10), (0,1.00866368e-02*10)]
         algorithm["subsolver_params"]["method"] = "Nelder-Mead"
 
@@ -205,7 +205,7 @@ class TestExperiment04(unittest.TestCase):
             rpt.plot_fit(times, observations, tt, trajectories_raw[1:], labels[1:], self.model_key)
             rpt.plot_fit(times, observations, tt, trajectories_fit[1:], labels[1:], self.model_key)
 
-        self.assertTrue(len(result["local"]) == 8)
+        self.assertTrue(len(result["local"]) == 3)
         actual = result["global"]["objective_function"]
         expected = 0.021119404945328022
         self.assertAlmostEquals(actual, expected, 12)
