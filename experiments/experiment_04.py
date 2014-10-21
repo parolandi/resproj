@@ -196,6 +196,7 @@ class TestExperiment04(unittest.TestCase):
         ssr_fit = mo.sum_squared_residuals_st(opt_param_est, model_func, model_data, problem_data)
 
         print("wall time:", wall_time)
+        print("number of local optima:     ", len(result["local"]))
         print("nominal parameter values:   ", nom_param_vals)
         print("optimal parameter estimates:", opt_param_est.tolist())
         print("ssr (raw):                  ", ssr_raw)        
