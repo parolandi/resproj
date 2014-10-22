@@ -13,11 +13,15 @@ def handle_initial_point(values, problem_instance):
 
 
 # TODO: rename; remove "_st"
+# TODO: consider always returning list of residuals, even in degenerate case of single residual
 def residuals_st(model, model_instance, problem_instance):
     # TODO: preconditions
     assert(len(problem_instance["output_indices"]) > 0)
+    assert(len(problem_instance["output_indices"]) == len(problem_instance["outputs"]))
     
+    #TODO: here an in initial value?
     measured = handle_initial_point(numpy.asarray(problem_instance["outputs"]), problem_instance)
+    
     predicted = solvers.initial_value.compute_timecourse_trajectories( \
         model, model_instance, problem_instance)
 
@@ -31,9 +35,9 @@ def residuals_st(model, model_instance, problem_instance):
         predicted_s = predicted[problem_instance["output_indices"][0]]
         res = numpy.subtract(measured_s, predicted_s)
         return res
-    states = 0
+    
     res = numpy.empty(measured.shape)
-    for jj in range(measured.shape[states]):
+    for jj in range(len(problem_instance["output_indices"])):
         measured_s = measured[jj]
         predicted_s = predicted[problem_instance["output_indices"][jj]]
         res[jj] = numpy.subtract(measured_s, predicted_s)
@@ -70,10 +74,15 @@ def sums_squared_residuals(dof, model, model_instance, problem_instance):
 
 # TODO: compute state-wise and experiment-wise
 # TODO: rename; remove "_st"
+# dof: a list/array or None
+# TODO: test empty array
 def sum_squared_residuals_st(dof, model, model_instance, problem_instance):
+    if dof is not None:
+        assert(len(dof) == len(problem_instance["parameter_indices"]))
     # TODO: preconditions
     # TODO: more pythonic
-    if len(problem_instance["parameter_indices"]) > 0:
+    
+    if dof is not None:
         for ii in range(len(dof)):
             index = problem_instance["parameter_indices"][ii]
             model_instance["parameters"][index] = dof[ii]
@@ -81,9 +90,10 @@ def sum_squared_residuals_st(dof, model, model_instance, problem_instance):
     
     # TODO: more pythonic
     res = 0.0
+    residuals = residuals_st(model, model_instance, problem_instance)
     if len(problem_instance["output_indices"]) == 1:
-        res = math.fsum(res**2 for res in residuals_st(model, model_instance, problem_instance))
+        res = math.fsum(res**2 for res in residuals)
         return res
-    for ii in range(len(problem_instance["outputs"])):
-        res += math.fsum(res**2 for res in residuals_st(model, model_instance, problem_instance)[ii])
+    for ii in range(len(problem_instance["output_indices"])):
+        res += math.fsum(res**2 for res in residuals[ii])
     return res

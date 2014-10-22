@@ -7,16 +7,16 @@ import solvers.solver_data
 
 # TODO: rename; remove _st
 def solve_st(metric, model, model_instance, problem_instance, algorithm_structure):
-    diag = {
-        "disp": False,
-        }
+    assert(len(problem_instance["parameter_indices"]) == len(algorithm_structure["initial_guesses"]))
+    #TODO: preconditions
+    
     return scipy.optimize.minimize( \
         args =     (model, model_instance, problem_instance), \
         bounds =   problem_instance["bounds"], \
         callback = algorithm_structure["callback"], \
         fun =      metric, \
         method =   algorithm_structure["method"], \
-        options =  diag, \
+        options =  algorithm_structure["solver_settings"], \
         tol =      algorithm_structure["tolerance"], \
         x0 =       algorithm_structure["initial_guesses"], \
         )

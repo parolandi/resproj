@@ -1,7 +1,8 @@
 
-import numpy
+#import numpy
 
 model_structure = {
+    "model": None,
     "parameters": [],
     "inputs": [],
     "states": [],
@@ -24,7 +25,6 @@ problem_structure = {
     # TODO: change to "times"
     "time": [],
     "performance_measure": "",
-    "model": "",
     "parameters": [],
     "parameter_indices": [],
     "inputs": [],
