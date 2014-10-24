@@ -144,6 +144,46 @@ class TestInitialValueSolvers(unittest.TestCase):
         [self.assertAlmostEqual(exp, act, 8) for exp, act in zip(expected[0], actual[0])]
         [self.assertAlmostEqual(exp, act, 8) for exp, act in zip(expected[1], actual[1])]
 
+    
+    # TODO: test that solve_lsoda_st asserts if model is none
+    
+    
+    def test_linear_2p2s_solve_lsoda_st_include_initial_model_is_none(self):
+        model_instance, problem_instance = self.do_setup_2p2s()
+        model_instance["model"] = linear_2p2s_mock
+        problem_instance["time"] = numpy.linspace(0.0, 1.0, 10, endpoint=False)
+        
+        # avoid false negatives
+        model_instance["states"] = numpy.multiply(problem_instance["initial_conditions"], 1.1)
+        problem_instance["parameters"] = numpy.multiply(problem_instance["parameters"], 1.1)
+        problem_instance["inputs"] = numpy.multiply(problem_instance["inputs"], 1.1)
+                
+        result, _ = solvers.initial_value.solve_lsoda(model_instance, problem_instance)
+        actual = common.utilities.sliceit_astrajectory(result)
+        expected = [[0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9],
+                    [1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9]]
+
+        [self.assertAlmostEqual(exp, act, 8) for exp, act in zip(expected[0], actual[0])]
+        [self.assertAlmostEqual(exp, act, 8) for exp, act in zip(expected[1], actual[1])]
+
+
+    def test_linear_2p2s_compute_timecourse_trajectories_include_initial_model_is_none(self):
+        model_instance, problem_instance = self.do_setup_2p2s()
+        model_instance["model"] = linear_2p2s_mock
+        problem_instance["time"] = numpy.linspace(0.0, 1.0, 10, endpoint=False)
+        
+        # avoid false negatives
+        model_instance["states"] = numpy.multiply(problem_instance["initial_conditions"], 1.1)
+        problem_instance["parameters"] = numpy.multiply(problem_instance["parameters"], 1.1)
+        problem_instance["inputs"] = numpy.multiply(problem_instance["inputs"], 1.1)
+                
+        actual = solvers.initial_value.compute_timecourse_trajectories(None, model_instance, problem_instance)
+        expected = [[0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9],
+                    [1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9]]
+        
+        [self.assertAlmostEqual(exp, act, 8) for exp, act in zip(expected[0], actual[0])]
+        [self.assertAlmostEqual(exp, act, 8) for exp, act in zip(expected[1], actual[1])]
+
 
 if __name__ == "__main__":
     unittest.main()
