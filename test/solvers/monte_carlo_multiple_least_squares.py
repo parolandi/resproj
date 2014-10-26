@@ -5,6 +5,7 @@ import solvers.monte_carlo_multiple_least_squares as smls
 import numpy
 import models.model_data as mmd
 import solvers.initial_value as siv
+import metrics.ordinary_differential as meod
 import models.ordinary_differential as mod
 import data.generator as dg
 
@@ -41,9 +42,10 @@ class TestMonteCarloMultipleLeastSquares(unittest.TestCase):
         problem_instance["parameters"] = numpy.array([1.0, 2.0])
         problem_instance["parameter_indices"] = numpy.array([0, 1])
         problem_instance["inputs"] = numpy.array([1.0, 2.0])
+        problem_instance["performance_measure"] = meod.sum_squared_residuals_st
 
         true_measurement_trajectories = numpy.asarray(siv.compute_timecourse_trajectories( \
-            mod.linear_2p2s, model_instance, problem_instance))
+            None, model_instance, problem_instance))
         
         measurement_noise = numpy.zeros([2, intervals])
         dg.set_seed(117)

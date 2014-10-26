@@ -37,6 +37,8 @@ montecarlo_multiple_optimisation_result = {
 # and solves the least-squares problem
 def montecarlo_multiple_least_squares(model, problem, algorithm):
     assert(model["model"] is not None)
+    assert(problem["performance_measure"] is not None)
+    assert(problem["performance_measure"] is mod.sum_squared_residuals_st)
     # TODO: preconditions!
     
     multi_start_trials = algorithm["number_of_trials"]
@@ -57,14 +59,13 @@ def montecarlo_multiple_least_squares(model, problem, algorithm):
         for jj in range(dv_count):
             initial_guesses.append(multi_start_points[jj][ii])
         subsolver_algorithm["initial_guesses"] = initial_guesses
-        trial_result = sls.solve_st( \
-            mod.sum_squared_residuals_st, model["model"], model, problem, subsolver_algorithm)
+        trial_result = sls.solve(model, problem, subsolver_algorithm)
         sp_copy = copy.deepcopy(solution_point)
         trial_point = dict(sp_copy)
         trial_point["decision_variables"] = trial_result.x
         obj_fun = inf_obj_func
         if trial_result.success:
-            obj_fun = mod.sum_squared_residuals_st(trial_result.x, model["model"], model, problem) 
+            obj_fun = mod.sum_squared_residuals_st(trial_result.x, None, model, problem) 
         trial_point["objective_function"] = copy.deepcopy(obj_fun)
         result["all"].append(trial_point)
         if trial_result.success:
