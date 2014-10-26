@@ -148,7 +148,7 @@ class TestInitialValueSolvers(unittest.TestCase):
     # TODO: test that solve_lsoda_st asserts if model is none
     
     
-    def test_linear_2p2s_solve_lsoda_st_include_initial_model_is_none(self):
+    def test_linear_2p2s_solve_lsoda_st_include_initial_model_is_not_none(self):
         model_instance, problem_instance = self.do_setup_2p2s()
         model_instance["model"] = linear_2p2s_mock
         problem_instance["time"] = numpy.linspace(0.0, 1.0, 10, endpoint=False)
@@ -167,7 +167,7 @@ class TestInitialValueSolvers(unittest.TestCase):
         [self.assertAlmostEqual(exp, act, 8) for exp, act in zip(expected[1], actual[1])]
 
 
-    def test_linear_2p2s_compute_timecourse_trajectories_include_initial_model_is_none(self):
+    def test_linear_2p2s_compute_timecourse_trajectories_include_initial_model_is_not_none(self):
         model_instance, problem_instance = self.do_setup_2p2s()
         model_instance["model"] = linear_2p2s_mock
         problem_instance["time"] = numpy.linspace(0.0, 1.0, 10, endpoint=False)
