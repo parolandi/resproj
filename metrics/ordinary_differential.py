@@ -91,9 +91,6 @@ def sum_squared_residuals_st(dof, model, model_instance, problem_instance):
     # TODO: more pythonic
     res = 0.0
     residuals = residuals_st(model, model_instance, problem_instance)
-    if len(problem_instance["output_indices"]) == 1:
-        res = math.fsum(res**2 for res in residuals)
-        return res
     for ii in range(len(problem_instance["output_indices"])):
         res += math.fsum(res**2 for res in residuals[ii])
     return res
