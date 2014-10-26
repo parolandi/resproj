@@ -6,6 +6,7 @@ from experiments.experiment import *
 from experiments.experiment_01 import *
 from experiments.experiment_02 import *
 from experiments.experiment_03 import *
+from experiments.experiment_04 import *
 
 
 if __name__ == '__main__':
