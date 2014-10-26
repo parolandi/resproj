@@ -2,6 +2,7 @@
 import scipy.optimize
 
 # TODO: validate use of data structure
+import common.diagnostics as cdi
 import solvers.solver_data
 
 
@@ -9,7 +10,17 @@ import solvers.solver_data
 def solve_st(metric, model, model_instance, problem_instance, algorithm_structure):
     assert(len(problem_instance["parameter_indices"]) == len(algorithm_structure["initial_guesses"]))
     #TODO: preconditions
+
+    if model is None:
+        assert(model_instance["model"] is not None)
+        model = model_instance["model"]
+        cdi.print_legacy_code_message()
     
+    if metric is None:
+        assert(problem_instance["performance_measure"] is not None)
+        metric = problem_instance["performance_measure"]
+        cdi.print_legacy_code_message()
+        
     return scipy.optimize.minimize( \
         args =     (model, model_instance, problem_instance), \
         bounds =   problem_instance["bounds"], \
