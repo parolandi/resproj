@@ -24,7 +24,7 @@ problem_structure = {
     "initial_conditions": [],
     # TODO: change to "times"
     "time": [],
-    "performance_measure": "",
+    "performance_measure": None,
     "parameters": [],
     "parameter_indices": [],
     "inputs": [],

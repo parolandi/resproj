@@ -170,5 +170,27 @@ class TestLeastSquaresSolvers(unittest.TestCase):
         self.assertAlmostEqual(sum_sq_res_expected, sum_sq_res_actual, 6)
 
 
+    def test_solve_linear_2p2s_1dof_include_initial_model_and_metric_are_not_none(self):
+        model_instance, problem_instance, algorithm_instance = self.do_setup()
+        model_instance["model"] = linear_2p2s_mock
+        problem_instance["performance_measure"] = metrics.ordinary_differential.sum_squared_residuals_st
+        algorithm_instance["method"] = 'SLSQP'
+        
+        model_instance["parameters"][1] = 0.5
+        problem_instance["parameters"] = [0.1]
+        problem_instance["parameter_indices"] = [0]
+        algorithm_instance["initial_guesses"] = [copy.deepcopy(problem_instance["parameters"][0])]
+                
+        result = solvers.least_squares.solve(model_instance, problem_instance, algorithm_instance)
+        estimate_actual = result.x
+        estimate_expected = [1.0]
+        [self.assertAlmostEqual(exp, act, 5) for exp, act in zip(estimate_expected, estimate_actual)]
+        
+        sum_sq_res_actual = metrics.ordinary_differential.sum_squared_residuals_st( \
+            estimate_actual, linear_2p2s_mock, model_instance, problem_instance)
+        sum_sq_res_expected = 0.0
+        self.assertAlmostEqual(sum_sq_res_expected, sum_sq_res_actual, 6)
+
+
 if __name__ == "__main__":
     unittest.main()
