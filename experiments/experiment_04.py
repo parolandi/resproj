@@ -13,9 +13,8 @@ import models.model_data
 import results.plot_tiles as rpt
 import solvers.initial_value as si
 import solvers.least_squares as sl
-import solvers.solver_data as sd
-
 import solvers.monte_carlo_multiple_least_squares as smls
+import solvers.solver_data as sd
 
 
 class TestExperiment04(unittest.TestCase):
@@ -212,7 +211,7 @@ class TestExperiment04(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    run_slow_tests = True
+    run_slow_tests = False
     suite = unittest.TestSuite()
     suite.addTest(TestExperiment04("test_simulate"))
     suite.addTest(TestExperiment04("test_metric"))
