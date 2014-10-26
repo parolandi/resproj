@@ -16,7 +16,7 @@ Preconditions: at this point in time, all problem-specific stuff must have been 
 this is a direct solver call and there is no context to do problem-specific things
 '''
 # TODO: deep copy?
-def solve_lsoda(model_data, problem_data):
+def solve(model_data, problem_data):
     assert(len(problem_data["initial_conditions"]) == len(model_data["states"]))
     assert(model_data["states"] is not None)
     # TODO: preconditions
@@ -46,7 +46,7 @@ def compute_trajectory_st(model, model_data, problem_data):
         model_data["model"] = model
         cd.print_legacy_code_message()
 
-    snapshot, _ = solve_lsoda(model_data, problem_data)
+    snapshot, _ = solve(model_data, problem_data)
     return snapshot
 
 
@@ -72,12 +72,13 @@ def compute_timecourse_trajectories(model, model_data, problem_data):
 '''
 Legacy
 '''
+# -----------------------------------------------------------------------------
 '''
 Calls odepack.lsoda to solve the initial value problem for stiff and non-stiff ode's.
 Preconditions: at this point in time, all problem-specific stuff must have been done;
 this is a direct solver call and there is no context to do problem-specific things
 '''
-# TODO: rename; remove lsoda_st
+# TODO: remove when possible
 # TODO: deep copy?
 def solve_lsoda_st(model, model_data, problem_data):
     assert(len(problem_data["initial_conditions"]) == len(model_data["states"]))
