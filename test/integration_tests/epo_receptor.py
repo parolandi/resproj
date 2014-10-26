@@ -152,7 +152,7 @@ class TestEpoModel(unittest.TestCase):
         inputs = numpy.ones(len(models.ordinary_differential.inputs_i))
         for inp in models.ordinary_differential.inputs_i.items():
             inputs[inp[1]] = models.ordinary_differential.epo_receptor_default_inputs[inp[0]]
-        measured = numpy.asarray([2030.19, 638.782, 155.361, 37.5639, 10.2865, 2.90606, 0.82607, 0.235169, 0.0669758, 0.0190769,  0.00543388, 0.00154781, 0.000440884, 0.000125583, 3.57718E-005, 1.01894E-005])
+        measured = numpy.asarray([[2030.19, 638.782, 155.361, 37.5639, 10.2865, 2.90606, 0.82607, 0.235169, 0.0669758, 0.0190769,  0.00543388, 0.00154781, 0.000440884, 0.000125583, 3.57718E-005, 1.01894E-005]])
 
         model_instance = dict(models.model_data.model_structure)
         model_instance["parameters"] = params
