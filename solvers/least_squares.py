@@ -7,6 +7,8 @@ import common.diagnostics as cdi
 import solvers.solver_data
 
 
+# TODO: exceptions
+# raise ValueError unknown solver
 def solve(model_instance, problem_instance, algorithm_structure):
     assert(len(problem_instance["parameter_indices"]) == len(algorithm_structure["initial_guesses"]))
     assert(model_instance["model"] is not None)

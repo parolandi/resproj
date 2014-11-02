@@ -30,6 +30,7 @@ problem_structure = {
     "inputs": [],
     "outputs": [],
     "output_indices": [],
+    # TODO observables
     "bounds": None,
     # TODO: establish dedicated "problem_formulation"
     "initial": ("estimate", "exclude", "include"),
