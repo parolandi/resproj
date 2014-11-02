@@ -3,12 +3,9 @@ import unittest
 import setups.kremlingetal_bioreactor as skb
 
 import copy
-import numpy
 import time
 
-import common.utilities as cu
 import metrics.ordinary_differential as mo
-import models.model_data
 #import results.plot as rps
 import results.plot_tiles as rpt
 import solvers.initial_value as si
