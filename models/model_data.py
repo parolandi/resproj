@@ -65,3 +65,13 @@ calib_valid_experimental_dataset = {
     "calib": dict(experimental_dataset),
     "valid": dict(experimental_dataset),
     }
+
+
+optimisation_problem_solution = {
+    "decision_variables": [],
+    }
+
+
+optimisation_problem_results = {
+    "objective_function": 0.0,
+    }

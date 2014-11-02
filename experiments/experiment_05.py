@@ -48,9 +48,9 @@ class TestExperiment05(unittest.TestCase):
     # test regression
     def test_protocol_calibration_without_splicing(self):
         config = self.do_experiment_setup()
-        actual = epr.do_calibration_and_compute_performance_measure(config)
+        _, actual = epr.do_calibration_and_compute_performance_measure(config)
         expected = 0.020948632939275735
-        self.assertAlmostEquals(actual, expected, 12)
+        self.assertAlmostEquals(actual["objective_function"], expected, 12)
 
 
     # TODO: at solution point
@@ -65,9 +65,9 @@ class TestExperiment05(unittest.TestCase):
     # test regression
     def test_protocol_calibration_with_splicing(self):
         config = self.do_experiment_setup_splicing()
-        actual = epr.do_calibration_and_compute_performance_measure(config)
+        _, actual = epr.do_calibration_and_compute_performance_measure(config)
         expected = 0.01302438324230857
-        self.assertAlmostEquals(actual, expected, 12)
+        self.assertAlmostEquals(actual["objective_function"], expected, 12)
 
 
 if __name__ == "__main__":

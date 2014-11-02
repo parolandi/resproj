@@ -3,6 +3,7 @@ import copy
 
 import metrics.ordinary_differential as mod
 import metrics.statistical_tests as mst
+import models.model_data as mmd
 import solvers.least_squares
 import workflows.workflow_data as wwd
 
@@ -11,8 +12,9 @@ import workflows.workflow_data as wwd
 Do calibration
 Compute performance measure
 config: setups.setup_data.experiment_setup
-return: float
-    the performance measure
+return: models.model_data.optimisation_problem_solution, models.model_data.optimisation_problem_results
+    the decision variable values
+    the objective function value
 '''
 def do_calibration_and_compute_performance_measure(config):
     # setup
@@ -23,7 +25,6 @@ def do_calibration_and_compute_performance_measure(config):
 
     # least-squares
     result = solvers.least_squares.solve(model_instance, problem_instance, algorithm_instance)
-    problem_instance["parameters"] = copy.deepcopy(result.x)
 
     # verification    
     # WIP: should this be needed?
@@ -33,7 +34,11 @@ def do_calibration_and_compute_performance_measure(config):
 
     ssr_fit = problem_instance["performance_measure"](None, None, model_instance, problem_instance)
 
-    return ssr_fit
+    solution = dict(mmd.optimisation_problem_solution)
+    results = dict(mmd.optimisation_problem_results)
+    solution["decision_variables"] = problem_instance["parameters"]
+    results["objective_function"] = ssr_fit
+    return solution, results 
 
 
 '''
