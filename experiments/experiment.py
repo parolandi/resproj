@@ -128,7 +128,25 @@ def do_test_path(self, path_results, baseline):
     self.assertEquals(expected, actual)
     
 
-# TODO: do deep copies    
+# TODO: do deep copies
+'''
+Do calibration on whole data set
+Do basic workflows at solution point and path
+Splice data
+Do calibration on calib data set
+Do basic workflows at solution point and path
+Use valid data set and
+do basic workflows at solution point and path
+Plot results
+Print results
+Test regressions if baseline is provided
+Important: it needs a sensitivity system
+config: experiments.experiment.experiment_setup
+    configuration of algorithm and splicing
+baseline: workflows.workflow_data.workflow_results
+    reference testing values
+return: None
+'''    
 def do_experiment(self, config, baseline):
     # TODO: user messages
 
