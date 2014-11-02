@@ -57,6 +57,9 @@ def splice_data_with_pattern_111000_get_zeros(values):
     return zeros
 
 
+'''
+returns: calib_valid_data
+'''
 def splice_data_with_pattern_111000(times, meas, noise, true):
     datasets = splice_data_with_pattern(splice_data_with_pattern_111000_get_ones, \
         splice_data_with_pattern_111000_get_zeros, times, meas, noise, true)
