@@ -1,0 +1,41 @@
+
+import data.data_splicing as dds
+import models.model_data as mmd
+
+
+'''
+pseudo_exp: data.data_splicing.calib_valid_data
+returns: models.model_data.calib_valid_experimental_dataset
+'''
+def convert_pseudo_experimental_to_experimental(pseudo_exp):
+    exp = dict(mmd.calib_valid_experimental_dataset)
+    exp["id"] = pseudo_exp["id"]
+    calib = dict(mmd.experimental_dataset)
+    calib["time"] = pseudo_exp["calib"]["time"]
+    calib["observables"] = pseudo_exp["calib"]["meas"]
+    exp["calib"] = calib
+    return exp
+
+
+'''
+data:    list containing time and measurements, respectively
+returns: calib_valid_experimental_dataset
+'''
+def splice_raw_data_with_pattern_111111(data):
+    dataset = dict(mmd.calib_valid_experimental_dataset)
+    dataset["calib"]["time"] = data[0]
+    dataset["calib"]["observables"] = data[1:]
+    dataset["id"] = dds.format_dataset_id("111111", str(len(data)))
+    # WIP: add warning on diff len()
+    return dataset
+
+
+'''
+returns: calib_valid_experimental_dataset
+'''
+def splice_raw_data_with_pattern_111000(data):
+    dataset = dds.splice_data_with_pattern(dds.splice_data_with_pattern_111000_get_ones, \
+        dds.splice_data_with_pattern_111000_get_zeros, data[0], data[1:], None, None)
+    dataset["id"] = dds.format_dataset_id("111000", str(len(data)))
+    # WIP: add warning on diff len()
+    return convert_pseudo_experimental_to_experimental(dataset)
