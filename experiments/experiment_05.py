@@ -2,10 +2,13 @@
 import unittest
 import setups.kremlingetal_bioreactor as skb
 
+import copy
+
 import experiments.protocols as epr
 import metrics.ordinary_differential as mod
+import models.model_data as mmd
 import setups.setup_data as ssd
-
+import setups.setup_data_utils as ssdu
 
 class TestExperiment05(unittest.TestCase):
 
@@ -53,11 +56,15 @@ class TestExperiment05(unittest.TestCase):
         self.assertAlmostEquals(actual["objective_function"], expected, 12)
 
 
-    # TODO: at solution point
     # test regression
     def test_protocol_workflow_at_solution_point(self):
         config = self.do_experiment_setup()
-        actual = epr.do_basic_workflow_at_solution_point(config)
+
+        _, _, problem_data, _ = ssdu.apply_config(config)
+        reference_point = dict(mmd.optimisation_problem_solution)
+        reference_point["decision_variables"] = copy.deepcopy(problem_data["parameters"])
+                
+        actual = epr.do_basic_workflow_at_solution_point(config, reference_point)
         expected = 0.045095700772591826
         self.assertAlmostEquals(actual["ssr"], expected, 12)
 
@@ -68,6 +75,16 @@ class TestExperiment05(unittest.TestCase):
         _, actual = epr.do_calibration_and_compute_performance_measure(config)
         expected = 0.01302438324230857
         self.assertAlmostEquals(actual["objective_function"], expected, 12)
+
+
+    # test regression
+    def test_protocol_calibration_and_workflow_at_solution_point_without_splicing(self):
+        expected = 0.020948632939275735
+        config = self.do_experiment_setup()
+        solution_point, actual = epr.do_calibration_and_compute_performance_measure(config)
+        self.assertAlmostEquals(actual["objective_function"], expected, 12)
+        actual = epr.do_basic_workflow_at_solution_point(config, solution_point)
+        self.assertAlmostEquals(actual["ssr"], expected, 12)
 
 
 if __name__ == "__main__":

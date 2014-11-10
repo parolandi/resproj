@@ -4,6 +4,7 @@ import copy
 import metrics.ordinary_differential as mod
 import metrics.statistical_tests as mst
 import models.model_data as mmd
+import models.model_data_utils as mmdu
 import solvers.least_squares
 import workflows.workflow_data as wwd
 
@@ -29,6 +30,7 @@ def do_calibration_and_compute_performance_measure(config):
     # verification    
     # WIP: should this be needed?
     # need to do this here because problem data is kind of ignored
+    problem_instance["parameters"] = copy.deepcopy(result.x)
     for ii in range(len(problem_instance["parameter_indices"])):
         model_instance["parameters"][problem_instance["parameter_indices"][ii]] = copy.deepcopy(result.x[ii])
 
@@ -36,7 +38,7 @@ def do_calibration_and_compute_performance_measure(config):
 
     solution = dict(mmd.optimisation_problem_solution)
     results = dict(mmd.optimisation_problem_results)
-    solution["decision_variables"] = problem_instance["parameters"]
+    solution["decision_variables"] = copy.deepcopy(problem_instance["parameters"])
     results["objective_function"] = ssr_fit
     return solution, results 
 
@@ -49,10 +51,15 @@ DO NOT...
 Compute confidence intervals,
 or sensitivities, covariance matrix, estimate standard deviation
 and ellipsoid radius
+config:
+solution_point:
 return: workflows.workflow_data.point_results
 '''
 # TODO: hard-coded stdev
-def do_basic_workflow_at_solution_point(config):
+def do_basic_workflow_at_solution_point(config, solution_point):
+    assert(solution_point is not None)
+    # TODO: preconditions!
+    
     # TODO: hard-coded stdev
     stdev = 1.0
 
@@ -62,16 +69,18 @@ def do_basic_workflow_at_solution_point(config):
     problem_instance  = config["problem_setup"](model_instance, data_instance["calib"])
     protocol = config["protocol_setup"]()
 
+    mmdu.apply_decision_variables_to_parameters(solution_point, model_instance, problem_instance)
+    
     assert(problem_instance["performance_measure"] is protocol["performance_measure"])
     assert(problem_instance["performance_measure"] is mod.sum_squared_residuals_st)
 
     # objective function
     sum_sq_res = mod.sum_squared_residuals_st( \
-        problem_instance["parameters"], None, model_instance, problem_instance)
+        None, None, model_instance, problem_instance)
 
     # objective-function contributions
     sums_sq_res = mod.sums_squared_residuals( \
-        problem_instance["parameters"], None, model_instance, problem_instance)
+        None, None, model_instance, problem_instance)
 
     # observables' trajectories
     _ = solvers.initial_value.compute_timecourse_trajectories( \
