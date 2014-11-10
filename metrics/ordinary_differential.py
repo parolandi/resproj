@@ -4,6 +4,7 @@ import numpy
 
 import common.diagnostics as cd
 import common.utilities
+import models.model_data_utils as mmdu
 import solvers.initial_value
 
 
@@ -66,7 +67,12 @@ def residuals_dof(dof, model, model_instance, problem_instance):
 
 # compute the ssr for each trajectory
 def sums_squared_residuals(dof, model, model_instance, problem_instance):
-    if len(problem_instance["parameter_indices"]) > 0:
+    if dof is not None:
+        assert(len(dof) == len(problem_instance["parameter_indices"]))
+    # TODO: preconditions
+    # TODO: more pythonic
+    
+    if dof is not None:
         for ii in range(len(dof)):
             index = problem_instance["parameter_indices"][ii]
             model_instance["parameters"][index] = dof[ii]
@@ -96,10 +102,7 @@ def sum_squared_residuals_st(dof, model, model_instance, problem_instance):
     # TODO: more pythonic
     
     if dof is not None:
-        for ii in range(len(dof)):
-            index = problem_instance["parameter_indices"][ii]
-            model_instance["parameters"][index] = dof[ii]
-            problem_instance["parameters"][ii] = dof[ii]
+        mmdu.apply_values_to_parameters(dof, model_instance, problem_instance)
     
     if model is not None:
         model_instance["model"] = model
