@@ -20,6 +20,8 @@ def solve(model_data, problem_data):
     assert(len(problem_data["initial_conditions"]) == len(model_data["states"]))
     assert(model_data["states"] is not None)
     # TODO: preconditions
+    # TODO: warnings
+    # if problem_data != model_data, then warn
 
     # TODO: sort alphabetically
     return scipy.integrate.odeint(
@@ -40,9 +42,11 @@ Warning: it will unconditionally include the initial point
 '''
 # TODO: rename; "compute_timecourse_snapshots"
 def compute_trajectory_st(model, model_data, problem_data):
+    # TODO: problem_data["initial"] not being handled correctly if called direction
     # TODO: preconditions
 
     if model is not None:
+        assert(model is not None)
         model_data["model"] = model
         cd.print_legacy_code_message()
 
