@@ -14,6 +14,10 @@ def convert_pseudo_experimental_to_experimental(pseudo_exp):
     calib["time"] = pseudo_exp["calib"]["time"]
     calib["observables"] = pseudo_exp["calib"]["meas"]
     exp["calib"] = calib
+    valid = dict(mmd.experimental_dataset)
+    valid["time"] = pseudo_exp["valid"]["time"]
+    valid["observables"] = pseudo_exp["valid"]["meas"]
+    exp["valid"] = valid
     return exp
 
 
@@ -31,6 +35,7 @@ def splice_raw_data_with_pattern_111111(data):
 
 
 '''
+data:    list containing time and measurements, respectively
 returns: calib_valid_experimental_dataset
 '''
 def splice_raw_data_with_pattern_111000(data):
