@@ -8,6 +8,12 @@ instrumentation_data = {
     }
 
 
+protocol_step_data = {
+    "calib": ("donot", "do", "done"),
+    "valid": ("donot", "do", "done"),
+    }
+
+
 '''
 number_of_intervals: int
 data_splicing: function
@@ -28,6 +34,7 @@ experiment_setup = {
     "algorithm_setup": None,
     "instrumentation_setup": None,
     "protocol_setup": None,
+    "protocol_step": dict(protocol_step_data),
     "data_setup": None,
 # kind of legacy
     "number_of_intervals": 0,

@@ -7,6 +7,7 @@ import metrics.statistical_tests as mst
 import models.model_data as mmd
 import models.model_data_utils as mmdu
 import engine.estimation_matrices
+import setups.setup_data_utils as ssdu
 import solvers.least_squares
 import workflows.workflow_data as wwd
 
@@ -62,11 +63,13 @@ def do_basic_workflow_at_solution_point(config, solution_point):
     stdev = 1.0
 
     # setup
+    protocol = config["protocol_setup"]()
     model_instance = config["model_setup"]()
     data_instance = config["data_setup"]()
-    problem_instance  = config["problem_setup"](model_instance, data_instance["calib"])
-    protocol = config["protocol_setup"]()
-
+    protocol_step = ssdu.get_next_protocol_step(config)
+    problem_instance  = config["problem_setup"](model_instance, data_instance[protocol_step])
+    
+    
     mmdu.apply_decision_variables_to_parameters(solution_point, model_instance, problem_instance)
     
     assert(problem_instance["performance_measure"] is protocol["performance_measure"])
