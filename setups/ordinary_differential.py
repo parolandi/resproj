@@ -146,6 +146,12 @@ def do_baseline_data_setup_spliced_111111():
     return spliced_trajectories
 
 
+def do_baseline_data_setup_spliced_111000():
+    trajectories = do_baseline_data_setup()
+    spliced_trajectories = deds.splice_raw_data_with_pattern_111000(trajectories)
+    return spliced_trajectories
+
+
 def do_algorithm_setup(instrumentation_data):
     initial_guesses = numpy.array([1.0, 2.0])
 

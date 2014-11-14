@@ -131,7 +131,8 @@ def do_sensitivity_based_workflow_at_solution_point(config, solution_point):
 
     model_instance = config["sensitivity_model_setup"]()
     data_instance = config["data_setup"]()
-    problem_instance  = config["sensitivity_problem_setup"](model_instance, data_instance["calib"])
+    protocol_step = ssdu.get_next_protocol_step(config)
+    problem_instance  = config["sensitivity_problem_setup"](model_instance, data_instance[protocol_step])
     
     # sensitivities and covariance matrix
     state_and_sens_trajectories = solvers.initial_value.compute_timecourse_trajectories( \

@@ -17,11 +17,16 @@ def apply_config(config):
 
 
 def get_next_protocol_step(config):
-    value = ""
+    step = ""
+    if config["protocol_step"]["calib"] == "do":
+        step = "calib"
+    elif config["protocol_step"]["valid"] == "do":
+        step = "valid"
+    return step
+
+
+def set_next_protocol_step(config):
     if config["protocol_step"]["calib"] == "do":
         config["protocol_step"]["calib"] = "done"
-        value = "calib"
     elif config["protocol_step"]["valid"] == "do":
         config["protocol_step"]["valid"] = "done"
-        value = "valid"
-    return value
