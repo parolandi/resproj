@@ -3,6 +3,8 @@ import numpy
 
 
 def prepare_sensitivity_matrix(no_params, no_timepoints, sensitivity_trajectories):
+    assert(no_timepoints == len(sensitivity_trajectories[0]))
+    
     flat = sensitivity_trajectories.flatten()
     no_meas = no_timepoints * no_params
     sensitivity_matrix = numpy.asmatrix(flat.reshape((no_params, no_meas)).transpose())

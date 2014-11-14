@@ -21,9 +21,16 @@ def apply_values_to_parameters(values, model_data, problem_data):
 
 '''
 Set model's and problem's parameters to the values given by the decision variables
-opt_sol:      models.model_data.optimisation_problem_solution
+opt_sol:      models.model_data.optimisation_problem_point
 model_data:   models.model_data.model_structure
 problem_data: models.model_data.problem.problem_structure
 '''
 def apply_decision_variables_to_parameters(opt_sol, model_data, problem_data):
     apply_values_to_parameters(opt_sol["decision_variables"], model_data, problem_data)
+
+
+def get_number_of_time_points(problem_data):
+    no_timepoints = len(problem_data["time"])
+    if problem_data["initial"] == "exclude":
+        no_timepoints -= 1
+    return no_timepoints

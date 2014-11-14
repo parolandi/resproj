@@ -48,6 +48,31 @@ def sensitivities_linear_2p2s(s, t, p, u):
     ds_dt.append(u[1] - s[3])
     return ds_dt
 
+'''
+Compute full augmented state and sensitivity system
+d: indices of decision variables for parameters p
+'''
+#TODO: add dp
+def state_and_sensitivities_linear_2p2s(xs, t, p, u):
+    assert(len(xs) == 6)
+    assert(len(p) == 2)
+    assert(len(u) == 2)
+#    assert(len(dp) == 2)
+    
+    dx_dt = []
+    dx_dt.append(p[0] * u[0] - xs[0])
+    dx_dt.append(p[1] * u[1] - xs[1])
+    
+    ds_dt = []
+    ds_dt.append(u[0] - xs[2])
+    ds_dt.append(0.0)
+    ds_dt.append(0.0)
+    ds_dt.append(u[1] - xs[5])
+    
+    dxs_dt = numpy.concatenate((dx_dt, ds_dt))
+    return dxs_dt
+
+
 # TODO: perhpas move to epo_receptor module?
 epo_receptor_default_parameters = {
     "k_on": 0.00010496,

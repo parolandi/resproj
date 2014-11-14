@@ -67,13 +67,7 @@ calib_valid_experimental_dataset = {
     }
 
 
-#TODO: merge with results; name "point"
-optimisation_problem_solution = {
+optimisation_problem_point = {
     "decision_variables": [],
-    }
-
-
-#TODO: merge with solution; name "point"
-optimisation_problem_results = {
     "objective_function": 0.0,
     }

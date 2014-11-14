@@ -51,7 +51,7 @@ class TestExperiment05(unittest.TestCase):
     # test regression
     def test_protocol_calibration_without_splicing(self):
         config = self.do_experiment_setup()
-        _, actual = epr.do_calibration_and_compute_performance_measure(config)
+        actual = epr.do_calibration_and_compute_performance_measure(config)
         expected = 0.020948632939275735
         self.assertAlmostEquals(actual["objective_function"], expected, 12)
 
@@ -61,7 +61,7 @@ class TestExperiment05(unittest.TestCase):
         config = self.do_experiment_setup()
 
         _, _, problem_data, _ = ssdu.apply_config(config)
-        reference_point = dict(mmd.optimisation_problem_solution)
+        reference_point = dict(mmd.optimisation_problem_point)
         reference_point["decision_variables"] = copy.deepcopy(problem_data["parameters"])
                 
         actual = epr.do_basic_workflow_at_solution_point(config, reference_point)
@@ -72,7 +72,7 @@ class TestExperiment05(unittest.TestCase):
     # test regression
     def test_protocol_calibration_with_splicing(self):
         config = self.do_experiment_setup_splicing()
-        _, actual = epr.do_calibration_and_compute_performance_measure(config)
+        actual = epr.do_calibration_and_compute_performance_measure(config)
         expected = 0.01302438324230857
         self.assertAlmostEquals(actual["objective_function"], expected, 12)
 
@@ -81,11 +81,13 @@ class TestExperiment05(unittest.TestCase):
     def test_protocol_calibration_and_workflow_at_solution_point_without_splicing(self):
         expected = 0.020948632939275735
         config = self.do_experiment_setup()
-        solution_point, actual = epr.do_calibration_and_compute_performance_measure(config)
-        self.assertAlmostEquals(actual["objective_function"], expected, 12)
-        actual = epr.do_basic_workflow_at_solution_point(config, solution_point)
-        self.assertAlmostEquals(actual["ssr"], expected, 12)
+        solution_point = epr.do_calibration_and_compute_performance_measure(config)
+        actual = solution_point["objective_function"]
+        self.assertAlmostEquals(actual, expected, 12)
+        results = epr.do_basic_workflow_at_solution_point(config, solution_point)
+        actual = results["ssr"]
+        self.assertAlmostEquals(actual, expected, 12)
 
-
+    
 if __name__ == "__main__":
     unittest.main()
