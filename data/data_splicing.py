@@ -25,6 +25,9 @@ def format_dataset_id(pattern, dim):
 
 # TODO: noise
 # TODO: true
+'''
+returns data.data_splicing.calib_valid_data
+'''
 def splice_data_with_pattern(splicer_ones, splicer_zeros, times, meas, noise, true):
     datasets = dict(calib_valid_data)
     calib_meas = []
