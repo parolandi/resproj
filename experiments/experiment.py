@@ -212,6 +212,8 @@ def do_experiment(self, config, baseline):
 
     problem_instance["outputs"] = dataset["calib"]["meas"]
     problem_instance["time"] = dataset["calib"]["time"]
+    sens_problem_instance["outputs"] = dataset["calib"]["meas"]
+    sens_problem_instance["time"] = dataset["calib"]["time"]
 
     logger = solvers.least_squares.DecisionVariableLogger()
     algorithm_instance["callback"] = logger.log_decision_variables
@@ -246,6 +248,8 @@ def do_experiment(self, config, baseline):
     # validation data set
     problem_instance["outputs"] = dataset["valid"]["meas"]
     problem_instance["time"] = dataset["valid"]["time"]
+    sens_problem_instance["outputs"] = dataset["valid"]["meas"]
+    sens_problem_instance["time"] = dataset["valid"]["time"]
 
     point_results = workflows.basic.do_workflow_at_solution_point( \
             models.ordinary_differential.linear_2p2s, model_instance, problem_instance, \
