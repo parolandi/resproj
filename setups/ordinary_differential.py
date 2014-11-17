@@ -86,8 +86,6 @@ def do_sensitivity_problem_setup(model_data, data_instance):
     problem_data["outputs"] = data_instance["observables"]
     assert(len(["output_indices"]) == len(["outputs"]))
 
-    problem_data["initial"] = "exclude"
-
     return problem_data
 
 
@@ -117,7 +115,6 @@ def do_baseline_data_setup():
     problem_instance["time"] = times
     problem_instance["parameters"] = copy.deepcopy(model_instance["parameters"])
     problem_instance["parameter_indices"] = param_indices
-#    problem_instance["initial"] = "exclude"
 
     mi = copy.deepcopy(model_instance)
     pi = copy.deepcopy(problem_instance)
@@ -160,6 +157,7 @@ def do_algorithm_setup(instrumentation_data):
         algorithm_data["callback"] = instrumentation_data["logger"].log_decision_variables
     algorithm_data["initial_guesses"] = initial_guesses
     algorithm_data["method"] = "CG"
+    algorithm_data["tolerance"] = 1E-8
     return algorithm_data
 
     

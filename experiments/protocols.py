@@ -39,10 +39,30 @@ def do_calibration_and_compute_performance_measure(config):
 
     ssr_fit = problem_instance["performance_measure"](None, None, model_instance, problem_instance)
 
-    opt_sol = dict(mmd.optimisation_problem_point)
-    opt_sol["decision_variables"] = copy.deepcopy(problem_instance["parameters"])
-    opt_sol["objective_function"] = ssr_fit
-    return opt_sol 
+    calib_sol = dict(mmd.optimisation_problem_point)
+    calib_sol["decision_variables"] = copy.deepcopy(problem_instance["parameters"])
+    calib_sol["objective_function"] = ssr_fit
+    return calib_sol 
+
+
+def do_validation_and_compute_performance_measure_at_solution_point(config, solution_point):
+    # setup
+    model_instance = config["model_setup"]()
+    data_instance = config["data_setup"]()
+    problem_instance  = config["problem_setup"](model_instance, data_instance["valid"])
+
+    # verification    
+    # WIP: should this be needed?
+    # need to do this here because problem data is kind of ignored
+    problem_instance["parameters"] = copy.deepcopy(solution_point["decision_variables"])
+    for ii in range(len(problem_instance["parameter_indices"])):
+        model_instance["parameters"][problem_instance["parameter_indices"][ii]] = copy.deepcopy(solution_point["decision_variables"][ii])
+
+    ssr_fit = problem_instance["performance_measure"](None, None, model_instance, problem_instance)
+
+    valid_sol = copy.deepcopy(solution_point)
+    valid_sol["objective_function"] = ssr_fit
+    return valid_sol 
 
 
 '''

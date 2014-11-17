@@ -57,23 +57,25 @@ class TestExperiment01(unittest.TestCase):
         config["data_setup"] = sod.do_baseline_data_setup_spliced_111000
         config["protocol_step"]["calib"] = "do"
         config["protocol_step"]["valid"] = "do"
-        solution_point = epr.do_calibration_and_compute_performance_measure(config)
         # calibration
-        expected = 0.9110841402677451
+        solution_point = epr.do_calibration_and_compute_performance_measure(config)
         actual = solution_point["objective_function"]
+        expected = 0.911084140266
         self.assertAlmostEquals(actual, expected, 11)
         actual = epr.do_basic_workflow_at_solution_point(config, solution_point)
         self.assertAlmostEquals(actual["ssr"], expected, 11)
         actual = epr.do_sensitivity_based_workflow_at_solution_point(config, solution_point)
-        expected = [0.0010160231506570595, 0.00025400578766426489]
+        expected = [0.0010160231506539392, 0.0002540057876634848]
         [self.assertAlmostEquals(act, exp, 11) for act, exp in zip(actual["conf_intvs"], expected)]
         ssdu.set_next_protocol_step(config)
         # validation
-        expected = 0.6328786546412102
+        solution_point = epr.do_validation_and_compute_performance_measure_at_solution_point(config, solution_point)
+        actual = solution_point["objective_function"]
+        expected = 0.632877848654
         actual = epr.do_basic_workflow_at_solution_point(config, solution_point)
         self.assertAlmostEquals(actual["ssr"], expected, 11)
         actual = epr.do_sensitivity_based_workflow_at_solution_point(config, solution_point)
-        expected = [0.00038521491333684115, 9.6303728334210287e-05]
+        expected = [1.85877106e-04, 4.64692765e-05]
         [self.assertAlmostEquals(act, exp, 11) for act, exp in zip(actual["conf_intvs"], expected)]
 
     
