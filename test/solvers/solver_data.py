@@ -2,7 +2,7 @@
 import unittest
 import solvers.solver_data
 
-class Test(unittest.TestCase):
+class TestSolverData(unittest.TestCase):
 
 
     def test_no_keys(self):
