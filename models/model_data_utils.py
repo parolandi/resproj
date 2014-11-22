@@ -51,9 +51,11 @@ return: numpy.ndarray
     the sensitivity trajectories corresponding to the appropriate outputs and parameters
 '''
 def get_sensitivity_trajectories(dim_states, problem_instance, state_and_sens_trajectories):
+    dim_dv = len(problem_instance["parameter_indices"])
+    assert(dim_dv > 0)
+    
     trajectories = []
-    dim_dvs = len(problem_instance["parameter_indices"])
-    for jj in range(dim_dvs):
+    for jj in range(dim_dv):
         for ii in range(len(problem_instance["output_indices"])):
             index = dim_states*(jj+1)+problem_instance["output_indices"][ii]
             trajectory = state_and_sens_trajectories[index]
