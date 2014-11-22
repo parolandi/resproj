@@ -6,7 +6,7 @@ import copy
 import time
 
 import metrics.ordinary_differential as mo
-#import results.plot as rps
+import models.model_data_utils as mmdu
 import results.plot_tiles as rpt
 import solvers.initial_value as si
 import solvers.least_squares as sl
@@ -28,7 +28,8 @@ class TestExperiment04(unittest.TestCase):
     '''
     def test_simulate(self):
         model_data = skb.do_model_setup_model_B()
-        problem_data = skb.do_problem_setup(model_data)
+        published_data = skb.do_get_published_data_spliced_111111()
+        problem_data = skb.do_problem_setup(model_data, published_data["calib"])
         labels = skb.do_labels()
 
         trajectories = si.compute_timecourse_trajectories(None, model_data, problem_data)
@@ -47,7 +48,8 @@ class TestExperiment04(unittest.TestCase):
     '''
     def test_metric(self):
         model_data = skb.do_model_setup_model_B()
-        problem_data = skb.do_problem_setup(model_data)
+        data_instance = skb.do_get_published_data_spliced_111111()
+        problem_data = skb.do_problem_setup(model_data, data_instance["calib"])
 
         actual = mo.sum_squared_residuals_st(None, None, model_data, problem_data)
         expected = 0.045095700772591826
@@ -59,7 +61,8 @@ class TestExperiment04(unittest.TestCase):
     '''
     def test_calibrate(self):
         model_data = skb.do_model_setup_model_B()
-        problem_data = skb.do_problem_setup(model_data)
+        data_instance = skb.do_get_published_data_spliced_111111()
+        problem_data = skb.do_problem_setup(model_data, data_instance["calib"])
         labels = skb.do_labels()
 
         ssr_raw = mo.sum_squared_residuals_st(None, None, model_data, problem_data)
@@ -92,7 +95,7 @@ class TestExperiment04(unittest.TestCase):
             rpt.plot_fit(problem_data["time"], problem_data["outputs"], problem_data["time"], trajectories_fit[1:], labels[1:], self.model_key)
             
         actual = ssr_fit
-        expected = 0.020948632939275735
+        expected = 0.02094963117201898
         self.assertAlmostEqual(actual, expected, 12)
         # TODO add regression test point
 
@@ -102,7 +105,8 @@ class TestExperiment04(unittest.TestCase):
     '''
     def test_calibrate_global(self):
         model_data = skb.do_model_setup_model_B()
-        problem_data = skb.do_problem_setup(model_data)
+        data_instance = skb.do_get_published_data_spliced_111111()
+        problem_data = skb.do_problem_setup(model_data, data_instance["calib"])
         labels = skb.do_labels()
         
         ssr_raw = mo.sum_squared_residuals_st(None, None, model_data, problem_data)
@@ -114,7 +118,7 @@ class TestExperiment04(unittest.TestCase):
         
         algorithm = dict(smls.montecarlo_multiple_optimisation_params)
         algorithm["number_of_trials"] = 5
-        algorithm["decision_variable_ranges"] = [(0,7.23232059e-05*10), (0,6.00000000e+06*10), (0,1.00000000e+01*10), (0,1.67959956e-02*10), (0,1.00866368e-02*10)]
+        algorithm["decision_variable_ranges"] = [(0,7.23232059e-05*10), (0,6.00000000e+06*10), (0,1.67959956e-02*10), (0,1.00866368e-02*10)]
         algorithm["subsolver_params"]["method"] = "Nelder-Mead"
 
         wall_time0 = time.time() 
@@ -137,12 +141,13 @@ class TestExperiment04(unittest.TestCase):
 
         self.assertTrue(len(result["local"]) == 3)
         actual = result["global"]["objective_function"]
-        expected = 0.021119404945328022
+        expected = 0.021174194991343515
         self.assertAlmostEquals(actual, expected, 12)
 
 
 if __name__ == "__main__":
     run_slow_tests = False
+    
     suite = unittest.TestSuite()
     suite.addTest(TestExperiment04("test_simulate"))
     suite.addTest(TestExperiment04("test_metric"))
