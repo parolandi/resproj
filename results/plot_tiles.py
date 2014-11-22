@@ -27,3 +27,20 @@ def plot_fit(independent_meas, measurements, independent_pred, predictions, titl
     if title is not None:
         pp.suptitle(title)
     pp.show()
+
+'''
+Plot states and sensitivities in a tiled layout
+'''
+# TODO: consider removing dim_dv
+def plot_states_and_sensitivities(time, states, sensitivities, dim_dv):
+    no_rows = dim_dv+1
+    no_cols = len(states)
+    fig = pp.figure(1)
+    for dv_col in range(no_cols):
+        sp = fig.add_subplot(no_rows, no_cols, dv_col+1)
+        sp.plot(time, states[dv_col])
+        for x_row in range(no_rows-1):
+            plot_no = no_cols*(x_row+1)+(dv_col+1)
+            sp = fig.add_subplot(no_rows, no_cols, plot_no)
+            sp.plot(time, sensitivities[dim_dv*dv_col+x_row])
+    pp.show()
