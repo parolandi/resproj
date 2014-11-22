@@ -82,6 +82,8 @@ def do_sensitivity_problem_setup(model_data, data_instance):
     problem_data["parameters"] = copy.deepcopy(model_data["parameters"])
     problem_data["inputs"] = copy.deepcopy(model_data["inputs"])
 
+    problem_data["parameter_indices"] = numpy.array([0, 1])
+    
     problem_data["output_indices"] = numpy.array([0, 1])
     problem_data["outputs"] = data_instance["observables"]
     assert(len(["output_indices"]) == len(["outputs"]))
