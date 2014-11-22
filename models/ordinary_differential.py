@@ -48,6 +48,7 @@ def sensitivities_linear_2p2s(s, t, p, u):
     ds_dt.append(u[1] - s[3])
     return ds_dt
 
+
 '''
 Compute full augmented state and sensitivity system
 d: indices of decision variables for parameters p
