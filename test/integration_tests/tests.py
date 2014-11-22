@@ -2,8 +2,8 @@
 import unittest
 
 # TODO:I don't know why import does not work directly
-from test.integration_tests.epo_receptor import *
 from test.integration_tests.algebraic_linear import *
+from test.integration_tests.epo_receptor import *
 
 
 if __name__ == '__main__':
