@@ -65,10 +65,11 @@ def do_workflow_at_solution_point(model, model_instance, problem_instance, \
         sensitivity, sens_model_instance, sens_problem_instance))
     sens_trajectories = common.utilities.sliceit_astrajectory(sens_snapshot)
 
+    no_obs = len(problem_instance["outputs"])
     no_params = len(sens_problem_instance["parameters"])
     no_timepoints = len(sens_problem_instance["time"])
     cov_matrix = engine.estimation_matrices.compute_covariance_matrix( \
-        no_params, no_timepoints, sens_trajectories)
+        no_obs, no_params, no_timepoints, sens_trajectories)
 
     # ellipsoid radius and confidence interval
     no_meas = common.utilities.size_it(problem_instance["outputs"])
@@ -149,9 +150,11 @@ def do_workflow_at_solution_path(model, model_instance, problem_instance, \
         sens_snapshot = numpy.asarray(solvers.initial_value.compute_trajectory_st( \
             sensitivity, sens_model_instance, sens_problem_instance))
         sens_trajectories = common.utilities.sliceit_astrajectory(sens_snapshot)
+        no_obs = len(problem_instance["outputs"])
         no_params = len(sens_problem_instance["parameters"])
         no_timepoints = len(sens_problem_instance["time"])
-        cov_matrix = engine.estimation_matrices.compute_covariance_matrix(no_params, no_timepoints, sens_trajectories)
+        cov_matrix = engine.estimation_matrices.compute_covariance_matrix( \
+            no_obs, no_params, no_timepoints, sens_trajectories)
         # ellipsoid radius and confidence interval
         no_meas = common.utilities.size_it(problem_instance["outputs"])
         est_stdev = engine.statistical_inference.compute_measurements_standard_deviation( \

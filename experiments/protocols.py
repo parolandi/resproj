@@ -6,6 +6,7 @@ import metrics.ordinary_differential as mod
 import metrics.statistical_tests as mst
 import models.model_data as mmd
 import models.model_data_utils as mmdu
+import engine.statistical_inference
 import engine.estimation_matrices
 import setups.setup_data_utils as ssdu
 import solvers.least_squares
@@ -157,12 +158,16 @@ def do_sensitivity_based_workflow_at_solution_point(config, solution_point):
     # sensitivities and covariance matrix
     state_and_sens_trajectories = solvers.initial_value.compute_timecourse_trajectories( \
         None, model_instance, problem_instance)
-    sens_trajectories = state_and_sens_trajectories[2:]
+    
+    system_model = config["model_setup"]()
+    dim_states = len(system_model["states"])
+    sens_trajectories = mmdu.get_sensitivity_trajectories(dim_states, problem_instance, state_and_sens_trajectories)
 
-    no_params = len(problem_instance["parameters"])
+    no_obs = len(problem_instance["outputs"])
+    no_params = mmdu.get_number_of_decision_variables(problem_instance)
     no_timepoints = mmdu.get_number_of_time_points(problem_instance)
     cov_matrix = engine.estimation_matrices.compute_covariance_matrix( \
-        no_params, no_timepoints, sens_trajectories)
+        no_obs, no_params, no_timepoints, sens_trajectories)
 
     # ellipsoid radius and confidence interval
     no_meas = common.utilities.size_it(problem_instance["outputs"])
