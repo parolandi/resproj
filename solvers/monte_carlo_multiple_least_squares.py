@@ -33,12 +33,16 @@ montecarlo_multiple_optimisation_result = {
     }
 
 
-# this does a montecarlo randomisation of initial guesses
-# and solves the least-squares problem
+'''
+This does a montecarlo randomisation of initial guesses
+and solves the least-squares problem
+'''
 def montecarlo_multiple_least_squares(model, problem, algorithm):
     assert(model["model"] is not None)
     assert(problem["performance_measure"] is not None)
     assert(problem["performance_measure"] is mod.sum_squared_residuals_st)
+    dv_count = len(problem["parameter_indices"])
+    assert(len(algorithm["decision_variable_ranges"]) == dv_count)
     # TODO: preconditions!
     
     multi_start_trials = algorithm["number_of_trials"]
