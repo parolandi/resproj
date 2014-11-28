@@ -20,6 +20,7 @@ data_splicing: function
 algorithm_setting: str
 model_setup: function
 problem_setup: function
+sensitivity_setup: function
 sensitivity_model_setup: function
 sensitivity_problem_setup: function
 algorithm_setup: function
@@ -29,6 +30,7 @@ data_setup: function
 experiment_setup = {
     "model_setup": None,
     "problem_setup": None,
+    "sensitivity_setup": None,
     "sensitivity_model_setup": None,
     "sensitivity_problem_setup": None,
     "algorithm_setup": None,
