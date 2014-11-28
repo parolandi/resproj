@@ -6,7 +6,6 @@ import copy
 import time
 
 import metrics.ordinary_differential as mo
-import models.model_data_utils as mmdu
 import results.plot_tiles as rpt
 import solvers.initial_value as si
 import solvers.least_squares as sl
