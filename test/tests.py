@@ -20,6 +20,7 @@ from test.solvers.initial_value import *
 from test.solvers.least_squares_algebraic import *
 from test.solvers.least_squares_legacy import *
 from test.solvers.least_squares import *
+from test.solvers.local_sensitivities import *
 from test.solvers.monte_carlo_multiple_least_squares import *
 from test.solvers.nonlinear_algebraic import *
 from test.solvers.solver_data import *
