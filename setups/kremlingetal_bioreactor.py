@@ -10,6 +10,7 @@ import models.kremlingetal_bioreactor as mkb
 import models.model_data
 import setups.setup_data
 import solvers.least_squares
+import solvers.local_sensitivities
 
 
 def get_parameters_to_be_estimated():
@@ -94,6 +95,10 @@ def do_problem_setup(model_data, data_instance):
     assert(len(["output_indices"]) == len(["outputs"]))
 
     return problem_data
+
+
+def do_sensitivity_setup():
+    return solvers.local_sensitivities.compute_timecourse_trajectories_and_sensitivities
 
 
 def do_sensitivity_model_setup():
