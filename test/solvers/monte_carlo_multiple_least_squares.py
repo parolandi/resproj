@@ -6,7 +6,6 @@ import numpy
 import models.model_data as mmd
 import solvers.initial_value as siv
 import metrics.ordinary_differential as meod
-import models.ordinary_differential as mod
 import data.generator as dg
 
 
