@@ -45,8 +45,10 @@ def compute_trajectory_st(model, model_data, problem_data):
     # TODO: problem_data["initial"] not being handled correctly if called direction
     # TODO: preconditions
 
+    if model is None:
+        assert(model_data["model"] is not None)
+
     if model is not None:
-        assert(model is not None)
         model_data["model"] = model
         cd.print_legacy_code_message()
 
