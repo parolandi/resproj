@@ -6,6 +6,7 @@ from experiments.experiment_01 import *
 from experiments.experiment_02 import *
 from experiments.experiment_03 import *
 from experiments.experiment_04 import *
+from experiments.experiment_05 import *
 
 import experiments.experiment as ee
 
