@@ -7,6 +7,10 @@ import data.data_splicing
 import experiments.experiment
 import workflows.workflow_data
 
+import experiments.protocols as epr
+import setups.ordinary_differential as sod
+import setups.setup_data as ssd
+import setups.setup_data_utils as ssdu
 
 '''
 Examine the effect of changing the data splicing pattern between
@@ -20,6 +24,61 @@ class TestExperiment01(unittest.TestCase):
     NM_method = "key-Nelder-Mead"
     CG_method = "key-CG"
 
+
+    def do_experiment_setup(self):
+        config = dict(ssd.experiment_setup)
+        config["model_setup"] = sod.do_model_setup
+        config["problem_setup"] = sod.do_problem_setup
+        config["sensitivity_model_setup"] = sod.do_sensitivity_model_setup
+        config["sensitivity_problem_setup"] = sod.do_sensitivity_problem_setup
+        config["algorithm_setup"] = sod.do_algorithm_setup
+        config["protocol_setup"] = sod.do_protocol_setup
+        return config
+
+
+    def test_do_experiment_01_at_conditions_111111_with_CG_and_protocol(self):
+        config = self.do_experiment_setup()
+        config["data_setup"] = sod.do_baseline_data_setup_spliced_111111
+        config["protocol_step"]["calib"] = "do"
+        config["protocol_step"]["valid"] = "donot"
+        solution_point = epr.do_calibration_and_compute_performance_measure(config)
+        expected = 1.50566203272
+        actual = solution_point["objective_function"]
+        self.assertAlmostEquals(actual, expected, 11)
+        actual = epr.do_basic_workflow_at_solution_point(config, solution_point)
+        self.assertAlmostEquals(actual["ssr"], expected, 11)
+        actual = epr.do_sensitivity_based_workflow_at_solution_point(config, solution_point)
+        expected = [1.83394541e-04, 4.58486353e-05]
+        [self.assertAlmostEquals(act, exp, 11) for act, exp in zip(actual["conf_intvs"], expected)]
+
+    
+    def test_do_experiment_01_at_conditions_111000_with_CG_and_protocol(self):
+        config = self.do_experiment_setup()
+        config["data_setup"] = sod.do_baseline_data_setup_spliced_111000
+        config["protocol_step"]["calib"] = "do"
+        config["protocol_step"]["valid"] = "do"
+        # calibration
+        solution_point = epr.do_calibration_and_compute_performance_measure(config)
+        actual = solution_point["objective_function"]
+        expected = 0.911084140266
+        self.assertAlmostEquals(actual, expected, 11)
+        actual = epr.do_basic_workflow_at_solution_point(config, solution_point)
+        self.assertAlmostEquals(actual["ssr"], expected, 11)
+        actual = epr.do_sensitivity_based_workflow_at_solution_point(config, solution_point)
+        expected = [0.0010160231506539392, 0.0002540057876634848]
+        [self.assertAlmostEquals(act, exp, 11) for act, exp in zip(actual["conf_intvs"], expected)]
+        ssdu.set_next_protocol_step(config)
+        # validation
+        solution_point = epr.do_validation_and_compute_performance_measure_at_solution_point(config, solution_point)
+        actual = solution_point["objective_function"]
+        expected = 0.632877848654
+        actual = epr.do_basic_workflow_at_solution_point(config, solution_point)
+        self.assertAlmostEquals(actual["ssr"], expected, 11)
+        actual = epr.do_sensitivity_based_workflow_at_solution_point(config, solution_point)
+        expected = [1.85877106e-04, 4.64692765e-05]
+        [self.assertAlmostEquals(act, exp, 11) for act, exp in zip(actual["conf_intvs"], expected)]
+
+    
     def test_do_experiment_01_at_conditions_111000_with_CG(self):
         config = dict(experiments.experiment.experiment_setup)
         config["data_splicing"] = data.data_splicing.splice_data_with_pattern_111000

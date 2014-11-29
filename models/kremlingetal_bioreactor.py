@@ -33,16 +33,16 @@ pvec = {
 
 # Table 2 and Table 3; modelA
 pvec_table3_modelA = {
-    "Yxs": 6.968E-5,   # g/umol      - Table 3
+    "Yxs": 6.968E-5,   # g/umol      - Table 3 - to estimate
     "r1max": 2.4E4,    # umol/g/h DW - Table 2
     "KS": 0.4437,      # umol/g DW   - Table 2
-    "k2": 5.988E6,     # L/h         - Table 3
+    "k2": 5.988E6,     # L/h         - Table 3 - to estimate
     "KM1": 12.2,       # umol/g DW   - Table 2
-    "KIA": 0.104,      # umol/g DW   - Table 3
+    "KIA": 0.104,      # umol/g DW   - Table 3 - to estimate
     "r3max": 3E6,      # umol/g DW   - Table 2
     "KM2": 10.0,       # umol/g DW   - Table 2
-    "ksynmax": 7.2E-3, # umol/g/h DW - Table 3
-    "KIB": 0.0,        # umol/g DW   - Table 3
+    "ksynmax": 7.2E-3, # umol/g/h DW - Table 3 - to estimate
+    "KIB": 0.0,        # umol/g DW   - Table 3 - to estimate
     }
 
 
@@ -175,3 +175,75 @@ def evaluate_modelA(x, t, p, u):
 
 def evaluate_modelB(x, t, p, u):
     return evaluate(x, t, p, u, "modelB")
+
+
+'''
+w.r.t Yxs, k2, ksynmax, KIB
+'''
+def evaluate_system_and_sensitivities(xs, t, p, u):
+    # this is not quite ready
+    assert(False)
+    Mw = 342.3 * 1E-6 # molar mass of substrate
+    dim_dv = 4
+    dim_x = len(xmap)
+    x = xs[0:dim_x]
+    dx_dt = evaluate_modelB(x, t, p, u)
+    # all states, for each (implicit) decision variable
+    ds_dt = [0] * len(xmap) * dim_dv
+    s = xs[dim_x:]
+
+    y = numpy.zeros(len(yvec))
+    # p[pmap["Yxs"]] * p[pmap["r1max"]] * x[xmap["S"]] / (p[pmap["KS"]] + x[xmap["S"]])
+    y[ymap["r1"]] = p[pmap["r1max"]] * x[xmap["S"]] / (p[pmap["KS"]] + x[xmap["S"]])
+    y[ymap["mu"]] = p[pmap["Yxs"]] * y[ymap["r1"]]
+    y[ymap["r2"]] = p[pmap["k2"]] * x[xmap["E"]] * x[xmap["M1"]] / (p[pmap["KM1"]] + x[xmap["M1"]])
+    y[ymap["rsyn"]] = p[pmap["ksynmax"]] * p[pmap["KIB"]] / (p[pmap["KIB"]] + x[xmap["M2"]])
+    y[ymap["r3"]] = p[pmap["r3max"]] * x[xmap["M2"]] / (p[pmap["KM2"]] + x[xmap["M2"]])
+    
+    # dx_dt[xmap["X"]] = (y[ymap["mu"]] - u[umap["qin"]] / x[xmap["V"]]) * x[xmap["X"]]
+    a = y[ymap["r1"]] * x[xmap["X"]]
+    b = y[ymap["mu"]] * s[dim_dv*xmap["X"] + 0]
+    c = p[pmap["Yxs"]] * p[pmap["r1max"]] * x[xmap["X"]] * p[pmap["KS"]] / (p[pmap["KS"]] + x[xmap["S"]])**2 * s[dim_dv*xmap["S"] + 0]
+    d = (y[ymap["mu"]] - u[umap["qin"]] / x[xmap["V"]]) * s[dim_dv*xmap["X"] + 0]
+    print("ds_dt", a, b, c, d)
+    ds_dt[dim_dv*xmap["X"] + 0] = \
+        + 0 * (p[pmap["Yxs"]] * p[pmap["r1max"]] * x[xmap["S"]] / (p[pmap["KS"]] + x[xmap["S"]]) * x[xmap["X"]]) \
+        + a \
+        + b \
+        + c \
+        + 0 * ((y[ymap["mu"]] - u[umap["qin"]] / x[xmap["V"]]) * x[xmap["X"]]) \
+        + d 
+    # dx_dt[xmap["S"]] = u[umap["qin"]] * (u[umap["cin"]] - x[xmap["S"]]) - y[ymap["r1"]] * Mw * x[xmap["X"]]
+    ds_dt[dim_dv*xmap["S"] + 0] = \
+        + 0 * (u[umap["qin"]] * (u[umap["cin"]] - x[xmap["S"]])) \
+        - u[umap["qin"]] * s[dim_dv*xmap["S"] + 0] \
+        + 0 * (p[pmap["r1max"]] * x[xmap["S"]] / (p[pmap["KS"]] + x[xmap["S"]]) * Mw * x[xmap["X"]]) \
+        - p[pmap["r1max"]] * Mw * x[xmap["X"]] * p[pmap["KS"]] / (p[pmap["KS"]] + x[xmap["S"]])**2 * s[dim_dv*xmap["S"] + 0] \
+        - p[pmap["r1max"]] * x[xmap["S"]] / (p[pmap["KS"]] + x[xmap["S"]]) * Mw * s[dim_dv*xmap["X"] + 0]
+    # dx_dt[xmap["M1"]] = y[ymap["r1"]] - y[ymap["r2"]] - y[ymap["mu"]] * x[xmap["M1"]]
+    ds_dt[dim_dv*xmap["M1"] + 0] = \
+        + p[pmap["r1max"]] * x[xmap["S"]] / (p[pmap["KS"]] + x[xmap["S"]]) * (x[xmap["M1"]] - p[pmap["Yxs"]] * s[dim_dv*xmap["M1"] + 0]) \
+        + (1 - p[pmap["Yxs"]] * x[xmap["M1"]]) * p[pmap["r1max"]] * x[xmap["S"]] / (p[pmap["KS"]] + x[xmap["S"]]) * s[dim_dv*xmap["S"] + 0] \
+        - p[pmap["k2"]] * x[xmap["M1"]] / (p[pmap["KM1"]] + x[xmap["M1"]]) * s[dim_dv*xmap["E"] + 0] \
+        - p[pmap["k2"]] * x[xmap["E"]] * p[pmap["KM1"]] / (p[pmap["KM1"]] + x[xmap["M1"]])**2 * s[dim_dv*xmap["M1"] + 0] 
+    ds_dt[dim_dv*xmap["M1"] + 1] = - x[xmap["E"]] * x[xmap["M1"]] / (p[pmap["KM1"]] + x[xmap["M1"]])
+    # dx_dt[xmap["M2"]] = y[ymap["r2"]] - y[ymap["r3"]] - y[ymap["mu"]] * x[xmap["M2"]]
+    ds_dt[dim_dv*xmap["M2"] + 0] = \
+        + p[pmap["k2"]] * x[xmap["M1"]] / (p[pmap["KM1"]] + x[xmap["M1"]]) * s[dim_dv*xmap["E"] + 0] \
+        + p[pmap["k2"]] * x[xmap["E"]] * p[pmap["KM1"]] / (p[pmap["KM1"]] + x[xmap["M1"]])**2 * s[dim_dv*xmap["M1"] + 0] \
+        - p[pmap["r3max"]] * p[pmap["KM2"]] / (p[pmap["KM2"]] + x[xmap["M2"]])**2 * s[dim_dv*xmap["M2"] + 0] \
+        - p[pmap["r1max"]] * x[xmap["S"]] / (p[pmap["KS"]] + x[xmap["S"]]) * xmap["M2"] \
+        - p[pmap["Yxs"]] * p[pmap["r1max"]] * x[xmap["S"]] / (p[pmap["KS"]] + x[xmap["S"]]) * s[dim_dv*xmap["M2"] + 0] \
+        - p[pmap["Yxs"]] * p[pmap["r1max"]] * xmap["M2"] * p[pmap["KS"]] / (p[pmap["KS"]] + x[xmap["S"]])**2 * s[dim_dv*xmap["S"] + 0] 
+    ds_dt[dim_dv*xmap["M2"] + 1] = x[xmap["E"]] * x[xmap["M1"]] / (p[pmap["KM1"]] + x[xmap["M1"]])
+    # dx_dt[xmap["E"]] = y[ymap["rsyn"]] - y[ymap["mu"]] * x[xmap["E"]]
+    ds_dt[dim_dv*xmap["E"] + 0] = \
+        - p[pmap["ksynmax"]] * p[pmap["KIB"]] / (p[pmap["KIB"]] + x[xmap["M2"]])**2 * s[dim_dv*xmap["M2"] + 0] \
+        - p[pmap["r1max"]] * x[xmap["S"]] / (p[pmap["KS"]] + x[xmap["S"]]) * x[xmap["E"]] \
+        - p[pmap["Yxs"]] * p[pmap["r1max"]] * x[xmap["E"]] * p[pmap["KS"]] / (p[pmap["KS"]] + x[xmap["S"]])**2 * s[dim_dv*xmap["S"] + 0]  \
+        - p[pmap["Yxs"]] * p[pmap["r1max"]] * x[xmap["S"]] / (p[pmap["KS"]] + x[xmap["S"]]) * s[dim_dv*xmap["E"] + 0]
+    ds_dt[dim_dv*xmap["E"] + 2] = p[pmap["KIB"]] / (p[pmap["KIB"]] + x[xmap["M2"]])
+    ds_dt[dim_dv*xmap["E"] + 3] = p[pmap["ksynmax"]] * x[xmap["M2"]] / (p[pmap["KIB"]] + x[xmap["M2"]])**2
+    
+    dxs_dt = numpy.concatenate((dx_dt, ds_dt))
+    return dxs_dt

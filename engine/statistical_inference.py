@@ -14,6 +14,7 @@ significance: confidence level (e.g., 0.95 for 95%)
 '''
 def compute_confidence_ellipsoid_radius(no_params, no_meas, est_stdev, significance):
     assert(no_params > 0)
+    assert(no_meas > 0)
     assert(no_meas > no_params)
     assert(est_stdev > 0)
     assert(significance > 0 and significance < 1)

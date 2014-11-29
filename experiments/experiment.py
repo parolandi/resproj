@@ -128,7 +128,25 @@ def do_test_path(self, path_results, baseline):
     self.assertEquals(expected, actual)
     
 
-# TODO: do deep copies    
+# TODO: do deep copies
+'''
+Do calibration on whole data set
+Do basic workflows at solution point and path
+Splice data
+Do calibration on calib data set
+Do basic workflows at solution point and path
+Use valid data set and
+do basic workflows at solution point and path
+Plot results
+Print results
+Test regressions if baseline is provided
+Important: it needs a sensitivity system
+config: experiments.experiment.experiment_setup
+    configuration of algorithm and splicing
+baseline: workflows.workflow_data.workflow_results
+    reference testing values
+return: None
+'''    
 def do_experiment(self, config, baseline):
     # TODO: user messages
 
@@ -194,6 +212,8 @@ def do_experiment(self, config, baseline):
 
     problem_instance["outputs"] = dataset["calib"]["meas"]
     problem_instance["time"] = dataset["calib"]["time"]
+    sens_problem_instance["outputs"] = dataset["calib"]["meas"]
+    sens_problem_instance["time"] = dataset["calib"]["time"]
 
     logger = solvers.least_squares.DecisionVariableLogger()
     algorithm_instance["callback"] = logger.log_decision_variables
@@ -228,6 +248,8 @@ def do_experiment(self, config, baseline):
     # validation data set
     problem_instance["outputs"] = dataset["valid"]["meas"]
     problem_instance["time"] = dataset["valid"]["time"]
+    sens_problem_instance["outputs"] = dataset["valid"]["meas"]
+    sens_problem_instance["time"] = dataset["valid"]["time"]
 
     point_results = workflows.basic.do_workflow_at_solution_point( \
             models.ordinary_differential.linear_2p2s, model_instance, problem_instance, \
