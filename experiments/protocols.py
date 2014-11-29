@@ -10,6 +10,7 @@ import engine.statistical_inference
 import engine.estimation_matrices
 import setups.setup_data_utils as ssdu
 import solvers.least_squares
+import solvers.local_sensitivities
 import workflows.workflow_data as wwd
 
 
@@ -76,6 +77,7 @@ return: workflows.workflow_data.point_results
 '''
 # TODO: hard-coded stdev
 # TODO: change basic to system_based
+# TODO: change to at any point
 def do_basic_workflow_at_solution_point(config, solution_point):
     assert(solution_point is not None)
     # TODO: preconditions!
@@ -150,19 +152,26 @@ def do_sensitivity_based_workflow_at_solution_point(config, solution_point):
     # TODO: preconditions!
     ssr = solution_point["objective_function"]
 
-    model_instance = config["sensitivity_model_setup"]()
+    # full sensitivities
+    state_and_sens_trajectories = []
     data_instance = config["data_setup"]()
     protocol_step = ssdu.get_next_protocol_step(config)
-    problem_instance  = config["sensitivity_problem_setup"](model_instance, data_instance[protocol_step])
-    
-    # sensitivities and covariance matrix
-    state_and_sens_trajectories = solvers.initial_value.compute_timecourse_trajectories( \
-        None, model_instance, problem_instance)
+    if config["sensitivity_setup"] is solvers.local_sensitivities.compute_timecourse_trajectories_and_sensitivities:
+        model_instance = config["model_setup"]()
+        problem_instance  = config["problem_setup"](model_instance, data_instance[protocol_step])
+        state_and_sens_trajectories = config["sensitivity_setup"](model_instance, problem_instance)
+    else:
+        # TODO: use config; if possible refactor
+        model_instance = config["sensitivity_model_setup"]()
+        problem_instance  = config["sensitivity_problem_setup"](model_instance, data_instance[protocol_step])
+        state_and_sens_trajectories = solvers.initial_value.compute_timecourse_trajectories( \
+            None, model_instance, problem_instance)
     
     system_model = config["model_setup"]()
     dim_states = len(system_model["states"])
     sens_trajectories = mmdu.get_sensitivity_trajectories(dim_states, problem_instance, state_and_sens_trajectories)
 
+    # covariance matrix
     no_obs = len(problem_instance["outputs"])
     no_params = mmdu.get_number_of_decision_variables(problem_instance)
     no_timepoints = mmdu.get_number_of_time_points(problem_instance)
