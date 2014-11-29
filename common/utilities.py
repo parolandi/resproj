@@ -55,3 +55,10 @@ def sliceit_astrajectory(packed_vector):
     snapshots = numpy.asarray(packed_vector)
     trajectories = numpy.transpose(snapshots)
     return trajectories
+
+
+# TODO: unit-test
+def get_maximum_absolute_sensitivity_value(sensitivity_trajectories, dim_states, dim_dv):
+    max_sens = numpy.max(numpy.abs(sensitivity_trajectories), axis=1)
+    sens_max = max_sens.reshape(dim_states,dim_dv).transpose()
+    return sens_max
