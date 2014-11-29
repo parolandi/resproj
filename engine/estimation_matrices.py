@@ -49,4 +49,8 @@ def calculate_covariance_matrix(sensitivity_matrix):
     return covariance_matrix
 
 
+def calculate_determinant(matrix):
+    return numpy.linalg.det(matrix)
+
+
 # TODO: another calculation of the covariance matrix already exists
