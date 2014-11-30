@@ -26,6 +26,8 @@ class TestExperiment05(unittest.TestCase):
         config["algorithm_setup"] = skb.do_algorithm_setup
         config["data_setup"] = skb.do_get_published_data_spliced_111111
         config["protocol_setup"] = skb.do_protocol_setup
+        config["protocol_step"]["calib"] = "do"
+        config["protocol_step"]["valid"] = "donot"
         return config
 
     
@@ -33,9 +35,12 @@ class TestExperiment05(unittest.TestCase):
         config = dict(ssd.experiment_setup)
         config["model_setup"] = skb.do_model_setup_model_B
         config["problem_setup"] = skb.do_problem_setup
+        config["sensitivity_setup"] = skb.do_sensitivity_setup()
         config["algorithm_setup"] = skb.do_algorithm_setup
         config["data_setup"] = skb.do_get_published_data_spliced_111000
         config["protocol_setup"] = skb.do_protocol_setup
+        config["protocol_step"]["calib"] = "do"
+        config["protocol_step"]["valid"] = "donot"
         return config
 
     
@@ -92,8 +97,6 @@ class TestExperiment05(unittest.TestCase):
     '''
     def test_protocol_sensitivity_based_workflow_without_splicing(self):
         config = self.do_experiment_setup()
-        config["protocol_step"]["calib"] = "do"
-        config["protocol_step"]["valid"] = "donot"
 
         _, _, problem_data, _ = ssdu.apply_config(config)
         reference_point = dict(mmd.optimisation_problem_point)
@@ -111,13 +114,12 @@ class TestExperiment05(unittest.TestCase):
     '''
     def test_protocol_calibration_and_basic_plus_sensitivity_based_workflow_without_splicing(self):
         config = self.do_experiment_setup()
-        config["protocol_step"]["calib"] = "do"
-        config["protocol_step"]["valid"] = "donot"
-        solution_point = epr.do_calibration_and_compute_performance_measure(config)
 
+        solution_point = epr.do_calibration_and_compute_performance_measure(config)
         actual = solution_point["objective_function"]
         expected = 0.02094963117201898
         self.assertAlmostEquals(actual, expected, 12)
+
         actual = epr.do_basic_workflow_at_solution_point(config, solution_point)
         self.assertAlmostEquals(actual["ssr"], expected, 12)
 
