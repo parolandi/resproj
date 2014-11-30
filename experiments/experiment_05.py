@@ -10,7 +10,11 @@ import models.model_data as mmd
 import setups.setup_data as ssd
 import setups.setup_data_utils as ssdu
 
-
+'''
+Verify metric at nominal point
+Calibrate with full data
+Calibrate with 111000 splicing
+'''
 class TestExperiment05(unittest.TestCase):
 
 
@@ -37,9 +41,8 @@ class TestExperiment05(unittest.TestCase):
     
     # TODO: extract as workflow?
     '''
-    Compute sum squared residuals 
+    Compute sum squared residuals, nominal point
     '''
-    # test regression
     def test_verification(self):
         model_data = skb.do_model_setup_model_B()
         data_data = skb.do_get_published_data_spliced_111111()
@@ -49,8 +52,9 @@ class TestExperiment05(unittest.TestCase):
         expected = 0.045095700772591826
         self.assertAlmostEqual(actual, expected, 12)
 
-
-    # test regression
+    '''
+    Calibrate, use full data set
+    '''
     def test_protocol_calibration_without_splicing(self):
         config = self.do_experiment_setup()
         actual = epr.do_calibration_and_compute_performance_measure(config)
@@ -58,8 +62,20 @@ class TestExperiment05(unittest.TestCase):
         self.assertAlmostEquals(actual["objective_function"], expected, 12)
 
 
-    # test regression
-    def test_protocol_workflow_at_nominal_point(self):
+    '''
+    Calibrate, use 111000-spliced data set
+    '''
+    def test_protocol_calibration_with_splicing(self):
+        config = self.do_experiment_setup_splicing()
+        actual = epr.do_calibration_and_compute_performance_measure(config)
+        expected = 0.013033454937278158
+        self.assertAlmostEquals(actual["objective_function"], expected, 12)
+
+    
+    '''
+    Basic protocol, nominal point, use full data set
+    '''
+    def test_protocol_basic_workflow_without_splicing(self):
         config = self.do_experiment_setup()
 
         _, _, problem_data, _ = ssdu.apply_config(config)
@@ -71,16 +87,10 @@ class TestExperiment05(unittest.TestCase):
         self.assertAlmostEquals(actual["ssr"], expected, 12)
 
 
-    # test regression
-    def test_protocol_calibration_with_splicing(self):
-        config = self.do_experiment_setup_splicing()
-        actual = epr.do_calibration_and_compute_performance_measure(config)
-        expected = 0.013033454937278158
-        self.assertAlmostEquals(actual["objective_function"], expected, 12)
-
-
-    # test regression
-    def test_protocol_calibration_and_workflow_at_nominal_point_without_splicing(self):
+    '''
+    Sensitivity protocol, nominal point, use full data set
+    '''
+    def test_protocol_sensitivity_based_workflow_without_splicing(self):
         config = self.do_experiment_setup()
         config["protocol_step"]["calib"] = "do"
         config["protocol_step"]["valid"] = "donot"
@@ -96,8 +106,10 @@ class TestExperiment05(unittest.TestCase):
         [self.assertAlmostEquals(act, exp, delta=dif) for act, exp, dif in zip(actual["conf_intvs"], expected, delta)] 
 
     
-    # test regression
-    def test_protocol_calibration_and_workflow_at_solution_point_without_splicing(self):
+    '''
+    Calibration followed by basis and sensitivity-based protocols using the full data set
+    '''
+    def test_protocol_calibration_and_basic_plus_sensitivity_based_workflow_without_splicing(self):
         config = self.do_experiment_setup()
         config["protocol_step"]["calib"] = "do"
         config["protocol_step"]["valid"] = "donot"
