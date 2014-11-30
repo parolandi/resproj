@@ -4,7 +4,7 @@ import numpy
 
 import common.utilities as cu
 import data.experimental_data_splicing as deds
-import experiments.protocol_data as epd
+import workflows.protocol_data as wpd
 import metrics.ordinary_differential as mod
 import models.kremlingetal_bioreactor as mkb
 import models.model_data
@@ -165,6 +165,6 @@ def do_instrumentation_setup():
 
 
 def do_protocol_setup():
-    protocol_data = dict(epd.protocol_data)
+    protocol_data = dict(wpd.protocol_data)
     protocol_data["performance_measure"] = mod.sum_squared_residuals_st
     return protocol_data
