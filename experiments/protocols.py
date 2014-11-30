@@ -158,6 +158,7 @@ def do_sensitivity_based_workflow_at_solution_point(config, solution_point):
         state_and_sens_trajectories = config["sensitivity_setup"](model_instance, problem_instance)
     else:
         # TODO: use config; if possible refactor
+        assert(config["sensitivity_model_setup"] is not None)
         model_instance = config["sensitivity_model_setup"]()
         problem_instance  = config["sensitivity_problem_setup"](model_instance, data_instance[protocol_step])
         state_and_sens_trajectories = siv.compute_timecourse_trajectories( \
@@ -176,8 +177,7 @@ def do_sensitivity_based_workflow_at_solution_point(config, solution_point):
 
     # ellipsoid radius and confidence interval
     no_meas = common.utilities.size_it(problem_instance["outputs"])
-    est_stdev = esi.compute_measurements_standard_deviation( \
-        ssr, no_params, no_meas)
+    est_stdev = esi.compute_measurements_standard_deviation(ssr, no_params, no_meas)
     ell_radius = esi.compute_confidence_ellipsoid_radius(no_params, no_meas, est_stdev, 0.9)
     confidence_intervals = esi.compute_confidence_intervals(cov_matrix, ell_radius)
 
