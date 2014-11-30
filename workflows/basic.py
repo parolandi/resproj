@@ -123,6 +123,7 @@ def do_workflow_at_solution_path(model, model_instance, problem_instance, \
     ssr_contribs_path = []
     conf_intervs_path = []
     dec_vars_path = []
+    iter = 0
     for dvs in dv_path:
         iterations.append(iter)
 
