@@ -157,12 +157,14 @@ def do_sensitivity_based_workflow_at_solution_point(config, solution_point):
     if config["sensitivity_setup"] is sse.compute_timecourse_trajectories_and_sensitivities:
         model_instance = config["model_setup"]()
         problem_instance  = config["problem_setup"](model_instance, data_instance[protocol_step])
+        mmdu.apply_decision_variables_to_parameters(solution_point, model_instance, problem_instance)
         state_and_sens_trajectories = config["sensitivity_setup"](model_instance, problem_instance)
     else:
         # TODO: use config; if possible refactor
         assert(config["sensitivity_model_setup"] is not None)
         model_instance = config["sensitivity_model_setup"]()
         problem_instance  = config["sensitivity_problem_setup"](model_instance, data_instance[protocol_step])
+        mmdu.apply_decision_variables_to_parameters(solution_point, model_instance, problem_instance)
         state_and_sens_trajectories = siv.compute_timecourse_trajectories( \
             None, model_instance, problem_instance)
     
