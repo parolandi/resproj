@@ -16,6 +16,35 @@ point_results = {
     "conf_intvs": [],
     }
 
+'''
+Values of sum-squared-residuals, overall and contributions
+Values of chi-squared test, overall and contributions
+Full set of residual values
+To compute these values the system itself should only be required
+'''
+system_based_point_results = {
+    "params": [],
+    "ssr": [], # float
+    "ssrs": [],
+    "ress_vals": [],
+    "ssr_test": [], # boolean
+    "ssrs_tests": [],
+    }
+
+
+'''
+The covariance matrix and the confidence intervals
+Also the estimated standard deviation and the ellipsoid radius
+To compute these values the system and sensitivities should both be required
+'''
+sensitivity_based_point_results = {
+    "params": [],
+    "cov_matrix": [],
+    "est_stdev": [], # float
+    "ell_radius": [], # float
+    "conf_intvs": [],
+    }
+
 
 # TODO: document
 algorithmic_statistics = {

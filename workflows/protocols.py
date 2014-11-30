@@ -74,7 +74,7 @@ Compute residual trajectories, contributions
 Compute chi-squared test, total and contributions
 config: setups.setup_data.experiment_setup
 solution_point: models.model_data.optimisation_problem_point
-return: workflows.workflow_data.point_results
+return: workflows.workflow_data.system_based_point_results
 '''
 # TODO: hard-coded stdev
 # TODO: change basic to system_based
@@ -91,7 +91,7 @@ def do_basic_workflow_at_solution_point(config, solution_point):
     model_instance = config["model_setup"]()
     data_instance = config["data_setup"]()
     protocol_step = ssdu.get_next_protocol_step(config)
-    problem_instance  = config["problem_setup"](model_instance, data_instance[protocol_step])
+    problem_instance = config["problem_setup"](model_instance, data_instance[protocol_step])
     
     mmdu.apply_decision_variables_to_parameters(solution_point, model_instance, problem_instance)
     
@@ -125,7 +125,8 @@ def do_basic_workflow_at_solution_point(config, solution_point):
             mst.calculate_two_sided_chi_squared_test_for_mean_sum_squared_residuals( \
                 sums_sq_res[ii] / stdev **2, dof, 0.95))
 
-    workflow_results = dict(wwd.point_results)
+    workflow_results = dict(wwd.system_based_point_results)
+    workflow_results["params"] = copy.deepcopy(problem_instance["parameters"])
     workflow_results["ssr"] = sum_sq_res
     workflow_results["ssrs"] = sums_sq_res
     workflow_results["ress_vals"] = residuals_values
@@ -140,7 +141,7 @@ Compute sensitivities, covariance matrix,
 estimated standard deviation, ellipsoid radius and confidence intervals
 config: setups.setup_data.experiment_setup
 solution_point:
-return: workflows.workflow_data.point_results
+return: workflows.workflow_data.sensitivity_based_point_results
 '''
 # TODO: change to at any point
 def do_sensitivity_based_workflow_at_solution_point(config, solution_point):
@@ -181,7 +182,8 @@ def do_sensitivity_based_workflow_at_solution_point(config, solution_point):
     ell_radius = esi.compute_confidence_ellipsoid_radius(no_params, no_meas, est_stdev, 0.9)
     confidence_intervals = esi.compute_confidence_intervals(cov_matrix, ell_radius)
 
-    workflow_results = dict(wwd.point_results)
+    workflow_results = dict(wwd.sensitivity_based_point_results)
+    workflow_results["params"] = copy.deepcopy(problem_instance["parameters"])
     workflow_results["cov_matrix"] = cov_matrix
     workflow_results["est_stdev"] = est_stdev
     workflow_results["ell_radius"] = ell_radius
