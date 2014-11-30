@@ -105,7 +105,8 @@ def do_basic_workflow_at_solution_point(config, solution_point):
     sums_sq_res = mod.sums_squared_residuals(None, None, model_instance, problem_instance)
 
     # observables' trajectories
-    _ = siv.compute_timecourse_trajectories(None, model_instance, problem_instance)
+    if False:
+        _ = siv.compute_timecourse_trajectories(None, model_instance, problem_instance)
      
     # residuals' trajectories
     residuals_values = mod.residuals_st(None, model_instance, problem_instance)
