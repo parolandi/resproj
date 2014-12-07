@@ -67,6 +67,10 @@ calib_valid_experimental_dataset = {
     }
 
 
+'''
+decision_variables: numpy.array
+objective_function: float
+'''
 optimisation_problem_point = {
     "decision_variables": [],
     "objective_function": 0.0,

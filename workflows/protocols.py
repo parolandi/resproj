@@ -1,5 +1,6 @@
 
 import copy
+import numpy
 
 import common.utilities
 import metrics.ordinary_differential as mod
@@ -43,7 +44,7 @@ def do_calibration_and_compute_performance_measure(config):
     ssr_fit = problem_instance["performance_measure"](None, None, model_instance, problem_instance)
 
     calib_sol = dict(mmd.optimisation_problem_point)
-    calib_sol["decision_variables"] = copy.deepcopy(problem_instance["parameters"])
+    calib_sol["decision_variables"] = numpy.asarray(copy.deepcopy(problem_instance["parameters"]))
     calib_sol["objective_function"] = ssr_fit
     return calib_sol 
 
