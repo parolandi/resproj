@@ -3,6 +3,7 @@ import unittest
 import setups.kremlingetal_bioreactor as skb
 
 import copy
+import numpy
 
 import workflows.protocols as wpr
 import metrics.ordinary_differential as mod
@@ -57,6 +58,7 @@ class TestExperiment05(unittest.TestCase):
         expected = 0.045095700772591826
         self.assertAlmostEqual(actual, expected, 12)
 
+
     '''
     Calibrate, use full data set
     '''
@@ -65,6 +67,9 @@ class TestExperiment05(unittest.TestCase):
         actual = wpr.do_calibration_and_compute_performance_measure(config)
         expected = 0.02094963117201898
         self.assertAlmostEquals(actual["objective_function"], expected, 12)
+        expected = numpy.array([7.00537514e-05, 6.28707509e+06, 7.21106611e-03, 2.84514441e+01])
+        deltas = numpy.array([0.00000001e-05, 0.00000001e+06, 0.00000001e-03, 0.00000001e+01])
+        [self.assertAlmostEquals(act, exp, delta=diff) for act, exp, diff in zip(actual["decision_variables"], expected, deltas)]
 
 
     '''
@@ -75,6 +80,9 @@ class TestExperiment05(unittest.TestCase):
         actual = wpr.do_calibration_and_compute_performance_measure(config)
         expected = 0.013033454937278158
         self.assertAlmostEquals(actual["objective_function"], expected, 12)
+        expected = numpy.array([6.94673782e-05, 6.89584538e+06, 6.28171859e-03, 1.80509631e+00])
+        deltas = numpy.array([0.00000001e-05, 0.00000001e+06, 0.00000001e-03, 0.00000001e+00])
+        [self.assertAlmostEquals(act, exp, delta=diff) for act, exp, diff in zip(actual["decision_variables"], expected, deltas)]
 
     
     '''
