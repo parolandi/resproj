@@ -1,7 +1,6 @@
 
 import copy
 
-
 import data.generator as dg
 import metrics.ordinary_differential as mod
 import solvers.least_squares as sls
@@ -37,6 +36,7 @@ montecarlo_multiple_optimisation_result = {
 This does a montecarlo randomisation of initial guesses
 and solves the least-squares problem
 '''
+# TODO: total nunmber of runs
 def montecarlo_multiple_least_squares(model, problem, algorithm):
     assert(model["model"] is not None)
     assert(problem["performance_measure"] is not None)

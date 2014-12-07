@@ -133,6 +133,7 @@ class TestExperiment01(unittest.TestCase):
         experiments.experiment.do_experiment(self, config, baseline)
 
 
+    # TODO: update
     def setup_test_baseline_experiment_01_at_conditions_111000_with_CG(self):
         baseline = copy.deepcopy(workflows.workflow_data.workflow_results)
         baseline["full"]["params"] = [1.05280058, 2.05003397]
@@ -154,6 +155,7 @@ class TestExperiment01(unittest.TestCase):
         return baseline
     
 
+    # TODO: update
     def setup_test_baseline_experiment_01_at_conditions_000111_with_CG(self):
         baseline = copy.deepcopy(workflows.workflow_data.workflow_results)
         baseline["full"]["params"] = [1.05280058, 2.05003397]
@@ -175,6 +177,7 @@ class TestExperiment01(unittest.TestCase):
         return baseline
 
 
+    # TODO: update
     def setup_test_baseline_experiment_01_at_conditions_101010_with_CG(self):
         baseline = copy.deepcopy(workflows.workflow_data.workflow_results)
         baseline["full"]["params"] = [1.05280058, 2.05003397]
@@ -196,6 +199,7 @@ class TestExperiment01(unittest.TestCase):
         return baseline
 
 
+    # TODO: update
     def setup_test_baseline_experiment_01_at_conditions_111000_with_NM(self):
         baseline = copy.deepcopy(workflows.workflow_data.workflow_results)
         baseline["full"]["params"] = [1.05280045, 2.05003397]
@@ -217,6 +221,7 @@ class TestExperiment01(unittest.TestCase):
         return baseline
     
 
+    # TODO: update
     def setup_test_baseline_experiment_01_at_conditions_000111_with_NM(self):
         baseline = copy.deepcopy(workflows.workflow_data.workflow_results)
         baseline["full"]["params"] = [1.05280045, 2.05003397]
@@ -238,6 +243,7 @@ class TestExperiment01(unittest.TestCase):
         return baseline
 
 
+    # TODO: update
     def setup_test_baseline_experiment_01_at_conditions_101010_with_NM(self):
         baseline = copy.deepcopy(workflows.workflow_data.workflow_results)
         baseline["full"]["params"] = [1.05280045, 2.05003397]
