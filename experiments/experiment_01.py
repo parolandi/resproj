@@ -5,12 +5,12 @@ import copy
 
 import data.data_splicing
 import experiments.experiment
-import workflows.workflow_data
-
-import workflows.protocols as wpr
 import setups.ordinary_differential as sod
 import setups.setup_data as ssd
 import setups.setup_data_utils as ssdu
+import workflows.protocols as wpr
+import workflows.workflow_data
+
 
 '''
 Examine the effect of changing the data splicing pattern between
