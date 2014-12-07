@@ -120,7 +120,7 @@ class TestExperiment05(unittest.TestCase):
 
     
     '''
-    Calibration followed by basis and sensitivity-based protocols using the full data set
+    Calibration followed by basic and sensitivity-based protocols using the full data set
     '''
     def test_protocol_calibration_and_basic_plus_sensitivity_based_workflow_without_splicing(self):
         config = self.do_experiment_setup()
