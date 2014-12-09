@@ -71,6 +71,12 @@ def do_get_published_data_spliced_111000():
     return spliced_trajectories
 
 
+def do_get_published_data_spliced_000111():
+    trajectories_without_V = do_get_published_data()
+    spliced_trajectories = deds.splice_raw_data_with_pattern_000111(trajectories_without_V)
+    return spliced_trajectories
+
+
 def do_problem_setup(model_data, data_instance):
     assert(model_data is not None)
     assert(data_instance is not None)

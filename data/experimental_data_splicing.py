@@ -44,3 +44,15 @@ def splice_raw_data_with_pattern_111000(data):
     dataset["id"] = dds.format_dataset_id("111000", str(len(data)))
     # WIP: add warning on diff len()
     return convert_pseudo_experimental_to_experimental(dataset)
+
+
+'''
+data:    list containing time and measurements, respectively
+returns: calib_valid_experimental_dataset
+'''
+def splice_raw_data_with_pattern_000111(data):
+    dataset = dds.splice_data_with_pattern(dds.splice_data_with_pattern_000111_get_ones, \
+        dds.splice_data_with_pattern_000111_get_zeros, data[0], data[1:], None, None)
+    dataset["id"] = dds.format_dataset_id("000111", str(len(data)))
+    # WIP: add warning on diff len()
+    return convert_pseudo_experimental_to_experimental(dataset)
