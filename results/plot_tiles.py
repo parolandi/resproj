@@ -1,6 +1,8 @@
 
 import matplotlib.pyplot as pp
 
+import results.plot as rp
+
 
 # TODO: parameterise, generalise
 # WIP: needs to be re-worked
@@ -28,6 +30,7 @@ def plot_fit(independent_meas, measurements, independent_pred, predictions, titl
         pp.suptitle(title)
     pp.show()
 
+
 '''
 Plot states and sensitivities in a tiled layout
 '''
@@ -43,4 +46,27 @@ def plot_states_and_sensitivities(time, states, sensitivities, dim_dv):
             plot_no = no_cols*(x_row+1)+(dv_col+1)
             sp = fig.add_subplot(no_rows, no_cols, plot_no)
             sp.plot(time, sensitivities[dim_dv*dv_col+x_row])
+    pp.show()
+
+
+def plot_measurements_with_calibration_and_validation_trajectories( \
+    independent_calib, measurements_calib, predictions_calib, \
+    independent_valid, measurements_valid, predictions_valid):
+    # TODO: pre-conditions
+    
+    dim_obs = len(measurements_calib)
+    fig = pp.figure(1)
+    plot_data = {}
+    plot_data["figure"] = fig
+    plot_data["no_rows"] = dim_obs
+    plot_data["no_cols"] = 1
+    plot_colours = ['r', 'g', 'b', 'y', 'c']
+    for ii in range(dim_obs):
+        plot_data["plot_count"] = ii+1
+        plot_data["colour"] = plot_colours[ii]      
+        plot_data["index"] = ii 
+        rp.plot_measurements_with_calibration_and_validation_trajectory( \
+            independent_calib, measurements_calib[ii], predictions_calib[ii], \
+            independent_valid, measurements_valid[ii], predictions_valid[ii], \
+            plot_data)
     pp.show()
