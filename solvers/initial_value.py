@@ -16,6 +16,7 @@ Preconditions: at this point in time, all problem-specific stuff must have been 
 this is a direct solver call and there is no context to do problem-specific things
 '''
 # TODO: deep copy?
+# TODO: instrument reporting of data
 def solve(model_data, problem_data):
     assert(len(problem_data["initial_conditions"]) == len(model_data["states"]))
     assert(model_data["states"] is not None)
@@ -24,7 +25,7 @@ def solve(model_data, problem_data):
     # if problem_data != model_data, then warn
 
     # TODO: sort alphabetically
-    return scipy.integrate.odeint(
+    y, data = scipy.integrate.odeint(
         func        = model_data["model"], \
         y0          = problem_data["initial_conditions"], \
         # A sequence of time points for which to solve for y.
@@ -35,6 +36,7 @@ def solve(model_data, problem_data):
         full_output = True, \
         printmessg  = False, \
         ixpr        = False)
+    return y, data
 
 '''
 Computes the dynamic snapshots (or "time course") corresponding to the initial value problem.
