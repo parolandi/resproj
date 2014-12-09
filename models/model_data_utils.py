@@ -62,3 +62,11 @@ def get_sensitivity_trajectories(dim_states, problem_instance, state_and_sens_tr
             trajectory = state_and_sens_trajectories[index]
             trajectories.append(trajectory)
     return numpy.asarray(trajectories)
+
+
+def get_observable_trajectories(problem_instance, state_trajectories):
+    trajectories = []
+    for ii in range(len(problem_instance["output_indices"])):
+        index = problem_instance["output_indices"][ii]
+        trajectories.append(state_trajectories[index])
+    return numpy.asarray(trajectories)

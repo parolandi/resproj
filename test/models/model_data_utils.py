@@ -35,5 +35,20 @@ class TestModelDataUtils(unittest.TestCase):
         self.assertEquals(len(sens_trajectories), 6)
 
 
+    def test_get_observable_trajectories(self):
+        problem = dict(mmd.problem_structure)
+        problem["output_indices"] = [1,3]
+        dim_states = 4
+        state_trajectories = []
+        for ii in range(dim_states):
+            state_trajectories.append(numpy.linspace(0+ii, 1+ii, 5))
+        obs_trajectories = testme.get_observable_trajectories(problem, state_trajectories)
+        expected_o1 = numpy.linspace(0+1, 1+1, 5)
+        expected_o3 = numpy.linspace(0+3, 1+3, 5)
+        [self.assertEquals(act, exp) for act, exp in zip(obs_trajectories[0], expected_o1)]
+        [self.assertEquals(act, exp) for act, exp in zip(obs_trajectories[1], expected_o3)]
+        self.assertEquals(len(obs_trajectories), 2)
+
+
 if __name__ == "__main__":
     unittest.main()
