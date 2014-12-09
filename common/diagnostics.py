@@ -12,6 +12,14 @@ def print_decision_variables_and_confidence_intervals(dvs, cis):
     print("confidence intervals:", cis)
 
 
+'''
+point: models.model_data.optimisation_problem_point
+'''
+def print_decision_variables_and_objective_function(point):
+    print("decision variables:", point["decision_variables"])
+    print("confidence intervals:", point["objective_function"])
+
+
 def print_maximum_sensitivities(max_sens):
     print("maximum absolute sensitivities:", max_sens)
 
