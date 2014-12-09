@@ -139,6 +139,9 @@ def do_baseline_data_setup():
     return trajectory_data
 
 
+'''
+returns: calib_valid_experimental_dataset
+'''
 def do_baseline_data_setup_spliced_111111():
     trajectories = do_baseline_data_setup()
     spliced_trajectories = deds.splice_raw_data_with_pattern_111111(trajectories)
