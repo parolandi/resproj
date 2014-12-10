@@ -11,6 +11,7 @@ import setups.setup_data as ssd
 import setups.setup_data_utils as ssdu
 import workflows.protocols as wpr
 import workflows.reporting as wr
+import workflows.workflow_data_utils as wwdu
 
 
 '''
@@ -35,21 +36,26 @@ class TestExperiment05(unittest.TestCase):
         return config
 
     
-    def do_experiment_setup_111000_splicing(self):
+    def do_experiment_setup_calib_valid(self):
         config = dict(ssd.experiment_setup)
         config["model_setup"] = skb.do_model_setup_model_B
         config["problem_setup"] = skb.do_problem_setup
         config["sensitivity_setup"] = skb.do_sensitivity_setup()
         config["algorithm_setup"] = skb.do_algorithm_setup
-        config["data_setup"] = skb.do_get_published_data_spliced_111000
         config["protocol_setup"] = skb.do_protocol_setup
         config["protocol_step"]["calib"] = "do"
         config["protocol_step"]["valid"] = "do"
         return config
 
     
+    def do_experiment_setup_111000_splicing(self):
+        config = self.do_experiment_setup_calib_valid()
+        config["data_setup"] = skb.do_get_published_data_spliced_111000
+        return config
+
+    
     def do_experiment_setup_000111_splicing(self):
-        config = dict(ssd.experiment_setup)
+        config = self.do_experiment_setup_calib_valid()
         config["data_setup"] = skb.do_get_published_data_spliced_000111
         return config
 
@@ -99,6 +105,7 @@ class TestExperiment05(unittest.TestCase):
     '''
     def test_protocol_calibration_validation_with_111000_splicing(self):
         config = self.do_experiment_setup_111000_splicing()
+        # do calibration
         calibrated = wpr.do_calibration_and_compute_performance_measure(config)
         actual = calibrated["objective_function"]
         expected = 0.013033454937278158
@@ -108,6 +115,10 @@ class TestExperiment05(unittest.TestCase):
         expected = optpe
         deltas = numpy.array([0.00000001e-05, 0.00000001e+06, 0.00000001e-03, 0.00000001e+00])
         [self.assertAlmostEquals(act, exp, delta=diff) for act, exp, diff in zip(actual, expected, deltas)]
+        # do workflow
+        calib_results = wpr.do_basic_workflow_at_solution_point(config, calibrated)
+        wwdu.print_system_based_point_results(calib_results)
+        # do validation
         ssdu.set_next_protocol_step(config)
         validated = wpr.do_validation_and_compute_performance_measure_at_solution_point(config, calibrated)
         actual = validated["objective_function"]
@@ -116,14 +127,19 @@ class TestExperiment05(unittest.TestCase):
         actual = validated["decision_variables"]
         expected = optpe
         [self.assertAlmostEquals(act, exp, delta=diff) for act, exp, diff in zip(actual, expected, deltas)]
+        # do workflow
+        valid_results = wpr.do_basic_workflow_at_solution_point(config, calibrated)
+        wwdu.print_system_based_point_results(valid_results)
+        # do plotting
         wr.plot_tiled_calibration_and_validation_trajectories_at_point(config, calibrated)
-
+        
     
     '''
     Calibrate and validate, use 000111-spliced data set
     '''
     def test_protocol_calibration_validation_with_000111_splicing(self):
         config = self.do_experiment_setup_000111_splicing()
+        # do calibration
         calibrated = wpr.do_calibration_and_compute_performance_measure(config)
         actual = calibrated["objective_function"]
         expected = 0.8902801622379181
@@ -133,6 +149,10 @@ class TestExperiment05(unittest.TestCase):
         expected = optpe
         deltas = numpy.array([0.00000001e-05, 0.00000001e+06, 0.00000001e-02, 0.00000001e-03])
         [self.assertAlmostEquals(act, exp, delta=diff) for act, exp, diff in zip(actual, expected, deltas)]
+        # do workflow
+        calib_results = wpr.do_basic_workflow_at_solution_point(config, calibrated)
+        wwdu.print_system_based_point_results(calib_results)
+        # do validation
         ssdu.set_next_protocol_step(config)
         validated = wpr.do_validation_and_compute_performance_measure_at_solution_point(config, calibrated)
         actual = validated["objective_function"]
@@ -141,6 +161,10 @@ class TestExperiment05(unittest.TestCase):
         actual = validated["decision_variables"]
         expected = optpe
         [self.assertAlmostEquals(act, exp, delta=diff) for act, exp, diff in zip(actual, expected, deltas)]
+        # do workflow
+        valid_results = wpr.do_basic_workflow_at_solution_point(config, calibrated)
+        wwdu.print_system_based_point_results(valid_results)
+        # do plotting
         wr.plot_tiled_calibration_and_validation_trajectories_at_point(config, calibrated)
 
     
