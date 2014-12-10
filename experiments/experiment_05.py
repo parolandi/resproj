@@ -35,7 +35,7 @@ class TestExperiment05(unittest.TestCase):
         return config
 
     
-    def do_experiment_setup_splicing(self):
+    def do_experiment_setup_111000_splicing(self):
         config = dict(ssd.experiment_setup)
         config["model_setup"] = skb.do_model_setup_model_B
         config["problem_setup"] = skb.do_problem_setup
@@ -45,6 +45,12 @@ class TestExperiment05(unittest.TestCase):
         config["protocol_setup"] = skb.do_protocol_setup
         config["protocol_step"]["calib"] = "do"
         config["protocol_step"]["valid"] = "do"
+        return config
+
+    
+    def do_experiment_setup_000111_splicing(self):
+        config = dict(ssd.experiment_setup)
+        config["data_setup"] = skb.do_get_published_data_spliced_000111
         return config
 
     
@@ -66,7 +72,7 @@ class TestExperiment05(unittest.TestCase):
     Calibrate, use full data set
     '''
     def test_protocol_calibration_without_splicing(self):
-        config = self.do_experiment_setup()
+        config = self.do_experiment_setup_111000_splicing()
         actual = wpr.do_calibration_and_compute_performance_measure(config)
         expected = 0.02094963117201898
         self.assertAlmostEquals(actual["objective_function"], expected, 12)
@@ -78,8 +84,8 @@ class TestExperiment05(unittest.TestCase):
     '''
     Calibrate, use 111000-spliced data set
     '''
-    def test_protocol_calibration_with_splicing(self):
-        config = self.do_experiment_setup_splicing()
+    def test_protocol_calibration_with_111000_splicing(self):
+        config = self.do_experiment_setup_111000_splicing()
         actual = wpr.do_calibration_and_compute_performance_measure(config)
         expected = 0.013033454937278158
         self.assertAlmostEquals(actual["objective_function"], expected, 12)
@@ -91,8 +97,8 @@ class TestExperiment05(unittest.TestCase):
     '''
     Calibrate and validate, use 111000-spliced data set
     '''
-    def test_protocol_calibration_validation_with_splicing(self):
-        config = self.do_experiment_setup_splicing()
+    def test_protocol_calibration_validation_with_111000_splicing(self):
+        config = self.do_experiment_setup_111000_splicing()
         calibrated = wpr.do_calibration_and_compute_performance_measure(config)
         actual = calibrated["objective_function"]
         expected = 0.013033454937278158
@@ -113,9 +119,11 @@ class TestExperiment05(unittest.TestCase):
         wr.plot_tiled_calibration_and_validation_trajectories_at_point(config, calibrated)
 
     
+    '''
+    Calibrate and validate, use 000111-spliced data set
+    '''
     def test_protocol_calibration_validation_with_000111_splicing(self):
-        config = self.do_experiment_setup_splicing()
-        config["data_setup"] = skb.do_get_published_data_spliced_000111
+        config = self.do_experiment_setup_000111_splicing()
         calibrated = wpr.do_calibration_and_compute_performance_measure(config)
         actual = calibrated["objective_function"]
         expected = 0.8902801622379181
