@@ -1,4 +1,7 @@
 
+import numpy
+
+
 model_structure = {
     "model": None,
     "parameters": [],
@@ -21,23 +24,28 @@ problem_formulation = {
 
 
 problem_structure = {
-    "initial_conditions": [],
-    # TODO: change to "times"
-    "time": [],
-    "performance_measure": None,
-    "parameters": [],
-    "parameter_indices": [],
-    "inputs": [],
-    "outputs": [],
-    "output_indices": [],
-    # TODO observables
+    """
+    Defines the structure of a *computational* experiment, a.k.a. a *problem*
+    measurements_covariance_matrix: numpy.matrix
+    Notes: initial-guesses are not part of this structure as they are thought to be
+    an element (a need) of an algorithmic routine
+    """
     "bounds": None,
     # TODO: establish dedicated "problem_formulation"
     "initial": ("estimate", "exclude", "include"),
+    "initial_conditions": [],
+    "inputs": [],
+    "measurements_covariance_matrix": None,
+    "outputs": [],
+    "output_indices": [],
+    "performance_measure": None,
+    "parameters": [],
+    "parameter_indices": [],
+    # TODO: change to "times"
+    "time": [],
+    # TODO: add observables
     }
 
-
-# TODO: problem model verificator and synchroniser
 
 '''
 Agnostic experimental data set
