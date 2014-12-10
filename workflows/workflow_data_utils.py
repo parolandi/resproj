@@ -1,5 +1,8 @@
 
 def print_system_based_point_results(sbpr):
+    """
+    sbpr: workflows.workflow_data.system_based_point_results
+    """
     print("* Parameters *")
     for ii in range(len(sbpr["params"])):
         print(sbpr["params"][ii])
@@ -17,6 +20,9 @@ def print_system_based_point_results(sbpr):
 
 
 def print_sensitivity_based_point_results(sbpr):
+    """
+    sbpr: workflows.workflow_data.sensitivity_based_point_results
+    """
     print("* Parameters *")
     for ii in range(len(sbpr["params"])):
         print(sbpr["params"][ii])
