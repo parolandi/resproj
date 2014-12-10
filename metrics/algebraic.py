@@ -2,6 +2,8 @@
 import math
 import numpy
 
+import models.model_data_utils as mmdu
+
 
 def residuals_st(model, model_instance, problem_instance):
     series = 0
@@ -10,6 +12,7 @@ def residuals_st(model, model_instance, problem_instance):
     inputs = numpy.asarray(problem_instance["inputs"])
     assert(outputs.shape[states_index] == len(problem_instance["output_indices"])) 
     assert(outputs.shape[series] == inputs.shape[series])
+    mmdu.check_no_measurements_covariance_matrix(problem_instance)
     
     # there is one residual per experiment
     res = numpy.empty(problem_instance["outputs"].shape)
@@ -29,6 +32,7 @@ def residuals_st(model, model_instance, problem_instance):
 
 def sum_squared_residuals_st(dof, model, model_instance, problem_instance):
     assert(len(dof) == len(problem_instance["parameter_indices"]))
+    mmdu.check_no_measurements_covariance_matrix(problem_instance)
 
     # TODO: more pythonic
     if len(problem_instance["parameter_indices"]) > 0:
