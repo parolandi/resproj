@@ -26,7 +26,7 @@ problem_formulation = {
 problem_structure = {
     """
     Defines the structure of a *computational* experiment, a.k.a. a *problem*
-    measurements_covariance_matrix: numpy.matrix
+    measurements_covariance_trace: numpy.array
     Notes: initial-guesses are not part of this structure as they are thought to be
     an element (a need) of an algorithmic routine
     """
@@ -35,7 +35,7 @@ problem_structure = {
     "initial": ("estimate", "exclude", "include"),
     "initial_conditions": [],
     "inputs": [],
-    "measurements_covariance_matrix": None,
+    "measurements_covariance_trace": None,
     "outputs": [],
     "output_indices": [],
     "performance_measure": None,

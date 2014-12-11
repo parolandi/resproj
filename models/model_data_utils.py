@@ -79,14 +79,14 @@ def check_correctness_of_measurements_covariance_matrix(prob_inst):
     """
     prob_inst models.model_data.problem_structure
     """
-    shape = prob_inst["measurements_covariance_matrix"].shape
+    shape = prob_inst["measurements_covariance_trace"].shape
+    assert(len(shape) == 1)
     dim_obs = len(prob_inst["outputs"])
     assert(dim_obs == shape[0])
-    assert(dim_obs == shape[1])
 
 
 def check_no_measurements_covariance_matrix(prob_inst):
     """
     prob_inst models.model_data.problem_structure
     """
-    assert(prob_inst["measurements_covariance_matrix"] is None)
+    assert(prob_inst["measurements_covariance_trace"] is None)

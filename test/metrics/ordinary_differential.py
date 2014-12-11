@@ -65,6 +65,57 @@ class TestOrdinaryDifferentialMetrics(unittest.TestCase):
         self.assertAlmostEqual(expected, actual, 8)
 
 
+    # test the sum of squared residuals; two outputs with covariance
+    def test_sum_squared_residuals_st_linear_2p2s_covariance_2002(self):
+        model_instance, problem_instance = self.do_setup()
+        
+        offset = 3.0
+        measured = numpy.asarray([[0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], \
+                                  [1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9]]) + offset
+        problem_instance["outputs"] = measured
+        problem_instance["output_indices"] = [0, 1]
+        problem_instance["measurements_covariance_trace"] = numpy.ones(2) * offset
+        
+        actual = metrics.ordinary_differential.sum_squared_residuals_st( \
+            None, linear_2p2s_mock, model_instance, problem_instance)
+        expected = offset**2 * measured.size / offset**2
+        self.assertAlmostEqual(expected, actual, 8)
+
+    
+    def test_sum_squared_residuals_st_linear_2p2s_covariance_2001(self):
+        model_instance, problem_instance = self.do_setup()
+        
+        offset = 3.0
+        measured = numpy.asarray([[0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], \
+                                  [1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9]]) + offset
+        problem_instance["outputs"] = measured
+        problem_instance["output_indices"] = [0, 1]
+        cov00 = 2
+        problem_instance["measurements_covariance_trace"] = numpy.array([cov00, 1])
+        
+        actual = metrics.ordinary_differential.sum_squared_residuals_st( \
+            None, linear_2p2s_mock, model_instance, problem_instance)
+        expected = offset**2 * measured.size / 2 / cov00**2 + offset**2 * measured.size / 2
+        self.assertAlmostEqual(expected, actual, 8)
+
+    
+    def test_sums_squared_residuals_st_linear_2p2s_covariance_2001(self):
+        model_instance, problem_instance = self.do_setup()
+        
+        offset = 3.0
+        measured = numpy.asarray([[0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], \
+                                  [1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9]]) + offset
+        problem_instance["outputs"] = measured
+        problem_instance["output_indices"] = [0, 1]
+        cov00 = 2
+        problem_instance["measurements_covariance_trace"] = numpy.array([cov00, 1])
+        
+        actual = metrics.ordinary_differential.sums_squared_residuals( \
+            None, linear_2p2s_mock, model_instance, problem_instance)
+        expected = [offset**2 * measured.size / 2 / cov00**2, offset**2 * measured.size / 2]
+        [self.assertAlmostEqual(exp, act, 8) for exp, act in zip(expected, actual)]
+
+    
     # test the sum of squared residuals; one output
     def test_sum_squared_residuals_st_linear_2p2s_with_1output_at1(self):
         model_instance, problem_instance = self.do_setup()

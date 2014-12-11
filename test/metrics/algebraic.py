@@ -197,7 +197,7 @@ class TestAlgebraicMetrics(unittest.TestCase):
 
     def test_asserts_sum_squared_residuals_st_with_unexpected_measurements_covariance_matrix(self):
         model_inst, probm_inst = self.setup(0)
-        probm_inst["measurements_covariance_matrix"] = numpy.matrix([2,2])
+        probm_inst["measurements_covariance_trace"] = numpy.ones(2)
         try:
             dof = []
             metrics.algebraic.sum_squared_residuals_st(dof, linear_2p2s_mock, model_inst, probm_inst)
