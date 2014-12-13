@@ -8,6 +8,7 @@ import workflows.protocol_data as wpd
 import metrics.ordinary_differential as mod
 import models.kremlingetal_bioreactor as mkb
 import models.model_data
+import models.model_data_utils as mmdu
 import setups.setup_data
 import solvers.least_squares
 import solvers.local_sensitivities
@@ -77,9 +78,8 @@ def do_get_published_data_spliced_000111():
     return spliced_trajectories
 
 
-def do_problem_setup(model_data, data_instance):
+def do_base_problem_setup(model_data, data_instance):
     assert(model_data is not None)
-    assert(data_instance is not None)
     
     problem_data = dict(models.model_data.problem_structure)
     problem_data["initial_conditions"] = copy.deepcopy(model_data["states"])
@@ -97,9 +97,21 @@ def do_problem_setup(model_data, data_instance):
     problem_data["bounds"] = [(0,None), (0,None), (0,None), (0,None), (0,None)]
     
     problem_data["output_indices"] = [1, 2, 3, 4, 5]
-    problem_data["outputs"] = data_instance["observables"]
-    assert(len(["output_indices"]) == len(["outputs"]))
+    if data_instance is not None:
+        problem_data["outputs"] = data_instance["observables"]
+        assert(len(["output_indices"]) == len(["outputs"]))
 
+    return problem_data
+
+
+def do_problem_setup(model_data, data_instance):
+    return do_base_problem_setup(model_data, data_instance)
+
+    
+def do_problem_setup_with_covariance(model_data, data_instance):
+    problem_data = do_base_problem_setup(model_data, data_instance)
+    problem_data["measurements_covariance_trace"] = numpy.array([3.80E-001, 2.46E-001, 2.53E-001, 1.16E-002, 3.20E-002])
+    mmdu.check_correctness_of_measurements_covariance_matrix(problem_data)
     return problem_data
 
 

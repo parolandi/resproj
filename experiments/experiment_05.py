@@ -13,6 +13,8 @@ import workflows.protocols as wpr
 import workflows.reporting as wr
 import workflows.workflow_data_utils as wwdu
 
+import common.diagnostics as cd
+
 
 '''
 Verify metric at nominal point
@@ -23,10 +25,9 @@ TODO
 class TestExperiment05(unittest.TestCase):
 
 
-    def do_experiment_setup(self):
+    def do_base_setup(self):
         config = dict(ssd.experiment_setup)
         config["model_setup"] = skb.do_model_setup_model_B
-        config["problem_setup"] = skb.do_problem_setup
         config["sensitivity_setup"] = skb.do_sensitivity_setup()
         config["algorithm_setup"] = skb.do_algorithm_setup
         config["data_setup"] = skb.do_get_published_data_spliced_111111
@@ -36,10 +37,21 @@ class TestExperiment05(unittest.TestCase):
         return config
 
     
-    def do_experiment_setup_calib_valid(self):
+    def do_experiment_setup(self):
+        config = self.do_base_setup()
+        config["problem_setup"] = skb.do_problem_setup
+        return self.do_base_setup()
+    
+    
+    def do_experiment_setup_with_covariance(self):
+        config = self.do_base_setup()
+        config["problem_setup"] = skb.do_problem_setup_with_covariance
+        return config
+        
+    
+    def do_base_experiment_setup_calib_valid(self):
         config = dict(ssd.experiment_setup)
         config["model_setup"] = skb.do_model_setup_model_B
-        config["problem_setup"] = skb.do_problem_setup
         config["sensitivity_setup"] = skb.do_sensitivity_setup()
         config["algorithm_setup"] = skb.do_algorithm_setup
         config["protocol_setup"] = skb.do_protocol_setup
@@ -48,14 +60,30 @@ class TestExperiment05(unittest.TestCase):
         return config
 
     
+    def do_experiment_setup_111111_splicing(self):
+        config = self.do_base_experiment_setup_calib_valid()
+        config["problem_setup"] = skb.do_problem_setup
+        config["data_setup"] = skb.do_get_published_data_spliced_111111
+        return config
+
+    
     def do_experiment_setup_111000_splicing(self):
-        config = self.do_experiment_setup_calib_valid()
+        config = self.do_base_experiment_setup_calib_valid()
+        config["problem_setup"] = skb.do_problem_setup
+        config["data_setup"] = skb.do_get_published_data_spliced_111000
+        return config
+
+    
+    def do_experiment_setup_111000_splicing_with_covariance(self):
+        config = self.do_base_experiment_setup_calib_valid()
+        config["problem_setup"] = skb.do_problem_setup_with_covariance
         config["data_setup"] = skb.do_get_published_data_spliced_111000
         return config
 
     
     def do_experiment_setup_000111_splicing(self):
-        config = self.do_experiment_setup_calib_valid()
+        config = self.do_base_experiment_setup_calib_valid()
+        config["problem_setup"] = skb.do_problem_setup
         config["data_setup"] = skb.do_get_published_data_spliced_000111
         return config
 
@@ -78,7 +106,7 @@ class TestExperiment05(unittest.TestCase):
     Calibrate, use full data set
     '''
     def test_protocol_calibration_without_splicing(self):
-        config = self.do_experiment_setup_111000_splicing()
+        config = self.do_experiment_setup_111111_splicing()
         actual = wpr.do_calibration_and_compute_performance_measure(config)
         expected = 0.02094963117201898
         self.assertAlmostEquals(actual["objective_function"], expected, 12)
@@ -87,6 +115,20 @@ class TestExperiment05(unittest.TestCase):
         [self.assertAlmostEquals(act, exp, delta=diff) for act, exp, diff in zip(actual["decision_variables"], expected, deltas)]
 
 
+    def test_protocol_calibration_without_splicing_with_covariance(self):
+        """
+        As before but with measurements covariance trace
+        """
+        config = self.do_experiment_setup_111000_splicing_with_covariance()
+        actual = wpr.do_calibration_and_compute_performance_measure(config)
+#        cd.print_decision_variables_and_objective_function(actual)
+        expected = 0.42504827266225675
+        self.assertAlmostEquals(actual["objective_function"], expected, 12)
+        expected = numpy.array([7.14024687e-05, 5.78668651e+06, 7.86964385e-03, 7.94837482e-01])
+        deltas = numpy.array([0.00000001e-05, 0.00000001e+06, 0.00000001e-03, 0.00000001e+01])
+        [self.assertAlmostEquals(act, exp, delta=diff) for act, exp, diff in zip(actual["decision_variables"], expected, deltas)]
+
+    
     '''
     Calibrate, use 111000-spliced data set
     '''
@@ -131,7 +173,7 @@ class TestExperiment05(unittest.TestCase):
         valid_results = wpr.do_basic_workflow_at_solution_point(config, calibrated)
         wwdu.print_system_based_point_results(valid_results)
         # do plotting
-        wr.plot_tiled_calibration_and_validation_trajectories_at_point(config, calibrated)
+#        wr.plot_tiled_calibration_and_validation_trajectories_at_point(config, calibrated)
         
     
     '''
@@ -165,14 +207,14 @@ class TestExperiment05(unittest.TestCase):
         valid_results = wpr.do_basic_workflow_at_solution_point(config, calibrated)
         wwdu.print_system_based_point_results(valid_results)
         # do plotting
-        wr.plot_tiled_calibration_and_validation_trajectories_at_point(config, calibrated)
+#        wr.plot_tiled_calibration_and_validation_trajectories_at_point(config, calibrated)
 
     
     '''
     Basic protocol, nominal point, use full data set
     '''
     def test_protocol_basic_workflow_without_splicing(self):
-        config = self.do_experiment_setup()
+        config = self.do_experiment_setup_111111_splicing()
 
         _, _, problem_data, _ = ssdu.apply_config(config)
         reference_point = dict(mmd.optimisation_problem_point)
@@ -183,11 +225,43 @@ class TestExperiment05(unittest.TestCase):
         self.assertAlmostEquals(actual["ssr"], expected, 12)
 
 
+    def test_protocol_basic_workflow_without_splicing_cov(self):
+        """
+        As before but with measurements covariance trace
+        """
+        config = self.do_experiment_setup_with_covariance()
+
+        _, _, problem_data, _ = ssdu.apply_config(config)
+        reference_point = dict(mmd.optimisation_problem_point)
+        reference_point["decision_variables"] = copy.deepcopy(problem_data["parameters"])
+                
+        actual = wpr.do_basic_workflow_at_solution_point(config, reference_point)
+        expected = 0.892164390019673
+        self.assertAlmostEquals(actual["ssr"], expected, 12)
+
+    
     '''
     Sensitivity protocol, nominal point, use full data set
     '''
     def test_protocol_sensitivity_based_workflow_without_splicing(self):
-        config = self.do_experiment_setup()
+        config = self.do_experiment_setup_111111_splicing()
+
+        _, _, problem_data, _ = ssdu.apply_config(config)
+        reference_point = dict(mmd.optimisation_problem_point)
+        reference_point["objective_function"] = 0.892164390019673
+        reference_point["decision_variables"] = copy.deepcopy(problem_data["parameters"])
+
+        actual = wpr.do_sensitivity_based_workflow_at_solution_point(config, reference_point)
+        expected = [7.29289679e-12, 2.56108556e+11, 4.26537175e-11, 3.45564877e-10]
+        delta = [0.00000001e-12, 0.00000001e+11, 0.00000001e-11, 0.00000001e-10]
+        [self.assertAlmostEquals(act, exp, delta=dif) for act, exp, dif in zip(actual["conf_intvs"], expected, delta)] 
+
+    
+    def test_protocol_sensitivity_based_workflow_without_splicing_with_covariance(self):
+        """
+        As before but with measurements covariance trace
+        """
+        config = self.do_experiment_setup_with_covariance()
 
         _, _, problem_data, _ = ssdu.apply_config(config)
         reference_point = dict(mmd.optimisation_problem_point)
@@ -203,8 +277,8 @@ class TestExperiment05(unittest.TestCase):
     '''
     Calibration followed by basic and sensitivity-based protocols using the full data set
     '''
-    def test_protocol_calibration_and_basic_plus_sensitivity_based_workflow_without_splicing(self):
-        config = self.do_experiment_setup()
+    def regression_test_protocol_calibration_and_basic_plus_sensitivity_based_workflow_without_splicing(self):
+        config = self.do_experiment_setup_111111_splicing()
 
         solution_point = wpr.do_calibration_and_compute_performance_measure(config)
         actual = solution_point["objective_function"]
