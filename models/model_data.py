@@ -23,13 +23,13 @@ problem_formulation = {
     }
 
 
+"""
+Defines the structure of a *computational* experiment, a.k.a. a *problem*
+measurements_covariance_trace: numpy.array
+Notes: initial-guesses are not part of this structure as they are thought to be
+an element (a need) of an algorithmic routine
+"""
 problem_structure = {
-    """
-    Defines the structure of a *computational* experiment, a.k.a. a *problem*
-    measurements_covariance_trace: numpy.array
-    Notes: initial-guesses are not part of this structure as they are thought to be
-    an element (a need) of an algorithmic routine
-    """
     "bounds": None,
     # TODO: establish dedicated "problem_formulation"
     "initial": ("estimate", "exclude", "include"),
