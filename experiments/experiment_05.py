@@ -25,43 +25,50 @@ TODO
 class TestExperiment05(unittest.TestCase):
 
 
+    def __init__(self, *args, **kwargs):
+        super(TestExperiment05, self).__init__(*args, **kwargs)
+        self.do_plotting = False
+    
+    
     def do_base_setup(self):
-        config = dict(ssd.experiment_setup)
+        config = copy.deepcopy(ssd.experiment_setup)
         config["model_setup"] = skb.do_model_setup_model_B
+        # TODO: () or not ()?
         config["sensitivity_setup"] = skb.do_sensitivity_setup()
         config["algorithm_setup"] = skb.do_algorithm_setup
-        config["data_setup"] = skb.do_get_published_data_spliced_111111
         config["protocol_setup"] = skb.do_protocol_setup
+        return config
+
+    
+    def do_base_experiment_setup_calib(self):
+        config = self.do_base_setup()
+        config["data_setup"] = skb.do_get_published_data_spliced_111111
         config["protocol_step"]["calib"] = "do"
         config["protocol_step"]["valid"] = "donot"
         return config
 
     
-    def do_experiment_setup(self):
-        config = self.do_base_setup()
-        config["problem_setup"] = skb.do_problem_setup
-        return self.do_base_setup()
-    
-    
-    def do_experiment_setup_with_covariance(self):
-        config = self.do_base_setup()
-        config["problem_setup"] = skb.do_problem_setup_with_covariance
-        return config
-        
-    
     def do_base_experiment_setup_calib_valid(self):
-        config = dict(ssd.experiment_setup)
-        config["model_setup"] = skb.do_model_setup_model_B
-        config["sensitivity_setup"] = skb.do_sensitivity_setup()
-        config["algorithm_setup"] = skb.do_algorithm_setup
-        config["protocol_setup"] = skb.do_protocol_setup
+        config = self.do_base_setup()
         config["protocol_step"]["calib"] = "do"
         config["protocol_step"]["valid"] = "do"
         return config
 
     
+    def do_experiment_setup(self):
+        config = self.do_base_experiment_setup_calib()
+        config["problem_setup"] = skb.do_problem_setup
+        return self.do_base_setup()
+    
+    
+    def do_experiment_setup_with_covariance(self):
+        config = self.do_base_experiment_setup_calib()
+        config["problem_setup"] = skb.do_problem_setup_with_covariance
+        return config
+        
+    
     def do_experiment_setup_111111_splicing(self):
-        config = self.do_base_experiment_setup_calib_valid()
+        config = self.do_base_experiment_setup_calib()
         config["problem_setup"] = skb.do_problem_setup
         config["data_setup"] = skb.do_get_published_data_spliced_111111
         return config
@@ -121,7 +128,6 @@ class TestExperiment05(unittest.TestCase):
         """
         config = self.do_experiment_setup_111000_splicing_with_covariance()
         actual = wpr.do_calibration_and_compute_performance_measure(config)
-#        cd.print_decision_variables_and_objective_function(actual)
         expected = 0.42504827266225675
         self.assertAlmostEquals(actual["objective_function"], expected, 12)
         expected = numpy.array([7.14024687e-05, 5.78668651e+06, 7.86964385e-03, 7.94837482e-01])
@@ -158,22 +164,20 @@ class TestExperiment05(unittest.TestCase):
         deltas = numpy.array([0.00000001e-05, 0.00000001e+06, 0.00000001e-03, 0.00000001e+00])
         [self.assertAlmostEquals(act, exp, delta=diff) for act, exp, diff in zip(actual, expected, deltas)]
         # do workflow
-        calib_results = wpr.do_basic_workflow_at_solution_point(config, calibrated)
-        wwdu.print_system_based_point_results(calib_results)
+        _ = wpr.do_basic_workflow_at_solution_point(config, calibrated)
         # do validation
         ssdu.set_next_protocol_step(config)
         validated = wpr.do_validation_and_compute_performance_measure_at_solution_point(config, calibrated)
-        actual = validated["objective_function"]
-        expected = 0.02449032032693814
-        self.assertAlmostEquals(actual, expected, 12)
         actual = validated["decision_variables"]
         expected = optpe
         [self.assertAlmostEquals(act, exp, delta=diff) for act, exp, diff in zip(actual, expected, deltas)]
+        actual = validated["objective_function"]
+        expected = 0.02449032032693814
+        self.assertAlmostEquals(actual, expected, 12)
         # do workflow
-        valid_results = wpr.do_basic_workflow_at_solution_point(config, calibrated)
-        wwdu.print_system_based_point_results(valid_results)
-        # do plotting
-#        wr.plot_tiled_calibration_and_validation_trajectories_at_point(config, calibrated)
+        _ = wpr.do_basic_workflow_at_solution_point(config, calibrated)
+        if self.do_plotting:
+            wr.plot_tiled_calibration_and_validation_trajectories_at_point(config, calibrated)
         
     
     '''
@@ -192,8 +196,7 @@ class TestExperiment05(unittest.TestCase):
         deltas = numpy.array([0.00000001e-05, 0.00000001e+06, 0.00000001e-02, 0.00000001e-03])
         [self.assertAlmostEquals(act, exp, delta=diff) for act, exp, diff in zip(actual, expected, deltas)]
         # do workflow
-        calib_results = wpr.do_basic_workflow_at_solution_point(config, calibrated)
-        wwdu.print_system_based_point_results(calib_results)
+        _ = wpr.do_basic_workflow_at_solution_point(config, calibrated)
         # do validation
         ssdu.set_next_protocol_step(config)
         validated = wpr.do_validation_and_compute_performance_measure_at_solution_point(config, calibrated)
@@ -204,10 +207,9 @@ class TestExperiment05(unittest.TestCase):
         expected = optpe
         [self.assertAlmostEquals(act, exp, delta=diff) for act, exp, diff in zip(actual, expected, deltas)]
         # do workflow
-        valid_results = wpr.do_basic_workflow_at_solution_point(config, calibrated)
-        wwdu.print_system_based_point_results(valid_results)
-        # do plotting
-#        wr.plot_tiled_calibration_and_validation_trajectories_at_point(config, calibrated)
+        _ = wpr.do_basic_workflow_at_solution_point(config, calibrated)
+        if self.do_plotting:
+            wr.plot_tiled_calibration_and_validation_trajectories_at_point(config, calibrated)
 
     
     '''
@@ -225,7 +227,7 @@ class TestExperiment05(unittest.TestCase):
         self.assertAlmostEquals(actual["ssr"], expected, 12)
 
 
-    def test_protocol_basic_workflow_without_splicing_cov(self):
+    def test_protocol_basic_workflow_without_splicing_with_covariance(self):
         """
         As before but with measurements covariance trace
         """
@@ -276,6 +278,7 @@ class TestExperiment05(unittest.TestCase):
     
     '''
     Calibration followed by basic and sensitivity-based protocols using the full data set
+    Regressed between 2014-11-30 and 2014-12-12
     '''
     def regression_test_protocol_calibration_and_basic_plus_sensitivity_based_workflow_without_splicing(self):
         config = self.do_experiment_setup_111111_splicing()
@@ -293,6 +296,32 @@ class TestExperiment05(unittest.TestCase):
         delta = [0.00000001e-15, 0.00000001e+08, 0.00000001e-14, 0.00000001e-13]
         [self.assertAlmostEquals(act, exp, delta=dif) for act, exp, dif in zip(actual["conf_intvs"], expected, delta)] 
 
-    
+
+    '''
+    Calibration followed by basic and sensitivity-based protocols using the full data set
+    Spin-off after regression between 2014-11-30 and 2014-12-12
+    '''
+    def test_protocol_calibration_and_basic_plus_sensitivity_based_workflow_without_splicing(self):
+        config = self.do_experiment_setup_111111_splicing()
+
+        solution_point = wpr.do_calibration_and_compute_performance_measure(config)
+        actual = solution_point["objective_function"]
+        expected = 0.02094963117201898
+        self.assertAlmostEquals(actual, expected, 12)
+        actual = solution_point["decision_variables"]
+        expected = numpy.array([7.00537514e-05, 6.28707509e+06, 7.21106611e-03, 2.84514441e+01])
+        deltas = numpy.array([0.00000001e-05, 0.00000001e+06, 0.00000001e-03, 0.00000001e+01])
+        [self.assertAlmostEquals(act, exp, delta=diff) for act, exp, diff in zip(actual, expected, deltas)]
+
+        actual = wpr.do_basic_workflow_at_solution_point(config, solution_point)
+        expected = 0.02094963117201898
+        self.assertAlmostEquals(actual["ssr"], expected, 12)
+
+        actual = wpr.do_sensitivity_based_workflow_at_solution_point(config, solution_point)
+        expected = [3.63860571e-15, 4.90192037e+09, 6.85858001e-09, 7.95362508e+00]
+        delta = [0.00000001e-15, 0.00000001e+09, 0.00000001e-09, 0.00000001e+00]
+        [self.assertAlmostEquals(act, exp, delta=dif) for act, exp, dif in zip(actual["conf_intvs"], expected, delta)] 
+
+
 if __name__ == "__main__":
     unittest.main()

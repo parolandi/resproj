@@ -2,6 +2,7 @@
 def print_system_based_point_results(sbpr):
     """
     sbpr: workflows.workflow_data.system_based_point_results
+    Warning: could this method possibly have a side effect on unit-testing?
     """
     print("* Parameters *")
     for ii in range(len(sbpr["params"])):
