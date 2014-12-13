@@ -25,10 +25,9 @@ class TestExperiment01(unittest.TestCase):
     CG_method = "key-CG"
 
 
-    def do_experiment_setup(self):
+    def do_base_experiment_setup(self):
         config = dict(ssd.experiment_setup)
         config["model_setup"] = sod.do_model_setup
-        config["problem_setup"] = sod.do_problem_setup
         config["sensitivity_model_setup"] = sod.do_sensitivity_model_setup
         config["sensitivity_problem_setup"] = sod.do_sensitivity_problem_setup
         config["algorithm_setup"] = sod.do_algorithm_setup
@@ -36,11 +35,44 @@ class TestExperiment01(unittest.TestCase):
         return config
 
 
-    def test_do_experiment_01_at_conditions_111111_with_CG_and_protocol(self):
-        config = self.do_experiment_setup()
+    def do_problem_experiment_setup(self):
+        config = self.do_base_experiment_setup()
+        config["problem_setup"] = sod.do_problem_setup_without_covariance
+        return config
+
+
+    def do_problem_experiment_setup_with_covariance(self):
+        config = self.do_base_experiment_setup()
+        config["problem_setup"] = sod.do_problem_setup_with_covariance
+        return config
+
+    
+    def do_experiment_setup(self):
+        config = self.do_problem_experiment_setup()
         config["data_setup"] = sod.do_baseline_data_setup_spliced_111111
         config["protocol_step"]["calib"] = "do"
         config["protocol_step"]["valid"] = "donot"
+        return config
+    
+    
+    def do_experiment_setup_with_covariance(self):
+        config = self.do_problem_experiment_setup()
+        config["data_setup"] = sod.do_baseline_data_setup_spliced_111111_with_covariance
+        config["protocol_step"]["calib"] = "do"
+        config["protocol_step"]["valid"] = "donot"
+        return config
+
+
+    def do_experiment_setup_111000(self):
+        config = self.do_problem_experiment_setup()
+        config["data_setup"] = sod.do_baseline_data_setup_spliced_111000
+        config["protocol_step"]["calib"] = "do"
+        config["protocol_step"]["valid"] = "do"
+        return config
+
+    
+    def test_do_experiment_01_at_conditions_111111_with_CG_and_protocol(self):
+        config = self.do_experiment_setup()
         solution_point = wpr.do_calibration_and_compute_performance_measure(config)
         expected = 1.50566203272
         actual = solution_point["objective_function"]
@@ -52,11 +84,21 @@ class TestExperiment01(unittest.TestCase):
         [self.assertAlmostEquals(act, exp, 11) for act, exp in zip(actual["conf_intvs"], expected)]
 
     
+    def test_do_experiment_01_at_conditions_111111_with_CG_and_protocol_with_covariance(self):
+        config = self.do_experiment_setup_with_covariance()
+        solution_point = wpr.do_calibration_and_compute_performance_measure(config)
+        expected = 37.64155081912576
+        actual = solution_point["objective_function"]
+        self.assertAlmostEquals(actual, expected, 11)
+        actual = wpr.do_basic_workflow_at_solution_point(config, solution_point)
+        self.assertAlmostEquals(actual["ssr"], expected, 11)
+        actual = wpr.do_sensitivity_based_workflow_at_solution_point(config, solution_point)
+        expected = [0.11462158906831861, 0.028655397267079653]
+        [self.assertAlmostEquals(act, exp, 11) for act, exp in zip(actual["conf_intvs"], expected)]
+
+    
     def test_do_experiment_01_at_conditions_111000_with_CG_and_protocol(self):
-        config = self.do_experiment_setup()
-        config["data_setup"] = sod.do_baseline_data_setup_spliced_111000
-        config["protocol_step"]["calib"] = "do"
-        config["protocol_step"]["valid"] = "do"
+        config = self.do_experiment_setup_111000()
         # calibration
         solution_point = wpr.do_calibration_and_compute_performance_measure(config)
         actual = solution_point["objective_function"]
