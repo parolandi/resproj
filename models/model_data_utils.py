@@ -81,7 +81,7 @@ def check_correctness_of_measurements_covariance_matrix(prob_inst):
     """
     shape = prob_inst["measurements_covariance_trace"].shape
     assert(len(shape) == 1)
-    dim_obs = len(prob_inst["outputs"])
+    dim_obs = len(prob_inst["output_indices"])
     assert(dim_obs == shape[0])
 
 

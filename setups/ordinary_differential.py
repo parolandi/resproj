@@ -7,6 +7,7 @@ import data.generator
 import workflows.protocol_data as wpd
 import metrics.ordinary_differential as mod
 import models.model_data
+import models.model_data_utils as mmdu
 import setups.setup_data
 import solvers.initial_value
 
@@ -64,7 +65,7 @@ def do_problem_setup_without_covariance(model_data, data_instance):
 def do_problem_setup_with_covariance(model_data, data_instance):
     problem_data = do_base_problem_setup(model_data, data_instance)
     problem_data["measurements_covariance_trace"] = numpy.ones(2)
-    assert(len(problem_data["output_indices"]) == len(problem_data["measurements_covariance_trace"]))
+    mmdu.check_correctness_of_measurements_covariance_matrix(problem_data)
     return problem_data
 
 
