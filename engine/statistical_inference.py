@@ -1,6 +1,5 @@
 
 import scipy.stats
-import math
 import numpy
 
 

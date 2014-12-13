@@ -11,7 +11,7 @@ import setups.setup_data as ssd
 import setups.setup_data_utils as ssdu
 import workflows.protocols as wpr
 import workflows.reporting as wr
-import experiments.experiments as ee
+import workflows.experiments as we
 
 '''
 Splicing at 000111
@@ -45,7 +45,7 @@ class TestExperiment10(unittest.TestCase):
         baseline["point"]["decision_variables"] = numpy.array([7.01131196e-05, 6.36106401e+06, 1.71515507e-02, 9.79422021e-03])
         baseline["of_delta"] = 0.000000000000001
         baseline["dv_deltas"] = numpy.array([0.00000001e-05, 0.00000001e+06, 0.00000001e-02, 0.00000001e-03])
-        ee.test_baseline_calibration(self.do_experiment_setup, baseline, self)
+        we.test_baseline_calibration(self.do_experiment_setup, baseline, self)
 
     
     def donot_test_protocol_calibration_validation(self):
