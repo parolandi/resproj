@@ -17,7 +17,7 @@ point: models.model_data.optimisation_problem_point
 '''
 def print_decision_variables_and_objective_function(point):
     print("decision variables:", point["decision_variables"])
-    print("confidence intervals:", point["objective_function"])
+    print("objective function:", point["objective_function"])
 
 
 def print_maximum_sensitivities(max_sens):
