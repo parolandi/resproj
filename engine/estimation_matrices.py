@@ -53,4 +53,23 @@ def calculate_determinant(matrix):
     return numpy.linalg.det(matrix)
 
 
+def calculate_correlation_matrix(covariance_matrix):
+    """
+    covariance matrix: numpy.matrix
+    returns: numpy.matrix
+        correlation matrix
+    """
+    dims = covariance_matrix.shape
+    assert(dims[0] == dims[1])
+    # TODO: preconditions
+    # assert it is not singular
+    
+    correlation_matrix = numpy.asmatrix(numpy.zeros([dims[0],dims[1]]))
+    for ii in range(dims[0]):
+        for jj in range(dims[1]):
+            correlation_matrix[ii,jj] = covariance_matrix[ii,jj] / \
+                numpy.sqrt(covariance_matrix[ii,ii] * covariance_matrix[jj,jj])
+    return correlation_matrix
+
+
 # TODO: another calculation of the covariance matrix already exists
