@@ -38,3 +38,7 @@ def print_sensitivity_based_point_results(sbpr):
     print("* Confidence intervals *")
     for ii in range(len(sbpr["conf_intvs"])):
         print(sbpr["conf_intvs"][ii])
+    print("* Correlation matrix *")
+    for ii in range(len(sbpr["corr_matrix"])):
+        for jj in range(len(sbpr["corr_matrix"][ii])):
+            print(sbpr["corr_matrix"][ii][jj])    

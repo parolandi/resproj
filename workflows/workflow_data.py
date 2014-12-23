@@ -38,11 +38,12 @@ Also the estimated standard deviation and the ellipsoid radius
 To compute these values the system and sensitivities should both be required
 '''
 sensitivity_based_point_results = {
-    "params": [],
-    "cov_matrix": [],
+    "params": [], # numpy.array
+    "cov_matrix": [], # numpy.matrix
     "est_stdev": [], # float
     "ell_radius": [], # float
     "conf_intvs": [],
+    "corr_matrix": [], # numpy.matrix
     }
 
 
