@@ -1,4 +1,7 @@
 
+from __future__ import print_function
+
+
 def legacy_code_message():
     return "Warning: this is a legacy code path"
 
