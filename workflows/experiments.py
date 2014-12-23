@@ -1,12 +1,8 @@
 
-import copy
-import numpy
-
-import metrics.ordinary_differential as mod
 import models.model_data as mmd
-import setups.setup_data as ssd
-import setups.setup_data_utils as ssdu
 import workflows.protocols as wpr
+
+import common.diagnostics as cd
 
 
 baseline = {
@@ -29,3 +25,6 @@ def test_baseline_calibration(setup, baseline, unittester):
     expected = baseline["point"]["decision_variables"]
     deltas = baseline["dv_deltas"]
     [unittester.assertAlmostEquals(act, exp, delta=diff) for act, exp, diff in zip(actual, expected, deltas)]
+    # output
+    if False:
+        cd.print_decision_variables_and_objective_function(calibrated)
