@@ -35,7 +35,8 @@ def solve(model_data, problem_data):
         args        = (model_data["parameters"], model_data["inputs"]), \
         full_output = True, \
         printmessg  = False, \
-        ixpr        = False)
+        ixpr        = False, \
+        mxstep      = 50000)
     return y, data
 
 '''
