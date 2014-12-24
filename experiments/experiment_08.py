@@ -6,7 +6,6 @@ import copy
 import numpy
 
 import setups.setup_data as ssd
-import workflows.protocols as wpr
 import workflows.experiments as we
 import workflows.reporting as wr
 
@@ -37,16 +36,19 @@ class TestExperiment08(unittest.TestCase):
         return config
 
 
-    def test_protocol_calibration(self):
-        baseline = dict(we.baseline)
-        baseline["point"]["objective_function"] = 0.425048137374
-        baseline["point"]["decision_variables"] = numpy.array([7.14001284e-05, 5.78745310e+06, 7.86910017e-03, 7.93123799e-01])
-        baseline["of_delta"] = 0.000000000001
-        baseline["dv_deltas"] = numpy.array([0.00000001e-05, 0.00000001e+06, 0.00000001e-03, 0.00000001e-01])
-        calibrated = we.test_baseline_calibration(self.do_experiment_setup, baseline, self)
+    def test_protocol_calibration_and_validation(self):
+        baseline = dict(we.calib_valid_baseline)
+        basepoint = baseline["calib"]
+        basepoint["point"]["objective_function"] = 0.425048137374
+        basepoint["point"]["decision_variables"] = numpy.array([7.14001284e-05, 5.78745310e+06, 7.86910017e-03, 7.93123799e-01])
+        basepoint["of_delta"] = 0.000000000001
+        basepoint["dv_deltas"] = numpy.array([0.00000001e-05, 0.00000001e+06, 0.00000001e-03, 0.00000001e-01])
+        basepoint = baseline["valid"]
+        basepoint["point"]["objective_function"] = 0.318884855073
+        calibrated = we.test_baseline_calibration_and_validation(self.do_experiment_setup, baseline, self)
         if self.do_plotting:
             wr.plot_tiled_calibration_and_validation_trajectories_at_point(self.do_experiment_setup(), calibrated)
-        
+
 
 if __name__ == "__main__":
     unittest.main()
