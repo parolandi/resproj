@@ -5,11 +5,9 @@ import setups.kremlingetal_bioreactor as skb
 import copy
 import numpy
 
-import metrics.ordinary_differential as mod
-import models.model_data as mmd
 import setups.setup_data as ssd
-import setups.setup_data_utils as ssdu
 import workflows.protocols as wpr
+import workflows.experiments as we
 import workflows.reporting as wr
 
 
@@ -20,6 +18,11 @@ Covariance trace
 class TestExperiment08(unittest.TestCase):
 
 
+    def __init__(self, *args, **kwargs):
+        super(TestExperiment08, self).__init__(*args, **kwargs)
+        self.do_plotting = False
+
+    
     def do_experiment_setup(self):
         config = copy.deepcopy(ssd.experiment_setup)
         config["algorithm_setup"] = skb.do_algorithm_setup
@@ -35,13 +38,14 @@ class TestExperiment08(unittest.TestCase):
 
 
     def test_protocol_calibration(self):
-        config = self.do_experiment_setup()
-        actual = wpr.do_calibration_and_compute_performance_measure(config)
-        expected = 0.42504827266225675
-        self.assertAlmostEquals(actual["objective_function"], expected, 12)
-        expected = numpy.array([7.14024687e-05, 5.78668651e+06, 7.86964385e-03, 7.94837482e-01])
-        deltas = numpy.array([0.00000001e-05, 0.00000001e+06, 0.00000001e-03, 0.00000001e+01])
-        [self.assertAlmostEquals(act, exp, delta=diff) for act, exp, diff in zip(actual["decision_variables"], expected, deltas)]
+        baseline = dict(we.baseline)
+        baseline["point"]["objective_function"] = 0.425048137374
+        baseline["point"]["decision_variables"] = numpy.array([7.14001284e-05, 5.78745310e+06, 7.86910017e-03, 7.93123799e-01])
+        baseline["of_delta"] = 0.000000000001
+        baseline["dv_deltas"] = numpy.array([0.00000001e-05, 0.00000001e+06, 0.00000001e-03, 0.00000001e-01])
+        calibrated = we.test_baseline_calibration(self.do_experiment_setup, baseline, self)
+        if self.do_plotting:
+            wr.plot_tiled_calibration_and_validation_trajectories_at_point(self.do_experiment_setup(), calibrated)
         
 
 if __name__ == "__main__":
