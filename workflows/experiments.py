@@ -16,6 +16,9 @@ baseline = {
 def test_baseline_calibration(setup, baseline, unittester):
     config = setup()
     calibrated = wpr.do_calibration_and_compute_performance_measure(config)
+    # output
+    if True:
+        cd.print_decision_variables_and_objective_function(calibrated)
     # test
     actual = calibrated["objective_function"]
     expected = baseline["point"]["objective_function"]
@@ -25,6 +28,4 @@ def test_baseline_calibration(setup, baseline, unittester):
     expected = baseline["point"]["decision_variables"]
     deltas = baseline["dv_deltas"]
     [unittester.assertAlmostEquals(act, exp, delta=diff) for act, exp, diff in zip(actual, expected, deltas)]
-    # output
-    if False:
-        cd.print_decision_variables_and_objective_function(calibrated)
+    return calibrated
