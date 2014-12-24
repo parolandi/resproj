@@ -7,9 +7,9 @@ import numpy
 
 import setups.setup_data as ssd
 import setups.setup_data_utils as ssdu
+import workflows.experiments as we
 import workflows.protocols as wpr
 import workflows.reporting as wr
-import workflows.experiments as we
 
 import workflows.workflow_data_utils as wwdu
 
@@ -46,7 +46,9 @@ class TestExperiment10(unittest.TestCase):
         baseline["point"]["decision_variables"] = numpy.array([6.91450307e-05, 6.15859949e+06, 9.28550465e-03, 5.71289053e-02])
         baseline["of_delta"] = 0.00000000000000001
         baseline["dv_deltas"] = numpy.array([0.00000001e-05, 0.00000001e+06, 0.00000001e-03, 0.00000001e-02])
-        we.test_baseline_calibration(self.do_experiment_setup, baseline, self)
+        calibrated = we.test_baseline_calibration(self.do_experiment_setup, baseline, self)
+        if self.do_plotting:
+            wr.plot_tiled_calibration_and_validation_trajectories_at_point(self.do_experiment_setup(), calibrated)
 
 
     def donot_test_protocol_calibration_validation(self):
