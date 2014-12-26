@@ -190,9 +190,11 @@ def do_sensitivity_based_workflow_at_solution_point(config, solution_point):
     workflow_results = dict(wwd.sensitivity_based_point_results)
     workflow_results["params"] = copy.deepcopy(problem_instance["parameters"])
     workflow_results["cov_matrix"] = cov_matrix
+    workflow_results["cov_det"] = eem.calculate_determinant(cov_matrix)
     workflow_results["est_stdev"] = est_stdev
     workflow_results["ell_radius"] = ell_radius
     workflow_results["conf_intvs"] = confidence_intervals
     workflow_results["corr_matrix"] = corr_matrix
+    workflow_results["corr_det"] = eem.calculate_determinant(corr_matrix)
 
     return workflow_results

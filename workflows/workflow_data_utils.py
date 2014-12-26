@@ -31,6 +31,8 @@ def print_sensitivity_based_point_results(sbpr):
     for ii in range(len(sbpr["cov_matrix"])):
         for jj in range(len(sbpr["cov_matrix"][ii])):
             print(sbpr["cov_matrix"][ii][jj])    
+    print("* Covariance matrix determinant*")
+    print(sbpr["cov_det"])
     print("* Standard deviation *")
     print(sbpr["est_stdev"])
     print("* Ellipsoid radius *")
@@ -42,3 +44,5 @@ def print_sensitivity_based_point_results(sbpr):
     for ii in range(len(sbpr["corr_matrix"])):
         for jj in range(len(sbpr["corr_matrix"][ii])):
             print(sbpr["corr_matrix"][ii][jj])    
+    print("* Correlation matrix determinant*")
+    print(sbpr["corr_det"])
