@@ -29,6 +29,8 @@ def test_baseline_calibration(setup, baseline, unittester):
         cd.print_decision_variables_and_objective_function(calibrated)
         post_proc = wpr.do_basic_workflow_at_solution_point(config, calibrated)
         wwdu.print_system_based_point_results(post_proc)
+        post_proc = wpr.do_sensitivity_based_workflow_at_solution_point(config, calibrated)
+        wwdu.print_sensitivity_based_point_results(post_proc)
     # test
     actual = calibrated["objective_function"]
     expected = baseline["point"]["objective_function"]
@@ -51,6 +53,8 @@ def test_baseline_validation(setup, baseline, unittester, point):
         cd.print_decision_variables_and_objective_function(validated)
         post_proc = wpr.do_basic_workflow_at_solution_point(config, validated)
         wwdu.print_system_based_point_results(post_proc)
+        post_proc = wpr.do_sensitivity_based_workflow_at_solution_point(config, validated)
+        wwdu.print_sensitivity_based_point_results(post_proc)
     # test
     actual = validated["objective_function"]
     expected = baseline["point"]["objective_function"]
