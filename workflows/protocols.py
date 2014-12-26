@@ -179,6 +179,7 @@ def do_sensitivity_based_workflow_at_solution_point(config, solution_point):
     no_params = mmdu.get_number_of_decision_variables(problem_instance)
     no_timepoints = mmdu.get_number_of_time_points(problem_instance)
     cov_matrix = eem.compute_covariance_matrix(no_obs, no_params, no_timepoints, sens_trajectories)
+    corr_matrix = eem.calculate_correlation_matrix(cov_matrix)
 
     # ellipsoid radius and confidence interval
     no_meas = common.utilities.size_it(problem_instance["outputs"])
@@ -192,5 +193,6 @@ def do_sensitivity_based_workflow_at_solution_point(config, solution_point):
     workflow_results["est_stdev"] = est_stdev
     workflow_results["ell_radius"] = ell_radius
     workflow_results["conf_intvs"] = confidence_intervals
+    workflow_results["corr_matrix"] = corr_matrix
 
     return workflow_results

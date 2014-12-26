@@ -1,0 +1,55 @@
+experiment-08
+'''
+Splicing at 111000
+Covariance trace
+'''
+
+2014-12-24
+
+decision variables: [  7.14001284e-05   5.78745310e+06   7.86910017e-03   7.93123799e-01]
+objective function: 0.425048137374
+* Parameters *
+7.14001283942e-05
+5787453.09564
+0.00786910016541
+0.793123799285
+* SSR *
+0.425048137374
+* SSR contributions *
+0.031031047142
+0.137384460208
+0.0243572809316
+0.0929110058312
+0.139364343261
+* Chi-squared test *
+False
+* Chi-squared test contributions *
+False
+True
+False
+True
+True
+
+decision variables: [  7.14001284e-05   5.78745310e+06   7.86910017e-03   7.93123799e-01]
+objective function: 0.318884855073
+* Parameters *
+7.14001283942e-05
+5787453.09564
+0.00786910016541
+0.793123799285
+* SSR *
+0.318884855073
+* SSR contributions *
+0.0388543314811
+0.126017713928
+0.0265758157875
+0.062611503755
+0.0648254901214
+* Chi-squared test *
+False
+* Chi-squared test contributions *
+False
+True
+False
+True
+True
