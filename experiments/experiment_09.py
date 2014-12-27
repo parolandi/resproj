@@ -5,16 +5,14 @@ import setups.kremlingetal_bioreactor as skb
 import copy
 import numpy
 
-import metrics.ordinary_differential as mod
-import models.model_data as mmd
 import setups.setup_data as ssd
-import setups.setup_data_utils as ssdu
-import workflows.protocols as wpr
+import workflows.experiments as we
 import workflows.reporting as wr
 
 
 '''
 Splicing at 000111
+Covariance trace ~10%
 '''
 class TestExperiment09(unittest.TestCase):
 
@@ -22,14 +20,14 @@ class TestExperiment09(unittest.TestCase):
     def __init__(self, *args, **kwargs):
         super(TestExperiment09, self).__init__(*args, **kwargs)
         self.do_plotting = False
-    
+
     
     def do_experiment_setup(self):
         config = copy.deepcopy(ssd.experiment_setup)
         config["algorithm_setup"] = skb.do_algorithm_setup
         config["data_setup"] = skb.do_get_published_data_spliced_000111
         config["model_setup"] = skb.do_model_setup_model_B
-        config["problem_setup"] = skb.do_problem_setup
+        config["problem_setup"] = skb.do_problem_setup_with_covariance_2
         config["protocol_setup"] = skb.do_protocol_setup
         config["protocol_step"]["calib"] = "do"
         config["protocol_step"]["valid"] = "do"
@@ -37,35 +35,20 @@ class TestExperiment09(unittest.TestCase):
         config["sensitivity_setup"] = skb.do_sensitivity_setup()
         return config
 
-    
-    def test_protocol_calibration_validation(self):
-        config = self.do_experiment_setup()
-        # do calibration
-        calibrated = wpr.do_calibration_and_compute_performance_measure(config)
-        actual = calibrated["objective_function"]
-        expected = 0.8902801622379181
-        self.assertAlmostEquals(actual, expected, 12)
-        actual = calibrated["decision_variables"]
-        optpe = numpy.array([7.01131196e-05, 6.36106401e+06, 1.71515507e-02, 9.79422021e-03])
-        expected = optpe
-        deltas = numpy.array([0.00000001e-05, 0.00000001e+06, 0.00000001e-02, 0.00000001e-03])
-        [self.assertAlmostEquals(act, exp, delta=diff) for act, exp, diff in zip(actual, expected, deltas)]
-        # do workflow
-        _ = wpr.do_basic_workflow_at_solution_point(config, calibrated)
-        # do validation
-        ssdu.set_next_protocol_step(config)
-        validated = wpr.do_validation_and_compute_performance_measure_at_solution_point(config, calibrated)
-        actual = validated["objective_function"]
-        expected = 0.029182868537533817
-        self.assertAlmostEquals(actual, expected, 12)
-        actual = validated["decision_variables"]
-        expected = optpe
-        [self.assertAlmostEquals(act, exp, delta=diff) for act, exp, diff in zip(actual, expected, deltas)]
-        # do workflow
-        _ = wpr.do_basic_workflow_at_solution_point(config, calibrated)
-        if self.do_plotting:
-            wr.plot_tiled_calibration_and_validation_trajectories_at_point(config, calibrated)
 
-    
+    def test_protocol_calibration_and_validation(self):
+        baseline = dict(we.calib_valid_baseline)
+        basepoint = baseline["calib"]
+        basepoint["point"]["objective_function"] = 30.4314298681
+        basepoint["point"]["decision_variables"] = numpy.array([6.91450307e-05, 6.15859949e+06, 9.28550465e-03, 5.71289053e-02])
+        basepoint["of_delta"] = 0.0000000001
+        basepoint["dv_deltas"] = numpy.array([0.00000001e-05, 0.00000001e+06, 0.00000001e-03, 0.00000001e-02])
+        basepoint = baseline["valid"]
+        basepoint["point"]["objective_function"] = 51.6369870735
+        calibrated = we.test_baseline_calibration_and_validation(self.do_experiment_setup, baseline, self)
+        if self.do_plotting:
+            wr.plot_tiled_calibration_and_validation_trajectories_at_point(self.do_experiment_setup(), calibrated)
+
+
 if __name__ == "__main__":
     unittest.main()
