@@ -5,16 +5,14 @@ import setups.kremlingetal_bioreactor as skb
 import copy
 import numpy
 
-import metrics.ordinary_differential as mod
-import models.model_data as mmd
 import setups.setup_data as ssd
-import setups.setup_data_utils as ssdu
-import workflows.protocols as wpr
+import workflows.experiments as we
 import workflows.reporting as wr
 
 
 '''
 Splicing at 111000
+Covariance trace ~10%
 '''
 class TestExperiment07(unittest.TestCase):
 
@@ -29,7 +27,7 @@ class TestExperiment07(unittest.TestCase):
         config["algorithm_setup"] = skb.do_algorithm_setup
         config["data_setup"] = skb.do_get_published_data_spliced_111000
         config["model_setup"] = skb.do_model_setup_model_B
-        config["problem_setup"] = skb.do_problem_setup
+        config["problem_setup"] = skb.do_problem_setup_with_covariance_2
         config["protocol_setup"] = skb.do_protocol_setup
         config["protocol_step"]["calib"] = "do"
         config["protocol_step"]["valid"] = "do"
@@ -38,43 +36,18 @@ class TestExperiment07(unittest.TestCase):
         return config
 
 
-    def test_protocol_calibration(self):
-        config = self.do_experiment_setup()
-        actual = wpr.do_calibration_and_compute_performance_measure(config)
-        expected = 0.013033454937278158
-        self.assertAlmostEquals(actual["objective_function"], expected, 12)
-        expected = numpy.array([6.94673782e-05, 6.89584538e+06, 6.28171859e-03, 1.80509631e+00])
-        deltas = numpy.array([0.00000001e-05, 0.00000001e+06, 0.00000001e-03, 0.00000001e+00])
-        [self.assertAlmostEquals(act, exp, delta=diff) for act, exp, diff in zip(actual["decision_variables"], expected, deltas)]
-
-    
-    def test_protocol_calibration_validation(self):
-        config = self.do_experiment_setup()
-        # do calibration
-        calibrated = wpr.do_calibration_and_compute_performance_measure(config)
-        actual = calibrated["objective_function"]
-        expected = 0.013033454937278158
-        self.assertAlmostEquals(actual, expected, 12)
-        actual = calibrated["decision_variables"]
-        optpe = numpy.array([6.94673782e-05, 6.89584538e+06, 6.28171859e-03, 1.80509631e+00])
-        expected = optpe
-        deltas = numpy.array([0.00000001e-05, 0.00000001e+06, 0.00000001e-03, 0.00000001e+00])
-        [self.assertAlmostEquals(act, exp, delta=diff) for act, exp, diff in zip(actual, expected, deltas)]
-        # do workflow
-        _ = wpr.do_basic_workflow_at_solution_point(config, calibrated)
-        # do validation
-        ssdu.set_next_protocol_step(config)
-        validated = wpr.do_validation_and_compute_performance_measure_at_solution_point(config, calibrated)
-        actual = validated["decision_variables"]
-        expected = optpe
-        [self.assertAlmostEquals(act, exp, delta=diff) for act, exp, diff in zip(actual, expected, deltas)]
-        actual = validated["objective_function"]
-        expected = 0.02449032032693814
-        self.assertAlmostEquals(actual, expected, 12)
-        # do workflow
-        _ = wpr.do_basic_workflow_at_solution_point(config, calibrated)
+    def test_protocol_calibration_and_validation(self):
+        baseline = dict(we.calib_valid_baseline)
+        basepoint = baseline["calib"]
+        basepoint["point"]["objective_function"] = 42.5048137374
+        basepoint["point"]["decision_variables"] = numpy.array([7.14001284e-05, 5.78745310e+06, 7.86910017e-03, 7.93123799e-01])
+        basepoint["of_delta"] = 0.0000000001
+        basepoint["dv_deltas"] = numpy.array([0.00000001e-05, 0.00000001e+06, 0.00000001e-03, 0.00000001e-01])
+        basepoint = baseline["valid"]
+        basepoint["point"]["objective_function"] = 31.8884855073
+        calibrated = we.test_baseline_calibration_and_validation(self.do_experiment_setup, baseline, self)
         if self.do_plotting:
-            wr.plot_tiled_calibration_and_validation_trajectories_at_point(config, calibrated)
+            wr.plot_tiled_calibration_and_validation_trajectories_at_point(self.do_experiment_setup(), calibrated)
 
 
 if __name__ == "__main__":
