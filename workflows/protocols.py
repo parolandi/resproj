@@ -117,15 +117,23 @@ def do_basic_workflow_at_solution_point(config, solution_point):
         problem_instance["outputs"], problem_instance["parameter_indices"])
     ssr_test = mst.calculate_two_sided_chi_squared_test_for_mean_sum_squared_residuals( \
         sum_sq_res / stdev **2, dof, 0.95)
+    ssr_thresh_lb, ssr_thresh_ub = \
+        mst.calculate_thresholds_two_sided_chi_squared_test_for_mean_sum_squared_residuals(dof, 0.95)
     
     # observables' ssr test
     ssr_tests = []
+    ssrs_thresh_lb = []
+    ssrs_thresh_ub = []
     for ii in range(len(problem_instance["outputs"])):
         dof = mst.calculate_degrees_of_freedom( \
             problem_instance["outputs"][ii], problem_instance["parameter_indices"])
         ssr_tests.append( \
             mst.calculate_two_sided_chi_squared_test_for_mean_sum_squared_residuals( \
                 sums_sq_res[ii] / stdev **2, dof, 0.95))
+        thresh_lb, thresh_up = \
+            mst.calculate_thresholds_two_sided_chi_squared_test_for_mean_sum_squared_residuals(dof, 0.95)
+        ssrs_thresh_lb.append(thresh_lb)
+        ssrs_thresh_ub.append(thresh_up)
 
     workflow_results = dict(wwd.system_based_point_results)
     workflow_results["params"] = copy.deepcopy(problem_instance["parameters"])
@@ -134,6 +142,12 @@ def do_basic_workflow_at_solution_point(config, solution_point):
     workflow_results["ress_vals"] = residuals_values
     workflow_results["ssr_test"] = ssr_test
     workflow_results["ssrs_tests"] = ssr_tests  
+
+    workflow_results["ssr_thresh_lb"] = ssr_thresh_lb
+    workflow_results["ssr_thresh_ub"] = ssr_thresh_ub
+    workflow_results["ssrs_thresh_lb"] = ssrs_thresh_lb
+    workflow_results["ssrs_thresh_ub"] = ssrs_thresh_ub
+
 
     return workflow_results
 

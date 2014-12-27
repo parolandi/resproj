@@ -14,10 +14,10 @@ def print_system_based_point_results(sbpr):
         print(sbpr["ssrs"][ii])
     # TODO: ress_vals
     print("* Chi-squared test *")
-    print(sbpr["ssr_test"])
+    print(sbpr["ssr_test"], sbpr["ssr_thresh_lb"], sbpr["ssr"], sbpr["ssr_thresh_ub"])
     print("* Chi-squared test contributions *")
     for ii in range(len(sbpr["ssrs_tests"])):
-        print(sbpr["ssrs_tests"][ii])
+        print(sbpr["ssrs_tests"][ii], sbpr["ssrs_thresh_lb"][ii], sbpr["ssrs"][ii], sbpr["ssrs_thresh_ub"][ii])
 
 
 def print_sensitivity_based_point_results(sbpr):

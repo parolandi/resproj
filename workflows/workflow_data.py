@@ -29,6 +29,10 @@ system_based_point_results = {
     "ress_vals": [],
     "ssr_test": [], # boolean
     "ssrs_tests": [],
+    "ssr_thresh_lb": 0.0,
+    "ssr_thresh_ub": 0.0,
+    "ssrs_thresh_lb": [],
+    "ssrs_thresh_ub": [],
     }
 
 
