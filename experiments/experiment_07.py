@@ -47,7 +47,7 @@ class TestExperiment07(unittest.TestCase):
         basepoint["point"]["objective_function"] = 31.8884855073
         calibrated = we.test_baseline_calibration_and_validation(self.do_experiment_setup, baseline, self)
         if self.do_plotting:
-            wr.plot_tiled_calibration_and_validation_trajectories_at_point(self.do_experiment_setup(), calibrated)
+            wr.plot_tiled_calibration_validation_and_residual_trajectories_at_point(self.do_experiment_setup(), calibrated)
 
 
 if __name__ == "__main__":
