@@ -59,6 +59,13 @@ def calculate_one_sided_chi_squared_test_for_mean_sum_squared_residuals(res, dof
         return False
 
 
+def calculate_thresholds_two_sided_chi_squared_test_for_mean_sum_squared_residuals(dof, significance):
+    q = (1-significance)/2
+    chi_squared_value_lower = scipy.stats.chi2.ppf(q, dof)
+    chi_squared_value_upper = scipy.stats.chi2.isf(q, dof)
+    return chi_squared_value_lower, chi_squared_value_upper
+
+
 # res: residual, maximum likelihood
 # dof: degrees-of-freedom
 # significance: probability
@@ -67,9 +74,8 @@ def calculate_two_sided_chi_squared_test_for_mean_sum_squared_residuals(res, dof
     global print_user_messages
     print_user_messages = False
 
-    q = (1-significance)/2
-    chi_squared_value_lower = scipy.stats.chi2.ppf(q, dof)
-    chi_squared_value_upper = scipy.stats.chi2.isf(q, dof)
+    chi_squared_value_lower, chi_squared_value_upper = \
+        calculate_thresholds_two_sided_chi_squared_test_for_mean_sum_squared_residuals(dof, significance)
     if print_user_messages:
         print(user_messages["two_sided_chi_squared_test_values"].format(res, chi_squared_value_lower, chi_squared_value_upper))
     if res > chi_squared_value_lower and res < chi_squared_value_upper:
