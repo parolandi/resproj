@@ -4,6 +4,10 @@ import matplotlib.pyplot as pp
 import results.plot as rp
 
 
+def show_all():
+    pp.show()
+
+
 # TODO: parameterise, generalise
 # WIP: needs to be re-worked
 def plot_fit(independent_meas, measurements, independent_pred, predictions, titles, title):
@@ -49,10 +53,19 @@ def plot_states_and_sensitivities(time, states, sensitivities, dim_dv):
     pp.show()
 
 
-def plot_measurements_with_calibration_and_validation_trajectories( \
-    independent_calib, measurements_calib, predictions_calib, \
-    independent_valid, measurements_valid, predictions_valid):
+# TODO: refactor and make DRY
+def plot_measurements_with_calibration_and_validation_trajectories_with_errors( \
+    independent_calib, measurements_calib, predictions_calib, errors_calib, \
+    independent_valid, measurements_valid, predictions_valid, errors_valid):
+    """
+    errors_calib and errors_valid can be None
+    """
     # TODO: pre-conditions
+    
+    errors_provided = True
+    if errors_calib is None:
+        assert(errors_valid is None)
+        errors_provided = False
     
     dim_obs = len(measurements_calib)
     fig = pp.figure(1)
@@ -61,12 +74,54 @@ def plot_measurements_with_calibration_and_validation_trajectories( \
     plot_data["no_rows"] = dim_obs
     plot_data["no_cols"] = 1
     plot_colours = ['r', 'g', 'b', 'y', 'c']
+    calib_errors = None
+    valid_errors = None
+    for ii in range(dim_obs):
+        plot_data["plot_count"] = ii+1
+        plot_data["colour"] = plot_colours[ii]      
+        plot_data["index"] = ii
+        if errors_provided:
+            calib_errors = errors_calib[ii]
+            valid_errors = errors_valid[ii]
+        rp.plot_measurements_with_calibration_and_validation_trajectory_with_errors( \
+            independent_calib, measurements_calib[ii], predictions_calib[ii], calib_errors, \
+            independent_valid, measurements_valid[ii], predictions_valid[ii], valid_errors, \
+            plot_data)
+    fig.show()
+
+
+# TODO: refactor and make DRY
+def plot_residual_trajectories_with_errors( \
+    independent_calib, measurements_calib, predictions_calib, errors_calib, \
+    independent_valid, measurements_valid, predictions_valid, errors_valid):
+    """
+    errors_calib and errors_valid can be None
+    """
+    # TODO: pre-conditions
+    
+    errors_provided = True
+    if errors_calib is None:
+        assert(errors_valid is None)
+        errors_provided = False
+
+    dim_obs = len(measurements_calib)
+    fig = pp.figure(2)
+    plot_data = {}
+    plot_data["figure"] = fig
+    plot_data["no_rows"] = dim_obs
+    plot_data["no_cols"] = 1
+    plot_colours = ['r', 'g', 'b', 'y', 'c']
+    calib_errors = None
+    valid_errors = None
     for ii in range(dim_obs):
         plot_data["plot_count"] = ii+1
         plot_data["colour"] = plot_colours[ii]      
         plot_data["index"] = ii 
-        rp.plot_measurements_with_calibration_and_validation_trajectory( \
-            independent_calib, measurements_calib[ii], predictions_calib[ii], \
-            independent_valid, measurements_valid[ii], predictions_valid[ii], \
+        if errors_provided:
+            calib_errors = errors_calib[ii]
+            valid_errors = errors_valid[ii]
+        rp.plot_residuals_with_calibration_and_validation_trajectory_with_errors( \
+            independent_calib, measurements_calib[ii], predictions_calib[ii], calib_errors, \
+            independent_valid, measurements_valid[ii], predictions_valid[ii], valid_errors, \
             plot_data)
-    pp.show()
+    fig.show()
