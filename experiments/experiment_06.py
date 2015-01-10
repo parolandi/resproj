@@ -17,6 +17,7 @@ import common.diagnostics as cd
 '''
 Full data set 111111
 Covariance trace
+Also calibrate with 111111 but calibrate-validate; e.g., 111000
 '''
 class TestExperiment06(unittest.TestCase):
 
@@ -105,9 +106,28 @@ class TestExperiment06(unittest.TestCase):
         wwdu.print_sensitivity_based_point_results(sens_calib_results)
 
 
+    def test_protocol_calibration_and_validation(self):
+        """
+        Calibrate with 111111 but proceed to compute calibration-validation metrics with 111000
+        """
+        config = self.do_experiment_setup_with_covariance_2()
+        solution_point = wpr.do_calibration_and_compute_performance_measure(config)
+        
+        config["data_setup"] = skb.do_get_published_data_spliced_111000
+        calib_results = wpr.do_basic_workflow_at_solution_point(config, solution_point)
+        sens_calib_results = wpr.do_sensitivity_based_workflow_at_solution_point(config, solution_point)
+        wwdu.print_system_based_point_results(calib_results)
+        wwdu.print_sensitivity_based_point_results(sens_calib_results)
+        ssdu.set_next_protocol_step(config)
+        valid_results = wpr.do_basic_workflow_at_solution_point(config, solution_point)
+        sens_valid_results = wpr.do_sensitivity_based_workflow_at_solution_point(config, solution_point)
+        wwdu.print_system_based_point_results(valid_results)
+        wwdu.print_sensitivity_based_point_results(sens_valid_results)
+        
+        
 if __name__ == "__main__":
 #    unittest.main()
     suite = unittest.TestSuite()
-    suite.addTest(TestExperiment06("test_protocol_calibration_and_basic_plus_sensitivity_based_workflow_without_splicing_with_covariance"))
+    suite.addTest(TestExperiment06("test_protocol_calibration_and_validation"))
     runner = unittest.TextTestRunner()
     runner.run(suite)
