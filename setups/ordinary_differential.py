@@ -4,9 +4,10 @@ import numpy
 
 import data.experimental_data_splicing as deds
 import data.generator
-import experiments.protocol_data as epd
+import workflows.protocol_data as wpd
 import metrics.ordinary_differential as mod
 import models.model_data
+import models.model_data_utils as mmdu
 import setups.setup_data
 import solvers.initial_value
 
@@ -26,9 +27,8 @@ def do_model_setup():
     return model_instance
 
 
-def do_problem_setup(model_data, data_instance):
+def do_base_problem_setup(model_data, data_instance):
     assert(model_data is not None)
-    assert(data_instance is not None)
     
     problem_data = dict(models.model_data.problem_structure)
     problem_data["initial_conditions"] = copy.deepcopy(model_data["states"])
@@ -42,17 +42,30 @@ def do_problem_setup(model_data, data_instance):
     problem_data["parameters"] = numpy.zeros(len(problem_data["parameter_indices"]))
 #    problem_data["parameters"] = numpy.array([1.0, 2.0])
     
+    # TODO: re-use other mechanisms
     for ii in range(len(problem_data["parameter_indices"])):
         problem_data["parameters"][ii] = copy.deepcopy(model_data["parameters"][problem_data["parameter_indices"][ii]])
     
 #    problem_data["bounds"] = [(0,None), (0,None), (0,None), (0,None), (0,None)]
     
     problem_data["output_indices"] = numpy.array([0, 1])
-    problem_data["outputs"] = data_instance["observables"]
-    assert(len(["output_indices"]) == len(["outputs"]))
+    if data_instance is not None:
+        problem_data["outputs"] = data_instance["observables"]
+        assert(len(["output_indices"]) == len(["outputs"]))
 
     problem_data["initial"] = "exclude"
 
+    return problem_data
+
+
+def do_problem_setup_without_covariance(model_data, data_instance):
+    return do_base_problem_setup(model_data, data_instance)
+
+
+def do_problem_setup_with_covariance(model_data, data_instance):
+    problem_data = do_base_problem_setup(model_data, data_instance)
+    problem_data["measurements_covariance_trace"] = numpy.ones(2)
+    mmdu.check_correctness_of_measurements_covariance_matrix(problem_data)
     return problem_data
 
 
@@ -90,13 +103,13 @@ def do_sensitivity_problem_setup(model_data, data_instance):
 
     return problem_data
 
+# -----------------------------------------------------------------------------
 
 # TODO: DRY
-def do_baseline_data_setup():
+def do_base_data_setup(covariance_trace):
     # configuration
     final_time = 3.0
     intervals = 30
-    stdev = 0.2
     
     times = numpy.linspace(0.0, final_time, intervals+1, endpoint=True)
     inputs = numpy.array([1.0, 2.0])
@@ -124,11 +137,13 @@ def do_baseline_data_setup():
     mi["model"] = models.ordinary_differential.linear_2p2s
     measured = numpy.asarray(solvers.initial_value.compute_timecourse_trajectories(None, mi, pi))
     
+    # TODO: BUG, this only works for identical observables and states!
     no_states = len(model_instance["states"])
     data.generator.set_seed(117)
     measurement_noise = []
-    for _ in range(no_states):
-        measurement_noise.append(stdev * data.generator.normal_distribution(intervals+1))
+    for ii in range(no_states):
+        st_dev = covariance_trace[ii]
+        measurement_noise.append(st_dev * data.generator.normal_distribution(intervals+1))
     data.generator.unset_seed()
     
     experimental = measured + measurement_noise
@@ -139,8 +154,23 @@ def do_baseline_data_setup():
     return trajectory_data
 
 
+def do_baseline_data_setup():
+    return do_base_data_setup(numpy.array([0.2, 0.2]))
+    
+
+def do_baseline_data_setup_with_covariance():
+    return do_base_data_setup(numpy.array([1.0, 1.0]))
+    
+    
 def do_baseline_data_setup_spliced_111111():
+    """ returns: calib_valid_experimental_dataset """
     trajectories = do_baseline_data_setup()
+    spliced_trajectories = deds.splice_raw_data_with_pattern_111111(trajectories)
+    return spliced_trajectories
+
+
+def do_baseline_data_setup_spliced_111111_with_covariance():
+    trajectories = do_baseline_data_setup_with_covariance()
     spliced_trajectories = deds.splice_raw_data_with_pattern_111111(trajectories)
     return spliced_trajectories
 
@@ -150,6 +180,7 @@ def do_baseline_data_setup_spliced_111000():
     spliced_trajectories = deds.splice_raw_data_with_pattern_111000(trajectories)
     return spliced_trajectories
 
+# -----------------------------------------------------------------------------
 
 def do_algorithm_setup(instrumentation_data):
     initial_guesses = numpy.array([1.0, 2.0])
@@ -170,6 +201,6 @@ def do_instrumentation_setup():
 
 
 def do_protocol_setup():
-    protocol_data = dict(epd.protocol_data)
+    protocol_data = dict(wpd.protocol_data)
     protocol_data["performance_measure"] = mod.sum_squared_residuals_st
     return protocol_data

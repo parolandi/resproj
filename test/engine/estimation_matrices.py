@@ -48,5 +48,26 @@ class TestEstimationMatrices(unittest.TestCase):
             for i, j in zip(numpy.asarray(numpy.matlib.eye(2) / 4), numpy.asarray(cov_matrix))]
 
 
+
+    def test_calculate_calculate_correlation_matrix(self):
+        cov_matrix = numpy.eye(2, 2)
+        corr_matrix = testme.calculate_correlation_matrix(cov_matrix)
+        [self.assertEquals(act, exp) for act, exp in zip( \
+            numpy.asarray(corr_matrix).flatten(), numpy.asarray(cov_matrix).flatten())] 
+        
+        cov_matrix = numpy.ones([2, 2])
+        actual = testme.calculate_correlation_matrix(cov_matrix)
+        expected = cov_matrix
+        [self.assertEquals(act, exp) for act, exp in zip( \
+            numpy.asarray(actual).flatten(), numpy.asarray(expected).flatten())] 
+
+        cov_matrix = numpy.array([[1, 1], [1, 0.5]])
+        actual = testme.calculate_correlation_matrix(cov_matrix)
+        invsqrt = 1/numpy.sqrt(0.5)
+        expected = numpy.array([[1, invsqrt], [invsqrt, 1]])
+        [self.assertEquals(act, exp) for act, exp in zip( \
+            numpy.asarray(actual).flatten(), numpy.asarray(expected).flatten())] 
+
+
 if __name__ == "__main__":
     unittest.main()

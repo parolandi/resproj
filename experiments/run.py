@@ -7,6 +7,11 @@ from experiments.experiment_02 import *
 from experiments.experiment_03 import *
 from experiments.experiment_04 import *
 from experiments.experiment_05 import *
+from experiments.experiment_06 import *
+from experiments.experiment_07 import *
+from experiments.experiment_08 import *
+from experiments.experiment_09 import *
+#from experiments.experiment_10 import *
 
 import experiments.experiment as ee
 

@@ -19,10 +19,9 @@ def linear_2p2s_mock(p, x):
 
 class TestAlgebraicMetrics(unittest.TestCase):
 
-    def test_residuals_st_linear_2p2s(self):
-        offset = 2
+    def setup(self, offset):
         measured = numpy.array([[2.0, 40], [4.0, 80], [6.0, 120]]) + offset
-
+        
         model_instance = dict(models.model_data.model_structure)
         model_instance["parameters"] = numpy.array([2.0, 4.0])
         model_instance["inputs"] = numpy.array([[1.0, 10], [2.0, 20], [3.0, 30]])
@@ -32,7 +31,14 @@ class TestAlgebraicMetrics(unittest.TestCase):
         problem_instance["output_indices"] = [0, 1]
         problem_instance["inputs"] = model_instance["inputs"]
 
-        expected = offset * numpy.ones(measured.shape)
+        return model_instance, problem_instance
+
+    
+    def test_residuals_st_linear_2p2s(self):
+        offset = 2
+        model_instance, problem_instance = self.setup(2)
+
+        expected = offset * numpy.ones(problem_instance["outputs"].shape)
         actual = metrics.algebraic.residuals_st(linear_2p2s_mock, model_instance, problem_instance)
         [[self.assertAlmostEqual(exp, act, 8) for exp, act in zip(exps, acts)] for exps, acts in zip(expected, actual)]
 
@@ -187,6 +193,18 @@ class TestAlgebraicMetrics(unittest.TestCase):
         dof = [1.0]
         actual = metrics.algebraic.sum_squared_residuals_st(dof, linear_2p2s_mock, model_instance, problem_instance)
         self.assertAlmostEqual(expected, actual, 8)
+
+
+    def test_asserts_sum_squared_residuals_st_with_unexpected_measurements_covariance_matrix(self):
+        model_inst, probm_inst = self.setup(0)
+        probm_inst["measurements_covariance_trace"] = numpy.ones(2)
+        try:
+            dof = []
+            metrics.algebraic.sum_squared_residuals_st(dof, linear_2p2s_mock, model_inst, probm_inst)
+        except:
+            self.assertTrue(True)
+            return
+        self.assertTrue(False)
 
 
 if __name__ == "__main__":

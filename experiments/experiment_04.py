@@ -3,6 +3,7 @@ import unittest
 import setups.kremlingetal_bioreactor as skb
 
 import copy
+import numpy
 import time
 
 import metrics.ordinary_differential as mo
@@ -13,6 +14,9 @@ import solvers.monte_carlo_multiple_least_squares as smls
 import solvers.solver_data as sd
 
 
+'''
+TODO
+'''
 class TestExperiment04(unittest.TestCase):
 
 
@@ -142,6 +146,10 @@ class TestExperiment04(unittest.TestCase):
         actual = result["global"]["objective_function"]
         expected = 0.021174194991343515
         self.assertAlmostEquals(actual, expected, 12)
+        actual = result["global"]["decision_variables"]
+        expected = numpy.array([7.008707556656744e-05, 6969965.66008254, 0.007062287109842938, 0.13671901210795717])
+        deltas = numpy.array([0.000000000000001e-05, 0000000.00000001, 0.000000000000000001, 0.00000000000000001])
+        [self.assertAlmostEquals(act, exp, delta=diff) for act, exp, diff in zip(actual, expected, deltas)]
 
 
 if __name__ == "__main__":

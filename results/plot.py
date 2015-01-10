@@ -37,6 +37,94 @@ def plot_fit(independent, measurements, predictions, actuals):
     pp.show()
 
 
+def plot_measurements_with_calibration_and_validation_trajectory( \
+    independent_calib, measurements_calib, predictions_calib, \
+    independent_valid, measurements_valid, predictions_valid, \
+    plot_data):
+    # TODO assertions
+    
+    fig = plot_data["figure"]
+    sp = fig.add_subplot(plot_data["no_rows"], plot_data["no_cols"], plot_data["plot_count"])
+    t = independent_calib
+    meas = measurements_calib
+    pred = predictions_calib
+    legend = []
+    colour = plot_data["colour"]
+    sp.plot(t, meas, colour+'o')
+    legend.append("m-c-" + str(plot_data["index"]))
+    sp.plot(t, pred, colour+'+')
+    legend.append("p-c-" + str(plot_data["index"]))
+    t = independent_valid
+    meas = measurements_valid
+    pred = predictions_valid
+    sp.plot(t, meas, colour+'s')
+    legend.append("m-v-" + str(plot_data["index"]))
+    sp.plot(t, pred, colour+'x')
+    legend.append("p-v-" + str(plot_data["index"]))
+#    sp.legend(legend)
+    
+
+def plot_measurements_with_calibration_and_validation_trajectory_with_errors( \
+    independent_calib, measurements_calib, predictions_calib, errors_calib, \
+    independent_valid, measurements_valid, predictions_valid, errors_valid, \
+    plot_data):
+    """
+    errors_calib and errors_valid can be None
+    """
+    # TODO assertions
+    
+    fig = plot_data["figure"]
+    sp = fig.add_subplot(plot_data["no_rows"], plot_data["no_cols"], plot_data["plot_count"])
+    t = independent_calib
+    meas = measurements_calib
+    pred = predictions_calib
+    err = errors_calib
+    legend = []
+    colour = plot_data["colour"]
+    sp.errorbar(t, meas, fmt = colour+'o', yerr = err)
+    legend.append("m-c-" + str(plot_data["index"]))
+    sp.plot(t, pred, colour+'+')
+    legend.append("p-c-" + str(plot_data["index"]))
+    t = independent_valid
+    meas = measurements_valid
+    pred = predictions_valid
+    err = errors_valid
+    sp.errorbar(t, meas, fmt = colour+'s', yerr = err)
+    legend.append("m-v-" + str(plot_data["index"]))
+    sp.plot(t, pred, colour+'x')
+    legend.append("p-v-" + str(plot_data["index"]))
+#    sp.legend(legend)
+
+
+def plot_residuals_with_calibration_and_validation_trajectory_with_errors( \
+    independent_calib, measurements_calib, predictions_calib, errors_calib, \
+    independent_valid, measurements_valid, predictions_valid, errors_valid, \
+    plot_data):
+    # TODO assertions
+    
+    fig = plot_data["figure"]
+    sp = fig.add_subplot(plot_data["no_rows"], plot_data["no_cols"], plot_data["plot_count"])
+    t = independent_calib
+    meas = measurements_calib
+    pred = predictions_calib
+    res = pred - meas
+    err = errors_calib
+    legend = []
+    colour = plot_data["colour"]
+    sp.errorbar(t, res, fmt = colour+'o', yerr = err)
+    sp.axhline(color = 'r')
+    legend.append("r-c-" + str(plot_data["index"]))
+    t = independent_valid
+    meas = measurements_valid
+    pred = predictions_valid
+    res = pred - meas
+    err = errors_valid
+    sp.errorbar(t, res, fmt = colour+'s', yerr = err)
+    sp.axhline(color = 'r')
+    legend.append("r-v-" + str(plot_data["index"]))
+#    sp.legend(legend)
+
+
 def plot_observations(independent,  measurements):
     x = independent
     y_meas = measurements

@@ -1,4 +1,7 @@
 
+from __future__ import print_function
+
+
 def legacy_code_message():
     return "Warning: this is a legacy code path"
 
@@ -10,6 +13,14 @@ def print_legacy_code_message():
 def print_decision_variables_and_confidence_intervals(dvs, cis):
     print("decision variables:", dvs)
     print("confidence intervals:", cis)
+
+
+'''
+point: models.model_data.optimisation_problem_point
+'''
+def print_decision_variables_and_objective_function(point):
+    print("decision variables:", point["decision_variables"])
+    print("objective function:", point["objective_function"])
 
 
 def print_maximum_sensitivities(max_sens):
