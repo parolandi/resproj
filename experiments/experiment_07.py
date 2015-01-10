@@ -36,6 +36,12 @@ class TestExperiment07(unittest.TestCase):
         return config
 
 
+    def do_experiment_setup_with_exclude(self):
+        config = self.do_experiment_setup()
+        config["problem_setup"] = skb.do_problem_setup_with_exclude_with_covariance_2
+        return config
+
+    
     def test_protocol_calibration_and_validation(self):
         baseline = dict(we.calib_valid_baseline)
         basepoint = baseline["calib"]
@@ -47,7 +53,21 @@ class TestExperiment07(unittest.TestCase):
         basepoint["point"]["objective_function"] = 31.8884855073
         calibrated = we.test_baseline_calibration_and_validation(self.do_experiment_setup, baseline, self)
         if self.do_plotting:
-            wr.plot_tiled_calibration_validation_and_residual_trajectories_at_point(self.do_experiment_setup(), calibrated)
+            wr.plot_tiled_calibration_validation_and_residual_trajectories_at_point(self.do_experiment_setup, calibrated)
+
+
+    def test_protocol_calibration_and_validation_with_exclude(self):
+        baseline = dict(we.calib_valid_baseline)
+        basepoint = baseline["calib"]
+        basepoint["point"]["objective_function"] = 24.3896200907
+        basepoint["point"]["decision_variables"] = numpy.array([7.14001283942e-05, 5787453.09564, 0.00786910016541, 0.793123799285])
+        basepoint["of_delta"] = 0.0000000001
+        basepoint["dv_deltas"] = numpy.array([0.00000001e-05, 0.00000001e+06, 0.00000001e-03, 0.00000001e-01])
+        basepoint = baseline["valid"]
+        basepoint["point"]["objective_function"] = 13.7732918606
+        calibrated = we.test_baseline_calibration_and_validation(self.do_experiment_setup_with_exclude, baseline, self)
+        if self.do_plotting:
+            wr.plot_tiled_calibration_validation_and_residual_trajectories_at_point(self.do_experiment_setup_with_exclude, calibrated)
 
 
 if __name__ == "__main__":
