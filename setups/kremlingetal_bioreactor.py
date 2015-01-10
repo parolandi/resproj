@@ -12,6 +12,7 @@ import models.model_data_utils as mmdu
 import setups.setup_data
 import solvers.least_squares
 import solvers.local_sensitivities
+import solvers.solver_data
 
 
 def get_parameters_to_be_estimated():
