@@ -33,31 +33,31 @@ pvec = {
 
 # Table 2 and Table 3; modelA
 pvec_table3_modelA = {
-    "Yxs": 6.968E-5,   # g/umol      - Table 3 - to estimate
+    "Yxs": 6.968E-5,   # g/umol      - Table 3
     "r1max": 2.4E4,    # umol/g/h DW - Table 2
     "KS": 0.4437,      # umol/g DW   - Table 2
-    "k2": 5.988E6,     # L/h         - Table 3 - to estimate
+    "k2": 5.988E6,     # L/h         - Table 3
     "KM1": 12.2,       # umol/g DW   - Table 2
     "KIA": 0.104,      # umol/g DW   - Table 3 - to estimate
     "r3max": 3E6,      # umol/g DW   - Table 2
     "KM2": 10.0,       # umol/g DW   - Table 2
-    "ksynmax": 7.2E-3, # umol/g/h DW - Table 3 - to estimate
-    "KIB": 0.0,        # umol/g DW   - Table 3 - to estimate
+    "ksynmax": 7.2E-3, # umol/g/h DW - Table 3
+    "KIB": 0.0,        # umol/g DW   - Table 3
     }
 
 
 # Table 2 and Table 3; modelB
 pvec_table3_modelB = {
-    "Yxs": 7.031E-5,   # g/umol      - Table 3
+    "Yxs": 7.031E-5,   # g/umol      - Table 3 - to estimate
     "r1max": 2.4E4,    # umol/g/h DW - Table 2
     "KS": 0.4437,      # umol/g DW   - Table 2
-    "k2": 5.559E6,     # L/h         - Table 3
+    "k2": 5.559E6,     # L/h         - Table 3 - to estimate
     "KM1": 12.2,       # umol/g DW   - Table 2
     "KIA": 0.0,        # umol/g DW   - Table 3
     "r3max": 3E6,      # umol/g DW   - Table 2
     "KM2": 10.0,       # umol/g DW   - Table 2
-    "ksynmax": 8.2E-3, # umol/g/h DW - Table 3
-    "KIB": 0.166,      # umol/g DW   - Table 3
+    "ksynmax": 8.2E-3, # umol/g/h DW - Table 3 - to estimate
+    "KIB": 0.166,      # umol/g DW   - Table 3 - to estimate
     }
 
 
@@ -183,6 +183,7 @@ w.r.t Yxs, k2, ksynmax, KIB
 def evaluate_system_and_sensitivities(xs, t, p, u):
     # this is not quite ready
     assert(False)
+    
     Mw = 342.3 * 1E-6 # molar mass of substrate
     dim_dv = 4
     dim_x = len(xmap)
@@ -205,7 +206,6 @@ def evaluate_system_and_sensitivities(xs, t, p, u):
     b = y[ymap["mu"]] * s[dim_dv*xmap["X"] + 0]
     c = p[pmap["Yxs"]] * p[pmap["r1max"]] * x[xmap["X"]] * p[pmap["KS"]] / (p[pmap["KS"]] + x[xmap["S"]])**2 * s[dim_dv*xmap["S"] + 0]
     d = (y[ymap["mu"]] - u[umap["qin"]] / x[xmap["V"]]) * s[dim_dv*xmap["X"] + 0]
-    print("ds_dt", a, b, c, d)
     ds_dt[dim_dv*xmap["X"] + 0] = \
         + 0 * (p[pmap["Yxs"]] * p[pmap["r1max"]] * x[xmap["S"]] / (p[pmap["KS"]] + x[xmap["S"]]) * x[xmap["X"]]) \
         + a \
