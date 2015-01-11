@@ -1,6 +1,6 @@
 
 import unittest
-import solvers.monte_carlo_multiple_least_squares as smls
+import solvers.monte_carlo_multiple_least_squares as testme
 
 import numpy
 import models.model_data as mmd
@@ -62,11 +62,11 @@ class TestMonteCarloMultipleLeastSquares(unittest.TestCase):
 
     def test_10trials_meth_NelderMead(self):
         model, problem = self.do_setup()
-        algorithm = dict(smls.montecarlo_multiple_optimisation_params)
+        algorithm = dict(testme.montecarlo_multiple_optimisation_params)
         algorithm["number_of_trials"] = 10
         algorithm["decision_variable_ranges"] = [(-1E3, 1E3), (-1E3, 1E3)]
         algorithm["subsolver_params"]["method"] = "Nelder-Mead" 
-        result = smls.montecarlo_multiple_least_squares(model, problem, algorithm)
+        result = testme.montecarlo_multiple_least_squares(model, problem, algorithm)
         actual = [result["all"][ii]["decision_variables"] for ii in range(len(result["all"]))]
         expected = [[ 1.05282639,  2.05005982], \
                     [ 1.05282858,  2.05003897], \
@@ -102,6 +102,23 @@ class TestMonteCarloMultipleLeastSquares(unittest.TestCase):
         expected = [ 1.05278463,  2.05003175]
         [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(actual, expected)]
 
+
+    # TODO: move from check to actual test
+    def test_print(self):
+        wall_time = 1
+        result = dict(testme.montecarlo_multiple_optimisation_result)
+        solpnt1 = dict(testme.solution_point)
+        solpnt1["decision_variables"] = numpy.array([0.1, 0.2])
+        solpnt2 = dict(testme.solution_point)
+        solpnt2["decision_variables"] = numpy.array([0.11, 0.21])
+        solpnt2["objective_function"] = 9.01
+        result["local"] = [solpnt1, solpnt2]
+        result["global"] = solpnt2
+        nom_params = [1.0, 2.0]
+        nom_ssr = 10
+        fit_ssr = 9
+        testme.print_montecarlo_multiple_least_squares(wall_time, result, nom_params, nom_ssr, fit_ssr)
+        
 
 if __name__ == "__main__":
     unittest.main()

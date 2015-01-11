@@ -1,4 +1,6 @@
 
+from __future__ import print_function
+
 import copy
 
 import data.generator as dg
@@ -30,6 +32,12 @@ montecarlo_multiple_optimisation_result = {
     "local": [],
     "global": dict(solution_point)
     }
+
+
+def solve(model, problem, algorithm):
+    result = montecarlo_multiple_least_squares(model, problem, algorithm)
+    
+    return result["global"]
 
 
 '''
@@ -78,3 +86,17 @@ def montecarlo_multiple_least_squares(model, problem, algorithm):
             result["global"] = trial_point
 
     return result
+
+
+def print_montecarlo_multiple_least_squares(wall_time, result, nom_params, nom_ssr, fit_ssr):
+    print("**********************************************")
+    print("* Monte Carlo multiple least-squares summary *")
+    print("wall time:                  ", wall_time)
+    print("number of local optima:     ", len(result["local"]))
+    print("ssr (local)                 ", [result["local"][ii]["objective_function"] for ii in range(len(result["local"]))])
+    print("nominal parameter values:   ", nom_params)
+    print("optimal parameter estimates:", result["global"]["decision_variables"].tolist())
+    print("ssr (raw):                  ", nom_ssr)
+    print("ssr (opt):                  ", fit_ssr)
+    print("ssr (fit):                  ", result["global"]["objective_function"])        
+    print("**********************************************")
