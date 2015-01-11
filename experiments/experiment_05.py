@@ -53,10 +53,10 @@ class TestExperiment05(unittest.TestCase):
     def test_protocol_calibration(self):
         config = self.do_experiment_setup()
         actual = wpr.do_calibration_and_compute_performance_measure(config)
-        expected = 0.02094963117201898
+        expected = 0.020948695742714324
         self.assertAlmostEquals(actual["objective_function"], expected, 12)
-        expected = numpy.array([7.00537514e-05, 6.28707509e+06, 7.21106611e-03, 2.84514441e+01])
-        deltas = numpy.array([0.00000001e-05, 0.00000001e+06, 0.00000001e-03, 0.00000001e+01])
+        expected = numpy.array([7.00464849e-05, 6.27834699e+06, 7.22037461e-03, 3.67489807e+02])
+        deltas = numpy.array([0.00000001e-05, 0.00000001e+06, 0.00000001e-03, 0.00000001e+02])
         [self.assertAlmostEquals(act, exp, delta=diff) for act, exp, diff in zip(actual["decision_variables"], expected, deltas)]
 
 
@@ -81,8 +81,8 @@ class TestExperiment05(unittest.TestCase):
         reference_point["decision_variables"] = copy.deepcopy(problem_data["parameters"])
 
         actual = wpr.do_sensitivity_based_workflow_at_solution_point(config, reference_point)
-        expected = [7.29289679e-12, 2.56108556e+11, 4.26537175e-11, 3.45564877e-10]
-        delta = [0.00000001e-12, 0.00000001e+11, 0.00000001e-11, 0.00000001e-10]
+        expected = [6.59849402e-12, 6.55619839e+12, 1.65254651e-03, 2.79509781e-03]
+        delta = [0.00000001e-12, 0.00000001e+12, 0.00000001e-03, 0.00000001e-03]
         [self.assertAlmostEquals(act, exp, delta=dif) for act, exp, dif in zip(actual["conf_intvs"], expected, delta)] 
 
     
@@ -116,23 +116,22 @@ class TestExperiment05(unittest.TestCase):
 
         solution_point = wpr.do_calibration_and_compute_performance_measure(config)
         actual = solution_point["objective_function"]
-        expected = 0.02094963117201898
+        expected = 0.020948695742714324
         self.assertAlmostEquals(actual, expected, 12)
         actual = solution_point["decision_variables"]
-        expected = numpy.array([7.00537514e-05, 6.28707509e+06, 7.21106611e-03, 2.84514441e+01])
-        deltas = numpy.array([0.00000001e-05, 0.00000001e+06, 0.00000001e-03, 0.00000001e+01])
+        expected = numpy.array([7.00464849e-05, 6.27834699e+06, 7.22037461e-03, 3.67489807e+02])
+        deltas = numpy.array([0.00000001e-05, 0.00000001e+06, 0.00000001e-03, 0.00000001e+02])
         [self.assertAlmostEquals(act, exp, delta=diff) for act, exp, diff in zip(actual, expected, deltas)]
 
         actual = wpr.do_basic_workflow_at_solution_point(config, solution_point)
-        expected = 0.02094963117201898
+        expected = 0.020948695742714324
         self.assertAlmostEquals(actual["ssr"], expected, 12)
 
         actual = wpr.do_sensitivity_based_workflow_at_solution_point(config, solution_point)
-        expected = [3.63860571e-15, 4.90192037e+09, 6.85858001e-09, 7.95362508e+00]
-        delta = [0.00000001e-15, 0.00000001e+09, 0.00000001e-09, 0.00000001e+00]
+        expected = [3.55537353e-15, 9.46010055e+08, 1.62537059e-09, 3.84905843e+03]
+        delta = [0.00000001e-15, 0.00000001e+08, 0.00000001e-09, 0.00000001e+03]
         [self.assertAlmostEquals(act, exp, delta=dif) for act, exp, dif in zip(actual["conf_intvs"], expected, delta)] 
 
 
 if __name__ == "__main__":
     unittest.main()
-
