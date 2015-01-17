@@ -10,6 +10,14 @@ def print_legacy_code_message():
     print(legacy_code_message())
 
 
+def unexpected_code_branch_message():
+    return "Warning: this is an unexpected code branch path"
+    
+
+def print_unexpected_code_branch_message():
+    print(unexpected_code_branch_message())
+
+
 def print_decision_variables_and_confidence_intervals(dvs, cis):
     print("decision variables:", dvs)
     print("confidence intervals:", cis)
