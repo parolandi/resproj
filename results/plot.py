@@ -125,6 +125,21 @@ def plot_residuals_with_calibration_and_validation_trajectory_with_errors( \
 #    sp.legend(legend)
 
 
+def plot_ensemble_trajectories(independent, ensemble, plot_data):
+    """
+    Plots the ensemble trajectories of a given state
+    independent numpy array NT
+    ensembles numpy array NExNT
+    """
+    
+    NE = len(ensemble)
+    fig = plot_data["figure"]
+    sp = fig.add_subplot(plot_data["no_rows"], plot_data["no_cols"], plot_data["plot_count"])
+    colour = plot_data["colour"]
+    for ii in range(NE):
+        sp.plot(independent, ensemble[ii,:], colour+'o')
+
+
 def plot_observations(independent,  measurements):
     x = independent
     y_meas = measurements
