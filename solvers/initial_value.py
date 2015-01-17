@@ -3,6 +3,8 @@ import scipy.integrate
 
 import common.utilities
 import common.diagnostics as cd
+import models.model_data as mmd
+
 
 def handle_initial_point(values, problem_instance):
     if problem_instance["initial"] == "exclude":
@@ -17,6 +19,7 @@ this is a direct solver call and there is no context to do problem-specific thin
 '''
 # TODO: deep copy?
 # TODO: instrument reporting of data
+# TODO: test @ failure
 def solve(model_data, problem_data):
     assert(len(problem_data["initial_conditions"]) == len(model_data["states"]))
     assert(model_data["states"] is not None)
@@ -25,7 +28,7 @@ def solve(model_data, problem_data):
     # if problem_data != model_data, then warn
 
     # TODO: sort alphabetically
-    y, data = scipy.integrate.odeint(
+    y, data, status = scipy.integrate.odeint(
         func        = model_data["model"], \
         y0          = problem_data["initial_conditions"], \
         # A sequence of time points for which to solve for y.
@@ -37,7 +40,48 @@ def solve(model_data, problem_data):
         printmessg  = False, \
         ixpr        = False, \
         mxstep      = 50000)
-    return y, data
+    return status, y, data
+
+
+'''
+Computes the dynamic snapshots (or "time course") corresponding to the initial value problem.
+Warning: it will unconditionally include the initial point
+returns NumericResult
+'''
+def evaluate_timecourse_snapshots(model_data, problem_data):
+    # TODO: problem_data["initial"] not being handled correctly if called direction
+    assert(model_data["model"] is not None)
+    # TODO: preconditions
+
+    status, snapshots, diags_stats = solve(model_data, problem_data)
+    results = {}
+    is_successful = lambda x: True if x == 2 else False
+    results["success"] = is_successful(status)
+    results["snapshots"] = snapshots
+    results["diags_stats"] = diags_stats
+    result = mmd.NumericResult(results)
+    return result
+
+
+'''
+Computes the dynamic trajectories (or "time course") corresponding to the initial value problem.
+It conditionally includes/excludes the initial point
+'''
+# TODO: let problem_data count and use to override model_data
+def evaluate_timecourse_trajectories(model_data, problem_data):
+    assert(model_data["model"] is not None)
+    # TODO: preconditions
+
+    result = evaluate_timecourse_snapshots(model_data, problem_data)
+    including_initial_value = common.utilities.sliceit_astrajectory(result.snapshots)
+    trajectories = handle_initial_point(including_initial_value, problem_data)
+    results = {}
+    results["success"] = result.success
+    results["trajectories"] = trajectories
+    results["diags_stats"] = result.diags_stats
+    result = mmd.NumericResult(results)
+    return result
+
 
 '''
 Computes the dynamic snapshots (or "time course") corresponding to the initial value problem.
@@ -55,7 +99,7 @@ def compute_trajectory_st(model, model_data, problem_data):
         model_data["model"] = model
         cd.print_legacy_code_message()
 
-    snapshot, _ = solve(model_data, problem_data)
+    _, snapshot, _ = solve(model_data, problem_data)
     return snapshot
 
 
@@ -96,7 +140,7 @@ def solve_lsoda_st(model, model_data, problem_data):
     cd.print_legacy_code_message()
 
     # TODO: sort alphabetically
-    return scipy.integrate.odeint(
+    y, data, _ = scipy.integrate.odeint(
         func        = model, \
         y0          = problem_data["initial_conditions"], \
         # A sequence of time points for which to solve for y.
@@ -108,3 +152,4 @@ def solve_lsoda_st(model, model_data, problem_data):
         printmessg  = False, \
         ixpr        = False,
         mxstep      = 50000)
+    return y, data
