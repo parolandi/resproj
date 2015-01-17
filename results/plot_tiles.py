@@ -10,8 +10,8 @@ def show_all():
 
 
 def get_plot_colours(dim):
-    assert(dim <= 5)
-    return ['r', 'g', 'b', 'y', 'c']
+    assert(dim <= 6)
+    return ['r', 'g', 'b', 'y', 'c', 'm']
     
 
 # TODO: parameterise, generalise
