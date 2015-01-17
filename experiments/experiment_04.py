@@ -139,11 +139,11 @@ class TestExperiment04(unittest.TestCase):
 
         self.assertTrue(len(result["local"]) == 4)
         actual = result["global"]["objective_function"]
-        expected = 0.02113986074539735
+        expected = 0.0211884015947
         self.assertAlmostEquals(actual, expected, 12)
         actual = result["global"]["decision_variables"]
-        expected = numpy.array([7.008090066247478e-05, 6886103.023056829, 0.007061696058285224, 0.16176349186709418])
-        deltas = numpy.array([0.000000000000001e-05, 0000000.000000001, 0.000000000000000001, 0.00000000000000001])
+        expected = numpy.array([7.00689640e-05, 7.02472058e+06, 7.04011203e-03, 1.28695959e-01])
+        deltas = numpy.array([0.00000001e-05, 0.00000001e+06, 0.00000001e-03, 0.00000001e-01])
         [self.assertAlmostEquals(act, exp, delta=diff) for act, exp, diff in zip(actual, expected, deltas)]
 
 

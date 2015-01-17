@@ -69,31 +69,31 @@ class TestMonteCarloMultipleInitiaValue(unittest.TestCase):
         algorithm["decision_variable_ranges"] = [(-1E3, 1E3), (-1E3, 1E3)]
         #algorithm["subsolver_params"]["method"] = "Nelder-Mead" 
         result = testme.solve(model, problem, algorithm)
-        actual = [result["succeeded"]["decision_variables"][ii] for ii in range(len(result["succeeded"]))]
-        expected = [[ -97.17774704]*2, \
-                    [ -401.33377851]*2, \
-                    [ -538.07660677]*2, \
-                    [ 770.60680152]*2, \
-                    [ -627.1128209]*2, \
-                    [ 863.13342462]*2, \
-                    [ -909.19557985]*2, \
-                    [ 519.41088897]*2, \
-                    [ -824.3850921]*2, \
-                    [ -718.50336146]*2]
+        actual = result["succeeded"]["decision_variables"]
+        expected = [[ -97.17774704, 351.69932235], \
+                    [ -401.33377851, 932.92313607], \
+                    [ -538.07660677, 636.12944746], \
+                    [ 770.60680152, 797.24921185], \
+                    [ -627.1128209, 488.34367688], \
+                    [ 863.13342462, 453.69093021], \
+                    [ -909.19557985, -698.2144546], \
+                    [ 519.41088897, 462.74064042], \
+                    [ -824.3850921, -436.49292389], \
+                    [ -718.50336146, 167.48817323]]
         [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(actual[0], expected[0])]
         self.assertEqual(len(result["succeeded"]["objective_function"]), 10)
         self.assertEqual(len(result["failed"]["objective_function"]), 0)
-        actual = [result["succeeded"]["objective_function"][ii] for ii in range(len(result["succeeded"]))]
-        expected = [746800.7817577033, \
-                    12564174.807895496, \
-                    22559349.87397554, \
-                    46013795.11316571, \
-                    30628653.506581813, \
-                    57741070.00436532, \
-                    64323949.11690271, \
-                    20881589.246206686, \
-                    52893815.889362335, \
-                    40191943.06478162]
+        actual = result["succeeded"]["objective_function"]
+        expected = [7798389.5505145723, \
+                    56493001.345232479, \
+                    29590362.296406806, \
+                    48606309.122180611, \
+                    20895147.155216932, \
+                    24285108.270967092, \
+                    43231381.718003511, \
+                    17429376.115837783, \
+                    22466219.766100377, \
+                    9767733.3634064961]
         [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(actual, expected)]
         testme.print_montecarlo_multiple_initial_value(0, result)
 
@@ -115,10 +115,6 @@ class TestMonteCarloMultipleInitiaValue(unittest.TestCase):
         result["failed"] = failure
         testme.print_montecarlo_multiple_initial_value(wall_time, result)
 
-
-    def test_random_sampling(self):
-        self.assertTrue(False)
-        
 
 if __name__ == "__main__":
     unittest.main()

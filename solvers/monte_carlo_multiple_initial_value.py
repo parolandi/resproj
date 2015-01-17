@@ -4,10 +4,10 @@ import copy
 import numpy
 import time
 
-import data.generator as dg
 import metrics.ordinary_differential as mod
 import models.model_data_utils as mmdu
 import solvers.initial_value as siv
+import solvers.monte_carlo_sampling as smcs
 import solvers.solver_data as ss
 
 
@@ -95,25 +95,16 @@ def montecarlo_multiple_initial_value(model, problem, algorithm):
     assert(len(algorithm["decision_variable_ranges"]) == dv_count)
     # TODO: preconditions!
     
-    multi_start_trials = algorithm["number_of_trials"]
-    multi_start_points = []
-    dv_count = len(algorithm["decision_variable_ranges"])
-    for ii in range(dv_count):
-        bounds = algorithm["decision_variable_ranges"][ii]
-        dg.set_seed(algorithm["random_number_generator_seed"])
-        points = dg.uniform_distribution(multi_start_trials)
-        dg.unset_seed()
-        scaled_points = bounds[0] + points * (bounds[1] - bounds[0]) 
-        multi_start_points.append(scaled_points)
+    monte_carlo_points = smcs.do_sampling(algorithm)
     # TODO
     _ = dict(algorithm["subsolver_params"])
     
     success = copy.deepcopy(ensemble_trajectoryies)
     failure = copy.deepcopy(ensemble_trajectoryies)
-    for ii in range(multi_start_trials):
+    for ii in range(algorithm["number_of_trials"]):
         param_vals = []
         for jj in range(dv_count):
-            param_vals.append(multi_start_points[jj][ii])
+            param_vals.append(monte_carlo_points[jj][ii])
         mmdu.apply_values_to_parameters(param_vals, model, problem)
         trial_result = siv.evaluate_timecourse_trajectories(model, problem)
         if trial_result.success:
