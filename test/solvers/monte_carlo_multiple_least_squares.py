@@ -60,13 +60,13 @@ class TestMonteCarloMultipleLeastSquares(unittest.TestCase):
         return model_instance, problem_instance
         
 
-    def test_10trials_meth_NelderMead(self):
+    def test_solve_10trials_meth_NelderMead(self):
         model, problem = self.do_setup()
         algorithm = dict(testme.montecarlo_multiple_optimisation_params)
         algorithm["number_of_trials"] = 10
         algorithm["decision_variable_ranges"] = [(-1E3, 1E3), (-1E3, 1E3)]
         algorithm["subsolver_params"]["method"] = "Nelder-Mead" 
-        result = testme.montecarlo_multiple_least_squares(model, problem, algorithm)
+        result = testme.solve_all(model, problem, algorithm)
         actual = [result["all"][ii]["decision_variables"] for ii in range(len(result["all"]))]
         expected = [[ 1.05282639,  2.05005982], \
                     [ 1.05282858,  2.05003897], \
@@ -79,7 +79,7 @@ class TestMonteCarloMultipleLeastSquares(unittest.TestCase):
                     [ 1.05283625,  2.05002302], \
                     [ 1.05279885,  2.05000861]]
         [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(actual[0], expected[0])]
-        actual = [result["local"][ii]["decision_variables"] for ii in range(len(result["all"]))]
+        actual = [result["local"][ii]["decision_variables"] for ii in range(len(result["local"]))]
         [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(actual[0], expected[0])]
         actual = [result["all"][ii]["objective_function"] for ii in range(len(result["all"]))]
         expected = [1.6631843863164841, \
@@ -93,7 +93,7 @@ class TestMonteCarloMultipleLeastSquares(unittest.TestCase):
                     1.6631843616303503, \
                     1.6631843742734829]
         [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(actual, expected)]
-        actual = [result["local"][ii]["objective_function"] for ii in range(len(result["all"]))]
+        actual = [result["local"][ii]["objective_function"] for ii in range(len(result["local"]))]
         [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(actual, expected)]
         actual = result["global"]["objective_function"]
         expected = 1.6631843384988318
