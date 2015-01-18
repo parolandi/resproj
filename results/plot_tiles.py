@@ -133,7 +133,7 @@ def plot_residual_trajectories_with_errors( \
     fig.show()
 
 
-def plot_ensemble_trajectories(independent, ensembles, plot_config):
+def plot_ensemble_trajectories(independent, ensembles, measurements, errors, plot_config):
     """
     Plots the ensemble trajectories of a set of states
     independent numpy array NT
@@ -153,5 +153,5 @@ def plot_ensemble_trajectories(independent, ensembles, plot_config):
         plot_data["colour"] = plot_colours[ii]    
         plot_data["index"] = ii
         plot_data["ylabel"] = plot_config["output_names"][ii]
-        rp.plot_ensemble_trajectories(independent, ensembles[:,ii,:], plot_data)
+        rp.plot_ensemble_trajectories(independent, ensembles[:,ii,:], measurements[ii], errors[ii], plot_data)
     fig.show()

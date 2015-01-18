@@ -125,7 +125,7 @@ def plot_residuals_with_calibration_and_validation_trajectory_with_errors( \
 #    sp.legend(legend)
 
 
-def plot_ensemble_trajectories(independent, ensemble, plot_data):
+def plot_ensemble_trajectories(independent, ensemble, measurements, errors, plot_data):
     """
     Plots the ensemble trajectories of a given state
     independent numpy array NT
@@ -137,9 +137,9 @@ def plot_ensemble_trajectories(independent, ensemble, plot_data):
     sp = fig.add_subplot(plot_data["no_rows"], plot_data["no_cols"], plot_data["plot_count"])
     colour = plot_data["colour"]
     for ii in range(NE):
-        sp.plot(independent, ensemble[ii,:], colour+'o')
+        sp.plot(independent, ensemble[ii,:], colour+'+')
         sp.set_ylabel(plot_data["ylabel"])
-
+    sp.errorbar(independent, measurements, fmt = colour+'o', yerr = errors)
 
 def plot_observations(independent,  measurements):
     x = independent
