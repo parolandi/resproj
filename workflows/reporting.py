@@ -1,9 +1,11 @@
 
+import numpy
+
+
+import data.generator as dg
 import models.model_data_utils as mmdu
 import results.plot_tiles as rpt
 import solvers.initial_value as siv
-
-import numpy
 
 
 '''
@@ -44,15 +46,7 @@ def plot_tiled_calibration_validation_and_residual_trajectories_at_point(config,
     valid_trajectories = siv.compute_timecourse_trajectories(None, model_data, problem_data)
     valid_observables = mmdu.get_observable_trajectories(problem_data, valid_trajectories)
     
-    calib_errors = []
-    valid_errors = []
-    cvm = problem_data["measurements_covariance_trace"]
-    calib_dimT = len(data_instance["calib"]["time"])
-    valid_dimT = len(data_instance["valid"]["time"])
-    error_factor = 3
-    for ii in range(len(cvm)):
-        calib_errors.append(error_factor * numpy.ones(calib_dimT) * cvm[ii])
-        valid_errors.append(error_factor * numpy.ones(valid_dimT) * cvm[ii])
+    calib_errors, valid_errors = dg.compute_measurement_errors(problem_data, data_instance)
 
     # do plotting
     rpt.plot_measurements_with_calibration_and_validation_trajectories_with_errors( \
