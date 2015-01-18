@@ -4,6 +4,7 @@ import unittest
 # TODO:I don't know why import does not work directly
 from test.common.utilities import *
 from test.data.data_splicing import *
+from test.data.generator import *
 from test.engine.estimation_matrices import *
 from test.engine.statistical_inference import *
 from test.metrics.algebraic_legacy import *
