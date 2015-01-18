@@ -138,6 +138,7 @@ def plot_ensemble_trajectories(independent, ensemble, plot_data):
     colour = plot_data["colour"]
     for ii in range(NE):
         sp.plot(independent, ensemble[ii,:], colour+'o')
+        sp.set_ylabel(plot_data["ylabel"])
 
 
 def plot_observations(independent,  measurements):

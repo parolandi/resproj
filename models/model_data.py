@@ -1,7 +1,4 @@
 
-import numpy
-
-
 model_structure = {
     "model": None,
     "parameters": [],
@@ -11,6 +8,10 @@ model_structure = {
     "time": 0.0,
     }
 
+
+model_interface = {
+    "output_names": [],
+    }
 
 '''
 Defines the approach used for initial conditions
