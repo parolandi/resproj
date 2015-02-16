@@ -2,8 +2,6 @@
 import unittest
 import data.generator as testme
 
-import numpy
-
 
 class TestGenerator(unittest.TestCase):
 
