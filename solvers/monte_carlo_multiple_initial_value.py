@@ -82,12 +82,13 @@ def solve(model, problem, algorithm):
     return result
 
 
-'''
-This does a montecarlo randomisation of initial guesses
-and solves the initial value problem
-'''
 # TODO: total number of runs
 def montecarlo_multiple_initial_value(model, problem, algorithm):
+    """
+    This does a montecarlo randomisation of initial guesses
+    and solves the initial value problem
+    return montecarlo_multiple_simulation_result
+    """
     assert(model["model"] is not None)
     assert(problem["performance_measure"] is not None)
     assert(problem["performance_measure"] is mod.sum_squared_residuals_st)
