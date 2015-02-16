@@ -60,5 +60,10 @@ def sliceit_astrajectory(packed_vector):
 # TODO: unit-test
 def get_maximum_absolute_sensitivity_value(sensitivity_trajectories, dim_states, dim_dv):
     max_sens = numpy.max(numpy.abs(sensitivity_trajectories), axis=1)
-    sens_max = max_sens.reshape(dim_states,dim_dv).transpose()
+    sens_max = max_sens.reshape(dim_states, dim_dv).transpose()
     return sens_max
+
+
+def get_maximum_absolute_ensemble_values(ensembles):
+    max_ensn = numpy.max(numpy.abs(ensembles), axis=1)
+    return numpy.ones(ensembles.shape[1])

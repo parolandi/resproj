@@ -18,6 +18,14 @@ def print_unexpected_code_branch_message():
     print(unexpected_code_branch_message())
 
 
+def wall_time_message():
+    return "Wall time:"
+    
+
+def print_wall_time_message(value):
+    print(wall_time_message(), value)
+    
+    
 def print_decision_variables_and_confidence_intervals(dvs, cis):
     print("decision variables:", dvs)
     print("confidence intervals:", cis)

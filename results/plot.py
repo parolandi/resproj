@@ -141,6 +141,7 @@ def plot_ensemble_trajectories(independent, ensemble, measurements, errors, plot
         sp.set_ylabel(plot_data["ylabel"])
     sp.errorbar(independent, measurements, fmt = colour+'o', yerr = errors)
 
+
 def plot_observations(independent,  measurements):
     x = independent
     y_meas = measurements
