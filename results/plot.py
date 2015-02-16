@@ -130,6 +130,7 @@ def plot_residuals_with_calibration_and_validation_trajectory_with_errors( \
 def plot_ensemble_trajectories(independent, ensemble, measurements, errors, plot_data):
     """
     Plots the ensemble trajectories of a given state
+    arguments: measurements and errors can be None
     independent numpy array NT
     ensembles numpy array NExNT
     """
@@ -141,7 +142,8 @@ def plot_ensemble_trajectories(independent, ensemble, measurements, errors, plot
     for ii in range(NE):
         sp.plot(independent, ensemble[ii,:], colour+'+')
         sp.set_ylabel(plot_data["ylabel"])
-    sp.errorbar(independent, measurements, fmt = colour+'o', yerr = errors)
+    if measurements is not None and errors is not None:
+        sp.errorbar(independent, measurements, fmt = colour+'o', yerr = errors)
 
 
 def plot_observations(independent,  measurements):
