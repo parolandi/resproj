@@ -10,6 +10,7 @@ import common.diagnostics as cd
 import common.utilities as cu
 import data.generator as dg
 import results.plot_tiles as rpt
+import results.plot as rpl
 import setups.setup_data as ssd
 import solvers.monte_carlo_multiple_initial_value as smiv
 
@@ -86,6 +87,7 @@ class TestExperiment11(unittest.TestCase):
         errors, _ = dg.compute_measurement_errors(problem, data)
         rpt.plot_ensemble_trajectories(problem["time"], ensembles, problem["outputs"], errors, plot_config)
         rpt.show_all()
+        rpl.plot_histogram_cutoff_by_count(result["succeeded"]["objective_function"], 20, 3)
 
 
 if __name__ == "__main__":

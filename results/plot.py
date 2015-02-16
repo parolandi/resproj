@@ -1,6 +1,8 @@
 
 import matplotlib.pyplot as pp
 
+import data.nonparametrics as dnp
+
 # TODO: rename to plot single
 
 
@@ -180,4 +182,10 @@ def plot_observation_ensembles(independent,  measurements):
                 legend.append("m" + str(jj))
         done_already = True
     pp.legend(legend)
+    pp.show()
+
+
+def plot_histogram_cutoff_by_count(data, bins, count):
+    cutoff_data = dnp.cutoff_tail_by_count(data, count)
+    pp.hist(cutoff_data, bins = bins)
     pp.show()
