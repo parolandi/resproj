@@ -97,8 +97,11 @@ class TestMonteCarloMultipleInitiaValue(unittest.TestCase):
         [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(actual, expected)]
         testme.print_montecarlo_multiple_initial_value(0, result)
 
-        rpt.plot_ensemble_trajectories(problem["time"], result["succeeded"]["trajectories"])
-        rpt.show_all()
+        if False:
+            plot_config = {}
+            plot_config["output_names"] = "xyz"
+            rpt.plot_ensemble_trajectories(problem["time"], result["succeeded"]["trajectories"], None, None, plot_config)
+            rpt.show_all()
         
 
     # TODO: move from check to actual test
