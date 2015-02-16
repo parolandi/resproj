@@ -81,13 +81,14 @@ class TestExperiment11(unittest.TestCase):
         expected = numpy.ones(ensembles.shape[1])
         actual = cu.get_maximum_absolute_ensemble_values(ensembles)
         [self.assertAlmostEqual(act, exp, 8) for act, exp in zip(actual.flatten(), expected.flatten())]
-                
-        plot_config = {}
-        plot_config["output_names"] = skb.do_labels()[no_volume:]
-        errors, _ = dg.compute_measurement_errors(problem, data)
-        rpt.plot_ensemble_trajectories(problem["time"], ensembles, problem["outputs"], errors, plot_config)
-        rpt.show_all()
-        rpl.plot_histogram_cutoff_by_count(result["succeeded"]["objective_function"], 20, 3)
+
+        if self.do_plotting:     
+            plot_config = {}
+            plot_config["output_names"] = skb.do_labels()[no_volume:]
+            errors, _ = dg.compute_measurement_errors(problem, data)
+            rpt.plot_ensemble_trajectories(problem["time"], ensembles, problem["outputs"], errors, plot_config)
+            rpt.show_all()
+            rpl.plot_histogram_cutoff_by_count(result["succeeded"]["objective_function"], 20, 3)
 
 
 if __name__ == "__main__":
