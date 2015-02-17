@@ -1,5 +1,6 @@
 
 import matplotlib.pyplot as pp
+import numpy
 
 import results.plot as rp
 
@@ -7,6 +8,11 @@ import results.plot as rp
 def show_all():
     pp.show()
 
+
+def get_plot_colours(dim):
+    assert(dim <= 6)
+    return ['r', 'g', 'b', 'y', 'c', 'm']
+    
 
 # TODO: parameterise, generalise
 # WIP: needs to be re-worked
@@ -73,7 +79,7 @@ def plot_measurements_with_calibration_and_validation_trajectories_with_errors( 
     plot_data["figure"] = fig
     plot_data["no_rows"] = dim_obs
     plot_data["no_cols"] = 1
-    plot_colours = ['r', 'g', 'b', 'y', 'c']
+    plot_colours = get_plot_colours(dim_obs)
     calib_errors = None
     valid_errors = None
     for ii in range(dim_obs):
@@ -110,7 +116,7 @@ def plot_residual_trajectories_with_errors( \
     plot_data["figure"] = fig
     plot_data["no_rows"] = dim_obs
     plot_data["no_cols"] = 1
-    plot_colours = ['r', 'g', 'b', 'y', 'c']
+    plot_colours = get_plot_colours(dim_obs)
     calib_errors = None
     valid_errors = None
     for ii in range(dim_obs):
@@ -124,4 +130,32 @@ def plot_residual_trajectories_with_errors( \
             independent_calib, measurements_calib[ii], predictions_calib[ii], calib_errors, \
             independent_valid, measurements_valid[ii], predictions_valid[ii], valid_errors, \
             plot_data)
+    fig.show()
+
+
+def plot_ensemble_trajectories(independent, ensembles, measurements, errors, plot_config):
+    """
+    Plots the ensemble trajectories of a set of states
+    arguments: measurements and errors can be None
+    independent numpy array NT
+    ensembles numpy array NExNSxNT
+    """
+    
+    fig = pp.figure("ensembles")
+    dim_obs = len(ensembles[0])
+    plot_data = {}
+    plot_data["figure"] = fig
+    plot_data["no_rows"] = dim_obs
+    plot_data["no_cols"] = 1
+    plot_colours = get_plot_colours(dim_obs)
+
+    for ii in range(dim_obs):
+        plot_data["plot_count"] = ii+1
+        plot_data["colour"] = plot_colours[ii]    
+        plot_data["index"] = ii
+        plot_data["ylabel"] = plot_config["output_names"][ii]
+        if measurements is not None and errors is not None:
+            rp.plot_ensemble_trajectories(independent, ensembles[:,ii,:], measurements[ii], errors[ii], plot_data)
+        else:
+            rp.plot_ensemble_trajectories(independent, ensembles[:,ii,:], measurements, errors, plot_data)
     fig.show()

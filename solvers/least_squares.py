@@ -4,7 +4,6 @@ import copy
 
 # TODO: validate use of data structure
 import common.diagnostics as cdi
-import solvers.solver_data
 
 
 # TODO: exceptions

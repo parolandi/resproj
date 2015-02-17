@@ -9,7 +9,7 @@ import common.utilities
 It calls odepack.lsoda to solve the initial value problem for stiff and non-stiff ode's
 '''
 def solve_lsoda(model, initial_condition, timepoints, parameters, inputs):
-    return scipy.integrate.odeint(
+    y, data, _ = scipy.integrate.odeint(
         func = model, \
         y0 = initial_condition, \
         t = timepoints, \
@@ -17,6 +17,7 @@ def solve_lsoda(model, initial_condition, timepoints, parameters, inputs):
         full_output = True, \
         printmessg = True,
         ixpr = True)
+    return y, data
     
 
 def compute_trajectory(parameters, model, initial_condition, inputs, timepoints):

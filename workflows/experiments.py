@@ -32,14 +32,17 @@ def test_baseline_calibration(setup, baseline, unittester):
         post_proc = wpr.do_sensitivity_based_workflow_at_solution_point(config, calibrated)
         wwdu.print_sensitivity_based_point_results(post_proc)
     # test
-    actual = calibrated["objective_function"]
-    expected = baseline["point"]["objective_function"]
-    unittester.assertAlmostEquals(actual, expected, delta=baseline["of_delta"])
-    # test
-    actual = calibrated["decision_variables"]
-    expected = baseline["point"]["decision_variables"]
-    deltas = baseline["dv_deltas"]
-    [unittester.assertAlmostEquals(act, exp, delta=diff) for act, exp, diff in zip(actual, expected, deltas)]
+    if baseline is not None:
+        actual = calibrated["objective_function"]
+        expected = baseline["point"]["objective_function"]
+        unittester.assertAlmostEquals(actual, expected, delta=baseline["of_delta"])
+        # test
+        actual = calibrated["decision_variables"]
+        expected = baseline["point"]["decision_variables"]
+        deltas = baseline["dv_deltas"]
+        [unittester.assertAlmostEquals(act, exp, delta=diff) for act, exp, diff in zip(actual, expected, deltas)]
+    else:
+        cd.print_unexpected_code_branch_message()
     return calibrated
 
 
@@ -56,14 +59,17 @@ def test_baseline_validation(setup, baseline, unittester, point):
         post_proc = wpr.do_sensitivity_based_workflow_at_solution_point(config, validated)
         wwdu.print_sensitivity_based_point_results(post_proc)
     # test
-    actual = validated["objective_function"]
-    expected = baseline["point"]["objective_function"]
-    unittester.assertAlmostEquals(actual, expected, delta=baseline["of_delta"])
-    # test
-    actual = validated["decision_variables"]
-    expected = baseline["point"]["decision_variables"]
-    deltas = baseline["dv_deltas"]
-    [unittester.assertAlmostEquals(act, exp, delta=diff) for act, exp, diff in zip(actual, expected, deltas)]
+    if baseline is not None:
+        actual = validated["objective_function"]
+        expected = baseline["point"]["objective_function"]
+        unittester.assertAlmostEquals(actual, expected, delta=baseline["of_delta"])
+        # test
+        actual = validated["decision_variables"]
+        expected = baseline["point"]["decision_variables"]
+        deltas = baseline["dv_deltas"]
+        [unittester.assertAlmostEquals(act, exp, delta=diff) for act, exp, diff in zip(actual, expected, deltas)]
+    else:
+        cd.print_unexpected_code_branch_message()
     return validated
 
 

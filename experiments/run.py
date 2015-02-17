@@ -12,6 +12,7 @@ from experiments.experiment_07 import *
 from experiments.experiment_08 import *
 from experiments.experiment_09 import *
 #from experiments.experiment_10 import *
+from experiments.experiment_11 import *
 
 import experiments.experiment as ee
 

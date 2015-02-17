@@ -1,6 +1,8 @@
 
 import matplotlib.pyplot as pp
 
+import data.nonparametrics as dnp
+
 # TODO: rename to plot single
 
 
@@ -125,6 +127,25 @@ def plot_residuals_with_calibration_and_validation_trajectory_with_errors( \
 #    sp.legend(legend)
 
 
+def plot_ensemble_trajectories(independent, ensemble, measurements, errors, plot_data):
+    """
+    Plots the ensemble trajectories of a given state
+    arguments: measurements and errors can be None
+    independent numpy array NT
+    ensembles numpy array NExNT
+    """
+    
+    NE = len(ensemble)
+    fig = plot_data["figure"]
+    sp = fig.add_subplot(plot_data["no_rows"], plot_data["no_cols"], plot_data["plot_count"])
+    colour = plot_data["colour"]
+    for ii in range(NE):
+        sp.plot(independent, ensemble[ii,:], colour+'+')
+        sp.set_ylabel(plot_data["ylabel"])
+    if measurements is not None and errors is not None:
+        sp.errorbar(independent, measurements, fmt = colour+'o', yerr = errors)
+
+
 def plot_observations(independent,  measurements):
     x = independent
     y_meas = measurements
@@ -163,4 +184,10 @@ def plot_observation_ensembles(independent,  measurements):
                 legend.append("m" + str(jj))
         done_already = True
     pp.legend(legend)
+    pp.show()
+
+
+def plot_histogram_cutoff_by_count(data, bins, count):
+    cutoff_data = dnp.cutoff_tail_by_count(data, count)
+    pp.hist(cutoff_data, bins = bins)
     pp.show()

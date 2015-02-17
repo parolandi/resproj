@@ -96,7 +96,7 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
         problem_instance = testmetoo.do_problem_setup(model_instance, data_instance["calib"])
         states_and_sens = sls.compute_timecourse_trajectories_and_sensitivities(model_instance, problem_instance)
         actual = [math.fsum(states_and_sens[6+ii]) for ii in range(len(states_and_sens[6:]))]
-        expected = [0.0, 0.0, 0.0, 0.0, 59161.484880419586, 3.1968127959617714e-10, -13702.009513808418, -3500.852525351594, -14582.394274657654, -7.946087098494498e-11, 121859.87019973523, 40422.02964272601, -66407.97295549244, -4.884389744774786e-07, 872756.3597069957, 306658.0495776738, -1909.0309723004566, -9.464186176653491e-12, 14962.911515936856, 5116.043799519194, 1603.970009187875, -2.0444441761630994e-10, -2196.603637529724, -1110.7953398434115]
+        expected = [0.0, 0.0, 0.0, 0.0, 59161.484880419586, 3.1968127959617714e-10, 0.10483539730765658, -0.06504013050356859, -14582.394274657654, -7.946087098494498e-11, 0.27708034734013914, 0.12597806783865015, -66407.97295549244, -4.884389744774786e-07, -135.78004088834632, -126.76588971721745, -1909.0309723004566, -9.464186176653491e-12, 0.03544330615211961, 0.01750572201086875, 1603.970009187875, -2.0444441761630994e-10, 14.741219787364145, 13.424883852607149]
         [self.assertAlmostEqual(act, exp, 8) for act, exp in zip(actual, expected)]
         if self.do_plotting:
             states = states_and_sens[0:6]
@@ -129,8 +129,8 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
         confidence_intervals = engine.statistical_inference.compute_confidence_intervals( \
             cov_matrix, ell_radius)
         det = engine.estimation_matrices.calculate_determinant(cov_matrix)
-        expected = [1.86329053e-14, 6.54341701e+08, 1.08977640e-13, 8.82897129e-13]
-        delta = [0.00000001e-14, 0.00000001e+08, 0.00000001e-13, 0.00000001e-13]
+        expected = [1.68587487e-14, 1.67506860e+10, 4.22215529e-06, 7.14130399e-06]
+        delta = [0.00000001e-14, 0.00000001e+10, 0.00000001e-06, 0.00000001e-06]
         [self.assertAlmostEquals(act, exp, delta=dif) for act, exp, dif in zip(confidence_intervals, expected, delta)] 
         if self.do_diag:
             cd.print_maximum_sensitivities(sens_max)

@@ -98,7 +98,7 @@ class TestExperiment04(unittest.TestCase):
             rpt.plot_fit(problem_data["time"], problem_data["outputs"], problem_data["time"], trajectories_fit[1:], labels[1:], self.model_key)
             
         actual = ssr_fit
-        expected = 0.02094963117201898
+        expected = 0.020948695742714324
         self.assertAlmostEqual(actual, expected, 12)
         # TODO add regression test point
 
@@ -124,7 +124,7 @@ class TestExperiment04(unittest.TestCase):
         algorithm["decision_variable_ranges"] = [(0,7.23232059e-05*10), (0,6.00000000e+06*10), (0,1.67959956e-02*10), (0,1.00866368e-02*10)]
         algorithm["subsolver_params"]["method"] = "Nelder-Mead"
 
-        wall_time0 = time.time() 
+        wall_time0 = time.time()
         result = smls.montecarlo_multiple_least_squares(model_data, problem_data, algorithm)
         wall_time = time.time() - wall_time0
         opt_param_est = result["global"]["decision_variables"]
@@ -132,23 +132,18 @@ class TestExperiment04(unittest.TestCase):
         trajectories_fit = si.compute_timecourse_trajectories(None, model_data, problem_data)
         ssr_fit = mo.sum_squared_residuals_st(opt_param_est, None, model_data, problem_data)
 
-        print("wall time:", wall_time)
-        print("number of local optima:     ", len(result["local"]))
-        print("nominal parameter values:   ", nom_param_vals)
-        print("optimal parameter estimates:", opt_param_est.tolist())
-        print("ssr (raw):                  ", ssr_raw)        
-        print("ssr (fit):                  ", ssr_fit)        
+        smls.print_montecarlo_multiple_least_squares(wall_time, result, nom_param_vals, ssr_raw, ssr_fit)
         if self.do_plotting:
             rpt.plot_fit(problem_data["time"], problem_data["outputs"], problem_data["time"], trajectories_raw[1:], labels[1:], self.model_key)
             rpt.plot_fit(problem_data["time"], problem_data["outputs"], problem_data["time"], trajectories_fit[1:], labels[1:], self.model_key)
 
-        self.assertTrue(len(result["local"]) == 3)
+        self.assertTrue(len(result["local"]) == 4)
         actual = result["global"]["objective_function"]
-        expected = 0.021174194991343515
+        expected = 0.0211884015947
         self.assertAlmostEquals(actual, expected, 12)
         actual = result["global"]["decision_variables"]
-        expected = numpy.array([7.008707556656744e-05, 6969965.66008254, 0.007062287109842938, 0.13671901210795717])
-        deltas = numpy.array([0.000000000000001e-05, 0000000.00000001, 0.000000000000000001, 0.00000000000000001])
+        expected = numpy.array([7.00689640e-05, 7.02472058e+06, 7.04011203e-03, 1.28695959e-01])
+        deltas = numpy.array([0.00000001e-05, 0.00000001e+06, 0.00000001e-03, 0.00000001e-01])
         [self.assertAlmostEquals(act, exp, delta=diff) for act, exp, diff in zip(actual, expected, deltas)]
 
 

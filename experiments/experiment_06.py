@@ -74,8 +74,8 @@ class TestExperiment06(unittest.TestCase):
         reference_point["decision_variables"] = copy.deepcopy(problem_data["parameters"])
 
         actual = wpr.do_sensitivity_based_workflow_at_solution_point(config, reference_point)
-        expected = [1.86329053e-14, 6.54341701e+08, 1.08977640e-13, 8.82897129e-13]
-        delta = [0.00000001e-14, 0.00000001e+08, 0.00000001e-13, 0.00000001e-13]
+        expected = [1.68587487e-14, 1.67506860e+10, 4.22215529e-06, 7.14130399e-06]
+        delta = [0.00000001e-14, 0.00000001e+10, 0.00000001e-06, 0.00000001e-06]
         [self.assertAlmostEquals(act, exp, delta=dif) for act, exp, dif in zip(actual["conf_intvs"], expected, delta)] 
 
 

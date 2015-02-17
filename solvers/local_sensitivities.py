@@ -47,7 +47,7 @@ def compute_timecourse_trajectories_and_sensitivities(model_data, problem_data):
     s3p1
     s3p2
     '''
-    sens_state_wise = numpy.zeros([dim_param*dim_states,len(problem_data["time"])])
+    sens_state_wise = numpy.zeros([dim_param*dim_states, mmdu.get_number_of_time_points(problem_data)])
     sens_param_wise = numpy.asarray(sensitivities)
     for state in range(dim_states):
         for param in range(dim_param):
