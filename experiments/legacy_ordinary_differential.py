@@ -9,7 +9,7 @@ import models.analytical
 import models.ordinary_differential
 import results.plot_legacy
 import solvers.initial_value_legacy
-import solvers.dynamic_optimisation
+import solvers.dynamic_optimisation_legacy
 import solvers.least_squares_legacy
 
 
@@ -53,8 +53,8 @@ def experiment3():
     
     initial_guess = 0.1
     simple_bounds = [(0,10)]
-    result = solvers.dynamic_optimisation.solve_slsqp_optimise_with_bounds(
-        solvers.dynamic_optimisation.maximise_it, models.ordinary_differential.linear, y0, initial_guess, t_if, [p], simple_bounds)
+    result = solvers.dynamic_optimisation_legacy.solve_slsqp_optimise_with_bounds(
+        solvers.dynamic_optimisation_legacy.maximise_it, models.ordinary_differential.linear, y0, initial_guess, t_if, [p], simple_bounds)
 
     results.report.print_result(result)
     u = result.x
@@ -73,8 +73,8 @@ def experiment4():
     
     initial_guess = 0.1
     simple_bounds = [(0,10)]
-    result = solvers.dynamic_optimisation.solve_slsqp_optimise_with_bounds(
-        solvers.dynamic_optimisation.minimise_it, models.ordinary_differential.linear, y0, initial_guess, t_if, [p], simple_bounds)
+    result = solvers.dynamic_optimisation_legacy.solve_slsqp_optimise_with_bounds(
+        solvers.dynamic_optimisation_legacy.minimise_it, models.ordinary_differential.linear, y0, initial_guess, t_if, [p], simple_bounds)
 
     results.report.print_result(result)
     u = result.x
