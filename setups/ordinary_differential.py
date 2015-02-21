@@ -8,6 +8,7 @@ import workflows.protocol_data as wpd
 import metrics.ordinary_differential as mod
 import models.model_data
 import models.model_data_utils as mmdu
+import models.ordinary_differential
 import setups.setup_data
 import solvers.initial_value
 
@@ -28,6 +29,9 @@ def do_model_setup():
 
 
 def do_base_problem_setup(model_data, data_instance):
+    """
+    data_instance calib_valid_experimental_dataset["calib"]
+    """
     assert(model_data is not None)
     
     problem_data = dict(models.model_data.problem_structure)
@@ -107,6 +111,9 @@ def do_sensitivity_problem_setup(model_data, data_instance):
 
 # TODO: DRY
 def do_base_data_setup(covariance_trace):
+    """
+    return list (of trajectory data)
+    """
     # configuration
     final_time = 3.0
     intervals = 30
@@ -158,10 +165,15 @@ def do_baseline_data_setup():
     return do_base_data_setup(numpy.array([0.2, 0.2]))
     
 
+# TODO without covariance
 def do_baseline_data_setup_with_covariance():
     return do_base_data_setup(numpy.array([1.0, 1.0]))
     
     
+def do_baseline_data_setup_without_covariance():
+    return do_base_data_setup(numpy.array([1.0, 1.0]))
+
+
 def do_baseline_data_setup_spliced_111111():
     """ returns: calib_valid_experimental_dataset """
     trajectories = do_baseline_data_setup()
@@ -175,6 +187,12 @@ def do_baseline_data_setup_spliced_111111_with_covariance():
     return spliced_trajectories
 
 
+def do_baseline_data_setup_spliced_111111_without_covariance():
+    trajectories = do_baseline_data_setup_without_covariance()
+    spliced_trajectories = deds.splice_raw_data_with_pattern_111111(trajectories)
+    return spliced_trajectories
+
+
 def do_baseline_data_setup_spliced_111000():
     trajectories = do_baseline_data_setup()
     spliced_trajectories = deds.splice_raw_data_with_pattern_111000(trajectories)
@@ -183,6 +201,9 @@ def do_baseline_data_setup_spliced_111000():
 # -----------------------------------------------------------------------------
 
 def do_algorithm_setup(instrumentation_data):
+    """
+    instrumentation_data None or dictionary with "logger" 
+    """
     initial_guesses = numpy.array([1.0, 2.0])
 
     algorithm_data = dict(solvers.solver_data.algorithm_structure)

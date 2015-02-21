@@ -1,4 +1,7 @@
 
+import copy
+
+
 model_structure = {
     "model": None,
     "parameters": [],
@@ -24,6 +27,13 @@ problem_formulation = {
     }
 
 
+nonlinear_confidence_region_formulation = {
+    "ssr": 0,
+    "parameter_index": 0,
+    "alpha": 0.05,
+    }
+
+
 """
 Defines the structure of a *computational* experiment, a.k.a. a *problem*
 measurements_covariance_trace: numpy.array
@@ -44,6 +54,7 @@ problem_structure = {
     "parameter_indices": [],
     # TODO: change to "times"
     "time": [],
+    "nonlinear_confidence_region": copy.deepcopy(nonlinear_confidence_region_formulation),
     # TODO: add observables
     }
 

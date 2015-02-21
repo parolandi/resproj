@@ -28,10 +28,15 @@ user_messages = {
     }
 
 
+# TODO legacy
 def calculate_degrees_of_freedom(measurements, parameters_to_be_estimated):
     n = common.utilities.size_it(measurements)
     k = len(parameters_to_be_estimated)
     return n - k
+
+
+def calculate_one_sided_chi_squared_value(significance, dof):
+    return scipy.stats.chi2.isf(significance, dof)
 
 
 # TODO: validation of user input
