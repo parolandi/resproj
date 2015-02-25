@@ -34,6 +34,12 @@ nonlinear_confidence_region_formulation = {
     }
 
 
+timecourse_simulation = {
+    "time_horizon": 0.0,
+    "time_interval": 0.0,
+    }
+
+
 """
 Defines the structure of a *computational* experiment, a.k.a. a *problem*
 measurements_covariance_trace: numpy.array

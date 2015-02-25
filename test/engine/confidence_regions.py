@@ -5,10 +5,7 @@ import engine.confidence_regions as testme
 import copy
 import numpy
 
-import metrics.ordinary_differential as mod
-import models.model_data_utils as mmdu
 import setups.ordinary_differential as sod
-import solvers.least_squares as sls
 import solvers.monte_carlo_multiple_initial_value as mcmiv
 import solvers.solver_data as ssd
 
@@ -18,15 +15,24 @@ import matplotlib.pyplot as pp
 class TestConfidenceRegions(unittest.TestCase):
 
 
-    def do_setup(self):
-        model = sod.do_model_setup()
+    def do_setup_lin(self):
+        algorithm = self.do_algorithm_setup()
         data = sod.do_baseline_data_setup_spliced_111111_without_covariance()
+        model = sod.do_model_setup_lin()
         problem = sod.do_problem_setup_without_covariance(model, data["calib"])
         problem["nonlinear_confidence_region"]["ssr"] = 43
-        algorithm = self.do_algorithm_setup()
         return model, problem, algorithm
 
 
+    def do_setup_nonlin(self):
+        algorithm = self.do_algorithm_setup()
+        data = sod.do_data_setup_nonlin_spliced_111111_without_covariance()
+        model = sod.do_model_setup_nonlin()
+        problem = sod.do_problem_setup_without_covariance(model, data["calib"])
+        problem["nonlinear_confidence_region"]["ssr"] = 43
+        return model, problem, algorithm
+
+    
     def do_algorithm_setup(self):
         algorithm = copy.deepcopy(ssd.algorithm_structure)
         algorithm["initial_guesses"] = numpy.asarray([1.0])
@@ -34,23 +40,23 @@ class TestConfidenceRegions(unittest.TestCase):
         return algorithm
         
 
-    def test_compute_nonlinear_confidence_interval(self):
-        model, problem, algorithm = self.do_setup()
+    def test_compute_nonlinear_confidence_interval_lin(self):
+        model, problem, algorithm = self.do_setup_lin()
         actual = testme.compute_nonlinear_confidence_interval(model, problem, algorithm, 0)
         expected = [1.01338741, 1.59365765]
         [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(actual, expected)]
 
 
-    def test_compute_nonlinear_confidence_intervals(self):
-        model, problem, algorithm = self.do_setup()
+    def test_compute_nonlinear_confidence_intervals_lin(self):
+        model, problem, algorithm = self.do_setup_lin()
         actual = numpy.asarray(testme.compute_nonlinear_confidence_intervals(model, problem, algorithm))
         _ = numpy.asarray([[1.01338741, 1.59365765], [2.00000001, 2.49178146]])
         expected = numpy.asarray([[1.01338741, 1.59365765], [2.0040739383273261, 2.4877075291690458]])
         [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(actual.flatten(), expected.flatten())]
 
 
-    def test_empihbnci(self):
-        model, problem, _ = self.do_setup()
+    def test_empihbnci_lin(self):
+        model, problem, _ = self.do_setup_lin()
         algorithm = dict(mcmiv.montecarlo_multiple_simulation_params)
         algorithm["number_of_trials"] = 10
         algorithm["decision_variable_ranges"] = [(1.01338741, 1.59365765), (2.00000001, 2.49178146)]
@@ -62,8 +68,8 @@ class TestConfidenceRegions(unittest.TestCase):
         # TODO should also test decision variables
 
     
-    def donot_test_filter_nonlinear_confidence_region_points(self):
-        model, problem, _ = self.do_setup()
+    def test_filter_nonlinear_confidence_region_points_lin(self):
+        model, problem, _ = self.do_setup_lin()
         algorithm = dict(mcmiv.montecarlo_multiple_simulation_params)
         algorithm["number_of_trials"] = 10
         algorithm["decision_variable_ranges"] = [(1.01338741, 1.59365765), (2.00000001, 2.49178146)]
@@ -72,32 +78,43 @@ class TestConfidenceRegions(unittest.TestCase):
         cutoff = 38.47
         result = testme.filter_nonlinear_confidence_region_points(prelim, cutoff)
         self.assertTrue(len(result["objective_function"]) == 2)
-        # TODO should also check individual values
+        # TODO should also test individual values
 
 
-    def test_compute_nonlinear_confidence_region_points(self):
-        model, problem, _ = self.do_setup()
-        algorithm = dict(ssd.algorithm_structure)
-        algorithm["initial_guesses"] = problem["parameters"]
-        algorithm["method"] = 'SLSQP'
-        dvs = sls.solve(model, problem, algorithm)
-        mmdu.apply_values_to_parameters(dvs.x, model, problem)
-        obj = mod.sum_squared_residuals_st(None, None, model, problem)
+    def test_compute_nonlinear_confidence_region_points_lin(self):
         best_point = {}
-        best_point["decision_variables"] = dvs.x
-        best_point["objective_function"] = obj
+        best_point["decision_variables"] = [ 1.30352132,  2.24589073]
+        best_point["objective_function"] = 37.641550819151604
         
-        model, problem, algorithm_rf = self.do_setup()
+        model, problem, algorithm_rf = self.do_setup_lin()
         algorithm_mc = dict(mcmiv.montecarlo_multiple_simulation_params)
         algorithm_mc["number_of_trials"] = 10000
         actual = testme.compute_nonlinear_confidence_region_points( \
             model, problem, algorithm_rf, algorithm_mc, best_point)
-        points = numpy.asarray(actual["decision_variables"])
-        self.assertEquals(len(numpy.transpose(actual["objective_function"])), 7834)
+        self.assertEquals(len(actual["objective_function"]), 7834)
 
-        # plot
-        pp.plot(numpy.transpose(points)[0], numpy.transpose(points)[1], 'o')
-        pp.show()
+        if False:
+            points = numpy.asarray(actual["decision_variables"])
+            pp.plot(numpy.transpose(points)[0], numpy.transpose(points)[1], 'o')
+            pp.show()
+
+
+    def test_compute_nonlinear_confidence_region_points_nonlin(self):
+        best_point = {}
+        best_point["decision_variables"] = [ 1.2175145 ,  2.15319774]
+        best_point["objective_function"] = 37.67831358169179
+        
+        model, problem, algorithm_rf = self.do_setup_nonlin()
+        algorithm_mc = dict(mcmiv.montecarlo_multiple_simulation_params)
+        algorithm_mc["number_of_trials"] = 10000
+        actual = testme.compute_nonlinear_confidence_region_points( \
+            model, problem, algorithm_rf, algorithm_mc, best_point)
+        self.assertEquals(len(actual["objective_function"]), 7841)
+
+        if False:
+            points = numpy.asarray(actual["decision_variables"])
+            pp.plot(numpy.transpose(points)[0], numpy.transpose(points)[1], 'o')
+            pp.show()
 
 
 if __name__ == "__main__":

@@ -66,6 +66,30 @@ def plot_measurements_with_calibration_and_validation_trajectory( \
 #    sp.legend(legend)
     
 
+def plot_measurements_with_trajectory_with_errors( \
+    independent, measurements, predictions, errors, \
+    plot_data):
+    """
+    errors can be None
+    """
+    assert(plot_data is not None)
+    # TODO assertions
+    
+    fig = plot_data["figure"]
+    sp = fig.add_subplot(plot_data["no_rows"], plot_data["no_cols"], plot_data["plot_count"])
+    t = independent
+    meas = measurements
+    pred = predictions
+    err = errors
+    legend = []
+    colour = plot_data["colour"]
+    sp.errorbar(t, meas, fmt = colour+'o', yerr = err)
+    legend.append("m-" + str(plot_data["index"]))
+    sp.plot(t, pred, colour+'+')
+    legend.append("p-" + str(plot_data["index"]))
+#    sp.legend(legend)
+
+
 def plot_measurements_with_calibration_and_validation_trajectory_with_errors( \
     independent_calib, measurements_calib, predictions_calib, errors_calib, \
     independent_valid, measurements_valid, predictions_valid, errors_valid, \
@@ -73,6 +97,7 @@ def plot_measurements_with_calibration_and_validation_trajectory_with_errors( \
     """
     errors_calib and errors_valid can be None
     """
+    assert(plot_data is not None)
     # TODO assertions
     
     fig = plot_data["figure"]

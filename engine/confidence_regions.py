@@ -8,6 +8,9 @@ import solvers.monte_carlo_multiple_initial_value as mcmiv
 
 
 def compute_nonlinear_confidence_region_points(model, problem, algorithm_rf, algorithm_mc, best_point):
+    """
+    returns solvers.monte_carlo_multiple_initial_value.ensemble_trajectoryies
+    """
     mmdu.apply_decision_variables_to_parameters(best_point, model, problem)
     ssr = compute_chisquared_constraint( \
         best_point["objective_function"],
