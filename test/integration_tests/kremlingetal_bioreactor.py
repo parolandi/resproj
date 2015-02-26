@@ -109,7 +109,7 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
         data_instance = testmetoo.do_get_published_data_spliced_111111()
         problem_instance = testmetoo.do_problem_setup(model_instance, data_instance["calib"])
         no_obs = len(problem_instance["outputs"])
-        no_meas = cu.size_it(problem_instance["outputs"])
+        no_meas = mmdu.calculate_number_of_observations(problem_instance["outputs"])
         no_params = mmdu.get_number_of_decision_variables(problem_instance)
         no_timepoints = mmdu.get_number_of_time_points(problem_instance)
         ssr = 0.045095700772591826

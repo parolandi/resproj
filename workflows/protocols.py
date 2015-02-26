@@ -2,7 +2,6 @@
 import copy
 import numpy
 
-import common.utilities
 import metrics.ordinary_differential as mod
 import metrics.statistical_tests as mst
 import models.model_data as mmd
@@ -196,7 +195,7 @@ def do_sensitivity_based_workflow_at_solution_point(config, solution_point):
     corr_matrix = eem.calculate_correlation_matrix(cov_matrix)
 
     # ellipsoid radius and confidence interval
-    no_meas = common.utilities.size_it(problem_instance["outputs"])
+    no_meas = mmdu.calculate_number_of_observations(problem_instance["outputs"])
     est_stdev = esi.compute_measurements_standard_deviation(ssr, no_params, no_meas)
     ell_radius = esi.compute_confidence_ellipsoid_radius(no_params, no_meas, est_stdev, 0.9)
     confidence_intervals = esi.compute_confidence_intervals(cov_matrix, ell_radius)

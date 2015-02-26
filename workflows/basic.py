@@ -5,6 +5,7 @@ import numpy
 import common.utilities
 import metrics.ordinary_differential
 import metrics.statistical_tests
+import models.model_data_utils as mmdu
 import engine.estimation_matrices
 import engine.statistical_inference
 import results.plot
@@ -72,7 +73,7 @@ def do_workflow_at_solution_point(model, model_instance, problem_instance, \
         no_obs, no_params, no_timepoints, sens_trajectories)
 
     # ellipsoid radius and confidence interval
-    no_meas = common.utilities.size_it(problem_instance["outputs"])
+    no_meas = mmdu.calculate_number_of_observations(problem_instance["outputs"])
     est_stdev = engine.statistical_inference.compute_measurements_standard_deviation( \
         sum_sq_res, no_params, no_meas)
     ell_radius = engine.statistical_inference.compute_confidence_ellipsoid_radius( \
@@ -156,7 +157,7 @@ def do_workflow_at_solution_path(model, model_instance, problem_instance, \
         cov_matrix = engine.estimation_matrices.compute_covariance_matrix( \
             no_obs, no_params, no_timepoints, sens_trajectories)
         # ellipsoid radius and confidence interval
-        no_meas = common.utilities.size_it(problem_instance["outputs"])
+        no_meas = mmdu.calculate_number_of_observations(problem_instance["outputs"])
         est_stdev = engine.statistical_inference.compute_measurements_standard_deviation( \
             sum_sq_res, no_params, no_meas)
         ell_radius = engine.statistical_inference.compute_confidence_ellipsoid_radius( \
