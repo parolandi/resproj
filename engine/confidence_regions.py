@@ -1,6 +1,7 @@
 
 import copy
 
+import common.diagnostics as codi
 import metrics.statistical_tests as mst
 import models.model_data_utils as mmdu
 import solvers.dynamic_optimisation as sdo
@@ -11,14 +12,7 @@ def compute_nonlinear_confidence_region_points(model, problem, algorithm_rf, alg
     """
     returns solvers.monte_carlo_multiple_initial_value.ensemble_trajectoryies
     """
-    mmdu.apply_decision_variables_to_parameters(best_point, model, problem)
-    ssr = compute_chisquared_constraint( \
-        best_point["objective_function"],
-        problem["outputs"],
-        problem["nonlinear_confidence_region"]["alpha"])
-    problem["nonlinear_confidence_region"]["ssr"] = ssr
-    
-    hyperrect = compute_nonlinear_confidence_intervals(model, problem, algorithm_rf)
+    hyperrect = compute_nonlinear_confidence_intervals(model, problem, algorithm_rf, best_point)
     hyper = []
     for ii in range(len(hyperrect)):
         hyper.append(tuple(hyperrect[ii]))
@@ -48,7 +42,19 @@ def evaluate_multiple_points_in_hyperrectangle_by_nonlinear_confidence_intervals
     return hyper
 
 
-def compute_nonlinear_confidence_intervals(model, problem, algorithm):
+def compute_nonlinear_confidence_intervals(model, problem, algorithm, best_point):
+    mmdu.apply_decision_variables_to_parameters(best_point, model, problem)
+    ssr = compute_chisquared_constraint( \
+        best_point["objective_function"],
+        problem["outputs"],
+        problem["nonlinear_confidence_region"]["alpha"])
+    problem["nonlinear_confidence_region"]["ssr"] = ssr
+
+    hyperrectangle = compute_nonlinear_confidence_hyperrectangle(model, problem, algorithm)
+    return hyperrectangle
+
+
+def compute_nonlinear_confidence_hyperrectangle(model, problem, algorithm):
     hyperrectangle = []
     func = problem["performance_measure"]
     opt_param = copy.deepcopy(problem["parameters"])
@@ -69,6 +75,9 @@ def compute_nonlinear_confidence_interval(model, problem, algorithm, index):
     upper = sdo.solve(model, problem, algorithm)
     problem["performance_measure"] = sdo.minimise_it
     lower = sdo.solve(model, problem, algorithm)
+
+    if (upper.status > 0 or lower.status > 0):
+        codi.print_warning_error_code_message()
 
     return [lower.x[0], upper.x[0]]
 
