@@ -1,6 +1,5 @@
 
 import matplotlib.pyplot as pp
-import numpy
 
 import results.plot as rp
 
