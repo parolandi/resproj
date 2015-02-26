@@ -46,9 +46,8 @@ def experiment2():
 def experiment3():
     t_if = numpy.arange(0.0, 1.0, 1.0 / 10)
     y0 = 0.0
-    u = 1.0
-    p = 2.0
-    y = ([u], models.ordinary_differential.linear, y0, t_if, [p])
+    u0 = 1.0
+    p = 2.0 * u0
     t = t_if[len(t_if)-1]
     
     initial_guess = 0.1
@@ -66,9 +65,8 @@ def experiment3():
 def experiment4():
     t_if = numpy.arange(0.0, 1.0, 1.0 / 10)
     y0 = 0.0
-    u = 1.0
-    p = 2.0
-    y = ([u], models.ordinary_differential.linear, y0, t_if, [p])
+    u0 = 1.0
+    p = 2.0 * u0
     t = t_if[len(t_if)-1]
     
     initial_guess = 0.1
