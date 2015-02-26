@@ -76,7 +76,7 @@ def do_base_problem_setup(model_data, data_instance):
         problem_data["outputs"] = data_instance["observables"]
         assert(len(["output_indices"]) == len(["outputs"]))
 
-#    problem_data["initial"] = "exclude"
+    problem_data["initial"] = "exclude"
 
     return problem_data
 
