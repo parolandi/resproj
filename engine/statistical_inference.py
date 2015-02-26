@@ -6,7 +6,7 @@ import numpy
 '''
 Compute the confidence ellipsoid for the following assumptions:
 TODO:
-no_params: number of paramaters estimated
+no_params: number of parameters estimated
 no_meas: number of measurement points
 est_stdev: estimated standard deviation (e.g., R/(n-p))
 significance: confidence level (e.g., 0.95 for 95%)
