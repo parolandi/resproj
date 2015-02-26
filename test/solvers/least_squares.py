@@ -22,6 +22,7 @@ def callbackit(x):
 
 
 # TODO: test all algorithms with this simple case, non only SLSQP
+# TODO: regress with noise
 class TestLeastSquaresSolvers(unittest.TestCase):
 
 
