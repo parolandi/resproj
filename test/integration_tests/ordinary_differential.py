@@ -21,6 +21,7 @@ class TestOrdinaryDifferential(unittest.TestCase):
 
     baseline = {}
     baseline["number_of_points"] = 0
+    baseline["intervals"] = []
     
 
     def __init__(self, *args, **kwargs):
@@ -158,7 +159,6 @@ class TestOrdinaryDifferential(unittest.TestCase):
         # do nonlin conf intvs
         actual = ecr.compute_nonlinear_confidence_intervals( \
             model, problem, algorithm_rf, best_point)
-        #print(actual)
         self.assertEquals(actual, baseline["intervals"])
 
         # plot nonlin conf ints
@@ -177,6 +177,63 @@ class TestOrdinaryDifferential(unittest.TestCase):
         baseline = dict(self.baseline)
         baseline["intervals"] = [[1.1742834200072017, 1.2605897448526138], [2.1339948902051442, 2.1723709852890125]]
         self.do_test_compute_nonlinear_confidence_intervals( \
+            self.do_setup_nonlin, self.do_experiment_setup_nonlin, baseline)
+
+
+    def do_test_compute_nonlinear_confidence_region_both(self, setup, config, baseline):
+        # setup regression
+        model, problem, _ = setup()
+        algorithm = dict(ssd.algorithm_structure)
+        algorithm["initial_guesses"] = problem["parameters"]
+        algorithm["method"] = 'SLSQP'
+
+        # do regression        
+        dvs = sls.solve(model, problem, algorithm)
+        mmdu.apply_values_to_parameters(dvs.x, model, problem)
+        obj = mod.sum_squared_residuals_st(None, None, model, problem)
+        best_point = {}
+        best_point["decision_variables"] = dvs.x
+        best_point["objective_function"] = obj
+        
+        # plot regression
+        if self.do_plotting:
+            experiment = config()
+            wr.plot_tiled_trajectories_at_point(experiment, best_point)
+    
+        # setup nonlin conf reg
+        model, problem, algorithm_rf = setup()
+        algorithm_mc = dict(mcmiv.montecarlo_multiple_simulation_params)
+        algorithm_mc["number_of_trials"] = 10000
+        
+        # do nonlin conf reg
+        region = ecr.compute_nonlinear_confidence_region_points( \
+            model, problem, algorithm_rf, algorithm_mc, best_point)
+        number_of_points = len(numpy.transpose(region["objective_function"]))
+        self.assertEquals(number_of_points, baseline["number_of_points"])
+
+        # do nonlin conf intvs
+        intervals = ecr.compute_nonlinear_confidence_intervals( \
+            model, problem, algorithm_rf, best_point)
+        self.assertEquals(intervals, baseline["intervals"])
+
+        if self.do_plotting:
+            points = numpy.asarray(region["decision_variables"])
+            repl.plot_scatter_and_box(numpy.transpose(points)[0], numpy.transpose(points)[1], intervals)
+
+
+    def test_compute_nonlinear_confidence_region_both_lin(self):
+        baseline = {}
+        baseline["number_of_points"] = 7834
+        baseline["intervals"] = [[1.2421237393664939, 1.3649213376271863], [2.2151913416682403, 2.2765901228560925]]
+        self.do_test_compute_nonlinear_confidence_region_both( \
+            self.do_setup_lin, self.do_experiment_setup_lin, baseline)
+
+
+    def test_compute_nonlinear_confidence_region_both_nonlin(self):
+        baseline = {}
+        baseline["number_of_points"] = 7841
+        baseline["intervals"] = [[1.1742834200072017, 1.2605897448526138], [2.1339948902051442, 2.1723709852890125]]
+        self.do_test_compute_nonlinear_confidence_region_both( \
             self.do_setup_nonlin, self.do_experiment_setup_nonlin, baseline)
 
 

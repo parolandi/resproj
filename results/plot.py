@@ -227,3 +227,10 @@ def plot_box(vertices):
     pp.vlines(vertices[0], vertices[1][0], vertices[1][1], colors='b')
     pp.hlines(vertices[1], vertices[0][0], vertices[0][1], colors='b')
     pp.show()
+
+
+def plot_scatter_and_box(x, y, vertices):
+    pp.plot(x, y, 'o')
+    pp.vlines(vertices[0], vertices[1][0], vertices[1][1], colors='b')
+    pp.hlines(vertices[1], vertices[0][0], vertices[0][1], colors='b')
+    pp.show()
