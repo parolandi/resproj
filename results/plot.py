@@ -216,3 +216,14 @@ def plot_histogram_cutoff_by_count(data, bins, count):
     cutoff_data = dnp.cutoff_tail_by_count(data, count)
     pp.hist(cutoff_data, bins = bins)
     pp.show()
+
+
+def plot_scatter(x, y):
+    pp.plot(x, y, 'o')
+    pp.show()
+    
+    
+def plot_box(vertices):
+    pp.vlines(vertices[0], vertices[1][0], vertices[1][1], colors='b')
+    pp.hlines(vertices[1], vertices[0][0], vertices[0][1], colors='b')
+    pp.show()
