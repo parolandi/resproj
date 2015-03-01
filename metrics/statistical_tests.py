@@ -39,7 +39,10 @@ def calculate_one_sided_chi_squared_value(significance, dof):
     return scipy.stats.chi2.isf(significance, dof)
 
 
-# TODO: validation of user input
+def calculate_two_sided_t_student_value(significance, no_meas, no_params):
+    q = (1-significance)/2
+    return scipy.stats.t.isf(q, no_meas-no_params)
+
 
 # the significance is one sided, naturally
 # res: residual, maximum likelihood
