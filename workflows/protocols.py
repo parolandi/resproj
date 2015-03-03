@@ -151,15 +151,15 @@ def do_basic_workflow_at_solution_point(config, solution_point):
     return workflow_results
 
 
-'''
-Compute sensitivities, covariance matrix,
-estimated standard deviation, ellipsoid radius and confidence intervals
-config: setups.setup_data.experiment_setup
-solution_point:
-return: workflows.workflow_data.sensitivity_based_point_results
-'''
 # TODO: change to at any point
 def do_sensitivity_based_workflow_at_solution_point(config, solution_point):
+    """
+    Compute sensitivities, covariance matrix,
+    estimated standard deviation, ellipsoid radius and confidence intervals
+    config: setups.setup_data.experiment_setup
+    solution_point:
+    return: workflows.workflow_data.sensitivity_based_point_results
+    """
     assert(solution_point is not None)
     # TODO: preconditions!
     ssr = solution_point["objective_function"]
@@ -187,18 +187,20 @@ def do_sensitivity_based_workflow_at_solution_point(config, solution_point):
     sens_trajectories = mmdu.get_sensitivity_trajectories( \
         dim_states, problem_instance, state_and_sens_trajectories)
 
-    # covariance matrix
+    # TODO: transform 0.9 into configuration
+    conf = 0.9
+    # covariance matrix, ellipsoid radius and confidence interval
     no_obs = len(problem_instance["outputs"])
+    no_meas = mmdu.calculate_number_of_observations(problem_instance["outputs"])
     no_params = mmdu.get_number_of_decision_variables(problem_instance)
     no_timepoints = mmdu.get_number_of_time_points(problem_instance)
+
     cov_matrix = eem.compute_covariance_matrix(no_obs, no_params, no_timepoints, sens_trajectories)
     corr_matrix = eem.calculate_correlation_matrix(cov_matrix)
-
-    # ellipsoid radius and confidence interval
-    no_meas = mmdu.calculate_number_of_observations(problem_instance["outputs"])
     est_stdev = esi.compute_measurements_standard_deviation(ssr, no_params, no_meas)
-    ell_radius = esi.compute_confidence_ellipsoid_radius(no_params, no_meas, est_stdev, 0.9)
-    confidence_intervals = esi.compute_confidence_intervals(cov_matrix, ell_radius)
+    ell_radius = esi.compute_confidence_ellipsoid_radius(no_params, no_meas, est_stdev, conf)
+    confidence_intervals = esi.compute_confidence_intervals( \
+        cov_matrix, mst.calculate_two_sided_t_student_value(conf, no_meas, no_params))
 
     workflow_results = dict(wwd.sensitivity_based_point_results)
     workflow_results["params"] = copy.deepcopy(problem_instance["parameters"])
