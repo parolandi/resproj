@@ -156,7 +156,7 @@ def odeint(func, y0, t, args=(), Dfun=None, col_deriv=0, full_output=0,
     if full_output:
         output[1]['message'] = _msgs[output[-1]]
 
-    output = output[:-1]
+#    output = output[:-1]
     if len(output) == 1:
         return output[0]
     else:
