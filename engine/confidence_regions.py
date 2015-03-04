@@ -6,6 +6,8 @@ import metrics.statistical_tests as mst
 import models.model_data_utils as mmdu
 import solvers.dynamic_optimisation as sdo
 import solvers.monte_carlo_multiple_initial_value as mcmiv
+# TODO: dependency, engine cannot depend on workflow
+import workflows.protocols as wopr
 
 
 def compute_nonlinear_confidence_region_points(model, problem, algorithm_rf, algorithm_mc, best_point):
@@ -93,3 +95,28 @@ def compute_chisquared_constraint(ssr0, observations, confidence):
     chisquaredvalue = mst.calculate_one_sided_chi_squared_value(confidence, 1)
     ssr = ssr0 + chisquaredvalue/n
     return ssr
+
+# -----------------------------------------------------------------------------
+
+def compute_linearised_confidence_region_ellipsoid(config, best_point):
+    """
+    return numpy.matrix
+    """
+    workflow_results = wopr.do_sensitivity_based_workflow_at_solution_point(config, best_point)
+    cov_matrix = workflow_results["cov_matrix"]
+    ell_radius = workflow_results["ell_radius"]
+    std_cov_matrix = cov_matrix * ell_radius
+    return std_cov_matrix
+
+
+def compute_linearised_confidence_intervals(config, best_point):
+    """
+    return list of list (list of intervals)
+    """
+    workflow_results = wopr.do_sensitivity_based_workflow_at_solution_point(config, best_point)
+    intervals = workflow_results["conf_intvs"]
+    nominal = best_point["decision_variables"]
+    hyperrectangle = []
+    for ii in range(len(intervals)):
+        hyperrectangle.append([nominal[ii]-intervals[ii], nominal[ii]+intervals[ii]])
+    return hyperrectangle

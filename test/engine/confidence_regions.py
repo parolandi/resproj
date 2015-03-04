@@ -5,16 +5,35 @@ import engine.confidence_regions as testme
 import copy
 import numpy
 
+import results.plot as repl
 import setups.ordinary_differential as sod
+import setups.setup_data as seseda
+import solvers.local_sensitivities as solose
 import solvers.monte_carlo_multiple_initial_value as mcmiv
 import solvers.solver_data as ssd
-
-import matplotlib.pyplot as pp
 
 
 class TestConfidenceRegions(unittest.TestCase):
 
 
+    def __init__(self, *args, **kwargs):
+        super(TestConfidenceRegions, self).__init__(*args, **kwargs)
+        self.do_plotting = False
+
+    
+    def do_experiment_setup_lin(self):
+        config = copy.deepcopy(seseda.experiment_setup)
+        config["algorithm_setup"] = self.do_algorithm_setup
+        config["data_setup"] = sod.do_baseline_data_setup_spliced_111111_without_covariance
+        config["model_setup"] = sod.do_model_setup
+        config["problem_setup"] = sod.do_problem_setup_without_covariance
+        config["protocol_setup"] = None
+        config["protocol_step"]["calib"] = "do"
+        config["protocol_step"]["valid"] = "do"
+        config["sensitivity_setup"] = solose.compute_timecourse_trajectories_and_sensitivities
+        return config
+
+    
     def do_setup_lin(self):
         algorithm = self.do_algorithm_setup()
         data = sod.do_baseline_data_setup_spliced_111111_without_covariance()
@@ -93,10 +112,9 @@ class TestConfidenceRegions(unittest.TestCase):
             model, problem, algorithm_rf, algorithm_mc, best_point)
         self.assertEquals(len(actual["objective_function"]), 7834)
 
-        if False:
+        if self.do_plotting:
             points = numpy.asarray(actual["decision_variables"])
-            pp.plot(numpy.transpose(points)[0], numpy.transpose(points)[1], 'o')
-            pp.show()
+            repl.plot_scatter(numpy.transpose(points)[0], numpy.transpose(points)[1])
 
 
     def test_compute_nonlinear_confidence_region_points_nonlin(self):
@@ -111,12 +129,54 @@ class TestConfidenceRegions(unittest.TestCase):
             model, problem, algorithm_rf, algorithm_mc, best_point)
         self.assertEquals(len(actual["objective_function"]), 7841)
 
-        if False:
+        if self.do_plotting:
             points = numpy.asarray(actual["decision_variables"])
-            pp.plot(numpy.transpose(points)[0], numpy.transpose(points)[1], 'o')
-            pp.show()
+            repl.plot_scatter(numpy.transpose(points)[0], numpy.transpose(points)[1])
+
+
+    def test_compute_linearised_confidence_region_intervals_lin(self):
+        config = self.do_experiment_setup_lin()
+        best = {}
+        best['objective_function'] = 37.641550819151604
+        best['decision_variables'] = [ 1.30352132,  2.24589073]
+        intervals = numpy.asarray(testme.compute_linearised_confidence_intervals(config, best))
+        expected = numpy.asarray([[0.89143076, 1.71561188], [2.03984545, 2.45193601]])
+        [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(intervals.flatten(), expected.flatten())]
+        
+        if self.do_plotting:
+            repl.plot_box(intervals)
+
+
+    def test_compute_linearised_confidence_region_ellipsoid_lin(self):
+        config = self.do_experiment_setup_lin()
+        best = {}
+        best['objective_function'] = 37.641550819151604
+        best['decision_variables'] = [ 1.30352132,  2.24589073]
+        covariance = numpy.asarray(testme.compute_linearised_confidence_region_ellipsoid(config, best))
+        expected = numpy.asarray([[1.14621592e-01, 1.45127430e-10], [1.45127430e-10, 2.86553976e-02]])
+        [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(covariance.flatten(), expected.flatten())]
+        
+        if self.do_plotting:
+            repl.plot_ellipse(best['decision_variables'], covariance)
+
+
+    # TODO: note that this is calling two methods at the time and thus is not a unit-test
+    # but an integration test; leaving here for the moment for convenience
+    def test_compute_linearised_confidence_region_ellipsoid_and_intervals_lin(self):
+        config = self.do_experiment_setup_lin()
+        best = {}
+        best['objective_function'] = 37.641550819151604
+        best['decision_variables'] = [ 1.30352132,  2.24589073]
+        intervals = testme.compute_linearised_confidence_intervals(config, best)
+        expected = numpy.asarray([[0.89143075929592142, 1.7156118807040786], [2.0398454509198882, 2.4519360090801121]])
+        [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(numpy.asarray(intervals).flatten(), expected.flatten())]
+        covariance = testme.compute_linearised_confidence_region_ellipsoid(config, best)
+        expected = numpy.asarray([[1.14621592e-01, 1.45127430e-10], [1.45127430e-10, 2.86553976e-02]])
+        [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(numpy.asarray(covariance).flatten(), numpy.asarray(expected).flatten())]
+        
+        if self.do_plotting:
+            repl.plot_ellipse_and_box(best['decision_variables'], covariance, intervals)
 
 
 if __name__ == "__main__":
     unittest.main()
-    
