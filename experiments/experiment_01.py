@@ -13,6 +13,7 @@ import workflows.workflow_data
 
 
 '''
+Use linear (ordinary differential_ model
 Examine the effect of changing the data splicing pattern between
 different interpolation and extrapolation "extremes", using 30 points
 and both CG and NM methods
@@ -80,8 +81,8 @@ class TestExperiment01(unittest.TestCase):
         actual = wpr.do_basic_workflow_at_solution_point(config, solution_point)
         self.assertAlmostEquals(actual["ssr"], expected, 11)
         actual = wpr.do_sensitivity_based_workflow_at_solution_point(config, solution_point)
-        expected = [1.83394541e-04, 4.58486353e-05]
-        [self.assertAlmostEquals(act, exp, 11) for act, exp in zip(actual["conf_intvs"], expected)]
+        expected = [ 0.41209056,  0.20604528]
+        [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(actual["conf_intvs"], expected)]
 
     
     def test_do_experiment_01_at_conditions_111111_with_CG_and_protocol_without_covariance(self):
@@ -93,8 +94,8 @@ class TestExperiment01(unittest.TestCase):
         actual = wpr.do_basic_workflow_at_solution_point(config, solution_point)
         self.assertAlmostEquals(actual["ssr"], expected, 11)
         actual = wpr.do_sensitivity_based_workflow_at_solution_point(config, solution_point)
-        expected = [0.11462158906831861, 0.028655397267079653]
-        [self.assertAlmostEquals(act, exp, 11) for act, exp in zip(actual["conf_intvs"], expected)]
+        expected = [ 0.41209056,  0.20604528]
+        [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(actual["conf_intvs"], expected)]
 
     
     def test_do_experiment_01_at_conditions_111000_with_CG_and_protocol(self):
@@ -107,8 +108,8 @@ class TestExperiment01(unittest.TestCase):
         actual = wpr.do_basic_workflow_at_solution_point(config, solution_point)
         self.assertAlmostEquals(actual["ssr"], expected, 11)
         actual = wpr.do_sensitivity_based_workflow_at_solution_point(config, solution_point)
-        expected = [0.0010160231506539392, 0.0002540057876634848]
-        [self.assertAlmostEquals(act, exp, 11) for act, exp in zip(actual["conf_intvs"], expected)]
+        expected = [ 0.7984734969423507,  0.39923674847117535]
+        [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(actual["conf_intvs"], expected)]
         ssdu.set_next_protocol_step(config)
         # validation
         solution_point = wpr.do_validation_and_compute_performance_measure_at_solution_point(config, solution_point)
@@ -117,7 +118,7 @@ class TestExperiment01(unittest.TestCase):
         actual = wpr.do_basic_workflow_at_solution_point(config, solution_point)
         self.assertAlmostEquals(actual["ssr"], expected, 11)
         actual = wpr.do_sensitivity_based_workflow_at_solution_point(config, solution_point)
-        expected = [1.85877106e-04, 4.64692765e-05]
+        expected = [0.49165476180082279, 0.2458273809004114]
         [self.assertAlmostEquals(act, exp, 11) for act, exp in zip(actual["conf_intvs"], expected)]
 
     

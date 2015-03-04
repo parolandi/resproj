@@ -12,12 +12,13 @@ import solvers.initial_value
 
 import common.diagnostics as cd
 import common.utilities as cu
+import metrics.statistical_tests as mestte
+import models.model_data_utils as mmdu
 import engine.estimation_matrices
 import engine.statistical_inference
+import results.plot_tiles as rpt
 import solvers.initial_value as siv
 import solvers.local_sensitivities as sls
-import results.plot_tiles as rpt
-import models.model_data_utils as mmdu
 
 
 class TestKremlingEtAlBioreactor(unittest.TestCase):
@@ -122,16 +123,20 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
         # all this for the confidence intervals
         cov_matrix = engine.estimation_matrices.compute_covariance_matrix( \
             no_obs, no_params, no_timepoints, sens_trajectories)
+        det = engine.estimation_matrices.calculate_determinant(cov_matrix)
+
+        confidence_intervals = engine.statistical_inference.compute_confidence_intervals( \
+            cov_matrix, mestte.calculate_two_sided_t_student_value(0.9, no_meas, no_params))
+        # "Yxs": 7.031E-5, k2": 5.559E6, "ksynmax": 8.2E-3, "KIB": 0.166
+        expected = [  8.57302147e-05,  8.54550124e+07,  1.35671412e+00,  1.76445263e+00]
+        delta = [0.00000001e-05, 0.00000001e+07, 0.00000001e+00, 0.00000001e+00]
+        [self.assertAlmostEquals(act, exp, delta=dif) for act, exp, dif in zip(confidence_intervals, expected, delta)] 
+
         est_stdev = engine.statistical_inference.compute_measurements_standard_deviation( \
             ssr, no_params, no_meas)
         ell_radius = engine.statistical_inference.compute_confidence_ellipsoid_radius( \
             no_params, no_meas, est_stdev, 0.9)
-        confidence_intervals = engine.statistical_inference.compute_confidence_intervals( \
-            cov_matrix, ell_radius)
-        det = engine.estimation_matrices.calculate_determinant(cov_matrix)
-        expected = [1.68587487e-14, 1.67506860e+10, 4.22215529e-06, 7.14130399e-06]
-        delta = [0.00000001e-14, 0.00000001e+10, 0.00000001e-06, 0.00000001e-06]
-        [self.assertAlmostEquals(act, exp, delta=dif) for act, exp, dif in zip(confidence_intervals, expected, delta)] 
+
         if self.do_diag:
             cd.print_maximum_sensitivities(sens_max)
             cd.print_measurements_stdev_and_ellipsoid_radius(no_meas, est_stdev, ell_radius)
