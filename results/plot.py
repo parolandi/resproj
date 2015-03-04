@@ -1,5 +1,7 @@
 
 import matplotlib.pyplot as pp
+from matplotlib.patches import Ellipse
+import numpy
 
 import data.nonparametrics as dnp
 
@@ -219,18 +221,74 @@ def plot_histogram_cutoff_by_count(data, bins, count):
 
 
 def plot_scatter(x, y):
+    fig = pp.figure()
+    ax = fig.add_subplot(111)
     pp.plot(x, y, 'o')
+    ax.set_xlim(min(x)/1.1, max(x)*1.1)
+    ax.set_ylim(min(y)/1.1, max(y)*1.1)
     pp.show()
     
     
 def plot_box(vertices):
+    fig = pp.figure()
+    ax = fig.add_subplot(111)
     pp.vlines(vertices[0], vertices[1][0], vertices[1][1], colors='b')
     pp.hlines(vertices[1], vertices[0][0], vertices[0][1], colors='b')
+    ax.set_xlim(vertices[0][0]/1.1, vertices[0][1]*1.1)
+    ax.set_ylim(vertices[1][0]/1.1, vertices[1][1]*1.1)
     pp.show()
 
 
+# TODO: limits
 def plot_scatter_and_box(x, y, vertices):
+    fig = pp.figure()
+    _ = fig.add_subplot(111)
     pp.plot(x, y, 'o')
+    pp.vlines(vertices[0], vertices[1][0], vertices[1][1], colors='b')
+    pp.hlines(vertices[1], vertices[0][0], vertices[0][1], colors='b')
+    #ax.set_xlim(min(x, vertices[0][0])/1.1, max(x, vertices[0][1])*1.1)
+    #ax.set_ylim(min(y, vertices[1][0])/1.1, max(y, vertices[1][1])*1.1)
+    pp.show()
+
+
+def plot_ellipse(center, covar):
+    covariance = numpy.asmatrix(covar)
+    # TODO: preconditions
+    # sign eigenvals
+    eigenvals, eigenvecs = numpy.linalg.eig(covariance)
+    lambdaa = numpy.sqrt(eigenvals)
+    ell = Ellipse(xy=center, width=lambdaa[0]*2, height=lambdaa[1]*2, angle=numpy.rad2deg(numpy.arccos(eigenvecs[0,0])))
+    
+    fig = pp.figure()
+    ax = fig.add_subplot(111)
+    ax.add_artist(ell)
+    ell.set_clip_box(ax.bbox)
+    height = numpy.sqrt(covariance[0,0]) * 1.1
+    width = numpy.sqrt(covariance[1,1]) * 1.1
+    ax.set_xlim(center[0]-height, center[0]+height)
+    ax.set_ylim(center[1]-width, center[1]+width)
+    ell.set_facecolor('none')
+    pp.show()
+
+
+def plot_ellipse_and_box(center, covar, vertices):
+    covariance = numpy.asmatrix(covar)
+    # TODO: preconditions
+    # sign eigenvals
+    eigenvals, eigenvecs = numpy.linalg.eig(covariance)
+    lambdaa = numpy.sqrt(eigenvals)
+    ell = Ellipse(xy=center, width=lambdaa[0]*2, height=lambdaa[1]*2, angle=numpy.rad2deg(numpy.arccos(eigenvecs[0,0])))
+    
+    fig = pp.figure()
+    ax = fig.add_subplot(111)
+    ax.add_artist(ell)
+    ell.set_clip_box(ax.bbox)
+    height = numpy.sqrt(covariance[0,0]) * 1.2
+    width = numpy.sqrt(covariance[1,1]) * 1.2
+    ax.set_xlim(center[0]-height, center[0]+height)
+    ax.set_ylim(center[1]-width, center[1]+width)
+    ell.set_facecolor('none')
+
     pp.vlines(vertices[0], vertices[1][0], vertices[1][1], colors='b')
     pp.hlines(vertices[1], vertices[0][0], vertices[0][1], colors='b')
     pp.show()
