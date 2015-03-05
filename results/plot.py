@@ -242,12 +242,22 @@ def plot_box(vertices):
 # TODO: limits
 def plot_scatter_and_box(x, y, vertices):
     fig = pp.figure()
-    _ = fig.add_subplot(111)
+    ax = fig.add_subplot(111)
     pp.plot(x, y, 'o')
     pp.vlines(vertices[0], vertices[1][0], vertices[1][1], colors='b')
     pp.hlines(vertices[1], vertices[0][0], vertices[0][1], colors='b')
-    #ax.set_xlim(min(x, vertices[0][0])/1.1, max(x, vertices[0][1])*1.1)
-    #ax.set_ylim(min(y, vertices[1][0])/1.1, max(y, vertices[1][1])*1.1)
+
+    xlb = x
+    xub = x
+    xlb.append(vertices[0][0])
+    xub.append(vertices[0][1])
+    ylb = y
+    yub = y
+    ylb.append(vertices[1][0])
+    yub.append(vertices[1][1])
+    ax.set_xlim(min(xlb)/1.1, max(xub)*1.1)
+    ax.set_ylim(min(ylb)/1.1, max(yub)*1.1)
+    
     pp.show()
 
 
@@ -283,12 +293,22 @@ def plot_ellipse_and_box(center, covar, vertices):
     ax = fig.add_subplot(111)
     ax.add_artist(ell)
     ell.set_clip_box(ax.bbox)
-    height = numpy.sqrt(covariance[0,0]) * 1.2
-    width = numpy.sqrt(covariance[1,1]) * 1.2
-    ax.set_xlim(center[0]-height, center[0]+height)
-    ax.set_ylim(center[1]-width, center[1]+width)
+    height = lambdaa[1] # numpy.sqrt(covariance[0,0]) * 1.2
+    width = lambdaa[0] # numpy.sqrt(covariance[1,1]) * 1.2
     ell.set_facecolor('none')
 
     pp.vlines(vertices[0], vertices[1][0], vertices[1][1], colors='b')
     pp.hlines(vertices[1], vertices[0][0], vertices[0][1], colors='b')
+
+    xlb = [center[0]-width]
+    xub = [center[0]+width]
+    xlb.append(vertices[0][0])
+    xub.append(vertices[0][1])
+    ylb = [center[1]-height]
+    yub = [center[1]+height]
+    ylb.append(vertices[1][0])
+    yub.append(vertices[1][1])
+    ax.set_xlim(min(xlb)/1.1, max(xub)*1.1)
+    ax.set_ylim(min(ylb)/1.1, max(yub)*1.1)
+
     pp.show()
