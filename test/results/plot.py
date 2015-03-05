@@ -2,6 +2,8 @@
 import unittest
 import results.plot as testme
 
+import numpy
+
 
 class TestPlot(unittest.TestCase):
 
@@ -40,8 +42,8 @@ class TestPlot(unittest.TestCase):
         
 
     def test_plot_scatter_and_box(self):
-        x = [1,2,3,4,5]
-        y = [5,4,3,2,1]
+        x = numpy.asarray([1,2,3,4,5])
+        y = numpy.asarray([5,4,3,2,1])
         vertices = [[0,2], [0,2]]
         if self.do_plotting:
             testme.plot_scatter_and_box(x, y, vertices)

@@ -241,20 +241,20 @@ def plot_box(vertices):
 
 # TODO: limits
 def plot_scatter_and_box(x, y, vertices):
+    """
+    x, y numpy.array
+    vertices list of list
+    """
     fig = pp.figure()
     ax = fig.add_subplot(111)
     pp.plot(x, y, 'o')
     pp.vlines(vertices[0], vertices[1][0], vertices[1][1], colors='b')
     pp.hlines(vertices[1], vertices[0][0], vertices[0][1], colors='b')
 
-    xlb = x
-    xub = x
-    xlb.append(vertices[0][0])
-    xub.append(vertices[0][1])
-    ylb = y
-    yub = y
-    ylb.append(vertices[1][0])
-    yub.append(vertices[1][1])
+    xlb = numpy.concatenate((x, numpy.asarray([vertices[0][0]])))
+    xub = numpy.concatenate((x, numpy.asarray([vertices[0][1]])))
+    ylb = numpy.concatenate((y, numpy.asarray([vertices[1][0]])))
+    yub = numpy.concatenate((y, numpy.asarray([vertices[1][1]])))
     ax.set_xlim(min(xlb)/1.1, max(xub)*1.1)
     ax.set_ylim(min(ylb)/1.1, max(yub)*1.1)
     
