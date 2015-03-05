@@ -8,6 +8,10 @@ import data.nonparametrics as dnp
 # TODO: rename to plot single
 
 
+def get_lim_scaling_factor():
+    return 1.01
+
+
 def plot_errors_and_residuals(independent,  errors, residuals):
     # TODO assertions
     
@@ -224,8 +228,9 @@ def plot_scatter(x, y):
     fig = pp.figure()
     ax = fig.add_subplot(111)
     pp.plot(x, y, 'o')
-    ax.set_xlim(min(x)/1.1, max(x)*1.1)
-    ax.set_ylim(min(y)/1.1, max(y)*1.1)
+    sf = get_lim_scaling_factor()
+    ax.set_xlim(min(x)/sf, max(x)*sf)
+    ax.set_ylim(min(y)/sf, max(y)*sf)
     pp.show()
     
     
@@ -234,8 +239,9 @@ def plot_box(vertices):
     ax = fig.add_subplot(111)
     pp.vlines(vertices[0], vertices[1][0], vertices[1][1], colors='b')
     pp.hlines(vertices[1], vertices[0][0], vertices[0][1], colors='b')
-    ax.set_xlim(vertices[0][0]/1.1, vertices[0][1]*1.1)
-    ax.set_ylim(vertices[1][0]/1.1, vertices[1][1]*1.1)
+    sf = get_lim_scaling_factor()
+    ax.set_xlim(vertices[0][0]/sf, vertices[0][1]*sf)
+    ax.set_ylim(vertices[1][0]/sf, vertices[1][1]*sf)
     pp.show()
 
 
@@ -255,8 +261,9 @@ def plot_scatter_and_box(x, y, vertices):
     xub = numpy.concatenate((x, numpy.asarray([vertices[0][1]])))
     ylb = numpy.concatenate((y, numpy.asarray([vertices[1][0]])))
     yub = numpy.concatenate((y, numpy.asarray([vertices[1][1]])))
-    ax.set_xlim(min(xlb)/1.1, max(xub)*1.1)
-    ax.set_ylim(min(ylb)/1.1, max(yub)*1.1)
+    sf = get_lim_scaling_factor()
+    ax.set_xlim(min(xlb)/sf, max(xub)*sf)
+    ax.set_ylim(min(ylb)/sf, max(yub)*sf)
     
     pp.show()
 
@@ -273,8 +280,9 @@ def plot_ellipse(center, covar):
     ax = fig.add_subplot(111)
     ax.add_artist(ell)
     ell.set_clip_box(ax.bbox)
-    height = numpy.sqrt(covariance[0,0]) * 1.1
-    width = numpy.sqrt(covariance[1,1]) * 1.1
+    sf = get_lim_scaling_factor()
+    height = numpy.sqrt(covariance[0,0]) * sf
+    width = numpy.sqrt(covariance[1,1]) * sf
     ax.set_xlim(center[0]-height, center[0]+height)
     ax.set_ylim(center[1]-width, center[1]+width)
     ell.set_facecolor('none')
@@ -308,7 +316,8 @@ def plot_ellipse_and_box(center, covar, vertices):
     yub = [center[1]+height]
     ylb.append(vertices[1][0])
     yub.append(vertices[1][1])
-    ax.set_xlim(min(xlb)/1.1, max(xub)*1.1)
-    ax.set_ylim(min(ylb)/1.1, max(yub)*1.1)
+    sf = get_lim_scaling_factor()
+    ax.set_xlim(min(xlb)/sf, max(xub)*sf)
+    ax.set_ylim(min(ylb)/sf, max(yub)*sf)
 
     pp.show()
