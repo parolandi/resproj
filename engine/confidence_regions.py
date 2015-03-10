@@ -2,6 +2,7 @@
 import copy
 
 import common.diagnostics as codi
+import engine.statistical_inference as enstin
 import metrics.statistical_tests as mst
 import models.model_data_utils as mmdu
 import solvers.dynamic_optimisation as sdo
@@ -46,9 +47,10 @@ def evaluate_multiple_points_in_hyperrectangle_by_nonlinear_confidence_intervals
 
 def compute_nonlinear_confidence_intervals(model, problem, algorithm, best_point):
     mmdu.apply_decision_variables_to_parameters(best_point, model, problem)
-    ssr = compute_chisquared_constraint( \
+    ssr = compute_f_constraint( \
         best_point["objective_function"],
         problem["outputs"],
+        len(problem["parameter_indices"]),
         problem["nonlinear_confidence_region"]["alpha"])
     problem["nonlinear_confidence_region"]["ssr"] = ssr
 
@@ -90,11 +92,23 @@ def check_test(value, cutoff):
     return False
 
 
+# TODO: not tested
 def compute_chisquared_constraint(ssr0, observations, confidence):
+    assert(False)
+
     n = mmdu.calculate_number_of_observations(observations)
     chisquaredvalue = mst.calculate_one_sided_chi_squared_value(confidence, 1)
     ssr = ssr0 + chisquaredvalue/n
     return ssr
+
+
+def compute_f_constraint(ssr0, observations, no_params, confidence):
+    no_meas = mmdu.calculate_number_of_observations(observations)
+    f_value = enstin.compute_one_sided_f_value(confidence, no_meas, no_params)
+    est_stdev = enstin.compute_measurements_standard_deviation(ssr0, no_params, no_meas)
+    ssr = ssr0 + est_stdev * no_params * f_value
+    return ssr
+
 
 # -----------------------------------------------------------------------------
 
