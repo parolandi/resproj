@@ -19,10 +19,10 @@ def compute_confidence_ellipsoid_radius(no_params, no_meas, est_stdev, significa
     assert(est_stdev > 0)
     assert(significance > 0 and significance < 1)
     
-    q = 1 - significance
-    f_value = scipy.stats.f.isf(q, no_params, no_meas - no_params)
-    radius = no_params * est_stdev **2 * f_value
+    f_value = compute_one_sided_f_value(significance, no_meas, no_params)
+    radius = est_stdev * no_params * f_value
 
+    # TODO: change to settings
     user_messages = False
     if user_messages:
         print("est-stdev: ", est_stdev)
@@ -55,3 +55,12 @@ def compute_confidence_intervals(covariance_matrix, t_value):
     for ii in range(no_params):
         confidence_intervals[ii] = t_value * math.sqrt(covariance_matrix[ii, ii])
     return confidence_intervals
+
+
+def compute_one_sided_f_value(significance, no_meas, no_params):
+    assert(no_meas > 0 and no_params > 0)
+    assert(no_meas > no_params)
+    
+    q = 1 - significance
+    f_value = scipy.stats.f.isf(q, no_params, no_meas - no_params)
+    return f_value
