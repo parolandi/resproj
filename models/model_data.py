@@ -30,7 +30,7 @@ problem_formulation = {
 nonlinear_confidence_region_formulation = {
     "ssr": 0,
     "parameter_index": 0,
-    "alpha": 0.05,
+    "alpha": 0.90,
     }
 
 
