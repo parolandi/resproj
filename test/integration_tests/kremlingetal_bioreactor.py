@@ -132,14 +132,14 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
         delta = [0.00000001e-05, 0.00000001e+07, 0.00000001e+00, 0.00000001e+00]
         [self.assertAlmostEquals(act, exp, delta=dif) for act, exp, dif in zip(confidence_intervals, expected, delta)] 
 
-        est_stdev = engine.statistical_inference.compute_measurements_standard_deviation( \
+        est_var = engine.statistical_inference.compute_measurements_variance( \
             ssr, no_params, no_meas)
         ell_radius = engine.statistical_inference.compute_confidence_ellipsoid_radius( \
-            no_params, no_meas, est_stdev, 0.9)
+            no_params, no_meas, est_var, 0.9)
 
         if self.do_diag:
             cd.print_maximum_sensitivities(sens_max)
-            cd.print_measurements_stdev_and_ellipsoid_radius(no_meas, est_stdev, ell_radius)
+            cd.print_measurements_est_var_and_ellipsoid_radius(no_meas, est_var, ell_radius)
             cd.print_covariance_matrix_and_determinant(cov_matrix, det)
             cd.print_decision_variables_and_confidence_intervals(problem_instance["parameters"], confidence_intervals)
 

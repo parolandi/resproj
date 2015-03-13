@@ -4,6 +4,7 @@ import engine.confidence_regions as testme
 
 import copy
 import numpy
+import scipy.stats
 
 import results.plot as repl
 import setups.ordinary_differential as sod
@@ -39,7 +40,7 @@ class TestConfidenceRegions(unittest.TestCase):
         data = sod.do_baseline_data_setup_spliced_111111_without_covariance()
         model = sod.do_model_setup_lin()
         problem = sod.do_problem_setup_without_covariance(model, data["calib"])
-        problem["nonlinear_confidence_region"]["ssr"] = 43
+        problem["confidence_region"]["ssr"] = 43
         return model, problem, algorithm
 
 
@@ -48,7 +49,7 @@ class TestConfidenceRegions(unittest.TestCase):
         data = sod.do_data_setup_nonlin_spliced_111111_without_covariance()
         model = sod.do_model_setup_nonlin()
         problem = sod.do_problem_setup_without_covariance(model, data["calib"])
-        problem["nonlinear_confidence_region"]["ssr"] = 43
+        problem["confidence_region"]["ssr"] = 43
         return model, problem, algorithm
 
     
@@ -59,6 +60,16 @@ class TestConfidenceRegions(unittest.TestCase):
         return algorithm
         
 
+    def test_compute_f_constraint(self):
+        no_meas = 20
+        no_params = 2
+        alpha = 0.01
+        ssr = scipy.stats.chi2.stats(no_meas-no_params, moments='m')
+        est_var = ssr / (no_meas-no_params)
+        ssr_threshold = testme.compute_f_constraint(ssr, numpy.ones(no_meas), no_params, 1-alpha)
+        self.assertAlmostEquals(ssr + est_var * no_params * scipy.stats.f.isf(alpha, no_params, no_meas - no_params), ssr_threshold, 8)
+    
+    
     def test_compute_nonlinear_confidence_interval_lin(self):
         model, problem, algorithm = self.do_setup_lin()
         actual = testme.compute_nonlinear_confidence_interval(model, problem, algorithm, 0)
@@ -158,24 +169,6 @@ class TestConfidenceRegions(unittest.TestCase):
         
         if self.do_plotting:
             repl.plot_ellipse(best['decision_variables'], covariance)
-
-
-    # TODO: note that this is calling two methods at the time and thus is not a unit-test
-    # but an integration test; leaving here for the moment for convenience
-    def test_compute_linearised_confidence_region_ellipsoid_and_intervals_lin(self):
-        config = self.do_experiment_setup_lin()
-        best = {}
-        best['objective_function'] = 37.641550819151604
-        best['decision_variables'] = [ 1.30352132,  2.24589073]
-        intervals = testme.compute_linearised_confidence_intervals(config, best)
-        expected = numpy.asarray([[0.89143075929592142, 1.7156118807040786], [2.0398454509198882, 2.4519360090801121]])
-        [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(numpy.asarray(intervals).flatten(), expected.flatten())]
-        covariance = testme.compute_linearised_confidence_region_ellipsoid(config, best)
-        expected = numpy.asarray([[1.14621592e-01, 1.45127430e-10], [1.45127430e-10, 2.86553976e-02]])
-        [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(numpy.asarray(covariance).flatten(), numpy.asarray(expected).flatten())]
-        
-        if self.do_plotting:
-            repl.plot_ellipse_and_box(best['decision_variables'], covariance, intervals)
 
 
 if __name__ == "__main__":

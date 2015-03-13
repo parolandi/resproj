@@ -49,9 +49,9 @@ def print_observations_parameters_and_timeponts(obs, pars, pnts):
     print("no timepoints:", pnts)
 
 
-def print_measurements_stdev_and_ellipsoid_radius(meas, stdev, ellrad):
+def print_measurements_est_var_and_ellipsoid_radius(meas, est_var, ellrad):
     print("no measurements:", meas)
-    print("standard deviation:", stdev)
+    print("estimated variance:", est_var)
     print("ellipsoid radius:", ellrad)
 
 

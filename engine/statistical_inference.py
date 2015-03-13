@@ -4,28 +4,28 @@ import numpy
 import scipy.stats
 
 
-def compute_confidence_ellipsoid_radius(no_params, no_meas, est_stdev, significance):
+def compute_confidence_ellipsoid_radius(no_params, no_meas, est_var, significance):
     """
     Compute the confidence ellipsoid for the following assumptions:
     TODO:
     no_params: number of parameters estimated
     no_meas: number of measurement points
-    est_stdev: estimated standard deviation (e.g., R/(n-p))
+    est_var: estimated variance (e.g., S/(n-p)=R^2/(n-p))
     significance: confidence level (e.g., 0.95 for 95%)
     """
     assert(no_params > 0)
     assert(no_meas > 0)
     assert(no_meas > no_params)
-    assert(est_stdev > 0)
+    assert(est_var > 0)
     assert(significance > 0 and significance < 1)
     
     f_value = compute_one_sided_f_value(significance, no_meas, no_params)
-    radius = est_stdev * no_params * f_value
+    radius = est_var * no_params * f_value
 
     # TODO: change to settings
     user_messages = False
     if user_messages:
-        print("est-stdev: ", est_stdev)
+        print("est-var: ", est_var)
         print("f-value: ", f_value)
         print("radius:", radius)
 
@@ -33,16 +33,16 @@ def compute_confidence_ellipsoid_radius(no_params, no_meas, est_stdev, significa
 
 
 # TODO: documentation
-def compute_measurements_standard_deviation(ssr, no_params, no_meas):
+def compute_measurements_variance(ssr, no_params, no_meas):
     assert (no_meas > no_params)
     
-    est_stdev = ssr / (no_meas - no_params)
+    est_var = ssr / (no_meas - no_params)
     user_messages = False
     if user_messages:
         print("ssr", ssr)
-        print("est-stdev", est_stdev)
+        print("est-var", est_var)
     
-    return est_stdev
+    return est_var
 
 
 # TODO: documentation

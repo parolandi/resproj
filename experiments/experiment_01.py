@@ -81,7 +81,7 @@ class TestExperiment01(unittest.TestCase):
         actual = wpr.do_basic_workflow_at_solution_point(config, solution_point)
         self.assertAlmostEquals(actual["ssr"], expected, 11)
         actual = wpr.do_sensitivity_based_workflow_at_solution_point(config, solution_point)
-        expected = [ 0.41209056,  0.20604528]
+        expected = [0.49340341, 0.2467017]
         [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(actual["conf_intvs"], expected)]
 
     
@@ -94,7 +94,7 @@ class TestExperiment01(unittest.TestCase):
         actual = wpr.do_basic_workflow_at_solution_point(config, solution_point)
         self.assertAlmostEquals(actual["ssr"], expected, 11)
         actual = wpr.do_sensitivity_based_workflow_at_solution_point(config, solution_point)
-        expected = [ 0.41209056,  0.20604528]
+        expected = [0.49340341, 0.2467017]
         [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(actual["conf_intvs"], expected)]
 
     
@@ -108,7 +108,7 @@ class TestExperiment01(unittest.TestCase):
         actual = wpr.do_basic_workflow_at_solution_point(config, solution_point)
         self.assertAlmostEquals(actual["ssr"], expected, 11)
         actual = wpr.do_sensitivity_based_workflow_at_solution_point(config, solution_point)
-        expected = [ 0.7984734969423507,  0.39923674847117535]
+        expected = [0.9607836, 0.4803918]
         [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(actual["conf_intvs"], expected)]
         ssdu.set_next_protocol_step(config)
         # validation
@@ -118,8 +118,8 @@ class TestExperiment01(unittest.TestCase):
         actual = wpr.do_basic_workflow_at_solution_point(config, solution_point)
         self.assertAlmostEquals(actual["ssr"], expected, 11)
         actual = wpr.do_sensitivity_based_workflow_at_solution_point(config, solution_point)
-        expected = [0.49165476180082279, 0.2458273809004114]
-        [self.assertAlmostEquals(act, exp, 11) for act, exp in zip(actual["conf_intvs"], expected)]
+        expected = [0.59159613, 0.29579807]
+        [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(actual["conf_intvs"], expected)]
 
     
     def test_do_experiment_01_at_conditions_111000_with_CG(self):

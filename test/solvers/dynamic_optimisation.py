@@ -18,7 +18,7 @@ class TestDynamicOptimisation(unittest.TestCase):
         problem = sod.do_problem_setup_without_covariance(model, data["calib"])
         
         # needs to be sufficiency large otherwise will be chasing ghosts
-        problem["nonlinear_confidence_region"]["ssr"] = 43
+        problem["confidence_region"]["ssr"] = 43
  
         algorithm = self.do_algorithm_setup()
         return model, problem, algorithm
@@ -33,7 +33,7 @@ class TestDynamicOptimisation(unittest.TestCase):
 
     def test_solve(self):
         model, problem, algorithm = self.do_setup()
-        problem["nonlinear_confidence_region"]["parameter_index"] = 0
+        problem["confidence_region"]["parameter_index"] = 0
 
         problem["performance_measure"] = testme.maximise_it
         upper = testme.solve(model, problem, algorithm)
@@ -44,7 +44,7 @@ class TestDynamicOptimisation(unittest.TestCase):
         self.assertAlmostEquals(upper.x, 1.59365765, 8)
         self.assertAlmostEquals(lower.x, 1.01338741, 8)
 
-        problem["nonlinear_confidence_region"]["parameter_index"] = 1
+        problem["confidence_region"]["parameter_index"] = 1
 
         problem["performance_measure"] = testme.maximise_it
         upper = testme.solve(model, problem, algorithm)

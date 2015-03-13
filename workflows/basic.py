@@ -46,11 +46,13 @@ def do_workflow_at_solution_point(model, model_instance, problem_instance, \
     residuals_values = metrics.ordinary_differential.residuals_st( \
         model, model_instance, problem_instance)
 
+    significance = problem_instance["confidence_region"]["confidence"]
+
     # global ssr test
     dof = metrics.statistical_tests.calculate_degrees_of_freedom( \
         problem_instance["outputs"], problem_instance["parameter_indices"])
     ssr_test = metrics.statistical_tests.calculate_two_sided_chi_squared_test_for_mean_sum_squared_residuals( \
-        sum_sq_res / stdev **2, dof, 0.95)
+        sum_sq_res / stdev **2, dof, significance)
     
     # observables' ssr test
     ssr_tests = []
@@ -59,7 +61,7 @@ def do_workflow_at_solution_point(model, model_instance, problem_instance, \
             problem_instance["outputs"][ii], problem_instance["parameter_indices"])
         ssr_tests.append( \
             metrics.statistical_tests.calculate_two_sided_chi_squared_test_for_mean_sum_squared_residuals( \
-                sums_sq_res[ii] / stdev **2, dof, 0.95))
+                sums_sq_res[ii] / stdev **2, dof, significance))
 
     # sensitivities and covariance matrix
     sens_snapshot = numpy.asarray(solvers.initial_value.compute_trajectory_st( \
@@ -74,10 +76,10 @@ def do_workflow_at_solution_point(model, model_instance, problem_instance, \
 
     # ellipsoid radius and confidence interval
     no_meas = mmdu.calculate_number_of_observations(problem_instance["outputs"])
-    est_stdev = engine.statistical_inference.compute_measurements_standard_deviation( \
+    est_var = engine.statistical_inference.compute_measurements_variance( \
         sum_sq_res, no_params, no_meas)
     ell_radius = engine.statistical_inference.compute_confidence_ellipsoid_radius( \
-        no_params, no_meas, est_stdev, 0.9)
+        no_params, no_meas, est_var, significance)
     confidence_intervals = engine.statistical_inference.compute_confidence_intervals( \
         cov_matrix, ell_radius)
 
@@ -97,7 +99,7 @@ def do_workflow_at_solution_point(model, model_instance, problem_instance, \
     workflow_results["ssr_test"] = ssr_test
     workflow_results["ssrs_tests"] = ssr_tests  
     workflow_results["cov_matrix"] = cov_matrix
-    workflow_results["est_stdev"] = est_stdev
+    workflow_results["est_var"] = est_var
     workflow_results["ell_radius"] = ell_radius
     workflow_results["conf_intvs"] = confidence_intervals
 
@@ -124,9 +126,10 @@ def do_workflow_at_solution_path(model, model_instance, problem_instance, \
     ssr_contribs_path = []
     conf_intervs_path = []
     dec_vars_path = []
-    iter = 0
+    iters = 0
+    significance = problem_instance["confidence_region"]["confidence"]
     for dvs in dv_path:
-        iterations.append(iter)
+        iterations.append(iters)
 
         dec_vars = dvs[0]
         # objective function
@@ -139,14 +142,14 @@ def do_workflow_at_solution_path(model, model_instance, problem_instance, \
         dof = metrics.statistical_tests.calculate_degrees_of_freedom( \
             problem_instance["outputs"], problem_instance["parameter_indices"])
         test_chisquared = metrics.statistical_tests.calculate_two_sided_chi_squared_test_for_mean_sum_squared_residuals( \
-            sum_sq_res / stdev **2, dof, 0.95)
+            sum_sq_res / stdev **2, dof, significance)
         # observables' ssr test
         tests_chisquared = []
         for ii in range(len(problem_instance["outputs"])):
             dof = metrics.statistical_tests.calculate_degrees_of_freedom( \
                 problem_instance["outputs"][ii], problem_instance["parameter_indices"])
             tests_chisquared.append(metrics.statistical_tests.calculate_two_sided_chi_squared_test_for_mean_sum_squared_residuals( \
-                sums_sq_res[ii] / stdev **2, dof, 0.95))
+                sums_sq_res[ii] / stdev **2, dof, significance))
         # sensitivities and covariance matrix
         sens_snapshot = numpy.asarray(solvers.initial_value.compute_trajectory_st( \
             sensitivity, sens_model_instance, sens_problem_instance))
@@ -158,10 +161,10 @@ def do_workflow_at_solution_path(model, model_instance, problem_instance, \
             no_obs, no_params, no_timepoints, sens_trajectories)
         # ellipsoid radius and confidence interval
         no_meas = mmdu.calculate_number_of_observations(problem_instance["outputs"])
-        est_stdev = engine.statistical_inference.compute_measurements_standard_deviation( \
+        est_var = engine.statistical_inference.compute_measurements_variance( \
             sum_sq_res, no_params, no_meas)
         ell_radius = engine.statistical_inference.compute_confidence_ellipsoid_radius( \
-            no_params, no_meas, est_stdev, 0.9)
+            no_params, no_meas, est_var, significance)
         confidence_intervals = engine.statistical_inference.compute_confidence_intervals( \
             cov_matrix, ell_radius)
 
@@ -172,7 +175,7 @@ def do_workflow_at_solution_path(model, model_instance, problem_instance, \
         conf_intervs_path.append(confidence_intervals)
         dec_vars_path.append(dec_vars)
         
-        iter += 1
+        iters += 1
 
     solvers.plot.set_plot_rows_and_cols(4, 4)
     solvers.plot.get_objective_function_plot(fig, iterations, objfunc_path)

@@ -11,7 +11,7 @@ class TestStatisticalInference(unittest.TestCase):
 
 
     def test_compute_measurements_standard_deviation(self):
-        actual = tst.compute_measurements_standard_deviation(10, 1, 11)
+        actual = tst.compute_measurements_variance(10, 1, 11)
         expected = 10 / (11 - 1)
         self.assertAlmostEquals(actual, expected, 12)
 

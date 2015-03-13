@@ -27,10 +27,10 @@ problem_formulation = {
     }
 
 
-nonlinear_confidence_region_formulation = {
+confidence_region_formulation = {
     "ssr": 0,
     "parameter_index": 0,
-    "alpha": 0.90,
+    "confidence": 0.95,
     }
 
 
@@ -60,7 +60,7 @@ problem_structure = {
     "parameter_indices": [],
     # TODO: change to "times"
     "time": [],
-    "nonlinear_confidence_region": copy.deepcopy(nonlinear_confidence_region_formulation),
+    "confidence_region": copy.deepcopy(confidence_region_formulation),
     # TODO: add observables
     }
 

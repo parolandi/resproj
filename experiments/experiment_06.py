@@ -73,8 +73,8 @@ class TestExperiment06(unittest.TestCase):
         reference_point["decision_variables"] = copy.deepcopy(problem_data["parameters"])
 
         actual = wpr.do_sensitivity_based_workflow_at_solution_point(config, reference_point)
-        expected = [8.57302147e-05, 8.54550124e+07, 1.35671412e+00, 1.76445263e+00]
-        delta = [0.00000001e-05, 0.00000001e+07, 0.00000001e+00, 0.00000001e+00]
+        expected = [1.02735112e-04, 1.02405323e+08, 1.62582326e+00, 2.11443818e+00]
+        delta = [0.00000001e-04, 0.00000001e+08, 0.00000001e+00, 0.00000001e+00]
         [self.assertAlmostEquals(act, exp, delta=dif) for act, exp, dif in zip(actual["conf_intvs"], expected, delta)] 
 
 
@@ -97,8 +97,8 @@ class TestExperiment06(unittest.TestCase):
 
         sens_calib_results = wpr.do_sensitivity_based_workflow_at_solution_point(config, solution_point)
         actual = sens_calib_results
-        expected = [8.67039166e-05, 4.62337221e+07, 1.10591581e-01, 2.00184137e+02]
-        delta = [0.00000001e-05, 0.00000001e+07, 0.00000001e-01, 0.00000001e+02]
+        expected = [1.03901951e-04, 5.54043478e+07, 1.32527820e-01, 2.39891384e+02]
+        delta = [0.00000001e-04, 0.00000001e+07, 0.00000001e-01, 0.00000001e+02]
         [self.assertAlmostEquals(act, exp, delta=dif) for act, exp, dif in zip(actual["conf_intvs"], expected, delta)] 
         cd.print_decision_variables_and_objective_function(solution_point)
         wwdu.print_system_based_point_results(calib_results)

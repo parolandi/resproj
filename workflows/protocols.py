@@ -111,13 +111,15 @@ def do_basic_workflow_at_solution_point(config, solution_point):
     # residuals' trajectories
     residuals_values = mod.residuals_st(None, model_instance, problem_instance)
 
+
+    significance = problem_instance["confidence_region"]["confidence"]
     # global ssr test
     dof = mst.calculate_degrees_of_freedom( \
         problem_instance["outputs"], problem_instance["parameter_indices"])
     ssr_test = mst.calculate_two_sided_chi_squared_test_for_mean_sum_squared_residuals( \
-        sum_sq_res / stdev **2, dof, 0.95)
+        sum_sq_res / stdev **2, dof, significance)
     ssr_thresh_lb, ssr_thresh_ub = \
-        mst.calculate_thresholds_two_sided_chi_squared_test_for_mean_sum_squared_residuals(dof, 0.95)
+        mst.calculate_thresholds_two_sided_chi_squared_test_for_mean_sum_squared_residuals(dof, significance)
     
     # observables' ssr test
     ssr_tests = []
@@ -128,9 +130,9 @@ def do_basic_workflow_at_solution_point(config, solution_point):
             problem_instance["outputs"][ii], problem_instance["parameter_indices"])
         ssr_tests.append( \
             mst.calculate_two_sided_chi_squared_test_for_mean_sum_squared_residuals( \
-                sums_sq_res[ii] / stdev **2, dof, 0.95))
+                sums_sq_res[ii] / stdev **2, dof, significance))
         thresh_lb, thresh_up = \
-            mst.calculate_thresholds_two_sided_chi_squared_test_for_mean_sum_squared_residuals(dof, 0.95)
+            mst.calculate_thresholds_two_sided_chi_squared_test_for_mean_sum_squared_residuals(dof, significance)
         ssrs_thresh_lb.append(thresh_lb)
         ssrs_thresh_ub.append(thresh_up)
 
@@ -187,8 +189,7 @@ def do_sensitivity_based_workflow_at_solution_point(config, solution_point):
     sens_trajectories = mmdu.get_sensitivity_trajectories( \
         dim_states, problem_instance, state_and_sens_trajectories)
 
-    # TODO: transform 0.9 into configuration
-    conf = 0.9
+    significance = problem_instance["confidence_region"]["confidence"]
     # covariance matrix, ellipsoid radius and confidence interval
     no_obs = len(problem_instance["outputs"])
     no_meas = mmdu.calculate_number_of_observations(problem_instance["outputs"])
@@ -197,16 +198,16 @@ def do_sensitivity_based_workflow_at_solution_point(config, solution_point):
 
     cov_matrix = eem.compute_covariance_matrix(no_obs, no_params, no_timepoints, sens_trajectories)
     corr_matrix = eem.calculate_correlation_matrix(cov_matrix)
-    est_stdev = esi.compute_measurements_standard_deviation(ssr, no_params, no_meas)
-    ell_radius = esi.compute_confidence_ellipsoid_radius(no_params, no_meas, est_stdev, conf)
+    est_var = esi.compute_measurements_variance(ssr, no_params, no_meas)
+    ell_radius = esi.compute_confidence_ellipsoid_radius(no_params, no_meas, est_var, significance)
     confidence_intervals = esi.compute_confidence_intervals( \
-        cov_matrix, mst.calculate_two_sided_t_student_value(conf, no_meas, no_params))
+        cov_matrix, mst.calculate_two_sided_t_student_value(significance, no_meas, no_params))
 
     workflow_results = dict(wwd.sensitivity_based_point_results)
     workflow_results["params"] = copy.deepcopy(problem_instance["parameters"])
     workflow_results["cov_matrix"] = cov_matrix
     workflow_results["cov_det"] = eem.calculate_determinant(cov_matrix)
-    workflow_results["est_stdev"] = est_stdev
+    workflow_results["est_var"] = est_var
     workflow_results["ell_radius"] = ell_radius
     workflow_results["conf_intvs"] = confidence_intervals
     workflow_results["corr_matrix"] = corr_matrix

@@ -21,7 +21,7 @@ def compute_nonlinear_confidence_region_points(model, problem, algorithm_rf, alg
         hyper.append(tuple(hyperrect[ii]))
     algorithm_mc["decision_variable_ranges"] = hyper
     hyperpnts = evaluate_multiple_points_in_hyperrectangle_by_nonlinear_confidence_intervals(model, problem, algorithm_mc)
-    ssr = problem["nonlinear_confidence_region"]["ssr"]
+    ssr = problem["confidence_region"]["ssr"]
     pnts = filter_nonlinear_confidence_region_points(hyperpnts, ssr)
     return pnts
 
@@ -51,8 +51,8 @@ def compute_nonlinear_confidence_intervals(model, problem, algorithm, best_point
         best_point["objective_function"],
         problem["outputs"],
         len(problem["parameter_indices"]),
-        problem["nonlinear_confidence_region"]["alpha"])
-    problem["nonlinear_confidence_region"]["ssr"] = ssr
+        problem["confidence_region"]["confidence"])
+    problem["confidence_region"]["ssr"] = ssr
 
     hyperrectangle = compute_nonlinear_confidence_hyperrectangle(model, problem, algorithm)
     return hyperrectangle
@@ -73,7 +73,7 @@ def compute_nonlinear_confidence_hyperrectangle(model, problem, algorithm):
 
 # TODO: handle abnormal situations
 def compute_nonlinear_confidence_interval(model, problem, algorithm, index):
-    problem["nonlinear_confidence_region"]["parameter_index"] = index
+    problem["confidence_region"]["parameter_index"] = index
 
     problem["performance_measure"] = sdo.maximise_it
     upper = sdo.solve(model, problem, algorithm)
@@ -105,8 +105,8 @@ def compute_chisquared_constraint(ssr0, observations, confidence):
 def compute_f_constraint(ssr0, observations, no_params, confidence):
     no_meas = mmdu.calculate_number_of_observations(observations)
     f_value = enstin.compute_one_sided_f_value(confidence, no_meas, no_params)
-    est_stdev = enstin.compute_measurements_standard_deviation(ssr0, no_params, no_meas)
-    ssr = ssr0 + est_stdev * no_params * f_value
+    est_var = enstin.compute_measurements_variance(ssr0, no_params, no_meas)
+    ssr = ssr0 + est_var * no_params * f_value
     return ssr
 
 
