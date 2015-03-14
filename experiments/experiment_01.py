@@ -13,7 +13,7 @@ import workflows.workflow_data
 
 
 '''
-Use linear (ordinary differential_ model
+Use linear (ordinary differential) model
 Examine the effect of changing the data splicing pattern between
 different interpolation and extrapolation "extremes", using 30 points
 and both CG and NM methods

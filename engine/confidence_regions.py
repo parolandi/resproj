@@ -11,6 +11,11 @@ import solvers.monte_carlo_multiple_initial_value as mcmiv
 import workflows.protocols as wopr
 
 
+"""
+Best point is used as initial guess to start single-parameter search in order to
+find interval limits from which region can be approximated; it is also used
+to establish the threshold constraint based on the optimum SSR
+"""
 def compute_nonlinear_confidence_region_points(model, problem, algorithm_rf, algorithm_mc, best_point):
     """
     returns solvers.monte_carlo_multiple_initial_value.ensemble_trajectoryies
@@ -112,6 +117,10 @@ def compute_f_constraint(ssr0, observations, no_params, confidence):
 
 # -----------------------------------------------------------------------------
 
+"""
+Best point is to compute local parametric sensitivities and to calculate
+the estimated variance based on the optimum SSR
+"""
 def compute_linearised_confidence_region_ellipsoid(config, best_point):
     """
     return numpy.matrix
@@ -123,6 +132,10 @@ def compute_linearised_confidence_region_ellipsoid(config, best_point):
     return std_cov_matrix
 
 
+"""
+Best point is to compute local parameteric sensitivities and to calculate
+the estimated variance based on the optimum SSR
+"""
 def compute_linearised_confidence_intervals(config, best_point):
     """
     return list of list (list of intervals)
