@@ -224,8 +224,11 @@ def plot_histogram_cutoff_by_count(data, bins, count):
     pp.show()
 
 
-def plot_scatter(x, y):
+def plot_scatter(x, y, plot_data):
     fig = pp.figure()
+    if plot_data is not None:
+        fig.canvas.set_window_title(plot_data["window_title"])
+        fig.suptitle(plot_data["title"])
     ax = fig.add_subplot(111)
     pp.plot(x, y, 'o')
     sf = get_lim_scaling_factor()
@@ -234,8 +237,11 @@ def plot_scatter(x, y):
     pp.show()
     
     
-def plot_box(vertices):
+def plot_box(vertices, plot_data):
     fig = pp.figure()
+    if plot_data is not None:
+        fig.canvas.set_window_title(plot_data["window_title"])
+        fig.suptitle(plot_data["title"])
     ax = fig.add_subplot(111)
     pp.vlines(vertices[0], vertices[1][0], vertices[1][1], colors='b')
     pp.hlines(vertices[1], vertices[0][0], vertices[0][1], colors='b')
@@ -246,12 +252,15 @@ def plot_box(vertices):
 
 
 # TODO: limits
-def plot_scatter_and_box(x, y, vertices):
+def plot_scatter_and_box(x, y, vertices, plot_data):
     """
     x, y numpy.array
     vertices list of list
     """
     fig = pp.figure()
+    if plot_data is not None:
+        fig.canvas.set_window_title(plot_data["window_title"])
+        fig.suptitle(plot_data["title"])
     ax = fig.add_subplot(111)
     pp.plot(x, y, 'o')
     pp.vlines(vertices[0], vertices[1][0], vertices[1][1], colors='b')
@@ -268,7 +277,7 @@ def plot_scatter_and_box(x, y, vertices):
     pp.show()
 
 
-def plot_ellipse(center, covar):
+def plot_ellipse(center, covar, plot_data):
     covariance = numpy.asmatrix(covar)
     # TODO: preconditions
     # sign eigenvals
@@ -277,6 +286,9 @@ def plot_ellipse(center, covar):
     ell = Ellipse(xy=center, width=lambdaa[0]*2, height=lambdaa[1]*2, angle=numpy.rad2deg(numpy.arccos(eigenvecs[0,0])))
     
     fig = pp.figure()
+    if plot_data is not None:
+        fig.canvas.set_window_title(plot_data["window_title"])
+        fig.suptitle(plot_data["title"])
     ax = fig.add_subplot(111)
     ax.add_artist(ell)
     ell.set_clip_box(ax.bbox)
@@ -289,7 +301,7 @@ def plot_ellipse(center, covar):
     pp.show()
 
 
-def plot_ellipse_and_box(center, covar, vertices):
+def plot_ellipse_and_box(center, covar, vertices, plot_data):
     covariance = numpy.asmatrix(covar)
     # TODO: preconditions
     # sign eigenvals
@@ -298,6 +310,9 @@ def plot_ellipse_and_box(center, covar, vertices):
     ell = Ellipse(xy=center, width=lambdaa[0]*2, height=lambdaa[1]*2, angle=numpy.rad2deg(numpy.arccos(eigenvecs[0,0])))
     
     fig = pp.figure()
+    if plot_data is not None:
+        fig.canvas.set_window_title(plot_data["window_title"])
+        fig.suptitle(plot_data["title"])
     ax = fig.add_subplot(111)
     ax.add_artist(ell)
     ell.set_clip_box(ax.bbox)
