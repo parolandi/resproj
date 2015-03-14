@@ -28,7 +28,7 @@ class TestOrdinaryDifferential(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
         super(TestOrdinaryDifferential, self).__init__(*args, **kwargs)
-        self.do_plotting = True
+        self.do_plotting = False
 
     
     def do_setup_lin(self):
@@ -58,7 +58,7 @@ class TestOrdinaryDifferential(unittest.TestCase):
         config["protocol_setup"] = None
         config["protocol_step"]["calib"] = "do"
         config["protocol_step"]["valid"] = "do"
-        config["sensitivity_setup"] = None
+        config["sensitivity_setup"] = solose.compute_timecourse_trajectories_and_sensitivities
         return config
 
     
@@ -204,7 +204,6 @@ class TestOrdinaryDifferential(unittest.TestCase):
         best_point = {}
         best_point["decision_variables"] = dvs.x
         best_point["objective_function"] = obj
-        
         # plot regression
         if False:
             experiment = config()
@@ -253,24 +252,41 @@ class TestOrdinaryDifferential(unittest.TestCase):
             self.do_setup_nonlin, self.do_experiment_setup_nonlin, baseline)
 
 
-    def test_compute_linearised_confidence_region_ellipsoid_and_intervals_lin(self):
-        config = self.do_experiment_setup_lin()
-        best = {}
-        best['objective_function'] = 37.641550819151604
-        best['decision_variables'] = [ 1.30352132,  2.24589073]
-        plotdata = dict(replda.plot_data)
-        plotdata["window_title"] = "LCR linear model"
+    def do_test_compute_linearised_confidence_region_both(self, config, best, baseline):
         intervals = ecr.compute_linearised_confidence_intervals(config, best)
-        expected = numpy.asarray([[0.81011790765132297, 1.796924732348677], [1.9991890253485634, 2.4925924346514372]])
+        expected = baseline["intervals"]
         [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(numpy.asarray(intervals).flatten(), expected.flatten())]
-        # TODO rename
-        covariance = ecr.compute_linearised_confidence_region_ellipsoid(config, best)
-        expected = numpy.asarray([[2.40507423e-01, 3.04517007e-10], [3.04517007e-10, 6.01268550e-02]])
+        ellipsoid = ecr.compute_linearised_confidence_region_ellipsoid(config, best)
+        expected = baseline["ellipsoid"]
         [self.assertAlmostEquals(act, exp, 8) for act, exp in zip( \
-            numpy.asarray(covariance).flatten(), numpy.asarray(expected).flatten())]
+            numpy.asarray(ellipsoid).flatten(), numpy.asarray(expected).flatten())]
         
         if self.do_plotting:
-            repl.plot_ellipse_and_box(best['decision_variables'], covariance, intervals, plotdata)
+            repl.plot_ellipse_and_box(best['decision_variables'], ellipsoid, intervals, baseline["plotdata"])
+
+
+    def test_compute_linearised_confidence_region_ellipsoid_and_intervals_lin(self):
+        best = {}
+        best['objective_function'] = 37.641550819151604
+        best['decision_variables'] = [1.30352132, 2.24589073]
+        baseline = {}
+        baseline["intervals"] = numpy.asarray([[0.81011790765132297, 1.796924732348677], [1.9991890253485634, 2.4925924346514372]])
+        baseline["ellipsoid"] = numpy.asarray([[2.40507423e-01, 3.04517007e-10], [3.04517007e-10, 6.01268550e-02]])
+        baseline["plotdata"] = dict(replda.plot_data)
+        baseline["plotdata"]["window_title"] = "LCR linear model"
+        self.do_test_compute_linearised_confidence_region_both(self.do_experiment_setup_lin(), best, baseline)
+
+        
+    def test_compute_linearised_confidence_region_ellipsoid_and_intervals_nonlin(self):
+        best = {}
+        best['objective_function'] = 37.67831358169179
+        best['decision_variables'] = [1.2175145, 2.15319774]
+        baseline = {}
+        baseline["intervals"] = numpy.asarray([[0.87032574595894485, 1.5647032540410553], [1.9989498251354314, 2.3074456548645683]])
+        baseline["ellipsoid"] = numpy.asarray([[1.19200873e-01, -4.59099258e-09], [-4.59099258e-09, 2.35280936e-02]])
+        baseline["plotdata"] = dict(replda.plot_data)
+        baseline["plotdata"]["window_title"] = "LCR nonlinear model"
+        self.do_test_compute_linearised_confidence_region_both(self.do_experiment_setup_nonlin(), best, baseline)
 
 
 if __name__ == "__main__":
