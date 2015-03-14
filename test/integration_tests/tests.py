@@ -5,6 +5,7 @@ import unittest
 from test.integration_tests.algebraic_linear import *
 from test.integration_tests.epo_receptor import *
 from test.integration_tests.kremlingetal_bioreactor import *
+from test.integration_tests.ordinary_differential import *
 
 
 if __name__ == '__main__':

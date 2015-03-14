@@ -1,4 +1,7 @@
 
+import copy
+
+
 model_structure = {
     "model": None,
     "parameters": [],
@@ -24,6 +27,19 @@ problem_formulation = {
     }
 
 
+confidence_region_formulation = {
+    "ssr": 0,
+    "parameter_index": 0,
+    "confidence": 0.95,
+    }
+
+
+timecourse_simulation = {
+    "time_horizon": 0.0,
+    "time_interval": 0.0,
+    }
+
+
 """
 Defines the structure of a *computational* experiment, a.k.a. a *problem*
 measurements_covariance_trace: numpy.array
@@ -44,6 +60,7 @@ problem_structure = {
     "parameter_indices": [],
     # TODO: change to "times"
     "time": [],
+    "confidence_region": copy.deepcopy(confidence_region_formulation),
     # TODO: add observables
     }
 

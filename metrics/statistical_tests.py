@@ -28,13 +28,21 @@ user_messages = {
     }
 
 
+# TODO legacy
 def calculate_degrees_of_freedom(measurements, parameters_to_be_estimated):
     n = common.utilities.size_it(measurements)
     k = len(parameters_to_be_estimated)
     return n - k
 
 
-# TODO: validation of user input
+def calculate_one_sided_chi_squared_value(significance, dof):
+    return scipy.stats.chi2.isf(significance, dof)
+
+
+def calculate_two_sided_t_student_value(significance, no_meas, no_params):
+    q = (1-significance)/2
+    return scipy.stats.t.isf(q, no_meas-no_params)
+
 
 # the significance is one sided, naturally
 # res: residual, maximum likelihood

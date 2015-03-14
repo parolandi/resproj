@@ -377,7 +377,7 @@ class RunLinearOdeExperiments(unittest.TestCase):
 
         # ellipsoid radius and confidence interval
         no_meas = common.utilities.size_it(problem_instance["outputs"])
-        est_stdev = engine.statistical_inference.compute_measurements_standard_deviation( \
+        est_stdev = engine.statistical_inference.compute_measurements_variance( \
             sum_sq_res_actual, no_params, no_meas)
         ell_radius = engine.statistical_inference.compute_confidence_ellipsoid_radius( \
             no_params, no_meas, est_stdev, 0.9)
@@ -437,7 +437,7 @@ class RunLinearOdeExperiments(unittest.TestCase):
             cov_matrix = engine.estimation_matrices.compute_covariance_matrix(no_params, no_timepoints, sens_trajectories)
             # ellipsoid radius and confidence interval
             no_meas = common.utilities.size_it(problem_instance["outputs"])
-            est_stdev = engine.statistical_inference.compute_measurements_standard_deviation( \
+            est_stdev = engine.statistical_inference.compute_measurements_variance( \
                 sum_sq_res, no_params, no_meas)
             ell_radius = engine.statistical_inference.compute_confidence_ellipsoid_radius( \
                 no_params, no_meas, est_stdev, 0.9)

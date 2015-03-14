@@ -1,5 +1,7 @@
 
+import math
 import numpy
+
 
 # TODO: change to gain and time constant and first order
 def linear(states, time, parameters, inputs):
@@ -72,6 +74,17 @@ def state_and_sensitivities_linear_2p2s(xs, t, p, u):
     
     dxs_dt = numpy.concatenate((dx_dt, ds_dt))
     return dxs_dt
+
+
+def nonlinear_2p2s(x, t, p, u):
+    assert(len(x) == 2)
+    assert(len(p) == 2)
+    assert(len(u) == 2)
+    
+    dx_dt = [0,0]
+    dx_dt[0] = p[0] * u[0] - 2*math.sqrt(x[0])
+    dx_dt[1] = p[1] * u[1] - 2*math.sqrt(x[1])
+    return dx_dt
 
 
 # TODO: perhpas move to epo_receptor module?

@@ -9,7 +9,7 @@ import solvers.initial_value as siv
 # TODO: do not work on lists
 def compute_timecourse_trajectories_and_sensitivities(model_data, problem_data):
     # TODO: preconditions
-    assert(problem_data["parameter_indices"] > 0)
+    assert(len(problem_data["parameter_indices"]) > 0)
     
     eps = 1E-5
     

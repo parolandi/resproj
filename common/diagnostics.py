@@ -49,12 +49,20 @@ def print_observations_parameters_and_timeponts(obs, pars, pnts):
     print("no timepoints:", pnts)
 
 
-def print_measurements_stdev_and_ellipsoid_radius(meas, stdev, ellrad):
+def print_measurements_est_var_and_ellipsoid_radius(meas, est_var, ellrad):
     print("no measurements:", meas)
-    print("standard deviation:", stdev)
+    print("estimated variance:", est_var)
     print("ellipsoid radius:", ellrad)
 
 
 def print_covariance_matrix_and_determinant(cov_matrix, det):
     print("covariance matrix:", cov_matrix)
     print("covariance matrix's determinant:", det)
+
+
+def warning_error_code_message():
+    return "Warning/Error: there is something wrong!"
+
+
+def print_warning_error_code_message():
+    print(warning_error_code_message())

@@ -11,7 +11,7 @@ point_results = {
     "ssr_test": False,
     "ssrs_tests": [],
     "cov_matrix": None,
-    "est_stdev": 0.0,
+    "est_var": 0.0,
     "ell_radius": 0.0,
     "conf_intvs": [],
     }
@@ -45,7 +45,7 @@ sensitivity_based_point_results = {
     "params": [], # numpy.array
     "cov_matrix": [], # numpy.matrix
     "cov_det": 0.0,
-    "est_stdev": [], # float
+    "est_var": [], # float
     "ell_radius": [], # float
     "conf_intvs": [],
     "corr_matrix": [], # numpy.matrix

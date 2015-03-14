@@ -1,9 +1,15 @@
 
 import matplotlib.pyplot as pp
+from matplotlib.patches import Ellipse
+import numpy
 
 import data.nonparametrics as dnp
 
 # TODO: rename to plot single
+
+
+def get_lim_scaling_factor():
+    return 1.01
 
 
 def plot_errors_and_residuals(independent,  errors, residuals):
@@ -66,6 +72,30 @@ def plot_measurements_with_calibration_and_validation_trajectory( \
 #    sp.legend(legend)
     
 
+def plot_measurements_with_trajectory_with_errors( \
+    independent, measurements, predictions, errors, \
+    plot_data):
+    """
+    errors can be None
+    """
+    assert(plot_data is not None)
+    # TODO assertions
+    
+    fig = plot_data["figure"]
+    sp = fig.add_subplot(plot_data["no_rows"], plot_data["no_cols"], plot_data["plot_count"])
+    t = independent
+    meas = measurements
+    pred = predictions
+    err = errors
+    legend = []
+    colour = plot_data["colour"]
+    sp.errorbar(t, meas, fmt = colour+'o', yerr = err)
+    legend.append("m-" + str(plot_data["index"]))
+    sp.plot(t, pred, colour+'+')
+    legend.append("p-" + str(plot_data["index"]))
+#    sp.legend(legend)
+
+
 def plot_measurements_with_calibration_and_validation_trajectory_with_errors( \
     independent_calib, measurements_calib, predictions_calib, errors_calib, \
     independent_valid, measurements_valid, predictions_valid, errors_valid, \
@@ -73,6 +103,7 @@ def plot_measurements_with_calibration_and_validation_trajectory_with_errors( \
     """
     errors_calib and errors_valid can be None
     """
+    assert(plot_data is not None)
     # TODO assertions
     
     fig = plot_data["figure"]
@@ -190,4 +221,118 @@ def plot_observation_ensembles(independent,  measurements):
 def plot_histogram_cutoff_by_count(data, bins, count):
     cutoff_data = dnp.cutoff_tail_by_count(data, count)
     pp.hist(cutoff_data, bins = bins)
+    pp.show()
+
+
+def plot_scatter(x, y, plot_data):
+    fig = pp.figure()
+    if plot_data is not None:
+        fig.canvas.set_window_title(plot_data["window_title"])
+        fig.suptitle(plot_data["title"])
+    ax = fig.add_subplot(111)
+    pp.plot(x, y, 'o')
+    sf = get_lim_scaling_factor()
+    ax.set_xlim(min(x)/sf, max(x)*sf)
+    ax.set_ylim(min(y)/sf, max(y)*sf)
+    pp.show()
+    
+    
+def plot_box(vertices, plot_data):
+    fig = pp.figure()
+    if plot_data is not None:
+        fig.canvas.set_window_title(plot_data["window_title"])
+        fig.suptitle(plot_data["title"])
+    ax = fig.add_subplot(111)
+    pp.vlines(vertices[0], vertices[1][0], vertices[1][1], colors='b')
+    pp.hlines(vertices[1], vertices[0][0], vertices[0][1], colors='b')
+    sf = get_lim_scaling_factor()
+    ax.set_xlim(vertices[0][0]/sf, vertices[0][1]*sf)
+    ax.set_ylim(vertices[1][0]/sf, vertices[1][1]*sf)
+    pp.show()
+
+
+# TODO: limits
+def plot_scatter_and_box(x, y, vertices, plot_data):
+    """
+    x, y numpy.array
+    vertices list of list
+    """
+    fig = pp.figure()
+    if plot_data is not None:
+        fig.canvas.set_window_title(plot_data["window_title"])
+        fig.suptitle(plot_data["title"])
+    ax = fig.add_subplot(111)
+    pp.plot(x, y, 'o')
+    pp.vlines(vertices[0], vertices[1][0], vertices[1][1], colors='b')
+    pp.hlines(vertices[1], vertices[0][0], vertices[0][1], colors='b')
+
+    xlb = numpy.concatenate((x, numpy.asarray([vertices[0][0]])))
+    xub = numpy.concatenate((x, numpy.asarray([vertices[0][1]])))
+    ylb = numpy.concatenate((y, numpy.asarray([vertices[1][0]])))
+    yub = numpy.concatenate((y, numpy.asarray([vertices[1][1]])))
+    sf = get_lim_scaling_factor()
+    ax.set_xlim(min(xlb)/sf, max(xub)*sf)
+    ax.set_ylim(min(ylb)/sf, max(yub)*sf)
+    
+    pp.show()
+
+
+def plot_ellipse(center, covar, plot_data):
+    covariance = numpy.asmatrix(covar)
+    # TODO: preconditions
+    # sign eigenvals
+    eigenvals, eigenvecs = numpy.linalg.eig(covariance)
+    lambdaa = numpy.sqrt(eigenvals)
+    ell = Ellipse(xy=center, width=lambdaa[0]*2, height=lambdaa[1]*2, angle=numpy.rad2deg(numpy.arccos(eigenvecs[0,0])))
+    
+    fig = pp.figure()
+    if plot_data is not None:
+        fig.canvas.set_window_title(plot_data["window_title"])
+        fig.suptitle(plot_data["title"])
+    ax = fig.add_subplot(111)
+    ax.add_artist(ell)
+    ell.set_clip_box(ax.bbox)
+    sf = get_lim_scaling_factor()
+    height = numpy.sqrt(covariance[0,0]) * sf
+    width = numpy.sqrt(covariance[1,1]) * sf
+    ax.set_xlim(center[0]-height, center[0]+height)
+    ax.set_ylim(center[1]-width, center[1]+width)
+    ell.set_facecolor('none')
+    pp.show()
+
+
+def plot_ellipse_and_box(center, covar, vertices, plot_data):
+    covariance = numpy.asmatrix(covar)
+    # TODO: preconditions
+    # sign eigenvals
+    eigenvals, eigenvecs = numpy.linalg.eig(covariance)
+    lambdaa = numpy.sqrt(eigenvals)
+    ell = Ellipse(xy=center, width=lambdaa[0]*2, height=lambdaa[1]*2, angle=numpy.rad2deg(numpy.arccos(eigenvecs[0,0])))
+    
+    fig = pp.figure()
+    if plot_data is not None:
+        fig.canvas.set_window_title(plot_data["window_title"])
+        fig.suptitle(plot_data["title"])
+    ax = fig.add_subplot(111)
+    ax.add_artist(ell)
+    ell.set_clip_box(ax.bbox)
+    height = lambdaa[1] # numpy.sqrt(covariance[0,0]) * 1.2
+    width = lambdaa[0] # numpy.sqrt(covariance[1,1]) * 1.2
+    ell.set_facecolor('none')
+
+    pp.vlines(vertices[0], vertices[1][0], vertices[1][1], colors='b')
+    pp.hlines(vertices[1], vertices[0][0], vertices[0][1], colors='b')
+
+    xlb = [center[0]-width]
+    xub = [center[0]+width]
+    xlb.append(vertices[0][0])
+    xub.append(vertices[0][1])
+    ylb = [center[1]-height]
+    yub = [center[1]+height]
+    ylb.append(vertices[1][0])
+    yub.append(vertices[1][1])
+    sf = get_lim_scaling_factor()
+    ax.set_xlim(min(xlb)/sf, max(xub)*sf)
+    ax.set_ylim(min(ylb)/sf, max(yub)*sf)
+
     pp.show()

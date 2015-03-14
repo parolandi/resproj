@@ -2,6 +2,7 @@
 import copy
 import numpy
 
+import common.utilities
 
 # TODO: problem model verificator and synchroniser
 
@@ -90,3 +91,13 @@ def check_no_measurements_covariance_matrix(prob_inst):
     prob_inst models.model_data.problem_structure
     """
     assert(prob_inst["measurements_covariance_trace"] is None)
+
+
+def calculate_number_of_observations(measurements):
+    return common.utilities.size_it(measurements)
+
+
+def calculate_numberof_degrees_of_freedom(measurements, parameters_to_be_estimated):
+    n = calculate_number_of_observations(measurements)
+    k = len(parameters_to_be_estimated)
+    return n - k

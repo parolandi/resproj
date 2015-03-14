@@ -1,6 +1,5 @@
 
 import matplotlib.pyplot as pp
-import numpy
 
 import results.plot as rp
 
@@ -57,6 +56,38 @@ def plot_states_and_sensitivities(time, states, sensitivities, dim_dv):
             sp = fig.add_subplot(no_rows, no_cols, plot_no)
             sp.plot(time, sensitivities[dim_dv*dv_col+x_row])
     pp.show()
+
+
+# TODO: refactor and make DRY
+def plot_measurements_with_trajectories_with_errors( \
+    independent, measurements, predictions, errors):
+    """
+    errors can be None
+    """
+    # TODO: pre-conditions
+    
+    errors_provided = True
+    if errors is None:
+        errors_provided = False
+    
+    dim_obs = len(measurements)
+    fig = pp.figure(1)
+    plot_data = {}
+    plot_data["figure"] = fig
+    plot_data["no_rows"] = dim_obs
+    plot_data["no_cols"] = 1
+    plot_colours = get_plot_colours(dim_obs)
+    errors_ii = None
+    for ii in range(dim_obs):
+        plot_data["plot_count"] = ii+1
+        plot_data["colour"] = plot_colours[ii]      
+        plot_data["index"] = ii
+        if errors_provided:
+            errors_ii = errors[ii]
+        rp.plot_measurements_with_trajectory_with_errors( \
+            independent, measurements[ii], predictions[ii], errors_ii, \
+            plot_data)
+    fig.show()
 
 
 # TODO: refactor and make DRY
