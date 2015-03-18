@@ -9,6 +9,7 @@ import solvers.dynamic_optimisation as sdo
 import solvers.monte_carlo_multiple_initial_value as mcmiv
 # TODO: dependency, engine cannot depend on workflow
 import workflows.protocols as wopr
+import metrics.ordinary_differential as mod
 
 
 """
@@ -21,6 +22,21 @@ def compute_nonlinear_confidence_region_points(model, problem, algorithm_rf, alg
     returns solvers.monte_carlo_multiple_initial_value.ensemble_trajectoryies
     """
     hyperrect = compute_nonlinear_confidence_intervals(model, problem, algorithm_rf, best_point)
+    hyper = []
+    for ii in range(len(hyperrect)):
+        hyper.append(tuple(hyperrect[ii]))
+    algorithm_mc["decision_variable_ranges"] = hyper
+    hyperpnts = evaluate_multiple_points_in_hyperrectangle_by_nonlinear_confidence_intervals(model, problem, algorithm_mc)
+    ssr = problem["confidence_region"]["ssr"]
+    pnts = filter_nonlinear_confidence_region_points(hyperpnts, ssr)
+    return pnts
+
+
+def compute_nonlinear_confidence_region_points_extreme(model, problem, algorithm_rf, algorithm_mc, best_point):
+    """
+    returns solvers.monte_carlo_multiple_initial_value.ensemble_trajectoryies
+    """
+    hyperrect = compute_nonlinear_confidence_intervals_extreme(model, problem, algorithm_rf, best_point)
     hyper = []
     for ii in range(len(hyperrect)):
         hyper.append(tuple(hyperrect[ii]))
@@ -63,6 +79,19 @@ def compute_nonlinear_confidence_intervals(model, problem, algorithm, best_point
     return hyperrectangle
 
 
+def compute_nonlinear_confidence_intervals_extreme(model, problem, algorithm, best_point):
+    mmdu.apply_decision_variables_to_parameters(best_point, model, problem)
+    ssr = compute_f_constraint( \
+        best_point["objective_function"],
+        problem["outputs"],
+        len(problem["parameter_indices"]),
+        problem["confidence_region"]["confidence"])
+    problem["confidence_region"]["ssr"] = ssr
+
+    hyperrectangle = compute_nonlinear_confidence_hyperrectangle_extreme(model, problem, algorithm)
+    return hyperrectangle
+
+
 def compute_nonlinear_confidence_hyperrectangle(model, problem, algorithm):
     hyperrectangle = []
     func = problem["performance_measure"]
@@ -73,6 +102,28 @@ def compute_nonlinear_confidence_hyperrectangle(model, problem, algorithm):
         problem["parameters"] = copy.deepcopy(opt_param)
         model["parameters"] = copy.deepcopy(opt_param)
     problem["performance_measure"] = func
+    return hyperrectangle
+
+
+def compute_nonlinear_confidence_hyperrectangle_extreme(model, problem, algorithm):
+    hyperrectangle = []
+    func = problem["performance_measure"]
+    opt_param = copy.deepcopy(problem["parameters"])
+
+    upper = compute_nonlinear_confidence_interval_upper(model, problem, algorithm)
+    problem["parameters"] = copy.deepcopy(opt_param)
+    model["parameters"] = copy.deepcopy(opt_param)
+
+    lower = compute_nonlinear_confidence_interval_lower(model, problem, algorithm)
+    problem["parameters"] = copy.deepcopy(opt_param)
+    model["parameters"] = copy.deepcopy(opt_param)
+
+    problem["performance_measure"] = func
+    hyperrectangle = []
+    print(lower, upper)
+    for ii in range(len(upper)):
+        hyperrectangle.append([lower[ii], upper[ii]])
+    print(hyperrectangle)
     return hyperrectangle
 
 
@@ -89,6 +140,101 @@ def compute_nonlinear_confidence_interval(model, problem, algorithm, index):
         codi.print_warning_error_code_message()
 
     return [lower.x[0], upper.x[0]]
+
+
+def compute_nonlinear_confidence_interval_upper(model, problem, algorithm):
+    problem["performance_measure"] = sdo.maximise_distance
+    # forming constraints here as this is the right level of abstraction
+    # copy existing constraints back
+    problem["constraints"] = form_upper_constraints(model, problem)
+    algorithm["initial_guess"] = problem["parameters"] * 1.01
+    bounds = []
+    for ii in range(len(problem["parameters"])):
+        #bounds.append([problem["parameters"][ii], problem["bounds"][ii][0]])
+        bounds.append([problem["parameters"][ii], 10])
+    problem["bounds"] = tuple(bounds)
+    upper = sdo.solve_std(model, problem, algorithm)
+
+    if (upper.status > 0):
+        codi.print_warning_error_code_message()
+
+    return upper.x
+
+
+def compute_nonlinear_confidence_interval_lower(model, problem, algorithm):
+    problem["performance_measure"] = sdo.maximise_distance
+    # forming constraints here as this is the right level of abstraction
+    # copy existing constraints back
+    problem["constraints"] = form_lower_constraints(model, problem)
+    algorithm["initial_guess"] = problem["parameters"] * 0.99
+    bounds = []
+    for ii in range(len(problem["parameters"])):
+        #bounds.append([problem["parameters"][ii], problem["bounds"][ii][0]])
+        bounds.append([-10, problem["parameters"][ii]])
+    problem["bounds"] = tuple(bounds)
+    lower = sdo.solve_std(model, problem, algorithm)
+
+    if (lower.status > 0):
+        codi.print_warning_error_code_message()
+
+    return lower.x
+
+
+# unit-tested
+def likelihood_constraint(x, model_data, problem_data, ssr_0):
+    #assert(len(x) == len(model_data["parameters"]))
+    #print(len(x))
+    #print(len(problem_data["parameters"]))
+    assert(len(x) == len(problem_data["parameters"]))
+
+    model_data["parameters"] = x
+    problem_data["parameters"] = x
+    ssr = problem_data["confidence_region"]["performance_measure"](None, None, model_data, problem_data)
+    #print("constr", ssr_0 - ssr)
+    return ssr_0 - ssr
+
+
+def positive_delta_constraint(x, x0, index):
+    return x[index] - x0[index]
+
+
+def negative_delta_constraint(x, x0, index):
+    return x0[index] - x[index]
+
+
+# unit-tested
+def form_upper_constraints(model, problem):
+    x0 = copy.deepcopy(problem["parameters"])
+    ssr0 = problem["confidence_region"]["ssr"]
+    constraint_list = []
+    constraint_list.append( \
+                  {'type': 'ineq', \
+                   'fun': likelihood_constraint, \
+                   'args': (model, problem, ssr0)})
+    for ii in range(len(problem["parameters"])):
+        constraint_list.append( \
+                       {'type': 'ineq', \
+                        'fun': positive_delta_constraint, \
+                        'args': (x0, ii)})
+    constraints = tuple(constraint_list)
+    return constraints
+
+
+def form_lower_constraints(model, problem):
+    x0 = copy.deepcopy(problem["parameters"])
+    ssr0 = problem["confidence_region"]["ssr"]
+    constraint_list = []
+    constraint_list.append( \
+                  {'type': 'ineq', \
+                   'fun': likelihood_constraint, \
+                   'args': (model, problem, ssr0)})
+    for ii in range(len(problem["parameters"])):
+        constraint_list.append( \
+                       {'type': 'ineq', \
+                        'fun': negative_delta_constraint, \
+                        'args': (x0, ii)})
+    constraints = tuple(constraint_list)
+    return constraints
 
 
 def check_test(value, cutoff):

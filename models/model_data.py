@@ -31,6 +31,7 @@ confidence_region_formulation = {
     "ssr": 0,
     "parameter_index": 0,
     "confidence": 0.95,
+    "performance_measure": None,
     }
 
 
@@ -62,6 +63,7 @@ problem_structure = {
     "time": [],
     "confidence_region": copy.deepcopy(confidence_region_formulation),
     # TODO: add observables
+    "constraints": [],
     }
 
 

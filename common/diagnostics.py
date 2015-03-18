@@ -66,3 +66,7 @@ def warning_error_code_message():
 
 def print_warning_error_code_message():
     print(warning_error_code_message())
+
+
+def print_ellipsoid(it):
+    print("ellipsoid", it)

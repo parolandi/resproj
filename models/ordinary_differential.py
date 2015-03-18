@@ -33,6 +33,9 @@ def linear_2p2s(x, t, p, u):
     assert(len(u) == 2)
     
     dx_dt = p * u - x
+    #dx_dt = []
+    #dx_dt.append(p[0] * u[0] - x[0])
+    #dx_dt.append(p[1]*p[0] * u[1] - x[1])
     return dx_dt
 
 

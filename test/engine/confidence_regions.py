@@ -13,6 +13,8 @@ import solvers.local_sensitivities as solose
 import solvers.monte_carlo_multiple_initial_value as mcmiv
 import solvers.solver_data as ssd
 
+import metrics.ordinary_differential as meordi
+
 
 class TestConfidenceRegions(unittest.TestCase):
 
@@ -60,7 +62,7 @@ class TestConfidenceRegions(unittest.TestCase):
         return algorithm
         
 
-    def test_compute_f_constraint(self):
+    def dn_test_compute_f_constraint(self):
         no_meas = 20
         no_params = 2
         alpha = 0.01
@@ -70,22 +72,22 @@ class TestConfidenceRegions(unittest.TestCase):
         self.assertAlmostEquals(ssr + est_var * no_params * scipy.stats.f.isf(alpha, no_params, no_meas - no_params), ssr_threshold, 8)
     
     
-    def test_compute_nonlinear_confidence_interval_lin(self):
+    def dn_test_compute_nonlinear_confidence_interval_lin(self):
         model, problem, algorithm = self.do_setup_lin()
         actual = testme.compute_nonlinear_confidence_interval(model, problem, algorithm, 0)
         expected = [1.01338741, 1.59365765]
         [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(actual, expected)]
 
 
-    def test_compute_nonlinear_confidence_hyperrectangle_lin(self):
+    def dn_test_compute_nonlinear_confidence_hyperrectangle_lin(self):
         model, problem, algorithm = self.do_setup_lin()
         actual = numpy.asarray(testme.compute_nonlinear_confidence_hyperrectangle(model, problem, algorithm))
-        _ = numpy.asarray([[1.01338741, 1.59365765], [2.00000001, 2.49178146]])
+        #_ = numpy.asarray([[1.01338741, 1.59365765], [2.00000001, 2.49178146]])
         expected = numpy.asarray([[1.01338741, 1.59365765], [2.0040739383273261, 2.4877075291690458]])
         [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(actual.flatten(), expected.flatten())]
 
 
-    def test_empihbnci_lin(self):
+    def dn_test_empihbnci_lin(self):
         model, problem, _ = self.do_setup_lin()
         algorithm = dict(mcmiv.montecarlo_multiple_simulation_params)
         algorithm["number_of_trials"] = 10
@@ -98,7 +100,7 @@ class TestConfidenceRegions(unittest.TestCase):
         # TODO should also test decision variables
 
     
-    def test_filter_nonlinear_confidence_region_points_lin(self):
+    def dn_test_filter_nonlinear_confidence_region_points_lin(self):
         model, problem, _ = self.do_setup_lin()
         algorithm = dict(mcmiv.montecarlo_multiple_simulation_params)
         algorithm["number_of_trials"] = 10
@@ -111,7 +113,7 @@ class TestConfidenceRegions(unittest.TestCase):
         # TODO should also test individual values
 
 
-    def test_compute_nonlinear_confidence_region_points_lin(self):
+    def dn_test_compute_nonlinear_confidence_region_points_lin(self):
         best_point = {}
         best_point["decision_variables"] = [ 1.30352132,  2.24589073]
         best_point["objective_function"] = 37.641550819151604
@@ -128,7 +130,7 @@ class TestConfidenceRegions(unittest.TestCase):
             repl.plot_scatter(numpy.transpose(points)[0], numpy.transpose(points)[1])
 
 
-    def test_compute_nonlinear_confidence_region_points_nonlin(self):
+    def dn_test_compute_nonlinear_confidence_region_points_nonlin(self):
         best_point = {}
         best_point["decision_variables"] = [ 1.2175145 ,  2.15319774]
         best_point["objective_function"] = 37.67831358169179
@@ -145,7 +147,7 @@ class TestConfidenceRegions(unittest.TestCase):
             repl.plot_scatter(numpy.transpose(points)[0], numpy.transpose(points)[1])
 
 
-    def test_compute_linearised_confidence_region_intervals_lin(self):
+    def dn_test_compute_linearised_confidence_region_intervals_lin(self):
         config = self.do_experiment_setup_lin()
         best = {}
         best['objective_function'] = 37.641550819151604
@@ -158,7 +160,7 @@ class TestConfidenceRegions(unittest.TestCase):
             repl.plot_box(intervals)
 
 
-    def test_compute_linearised_confidence_region_ellipsoid_lin(self):
+    def dn_test_compute_linearised_confidence_region_ellipsoid_lin(self):
         config = self.do_experiment_setup_lin()
         best = {}
         best['objective_function'] = 37.641550819151604
@@ -169,6 +171,100 @@ class TestConfidenceRegions(unittest.TestCase):
         
         if self.do_plotting:
             repl.plot_ellipse(best['decision_variables'], covariance)
+
+    '''---------------------------------------------------------------------'''
+    
+    # mock
+    def do_confidence_region_performance_measure(self, dummy1, dummy2, model, problem):
+        param = numpy.asarray(problem["parameters"])
+        print("param", param)
+        measure = numpy.dot(param, param)
+        print("measure", measure)
+        return measure
+    
+    
+    def dn_test_likelihood_constraint(self):
+        ssr0 = 10
+        model = {}
+        model["parameters"] = [1, 2]
+        problem = {}
+        problem["parameters"] = [3, 4]
+        problem["confidence_region"] = {}
+        problem["confidence_region"]["performance_measure"] = self.do_confidence_region_performance_measure
+        actual = testme.likelihood_constraint([0, 2], model, problem, ssr0)
+        expected = 10-(0**2+2**2)
+        self.assertEquals(actual, expected)
+    
+
+    def dn_test_form_upper_constraints(self):
+        ssr0 = 10
+        model = {}
+        model["parameters"] = [1, 2]
+        problem = {}
+        problem["parameters"] = [3, 4]
+        problem["confidence_region"] = {}
+        problem["confidence_region"]["ssr"] = ssr0
+        problem["confidence_region"]["performance_measure"] = self.do_confidence_region_performance_measure
+        constraints = testme.form_upper_constraints(model, problem)
+        actual = constraints[0]['fun']([0, 2], *constraints[0]['args'])
+        expected = 10-(0**2+2**2)
+        self.assertEquals(actual, expected)
+        actual = constraints[1]['fun']([0, 2], *constraints[1]['args'])
+        expected = 0-3
+        self.assertEquals(actual, expected)
+        actual = constraints[2]['fun']([0, 2], *constraints[2]['args'])
+        expected = 2-4
+        self.assertEquals(actual, expected)
+        
+
+    def dn_test_compute_nonlinear_confidence_interval_upper(self):
+        ssr0 = 2**2+3**2+4
+        #print("ssr0", ssr0)
+        model = {}
+        model["parameters"] = [1, 2]
+        problem = {}
+        problem["parameters"] = [2, 3]
+        problem["bounds"] = ((0,10),(0,10),)
+        problem["confidence_region"] = {}
+        problem["confidence_region"]["ssr"] = ssr0
+        problem["confidence_region"]["performance_measure"] = self.do_confidence_region_performance_measure
+        algorithm = {}
+        algorithm["initial_guesses"] = numpy.asarray([2.1, 3.1])
+        #algorithm["initial_guesses"] = numpy.asarray([1.9, 2.9])
+        algorithm["method"] = 'SLSQP'
+        actual = testme.compute_nonlinear_confidence_interval_upper(model, problem, algorithm)
+        #print(actual)
+
+
+    def dn_test_compute_nonlinear_confidence_interval_lower(self):
+        ssr0 = 2**2+3**2+4
+        print("ssr0", ssr0)
+        model = {}
+        model["parameters"] = [1, 2]
+        problem = {}
+        problem["parameters"] = [2, 3]
+        problem["bounds"] = ((-10,2),(-10,3),)
+        problem["confidence_region"] = {}
+        problem["confidence_region"]["ssr"] = ssr0
+        problem["confidence_region"]["performance_measure"] = self.do_confidence_region_performance_measure
+        algorithm = {}
+        #algorithm["initial_guesses"] = numpy.asarray([2.1, 3.1])
+        algorithm["initial_guesses"] = numpy.asarray([1.9, 2.9])
+        algorithm["method"] = 'SLSQP'
+        actual = testme.compute_nonlinear_confidence_interval_lower(model, problem, algorithm)
+        print(actual)
+
+
+    def test_compute_nonlinear_confidence_hyperrectangle_extreme_lin(self):
+        model, problem, algorithm = self.do_setup_lin()
+        algorithm["initial_guesses"] = numpy.asarray([1.0, 2.0])
+        problem["confidence_region"]["performance_measure"] = meordi.sum_squared_residuals_st
+        actual = numpy.asarray(testme.compute_nonlinear_confidence_hyperrectangle_extreme(model, problem, algorithm))
+        #_ = numpy.asarray([[1.01338741, 1.59365765], [2.00000001, 2.49178146]])
+        problem["parameters"] = [(1.01338741+1.59365765)/2, (2.0040739383273261+2.4877075291690458)/2]
+        algorithm["initial_guesses"] = problem["parameters"]
+        expected = numpy.asarray([[1.01338741, 1.59365765], [2.0040739383273261, 2.4877075291690458]])
+        [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(actual.flatten(), expected.flatten())]
 
 
 if __name__ == "__main__":

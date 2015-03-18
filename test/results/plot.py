@@ -35,6 +35,9 @@ class TestPlot(unittest.TestCase):
         vertices = [[0,2], [0,2]]
         if self.do_plotting:
             testme.plot_ellipse_and_box(mean, covariance, vertices, self.setup_plot())
+        covariance = [[1,-1],[-1,9]]
+        if self.do_plotting:
+            testme.plot_ellipse_and_box(mean, covariance, vertices, self.setup_plot())
 
 
     def test_plot_box(self):

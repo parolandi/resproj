@@ -305,9 +305,18 @@ def plot_ellipse_and_box(center, covar, vertices, plot_data):
     covariance = numpy.asmatrix(covar)
     # TODO: preconditions
     # sign eigenvals
+    '''
     eigenvals, eigenvecs = numpy.linalg.eig(covariance)
     lambdaa = numpy.sqrt(eigenvals)
     ell = Ellipse(xy=center, width=lambdaa[0]*2, height=lambdaa[1]*2, angle=numpy.rad2deg(numpy.arccos(eigenvecs[0,0])))
+    '''
+    vals, vecs = eigsorted(covariance)
+    theta = numpy.degrees(numpy.arctan2(*vecs[:,0][::-1]))
+    w, h = 2 * numpy.sqrt(vals)
+    ell = Ellipse(xy=center, \
+                  width=w, height=h,
+                  angle=theta, color='black')
+    lambdaa = numpy.sqrt(vals)
     
     fig = pp.figure()
     if plot_data is not None:
@@ -336,3 +345,9 @@ def plot_ellipse_and_box(center, covar, vertices, plot_data):
     ax.set_ylim(min(ylb)/sf, max(yub)*sf)
 
     pp.show()
+
+
+def eigsorted(cov):
+    vals, vecs = numpy.linalg.eigh(cov)
+    order = vals.argsort()[::-1]
+    return vals[order], vecs[:,order]
