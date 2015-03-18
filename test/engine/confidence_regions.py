@@ -259,10 +259,10 @@ class TestConfidenceRegions(unittest.TestCase):
         model, problem, algorithm = self.do_setup_lin()
         algorithm["initial_guesses"] = numpy.asarray([1.0, 2.0])
         problem["confidence_region"]["performance_measure"] = meordi.sum_squared_residuals_st
-        actual = numpy.asarray(testme.compute_nonlinear_confidence_hyperrectangle_extreme(model, problem, algorithm))
-        #_ = numpy.asarray([[1.01338741, 1.59365765], [2.00000001, 2.49178146]])
         problem["parameters"] = [(1.01338741+1.59365765)/2, (2.0040739383273261+2.4877075291690458)/2]
         algorithm["initial_guesses"] = problem["parameters"]
+        actual = numpy.asarray(testme.compute_nonlinear_confidence_hyperrectangle_extreme(model, problem, algorithm))
+        #_ = numpy.asarray([[1.01338741, 1.59365765], [2.00000001, 2.49178146]])
         expected = numpy.asarray([[1.01338741, 1.59365765], [2.0040739383273261, 2.4877075291690458]])
         [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(actual.flatten(), expected.flatten())]
 

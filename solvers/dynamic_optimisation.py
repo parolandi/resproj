@@ -40,7 +40,7 @@ def solve(model, problem, algorithm):
 
 def solve_std(model, problem, algorithm):
     p0 = copy.deepcopy(problem["parameters"])
-    print(algorithm["initial_guesses"])
+    print("ig", algorithm["initial_guesses"])
     
     if problem["constraints"] is not None:
         result = scipy.optimize.minimize( \

@@ -10,7 +10,7 @@ import solvers.monte_carlo_multiple_initial_value as mcmiv
 # TODO: dependency, engine cannot depend on workflow
 import workflows.protocols as wopr
 import metrics.ordinary_differential as mod
-
+import numpy
 
 """
 Best point is used as initial guess to start single-parameter search in order to
@@ -147,16 +147,19 @@ def compute_nonlinear_confidence_interval_upper(model, problem, algorithm):
     # forming constraints here as this is the right level of abstraction
     # copy existing constraints back
     problem["constraints"] = form_upper_constraints(model, problem)
-    algorithm["initial_guess"] = problem["parameters"] * 1.01
+    algorithm["initial_guesses"] = numpy.asarray(problem["parameters"]) * 1.01
+    print("ig", algorithm["initial_guesses"])
     bounds = []
     for ii in range(len(problem["parameters"])):
         #bounds.append([problem["parameters"][ii], problem["bounds"][ii][0]])
         bounds.append([problem["parameters"][ii], 10])
     problem["bounds"] = tuple(bounds)
+    print("bounds", bounds)
     upper = sdo.solve_std(model, problem, algorithm)
 
     if (upper.status > 0):
         codi.print_warning_error_code_message()
+        print("upper", upper)
 
     return upper.x
 
@@ -166,23 +169,26 @@ def compute_nonlinear_confidence_interval_lower(model, problem, algorithm):
     # forming constraints here as this is the right level of abstraction
     # copy existing constraints back
     problem["constraints"] = form_lower_constraints(model, problem)
-    algorithm["initial_guess"] = problem["parameters"] * 0.99
+    algorithm["initial_guesses"] = numpy.asarray(problem["parameters"]) * 0.99
+    print("ig", algorithm["initial_guesses"])
     bounds = []
     for ii in range(len(problem["parameters"])):
         #bounds.append([problem["parameters"][ii], problem["bounds"][ii][0]])
         bounds.append([-10, problem["parameters"][ii]])
     problem["bounds"] = tuple(bounds)
+    print("bounds", bounds)
     lower = sdo.solve_std(model, problem, algorithm)
 
     if (lower.status > 0):
         codi.print_warning_error_code_message()
+        print("lower", lower)
 
     return lower.x
 
 
 # unit-tested
 def likelihood_constraint(x, model_data, problem_data, ssr_0):
-    #assert(len(x) == len(model_data["parameters"]))
+    assert(len(x) == len(model_data["parameters"]))
     #print(len(x))
     #print(len(problem_data["parameters"]))
     assert(len(x) == len(problem_data["parameters"]))
