@@ -29,7 +29,7 @@ class TestExperiment01(unittest.TestCase):
     def do_base_experiment_setup(self):
         config = dict(ssd.experiment_setup)
         config["model_setup"] = sod.do_model_setup
-        config["sensitivity_model_setup"] = sod.do_sensitivity_model_setup
+        config["sensitivity_model_setup"] = sod.do_abstract_sensitivity_model_setup
         config["sensitivity_problem_setup"] = sod.do_sensitivity_problem_setup
         config["algorithm_setup"] = sod.do_algorithm_setup
         config["protocol_setup"] = sod.do_protocol_setup

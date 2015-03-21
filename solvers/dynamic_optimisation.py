@@ -40,12 +40,12 @@ def solve(model, problem, algorithm):
 
 def solve_std(model, problem, algorithm):
     p0 = copy.deepcopy(problem["parameters"])
-    print("ig", algorithm["initial_guesses"])
+    index = problem["confidence_region"]["parameter_index"]
     
     if problem["constraints"] is not None:
         result = scipy.optimize.minimize( \
             fun = problem["performance_measure"], \
-            args = (p0,), \
+            args = (p0, index), \
             constraints = problem["constraints"], \
             x0 = algorithm["initial_guesses"], \
             method = algorithm["method"], \
@@ -53,7 +53,7 @@ def solve_std(model, problem, algorithm):
     else:
         result = scipy.optimize.minimize( \
             fun = problem["performance_measure"], \
-            args = (p0,), \
+            args = (p0, problem["confidence_region"]["parameter_index"]), \
             x0 = algorithm["initial_guesses"], \
             method = algorithm["method"], \
             bounds = problem["bounds"])

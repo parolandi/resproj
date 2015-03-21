@@ -13,8 +13,7 @@ import setups.setup_data
 import solvers.initial_value
 
 
-# TODO: obsolete; now _lin()
-def do_model_setup():
+def do_abstract_model_setup():
     inputs = numpy.array([1.0, 2.0])
     params = numpy.array([1.0, 2.0])
     states = numpy.array([10.0, 8.0])
@@ -29,22 +28,24 @@ def do_model_setup():
     return model_instance
 
 
+# TODO: obsolete; now _lin()
+def do_model_setup():
+    return do_abstract_model_setup()
+
+
 def do_model_setup_lin():
-    return do_model_setup()
+    return do_abstract_model_setup()
 
 
 def do_model_setup_nonlin():
-    inputs = numpy.array([1.0, 2.0])
-    params = numpy.array([1.0, 2.0])
-    states = numpy.array([10.0, 8.0])
-    
-    # boiler-plate
-    model_instance = dict(models.model_data.model_structure)
-    model_instance["inputs"] = inputs
-    model_instance["parameters"] = params
-    model_instance["states"] = states
-    model_instance["time"] = 0.0
+    model_instance = do_abstract_model_setup()
     model_instance["model"] = models.ordinary_differential.nonlinear_2p2s
+    return model_instance
+
+
+def do_model_setup_nonlin_in_params():
+    model_instance = do_abstract_model_setup()
+    model_instance["model"] = models.ordinary_differential.nonlinear_in_params_2p2s
     return model_instance
 
 # -----------------------------------------------------------------------------
@@ -64,6 +65,7 @@ def do_base_problem_setup(model_data, data_instance):
     problem_data["inputs"] = copy.deepcopy(model_data["inputs"])
 
     problem_data["performance_measure"] = mod.sum_squared_residuals_st
+    problem_data["confidence_region"]["performance_measure"] = mod.sum_squared_residuals_st
     problem_data["parameter_indices"] = numpy.array([0, 1])
     problem_data["parameters"] = numpy.zeros(len(problem_data["parameter_indices"]))
     
@@ -91,8 +93,9 @@ def do_problem_setup_with_covariance(model_data, data_instance):
     mmdu.check_correctness_of_measurements_covariance_matrix(problem_data)
     return problem_data
 
+#-----------------------------------------------------------------------------#
 
-def do_sensitivity_model_setup():
+def do_abstract_sensitivity_model_setup():
     inputs = numpy.array([1.0, 2.0])
     params = numpy.array([1.0, 2.0])
     sys_and_sens_states = numpy.array([10.0, 8.0, 0.0, 0.0, 0.0, 0.0])
@@ -103,6 +106,12 @@ def do_sensitivity_model_setup():
     model_instance["parameters"] = params
     model_instance["states"] = sys_and_sens_states
     model_instance["time"] = 0.0
+    model_instance["model"] = models.ordinary_differential.state_and_sensitivities_linear_2p2s
+    return model_instance
+
+
+def do_sensitivity_model_setup_lin():
+    model_instance = do_abstract_sensitivity_model_setup()
     model_instance["model"] = models.ordinary_differential.state_and_sensitivities_linear_2p2s
     return model_instance
 
@@ -196,6 +205,7 @@ def do_baseline_data_setup_spliced_111000():
     return spliced_trajectories
 
 
+
 def do_data_setup_nonlin(covariance_trace):
     return do_abstract_data_setup(do_model_setup_nonlin, do_base_problem_setup, covariance_trace)
 
@@ -213,6 +223,21 @@ def do_data_setup_nonlin_spliced_111111_without_covariance():
 def do_data_setup_nonlin_spliced_111000_without_covariance():
     trajectories = do_data_setup_nonlin_without_covariance()
     spliced_trajectories = deds.splice_raw_data_with_pattern_111000(trajectories)
+    return spliced_trajectories
+
+
+
+def do_data_setup_nonlin_in_params(covariance_trace):
+    return do_abstract_data_setup(do_model_setup_nonlin_in_params, do_base_problem_setup, covariance_trace)
+
+
+def do_data_setup_nonlin_in_params_without_covariance():
+    return do_data_setup_nonlin_in_params(numpy.array([1.0, 1.0]))
+
+
+def do_data_setup_nonlin_in_params_spliced_111111_without_covariance():
+    trajectories = do_data_setup_nonlin_in_params_without_covariance()
+    spliced_trajectories = deds.splice_raw_data_with_pattern_111111(trajectories)
     return spliced_trajectories
 
 # -----------------------------------------------------------------------------

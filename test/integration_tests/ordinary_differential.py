@@ -17,8 +17,6 @@ import solvers.monte_carlo_multiple_initial_value as mcmiv
 import solvers.solver_data as ssd
 import workflows.reporting as wr
 
-import common.diagnostics as coda
-
 
 class TestOrdinaryDifferential(unittest.TestCase):
 
@@ -30,7 +28,7 @@ class TestOrdinaryDifferential(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
         super(TestOrdinaryDifferential, self).__init__(*args, **kwargs)
-        self.do_plotting = True
+        self.do_plotting = False
 
     
     def do_setup_lin(self):
@@ -44,6 +42,15 @@ class TestOrdinaryDifferential(unittest.TestCase):
     
     def do_setup_nonlin(self):
         config = self.do_experiment_setup_nonlin()
+        algorithm = config["algorithm_setup"]()
+        data = config["data_setup"]()
+        model = config["model_setup"]()
+        problem = config["problem_setup"](model, data["calib"])
+        return model, problem, algorithm
+
+    
+    def do_setup_nonlin_in_params(self):
+        config = self.do_experiment_setup_nonlin_in_params()
         algorithm = config["algorithm_setup"]()
         data = config["data_setup"]()
         model = config["model_setup"]()
@@ -69,6 +76,19 @@ class TestOrdinaryDifferential(unittest.TestCase):
         config["algorithm_setup"] = self.do_algorithm_setup
         config["data_setup"] = sod.do_baseline_data_setup_spliced_111111_without_covariance
         config["model_setup"] = sod.do_model_setup
+        config["problem_setup"] = sod.do_problem_setup_without_covariance
+        config["protocol_setup"] = None
+        config["protocol_step"]["calib"] = "do"
+        config["protocol_step"]["valid"] = "do"
+        config["sensitivity_setup"] = solose.compute_timecourse_trajectories_and_sensitivities
+        return config
+
+    
+    def do_experiment_setup_nonlin_in_params(self):
+        config = copy.deepcopy(sesd.experiment_setup)
+        config["algorithm_setup"] = self.do_algorithm_setup
+        config["data_setup"] = sod.do_data_setup_nonlin_in_params_spliced_111111_without_covariance
+        config["model_setup"] = sod.do_model_setup_nonlin_in_params
         config["problem_setup"] = sod.do_problem_setup_without_covariance
         config["protocol_setup"] = None
         config["protocol_step"]["calib"] = "do"
@@ -113,7 +133,7 @@ class TestOrdinaryDifferential(unittest.TestCase):
         actual = ecr.compute_nonlinear_confidence_region_points( \
             model, problem, algorithm_rf, algorithm_mc, best_point)
         number_of_points = len(numpy.transpose(actual["objective_function"]))
-        #self.assertEquals(number_of_points, baseline["number_of_points"])
+        self.assertEquals(number_of_points, baseline["number_of_points"])
 
         # plot nonlin conf reg
         if self.do_plotting:
@@ -121,7 +141,7 @@ class TestOrdinaryDifferential(unittest.TestCase):
             repl.plot_scatter(numpy.transpose(points)[0], numpy.transpose(points)[1], baseline["plotdata"])
 
 
-    def dn_test_compute_nonlinear_confidence_region_points_lin(self):
+    def test_compute_nonlinear_confidence_region_points_lin(self):
         baseline = dict(self.baseline)
         baseline["number_of_points"] = 7834
         baseline["plotdata"] = dict(replda.plot_data)
@@ -130,7 +150,7 @@ class TestOrdinaryDifferential(unittest.TestCase):
             self.do_setup_lin, self.do_experiment_setup_lin, baseline)
 
     
-    def dn_test_compute_nonlinear_confidence_region_points_nonlin(self):
+    def test_compute_nonlinear_confidence_region_points_nonlin(self):
         baseline = dict(self.baseline)
         baseline["number_of_points"] = 7836
         baseline["plotdata"] = dict(replda.plot_data)
@@ -174,7 +194,7 @@ class TestOrdinaryDifferential(unittest.TestCase):
             repl.plot_box(actual, baseline["plotdata"])
 
 
-    def dn_test_compute_nonlinear_confidence_intervals_lin(self):
+    def test_compute_nonlinear_confidence_intervals_lin(self):
         baseline = dict(self.baseline)
         baseline["intervals"] = [[0.81310699285569032, 1.7939381418621563], [2.0006829540098252, 2.4910985135890753]]
         baseline["plotdata"] = dict(replda.plot_data)
@@ -183,7 +203,7 @@ class TestOrdinaryDifferential(unittest.TestCase):
             self.do_setup_lin, self.do_experiment_setup_lin, baseline)
 
 
-    def dn_test_compute_nonlinear_confidence_intervals_nonlin(self):
+    def test_compute_nonlinear_confidence_intervals_nonlin(self):
         baseline = dict(self.baseline)
         baseline["intervals"] = [[0.8671657007822573, 1.5577381993790731], [1.9990400864599849, 2.3057674332509652]]
         baseline["plotdata"] = dict(replda.plot_data)
@@ -192,7 +212,7 @@ class TestOrdinaryDifferential(unittest.TestCase):
             self.do_setup_nonlin, self.do_experiment_setup_nonlin, baseline)
 
 
-    def do_test_compute_nonlinear_confidence_region_both(self, setup, config, baseline):
+    def do_test_compute_nonlinear_confidence_region_both(self, setup, config, baseline, do_extremal):
         # setup regression
         model, problem, _ = setup()
         algorithm = dict(ssd.algorithm_structure)
@@ -217,17 +237,24 @@ class TestOrdinaryDifferential(unittest.TestCase):
         algorithm_mc["number_of_trials"] = 10000
         
         # do nonlin conf reg
-        region = ecr.compute_nonlinear_confidence_region_points( \
-            model, problem, algorithm_rf, algorithm_mc, best_point)
+        if do_extremal:
+            region = ecr.compute_nonlinear_confidence_region_points_extremal( \
+                model, problem, algorithm_rf, algorithm_mc, best_point)
+        else:
+            region = ecr.compute_nonlinear_confidence_region_points( \
+                model, problem, algorithm_rf, algorithm_mc, best_point)
         number_of_points = len(numpy.transpose(region["objective_function"]))
-        #self.assertEquals(number_of_points, baseline["number_of_points"])
+        self.assertEquals(number_of_points, baseline["number_of_points"])
 
         # do nonlin conf intvs
-        intervals = ecr.compute_nonlinear_confidence_intervals( \
-            model, problem, algorithm_rf, best_point)
-        #[self.assertAlmostEquals(act, exp, 8) for act, exp in zip( \
-        #    numpy.asarray(intervals).flatten(), numpy.asarray(baseline["intervals"]).flatten())]
-
+        if do_extremal:
+            intervals = ecr.compute_nonlinear_confidence_intervals_extremal( \
+                model, problem, algorithm_rf, best_point)
+        else:
+            intervals = ecr.compute_nonlinear_confidence_intervals( \
+                model, problem, algorithm_rf, best_point)
+        [self.assertAlmostEquals(act, exp, 8) for act, exp in zip( \
+            numpy.asarray(intervals).flatten(), numpy.asarray(baseline["intervals"]).flatten())]
         if self.do_plotting:
             points = numpy.asarray(region["decision_variables"])
             repl.plot_scatter_and_box( \
@@ -241,22 +268,36 @@ class TestOrdinaryDifferential(unittest.TestCase):
         baseline["plotdata"] = dict(replda.plot_data)
         baseline["plotdata"]["window_title"] = "NCR linear model"
         self.do_test_compute_nonlinear_confidence_region_both( \
-            self.do_setup_lin, self.do_experiment_setup_lin, baseline)
+            self.do_setup_lin, self.do_experiment_setup_lin, baseline, False)
 
 
-    def dn_test_compute_nonlinear_confidence_region_points_and_intervals_nonlin(self):
+    def test_compute_nonlinear_confidence_region_points_and_intervals_nonlin_in_params(self):
+        baseline = {}
+        baseline["number_of_points"] = 1989
+        baseline["intervals"] = [[0.81310699019690669, 1.7939381418916953], [1.2251143133399702, 2.7436759296319919]]
+        baseline["plotdata"] = dict(replda.plot_data)
+        baseline["plotdata"]["window_title"] = "NCR nl-in-params model"
+        self.do_test_compute_nonlinear_confidence_region_both( \
+            self.do_setup_nonlin_in_params, \
+            self.do_experiment_setup_nonlin_in_params, \
+            baseline, True)
+
+    
+    def test_compute_nonlinear_confidence_region_points_and_intervals_nonlin(self):
         baseline = {}
         baseline["number_of_points"] = 7836
         baseline["intervals"] = [[0.8671657007822573, 1.5577381993790731], [1.9990400864599849, 2.3057674332509652]]
         baseline["plotdata"] = dict(replda.plot_data)
         baseline["plotdata"]["window_title"] = "NCR nonlinear model"
         self.do_test_compute_nonlinear_confidence_region_both( \
-            self.do_setup_nonlin, self.do_experiment_setup_nonlin, baseline)
+            self.do_setup_nonlin, self.do_experiment_setup_nonlin, baseline, False)
 
 
     def do_test_compute_linearised_confidence_region_both(self, config, dummy, baseline):
         # setup regression
-        model, problem, _ = self.do_setup_lin()
+        model = config["model_setup"]()
+        data = config["data_setup"]()
+        problem = config["problem_setup"](model, data["calib"])
         algorithm = dict(ssd.algorithm_structure)
         algorithm["initial_guesses"] = problem["parameters"]
         algorithm["method"] = 'SLSQP'
@@ -276,12 +317,11 @@ class TestOrdinaryDifferential(unittest.TestCase):
         # setup lin conf reg
         intervals = ecr.compute_linearised_confidence_intervals(config, best_point)
         expected = baseline["intervals"]
-        #[self.assertAlmostEquals(act, exp, 8) for act, exp in zip(numpy.asarray(intervals).flatten(), expected.flatten())]
+        [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(numpy.asarray(intervals).flatten(), expected.flatten())]
         ellipsoid = ecr.compute_linearised_confidence_region_ellipsoid(config, best_point)
         expected = baseline["ellipsoid"]
-        coda.print_ellipsoid(ellipsoid)
-        #[self.assertAlmostEquals(act, exp, 8) for act, exp in zip( \
-        #    numpy.asarray(ellipsoid).flatten(), numpy.asarray(expected).flatten())]
+        [self.assertAlmostEquals(act, exp, 8) for act, exp in zip( \
+            numpy.asarray(ellipsoid).flatten(), numpy.asarray(expected).flatten())]
         
         if self.do_plotting:
             repl.plot_ellipse_and_box(best_point['decision_variables'], ellipsoid, intervals, baseline["plotdata"])
@@ -292,20 +332,32 @@ class TestOrdinaryDifferential(unittest.TestCase):
         best['objective_function'] = 37.641550819151604
         best['decision_variables'] = [1.30352132, 2.24589073]
         baseline = {}
-        baseline["intervals"] = numpy.asarray([[0.81011790765132297, 1.796924732348677], [1.9991890253485634, 2.4925924346514372]])
+        baseline["intervals"] = numpy.asarray([[0.81011790556543528, 1.7969247260969337], [1.9991890216781714, 2.4925924309580578]])
         baseline["ellipsoid"] = numpy.asarray([[2.40507423e-01, 3.04517007e-10], [3.04517007e-10, 6.01268550e-02]])
         baseline["plotdata"] = dict(replda.plot_data)
         baseline["plotdata"]["window_title"] = "LCR linear model"
         self.do_test_compute_linearised_confidence_region_both(self.do_experiment_setup_lin(), best, baseline)
 
         
-    def dn_test_compute_linearised_confidence_region_ellipsoid_and_intervals_nonlin(self):
+    def test_compute_linearised_confidence_region_ellipsoid_and_intervals_nonlin_in_params(self):
+        best = {}
+        best['objective_function'] = 37.641550819151604
+        best['decision_variables'] = [1.30352132, 2.24589073]
+        baseline = {}
+        baseline["intervals"] = numpy.asarray([[0.81011527384884741, 1.79692209610366], [1.0438750236805574, 2.4020138804945135]])
+        baseline["ellipsoid"] = numpy.asarray([[0.24050742, -0.31789412], [-0.31789412, 0.4555673]])
+        baseline["plotdata"] = dict(replda.plot_data)
+        baseline["plotdata"]["window_title"] = "LCR nl-in-params model"
+        self.do_test_compute_linearised_confidence_region_both(self.do_experiment_setup_nonlin_in_params(), best, baseline)
+
+    
+    def test_compute_linearised_confidence_region_ellipsoid_and_intervals_nonlin(self):
         best = {}
         best['objective_function'] = 37.67831358169179
         best['decision_variables'] = [1.2175145, 2.15319774]
         baseline = {}
-        baseline["intervals"] = numpy.asarray([[0.87032574595894485, 1.5647032540410553], [1.9989498251354314, 2.3074456548645683]])
-        baseline["ellipsoid"] = numpy.asarray([[1.19200873e-01, -4.59099258e-09], [-4.59099258e-09, 2.35280936e-02]])
+        baseline["intervals"] = numpy.asarray([[0.87032571082305465, 1.5647032840530344], [1.9989498122735474, 2.3074456690372847]])
+        baseline["ellipsoid"] = numpy.asarray([[1.19200895e-01, 7.12328370e-09], [7.12328370e-09, 2.35280977e-02]])
         baseline["plotdata"] = dict(replda.plot_data)
         baseline["plotdata"]["window_title"] = "LCR nonlinear model"
         self.do_test_compute_linearised_confidence_region_both(self.do_experiment_setup_nonlin(), best, baseline)
