@@ -12,6 +12,14 @@ def get_lim_scaling_factor():
     return 1.01
 
 
+def handle_plot_data(fig, plot_data):
+    if plot_data is not None:
+        if "window_title" in plot_data:
+            fig.canvas.set_window_title(plot_data["window_title"])
+        if "title" in plot_data:
+            fig.suptitle(plot_data["title"])
+    
+
 def plot_errors_and_residuals(independent,  errors, residuals):
     # TODO assertions
     
@@ -226,9 +234,7 @@ def plot_histogram_cutoff_by_count(data, bins, count):
 
 def plot_scatter(x, y, plot_data):
     fig = pp.figure()
-    if plot_data is not None:
-        fig.canvas.set_window_title(plot_data["window_title"])
-        fig.suptitle(plot_data["title"])
+    handle_plot_data(fig, plot_data)
     ax = fig.add_subplot(111)
     pp.plot(x, y, 'o')
     sf = get_lim_scaling_factor()
@@ -239,9 +245,7 @@ def plot_scatter(x, y, plot_data):
     
 def plot_box(vertices, plot_data):
     fig = pp.figure()
-    if plot_data is not None:
-        fig.canvas.set_window_title(plot_data["window_title"])
-        fig.suptitle(plot_data["title"])
+    handle_plot_data(fig, plot_data)
     ax = fig.add_subplot(111)
     pp.vlines(vertices[0], vertices[1][0], vertices[1][1], colors='b')
     pp.hlines(vertices[1], vertices[0][0], vertices[0][1], colors='b')
@@ -258,9 +262,7 @@ def plot_scatter_and_box(x, y, vertices, plot_data):
     vertices list of list
     """
     fig = pp.figure()
-    if plot_data is not None:
-        fig.canvas.set_window_title(plot_data["window_title"])
-        fig.suptitle(plot_data["title"])
+    handle_plot_data(fig, plot_data)
     ax = fig.add_subplot(111)
     pp.plot(x, y, 'o')
     pp.vlines(vertices[0], vertices[1][0], vertices[1][1], colors='b')
@@ -286,9 +288,7 @@ def plot_ellipse(center, covar, plot_data):
     ell = Ellipse(xy=center, width=lambdaa[0]*2, height=lambdaa[1]*2, angle=numpy.rad2deg(numpy.arccos(eigenvecs[0,0])))
     
     fig = pp.figure()
-    if plot_data is not None:
-        fig.canvas.set_window_title(plot_data["window_title"])
-        fig.suptitle(plot_data["title"])
+    handle_plot_data(fig, plot_data)
     ax = fig.add_subplot(111)
     ax.add_artist(ell)
     ell.set_clip_box(ax.bbox)
@@ -319,9 +319,7 @@ def plot_ellipse_and_box(center, covar, vertices, plot_data):
     lambdaa = numpy.sqrt(vals)
     
     fig = pp.figure()
-    if plot_data is not None:
-        fig.canvas.set_window_title(plot_data["window_title"])
-        fig.suptitle(plot_data["title"])
+    handle_plot_data(fig, plot_data)
     ax = fig.add_subplot(111)
     ax.add_artist(ell)
     ell.set_clip_box(ax.bbox)

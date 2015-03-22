@@ -1,5 +1,6 @@
 
 import copy
+import numpy
 
 import common.diagnostics as codi
 import engine.statistical_inference as enstin
@@ -9,8 +10,7 @@ import solvers.dynamic_optimisation as sdo
 import solvers.monte_carlo_multiple_initial_value as mcmiv
 # TODO: dependency, engine cannot depend on workflow
 import workflows.protocols as wopr
-import metrics.ordinary_differential as mod
-import numpy
+
 
 """
 Best point is used as initial guess to start single-parameter search in order to
@@ -146,35 +146,45 @@ def maximise_distance_lower(x, x0, index):
 def compute_nonlinear_confidence_interval_extremal(model, problem, algorithm, index):
     problem["confidence_region"]["parameter_index"] = index
 
+    # form objective function
     problem["performance_measure"] = maximise_distance_upper
+    p0 = copy.deepcopy(problem["parameters"])
+    problem["performance_measure_args"] = tuple([p0, index])
+
     # forming constraints here as this is the right level of abstraction
     # copy existing constraints back
     problem["constraints"] = form_constraints(model, problem)
+
+    # form bounds
     algorithm["initial_guesses"] = numpy.asarray(problem["parameters"]) * 1.01
     bounds = []
     for _ in range(len(problem["parameters"])):
         bounds.append([-10, 10])
     bounds[index][0] = problem["parameters"][index]
     problem["bounds"] = tuple(bounds)
+
     upper = sdo.solve_std(model, problem, algorithm)
 
     if (upper.status > 0):
         codi.print_warning_error_code_message()
 
+    # form objective function
     problem["performance_measure"] = maximise_distance_lower
+    # maintain arguments
+    
     # forming constraints here as this is the right level of abstraction
     # copy existing constraints back
     problem["constraints"] = form_constraints(model, problem)
+    
+    # form bounds
     algorithm["initial_guesses"] = numpy.asarray(problem["parameters"]) * 0.99
     bounds = []
     for _ in range(len(problem["parameters"])):
         bounds.append([-10, 10])
     bounds[index][1] = problem["parameters"][index]
     problem["bounds"] = tuple(bounds)
+    
     lower = sdo.solve_std(model, problem, algorithm)
-
-    if (lower.status > 0):
-        codi.print_warning_error_code_message()
 
     if (upper.status > 0 or lower.status > 0):
         codi.print_warning_error_code_message()

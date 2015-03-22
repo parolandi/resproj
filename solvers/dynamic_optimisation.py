@@ -3,7 +3,6 @@ import scipy.optimize
 
 import metrics.ordinary_differential as mod
 
-import copy
 import numpy
 
 
@@ -39,25 +38,41 @@ def solve(model, problem, algorithm):
 
 
 def solve_std(model, problem, algorithm):
-    p0 = copy.deepcopy(problem["parameters"])
-    index = problem["confidence_region"]["parameter_index"]
+    result = None
     
-    if problem["constraints"] is not None:
+    if not has_obj_args(problem) and is_unconstrained(problem):
         result = scipy.optimize.minimize( \
             fun = problem["performance_measure"], \
-            args = (p0, index), \
+            x0 = algorithm["initial_guesses"], \
+            method = algorithm["method"], \
+            bounds = problem["bounds"])
+    
+    if not has_obj_args(problem) and not is_unconstrained(problem):
+        result = scipy.optimize.minimize( \
+            fun = problem["performance_measure"], \
             constraints = problem["constraints"], \
             x0 = algorithm["initial_guesses"], \
             method = algorithm["method"], \
             bounds = problem["bounds"])
-    else:
+
+    if has_obj_args(problem) and is_unconstrained(problem):
         result = scipy.optimize.minimize( \
             fun = problem["performance_measure"], \
-            args = (p0, problem["confidence_region"]["parameter_index"]), \
+            args = problem["performance_measure_args"], \
             x0 = algorithm["initial_guesses"], \
             method = algorithm["method"], \
             bounds = problem["bounds"])
-        
+
+    if has_obj_args(problem) and not is_unconstrained(problem):
+        result = scipy.optimize.minimize( \
+            fun = problem["performance_measure"], \
+            args = problem["performance_measure_args"], \
+            constraints = problem["constraints"], \
+            x0 = algorithm["initial_guesses"], \
+            method = algorithm["method"], \
+            bounds = problem["bounds"])
+
+    assert(result is not None)
     return result
 
 
@@ -73,5 +88,12 @@ def minimise_it(x):
 def maximise_distance(x, x0):
     delta = numpy.asarray(x - x0)
     distance = (-1) * numpy.dot(delta, delta)
-    #print("distance", distance) 
     return distance
+
+
+def has_obj_args(problem):
+    return problem["performance_measure_args"] is not None
+
+
+def is_unconstrained(problem):
+    return len(problem["constraints"]) == 0

@@ -57,6 +57,7 @@ problem_structure = {
     "outputs": [],
     "output_indices": [],
     "performance_measure": None,
+    "performance_measure_args": None,
     "parameters": [],
     "parameter_indices": [],
     # TODO: change to "times"

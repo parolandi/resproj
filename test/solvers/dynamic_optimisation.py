@@ -31,7 +31,30 @@ class TestDynamicOptimisation(unittest.TestCase):
         return algorithm
         
 
-    def test_solve(self):
+    def do_performance_measure_w_args(self, x, x0):
+        return x0 - x
+        
+    
+    def do_performance_measure_wo_args(self, x):
+        return (-1) * x
+
+    
+    def do_constraint(self, x, x0):
+        return x0 - x
+
+
+    def do_form_constraint(self, x0):
+        constraint_list = []
+        constraint_list.append( \
+                      {'type': 'ineq', \
+                       'fun': self.do_constraint, \
+                       'args': (x0,)})
+        constraints = tuple(constraint_list)
+        return constraints
+
+    
+    # TODO: legacy-ish
+    def dn_test_solve(self):
         model, problem, algorithm = self.do_setup()
         problem["confidence_region"]["parameter_index"] = 0
 
@@ -54,6 +77,54 @@ class TestDynamicOptimisation(unittest.TestCase):
         self.assertEquals(upper.status+lower.status, 0)
         self.assertAlmostEquals(upper.x, 2.49178146, 8)
         self.assertAlmostEquals(lower.x, 2.00000001, 8)
+
+
+    def test_solve_std_perf_meas_wo_args(self):
+        model, problem, algorithm = self.do_setup()
+        
+        problem["performance_measure"] = self.do_performance_measure_wo_args
+        bounds = [tuple([0,10])]
+        problem["bounds"] = tuple(bounds)
+        actual = testme.solve_std(model, problem, algorithm)
+        expected = -10
+        self.assertAlmostEqual(actual.fun, expected, 12)
+        
+
+    def test_solve_std_perf_meas_w_args(self):
+        model, problem, algorithm = self.do_setup()
+        
+        problem["performance_measure"] = self.do_performance_measure_w_args
+        problem["performance_measure_args"] = tuple([1])
+        bounds = [tuple([0,10])]
+        problem["bounds"] = tuple(bounds)
+        actual = testme.solve_std(model, problem, algorithm)
+        expected = -9
+        self.assertAlmostEqual(actual.fun, expected, 12)
+
+
+    def test_solve_std_perf_meas_wo_args_w_constraints(self):
+        model, problem, algorithm = self.do_setup()
+        
+        problem["performance_measure"] = self.do_performance_measure_wo_args
+        problem["constraints"] = self.do_form_constraint(5)
+        bounds = [tuple([0,10])]
+        problem["bounds"] = tuple(bounds)
+        actual = testme.solve_std(model, problem, algorithm)
+        expected = -5
+        self.assertAlmostEqual(actual.fun, expected, 12)
+
+
+    def test_solve_std_perf_meas_w_args_w_constraints(self):
+        model, problem, algorithm = self.do_setup()
+        
+        problem["performance_measure"] = self.do_performance_measure_w_args
+        problem["performance_measure_args"] = tuple([1])
+        problem["constraints"] = self.do_form_constraint(5)
+        bounds = [tuple([0,10])]
+        problem["bounds"] = tuple(bounds)
+        actual = testme.solve_std(model, problem, algorithm)
+        expected = -4
+        self.assertAlmostEqual(actual.fun, expected, 12)
 
 
 if __name__ == "__main__":

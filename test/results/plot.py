@@ -17,6 +17,7 @@ class TestPlot(unittest.TestCase):
 
     def setup_plot(self):
         plotdata = dict(replda.plot_data)
+        # it should work with either or both
         plotdata["title"] = "test"
         plotdata["window_title"] = "Test"
         return plotdata

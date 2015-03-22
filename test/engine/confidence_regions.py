@@ -142,7 +142,7 @@ class TestConfidenceRegions(unittest.TestCase):
 
         if self.do_plotting:
             points = numpy.asarray(actual["decision_variables"])
-            repl.plot_scatter(numpy.transpose(points)[0], numpy.transpose(points)[1])
+            repl.plot_scatter(numpy.transpose(points)[0], numpy.transpose(points)[1], None)
 
 
     def test_compute_nonlinear_confidence_region_points_nonlin(self):
@@ -158,8 +158,10 @@ class TestConfidenceRegions(unittest.TestCase):
         self.assertEquals(len(actual["objective_function"]), 7836)
 
         if self.do_plotting:
+            plot_data = {}
+            plot_data["window_title"] = "NCR nonlinear model"
             points = numpy.asarray(actual["decision_variables"])
-            repl.plot_scatter(numpy.transpose(points)[0], numpy.transpose(points)[1])
+            repl.plot_scatter(numpy.transpose(points)[0], numpy.transpose(points)[1], plot_data)
 
 
     def test_compute_linearised_confidence_region_intervals_lin(self):
@@ -172,7 +174,9 @@ class TestConfidenceRegions(unittest.TestCase):
         [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(intervals.flatten(), expected.flatten())]
         
         if self.do_plotting:
-            repl.plot_box(intervals)
+            plot_data = {}
+            plot_data["window_title"] = "LCR linear model"
+            repl.plot_box(intervals, plot_data)
 
 
     def test_compute_linearised_confidence_region_ellipsoid_lin(self):
@@ -185,7 +189,9 @@ class TestConfidenceRegions(unittest.TestCase):
         [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(ellipsoid.flatten(), expected.flatten())]
         
         if self.do_plotting:
-            repl.plot_ellipse(best['decision_variables'], ellipsoid)
+            plot_data = {}
+            plot_data["window_title"] = "LCR linear model"
+            repl.plot_ellipse(best['decision_variables'], ellipsoid, plot_data)
 
     '''---------------------------------------------------------------------'''
     
@@ -232,6 +238,7 @@ class TestConfidenceRegions(unittest.TestCase):
         self.assertEquals(actual, expected)
         
 
+    # TODO: these should be consistent!
     def test_compute_nonlinear_confidence_hyperrectangle_extremal_lin(self):
         model, problem, algorithm = self.do_setup_lin()
         algorithm["initial_guesses"] = numpy.asarray([1.0, 2.0])
