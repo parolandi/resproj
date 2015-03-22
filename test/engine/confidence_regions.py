@@ -155,7 +155,7 @@ class TestConfidenceRegions(unittest.TestCase):
         algorithm_mc["number_of_trials"] = 10000
         actual = testme.compute_nonlinear_confidence_region_points( \
             model, problem, algorithm_rf, algorithm_mc, best_point)
-        self.assertEquals(len(actual["objective_function"]), 7841)
+        self.assertEquals(len(actual["objective_function"]), 7836)
 
         if self.do_plotting:
             points = numpy.asarray(actual["decision_variables"])
@@ -166,9 +166,9 @@ class TestConfidenceRegions(unittest.TestCase):
         config = self.do_experiment_setup_lin()
         best = {}
         best['objective_function'] = 37.641550819151604
-        best['decision_variables'] = [ 1.30352132,  2.24589073]
+        best['decision_variables'] = [1.30352132, 2.24589073]
         intervals = numpy.asarray(testme.compute_linearised_confidence_intervals(config, best))
-        expected = numpy.asarray([[0.89143076, 1.71561188], [2.03984545, 2.45193601]])
+        expected = numpy.asarray(numpy.asarray([[0.81011790765132297, 1.796924732348677], [1.9991890253485634, 2.4925924346514372]]))
         [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(intervals.flatten(), expected.flatten())]
         
         if self.do_plotting:
@@ -179,13 +179,13 @@ class TestConfidenceRegions(unittest.TestCase):
         config = self.do_experiment_setup_lin()
         best = {}
         best['objective_function'] = 37.641550819151604
-        best['decision_variables'] = [ 1.30352132,  2.24589073]
-        covariance = numpy.asarray(testme.compute_linearised_confidence_region_ellipsoid(config, best))
-        expected = numpy.asarray([[1.14621592e-01, 1.45127430e-10], [1.45127430e-10, 2.86553976e-02]])
-        [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(covariance.flatten(), expected.flatten())]
+        best['decision_variables'] = [1.30352132, 2.24589073]
+        ellipsoid = numpy.asarray(testme.compute_linearised_confidence_region_ellipsoid(config, best))
+        expected = numpy.asarray([[2.40507423e-01, 3.04517007e-10], [3.04517007e-10, 6.01268550e-02]])
+        [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(ellipsoid.flatten(), expected.flatten())]
         
         if self.do_plotting:
-            repl.plot_ellipse(best['decision_variables'], covariance)
+            repl.plot_ellipse(best['decision_variables'], ellipsoid)
 
     '''---------------------------------------------------------------------'''
     
