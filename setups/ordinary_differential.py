@@ -51,6 +51,7 @@ def do_model_setup_nonlin_in_params():
 # -----------------------------------------------------------------------------
 
 # TODO: consider adding bounds?
+# TODO: rename to abstract
 def do_base_problem_setup(model_data, data_instance):
     """
     data_instance calib_valid_experimental_dataset["calib"]
@@ -79,6 +80,8 @@ def do_base_problem_setup(model_data, data_instance):
         assert(len(["output_indices"]) == len(["outputs"]))
 
     problem_data["initial"] = "exclude"
+
+    problem_data["bounds"] = [(-10,10), (-10,10)]
 
     return problem_data
 

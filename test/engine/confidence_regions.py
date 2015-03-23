@@ -198,9 +198,7 @@ class TestConfidenceRegions(unittest.TestCase):
     # mock
     def do_confidence_region_performance_measure(self, dummy1, dummy2, model, problem):
         param = numpy.asarray(problem["parameters"])
-        print("param", param)
         measure = numpy.dot(param, param)
-        print("measure", measure)
         return measure
     
     
@@ -258,6 +256,19 @@ class TestConfidenceRegions(unittest.TestCase):
         algorithm["initial_guesses"] = problem["parameters"]
         actual = numpy.asarray(testme.compute_nonlinear_confidence_hyperrectangle_extremal(model, problem, algorithm))
         expected = numpy.asarray([[0.73253447, 1.87451067], [1.16686454, 3.09717469]])
+        [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(actual.flatten(), expected.flatten())]
+
+
+    def test_compute_nonlinear_confidence_hyperrectangle_extremal_nonlin_in_params_w_bounds_mod(self):
+        model, problem, algorithm = self.do_setup_nonlin_in_params()
+        algorithm["initial_guesses"] = numpy.asarray([1.0, 2.0])
+        problem["confidence_region"]["performance_measure"] = meordi.sum_squared_residuals_st
+        problem["parameters"] = [(1.0017616818394601+1.2653734258285729)/2, (2.0040739383273261+2.4877075291690458)/2]
+        problem["bounds"] = [(0,10), (0,10)]
+        algorithm["initial_guesses"] = problem["parameters"]
+        actual = numpy.asarray(testme.compute_nonlinear_confidence_hyperrectangle_extremal(model, problem, algorithm))
+        expected = numpy.asarray( \
+            [[0.74600375649924178, 1.87451067], [1.16686454, 3.097174529374962]])
         [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(actual.flatten(), expected.flatten())]
 
 

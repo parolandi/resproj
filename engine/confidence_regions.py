@@ -107,21 +107,27 @@ def compute_nonlinear_confidence_hyperrectangle(model, problem, algorithm):
 
 def compute_nonlinear_confidence_hyperrectangle_extremal(model, problem, algorithm):
     hyperrectangle = []
-    func = problem["performance_measure"]
-    opt_param = copy.deepcopy(problem["parameters"])
     for param_index in range(len(problem["parameter_indices"])):
         interval = compute_nonlinear_confidence_interval_extremal(model, problem, algorithm, param_index)
         hyperrectangle.append(interval)
-        problem["parameters"] = copy.deepcopy(opt_param)
-        model["parameters"] = copy.deepcopy(opt_param)
-    problem["performance_measure"] = func
     return hyperrectangle
 
 
 # TODO: handle abnormal situations
 def compute_nonlinear_confidence_interval(model, problem, algorithm, index):
-    problem["confidence_region"]["parameter_index"] = index
+    assert(problem["bounds"] is not None)
+    assert(len(problem["bounds"]) == len(problem["parameter_indices"]))
 
+    opt_model_params = copy.deepcopy(model["parameters"])
+    opt_problem_params = copy.deepcopy(problem["parameters"])
+    func = copy.deepcopy(problem["performance_measure"])
+    args = copy.deepcopy(problem["performance_measure_args"])
+    cnstrnts = copy.deepcopy(problem["constraints"])
+    bounds = copy.deepcopy(problem["bounds"])
+    
+    problem["confidence_region"]["parameter_index"] = index
+    
+    problem["bounds"] = [problem["bounds"][index]]
     problem["performance_measure"] = sdo.maximise_it
     upper = sdo.solve(model, problem, algorithm)
     problem["performance_measure"] = sdo.minimise_it
@@ -129,6 +135,13 @@ def compute_nonlinear_confidence_interval(model, problem, algorithm, index):
 
     if (upper.status > 0 or lower.status > 0):
         codi.print_warning_error_code_message()
+
+    model["parameters"] = opt_model_params
+    problem["parameters"] = opt_problem_params
+    problem["performance_measure"] = func
+    problem["performance_measure_args"] = args
+    problem["constraints"] = cnstrnts
+    problem["bounds"] = bounds
 
     return [lower.x[0], upper.x[0]]
 
@@ -144,6 +157,16 @@ def maximise_distance_lower(x, x0, index):
 
 
 def compute_nonlinear_confidence_interval_extremal(model, problem, algorithm, index):
+    assert(problem["bounds"] is not None)
+    assert(len(problem["bounds"]) == len(problem["parameter_indices"]))
+
+    opt_model_params = copy.deepcopy(model["parameters"])
+    opt_problem_params = copy.deepcopy(problem["parameters"])
+    func = copy.deepcopy(problem["performance_measure"])
+    args = copy.deepcopy(problem["performance_measure_args"])
+    cnstrnts = copy.deepcopy(problem["constraints"])
+    bounds = copy.deepcopy(problem["bounds"])
+    
     problem["confidence_region"]["parameter_index"] = index
 
     # form objective function
@@ -156,11 +179,9 @@ def compute_nonlinear_confidence_interval_extremal(model, problem, algorithm, in
     problem["constraints"] = form_constraints(model, problem)
 
     # form bounds
-    bounds = []
-    for _ in range(len(problem["parameters"])):
-        bounds.append([-10, 10])
-    bounds[index][0] = problem["parameters"][index]
-    problem["bounds"] = tuple(bounds)
+    bound = list(bounds[index])
+    bound[0] = problem["parameters"][index]
+    problem["bounds"][index] = tuple(bound)
 
     # form initial guesses
     # TODO: the algorithm has been shown to be sensitive to these
@@ -180,11 +201,9 @@ def compute_nonlinear_confidence_interval_extremal(model, problem, algorithm, in
     problem["constraints"] = form_constraints(model, problem)
     
     # form bounds
-    bounds = []
-    for _ in range(len(problem["parameters"])):
-        bounds.append([-10, 10])
-    bounds[index][1] = problem["parameters"][index]
-    problem["bounds"] = tuple(bounds)
+    bound = list(bounds[index])
+    bound[1] = problem["parameters"][index]
+    problem["bounds"][index] = tuple(bound)
     
     # form initial guesses
     # TODO: the algorithm has been shown to be sensitive to these
@@ -194,6 +213,13 @@ def compute_nonlinear_confidence_interval_extremal(model, problem, algorithm, in
 
     if (upper.status > 0 or lower.status > 0):
         codi.print_warning_error_code_message()
+
+    model["parameters"] = opt_model_params
+    problem["parameters"] = opt_problem_params
+    problem["performance_measure"] = func
+    problem["performance_measure_args"] = args
+    problem["constraints"] = cnstrnts
+    problem["bounds"] = bounds
 
     return [lower.x[index], upper.x[index]]
 
