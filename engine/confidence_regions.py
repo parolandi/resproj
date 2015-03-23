@@ -156,12 +156,15 @@ def compute_nonlinear_confidence_interval_extremal(model, problem, algorithm, in
     problem["constraints"] = form_constraints(model, problem)
 
     # form bounds
-    algorithm["initial_guesses"] = numpy.asarray(problem["parameters"]) * 1.01
     bounds = []
     for _ in range(len(problem["parameters"])):
         bounds.append([-10, 10])
     bounds[index][0] = problem["parameters"][index]
     problem["bounds"] = tuple(bounds)
+
+    # form initial guesses
+    # TODO: the algorithm has been shown to be sensitive to these
+    algorithm["initial_guesses"] = numpy.asarray(problem["parameters"]) * 1.01
 
     upper = sdo.solve_std(model, problem, algorithm)
 
@@ -177,12 +180,15 @@ def compute_nonlinear_confidence_interval_extremal(model, problem, algorithm, in
     problem["constraints"] = form_constraints(model, problem)
     
     # form bounds
-    algorithm["initial_guesses"] = numpy.asarray(problem["parameters"]) * 0.99
     bounds = []
     for _ in range(len(problem["parameters"])):
         bounds.append([-10, 10])
     bounds[index][1] = problem["parameters"][index]
     problem["bounds"] = tuple(bounds)
+    
+    # form initial guesses
+    # TODO: the algorithm has been shown to be sensitive to these
+    algorithm["initial_guesses"] = numpy.asarray(problem["parameters"]) * 0.99
     
     lower = sdo.solve_std(model, problem, algorithm)
 
