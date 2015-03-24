@@ -185,12 +185,16 @@ def compute_nonlinear_confidence_interval_extremal(model, problem, algorithm, in
 
     # form initial guesses
     # TODO: the algorithm has been shown to be sensitive to these
-    algorithm["initial_guesses"] = numpy.asarray(problem["parameters"]) * 1.01
+    algorithm["initial_guesses"] = numpy.asarray(problem["parameters"]) * 1
 
     upper = sdo.solve_std(model, problem, algorithm)
 
     if (upper.status > 0):
         codi.print_warning_error_code_message()
+
+
+    model["parameters"] = opt_model_params
+    problem["parameters"] = opt_problem_params
 
     # form objective function
     problem["performance_measure"] = maximise_distance_lower
@@ -207,7 +211,7 @@ def compute_nonlinear_confidence_interval_extremal(model, problem, algorithm, in
     
     # form initial guesses
     # TODO: the algorithm has been shown to be sensitive to these
-    algorithm["initial_guesses"] = numpy.asarray(problem["parameters"]) * 0.99
+    algorithm["initial_guesses"] = numpy.asarray(problem["parameters"]) * 1
     
     lower = sdo.solve_std(model, problem, algorithm)
 

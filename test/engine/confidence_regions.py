@@ -244,7 +244,8 @@ class TestConfidenceRegions(unittest.TestCase):
         problem["parameters"] = [(1.01338741+1.59365765)/2, (2.0040739383273261+2.4877075291690458)/2]
         algorithm["initial_guesses"] = problem["parameters"]
         actual = numpy.asarray(testme.compute_nonlinear_confidence_hyperrectangle_extremal(model, problem, algorithm))
-        expected = numpy.asarray([[0.73253447, 1.87451066], [1.96039669, 2.53138478]])
+        expected = numpy.asarray( \
+            [[0.7325344709901066, 1.8745106620257141], [1.9603966924184313, 2.531384774085117]])
         [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(actual.flatten(), expected.flatten())]
 
 
@@ -255,7 +256,8 @@ class TestConfidenceRegions(unittest.TestCase):
         problem["parameters"] = [(1.0017616818394601+1.2653734258285729)/2, (2.0040739383273261+2.4877075291690458)/2]
         algorithm["initial_guesses"] = problem["parameters"]
         actual = numpy.asarray(testme.compute_nonlinear_confidence_hyperrectangle_extremal(model, problem, algorithm))
-        expected = numpy.asarray([[0.73253447, 1.87451067], [1.16686454, 3.09717469]])
+        expected = numpy.asarray( \
+            [[0.73253445143590945, 1.8745106623661127], [1.1668645358421914, 3.0971745938850002]])
         [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(actual.flatten(), expected.flatten())]
 
 
@@ -268,7 +270,7 @@ class TestConfidenceRegions(unittest.TestCase):
         algorithm["initial_guesses"] = problem["parameters"]
         actual = numpy.asarray(testme.compute_nonlinear_confidence_hyperrectangle_extremal(model, problem, algorithm))
         expected = numpy.asarray( \
-            [[0.74600375649924178, 1.87451067], [1.16686454, 3.097174529374962]])
+            [[0.73253445143590945, 1.8745106725484639], [1.1668645358421914, 3.0971746922364414]])
         [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(actual.flatten(), expected.flatten())]
 
 
