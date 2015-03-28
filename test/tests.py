@@ -5,6 +5,7 @@ import unittest
 from test.common.utilities import *
 from test.data.data_splicing import *
 from test.data.generator import *
+from test.engine.confidence_regions import *
 from test.engine.estimation_matrices import *
 from test.engine.statistical_inference import *
 from test.metrics.algebraic_legacy import *
@@ -13,9 +14,15 @@ from test.metrics.confidence_measures import *
 from test.metrics.ordinary_differential import *
 from test.metrics.statistical_tests import *
 from test.models.algebraic import *
+from test.models.kremlingetal_bioreactor import *
 from test.models.model_data_utils import *
 from test.models.ordinary_differential import *
+# TODO: ensure that call can be made but plot is not shown 
+#from test.results.plot_combinatorial import *
 #from test.results.plot_tiles import *
+#from test.results.plot import *
+from test.setups import *
+from test.solvers.dynamic_optimisation import *
 from test.solvers.initial_value_legacy import *
 from test.solvers.initial_value import *
 from test.solvers.least_squares_algebraic import *
