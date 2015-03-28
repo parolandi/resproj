@@ -54,7 +54,7 @@ class TestDynamicOptimisation(unittest.TestCase):
 
     
     # TODO: legacy-ish
-    def dn_test_solve(self):
+    def regression_test_solve(self):
         model, problem, algorithm = self.do_setup()
         problem["confidence_region"]["parameter_index"] = 0
 

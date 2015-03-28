@@ -208,6 +208,7 @@ class TestConfidenceRegions(unittest.TestCase):
         model["parameters"] = [1, 2]
         problem = {}
         problem["parameters"] = [3, 4]
+        problem["parameter_indices"] = [0, 1]
         problem["confidence_region"] = {}
         problem["confidence_region"]["performance_measure"] = self.do_confidence_region_performance_measure
         actual = testme.likelihood_constraint([0, 2], model, problem, ssr0)
@@ -221,6 +222,7 @@ class TestConfidenceRegions(unittest.TestCase):
         model["parameters"] = [1, 2]
         problem = {}
         problem["parameters"] = [3, 4]
+        problem["parameter_indices"] = [0, 1]
         problem["confidence_region"] = {}
         problem["confidence_region"]["ssr"] = ssr0
         problem["confidence_region"]["performance_measure"] = self.do_confidence_region_performance_measure
@@ -272,6 +274,20 @@ class TestConfidenceRegions(unittest.TestCase):
         expected = numpy.asarray( \
             [[0.73253445143590945, 1.8745106725484639], [1.1668645358421914, 3.0971746922364414]])
         [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(actual.flatten(), expected.flatten())]
+
+
+    def test_compute_nonlinear_confidence_hyperrectangle_extremal_lin_pseudo_bounded(self):
+        model, problem, algorithm = self.do_setup_lin()
+        algorithm["initial_guesses"] = numpy.asarray([1.0, 2.0])
+        problem["confidence_region"]["performance_measure"] = meordi.sum_squared_residuals_st
+        point = [(1.01338741+1.59365765)/2, (2.0040739383273261+2.4877075291690458)/2]
+        problem["parameters"] = point
+        algorithm["initial_guesses"] = problem["parameters"]
+        bounded = [(point[0]-0.01,point[0]+0.01), (point[1]-0.01,point[1]+0.01)]
+        problem["bounds"] = copy.deepcopy(bounded)
+        actual = numpy.asarray(testme.compute_nonlinear_confidence_hyperrectangle_extremal(model, problem, algorithm))
+        expected = numpy.asarray(bounded)
+        [self.assertAlmostEquals(act, exp, 12) for act, exp in zip(actual.flatten(), expected.flatten())]
 
 
 if __name__ == "__main__":
