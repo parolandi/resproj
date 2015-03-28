@@ -13,6 +13,8 @@ def solve(model_instance, problem_instance, algorithm_structure):
     assert(model_instance["model"] is not None)
     assert(problem_instance["performance_measure"] is not None)
     #TODO: preconditions
+    if problem_instance["bounds"] is not None:
+        assert(len(problem_instance["parameter_indices"]) == len(problem_instance["bounds"]))
     
     return scipy.optimize.minimize( \
         args =     (None, model_instance, problem_instance), \
@@ -24,21 +26,6 @@ def solve(model_instance, problem_instance, algorithm_structure):
         tol =      algorithm_structure["tolerance"], \
         x0 =       algorithm_structure["initial_guesses"], \
         )
-
-
-class DecisionVariableLogger():
-    
-    def __init__(self):
-        self.decision_variables = []
-    
-    def log_decision_variables(self, x):
-        self.decision_variables.append([x])
-        
-    def print_decision_variables(self):
-        print("Decision variables", self.decision_variables)
-        
-    def get_decision_variables(self):
-        return self.decision_variables
 
 
 # -----------------------------------------------------------------------------
