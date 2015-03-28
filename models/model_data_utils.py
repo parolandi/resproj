@@ -7,13 +7,13 @@ import common.utilities
 # TODO: problem model verificator and synchroniser
 
 
-'''
-Set model's and problem's parameters to the values given
-values:       list
-model_data:   models.model_data.model_structure
-problem_data: models.model_data.problem.problem_structure
-'''
 def apply_values_to_parameters(values, model_data, problem_data):
+    """
+    Set model's and problem's parameters to the values given
+    values:       list
+    model_data:   models.model_data.model_structure
+    problem_data: models.model_data.problem.problem_structure
+    """
     if problem_data is not None:
         problem_data["parameters"] = copy.deepcopy(values)
     
