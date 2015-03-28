@@ -182,19 +182,15 @@ def compute_nonlinear_confidence_interval_extremal(model, problem, algorithm, in
     bound = list(bounds[index])
     bound[0] = problem["parameters"][index]
     problem["bounds"][index] = tuple(bound)
-
+    
     # form initial guesses
     # TODO: the algorithm has been shown to be sensitive to these
     algorithm["initial_guesses"] = numpy.asarray(problem["parameters"]) * 1
 
     upper = sdo.solve_std(model, problem, algorithm)
 
-    if (upper.status > 0):
-        codi.print_warning_error_code_message()
-
-
-    model["parameters"] = opt_model_params
-    problem["parameters"] = opt_problem_params
+    model["parameters"] = copy.deepcopy(opt_model_params)
+    problem["parameters"] = copy.deepcopy(opt_problem_params)
 
     # form objective function
     problem["performance_measure"] = maximise_distance_lower
@@ -215,8 +211,13 @@ def compute_nonlinear_confidence_interval_extremal(model, problem, algorithm, in
     
     lower = sdo.solve_std(model, problem, algorithm)
 
+    # TODO: think how best to lead with this situation
     if (upper.status > 0 or lower.status > 0):
         codi.print_warning_error_code_message()
+        if upper.status > 0:
+            upper.x = algorithm["initial_guesses"]
+        if lower.status > 0:
+            lower.x = algorithm["initial_guesses"]
 
     model["parameters"] = opt_model_params
     problem["parameters"] = opt_problem_params
@@ -225,17 +226,17 @@ def compute_nonlinear_confidence_interval_extremal(model, problem, algorithm, in
     problem["constraints"] = cnstrnts
     problem["bounds"] = bounds
 
+    codi.write_info(upper.status)
+    codi.write_info(lower.status)
     return [lower.x[index], upper.x[index]]
 
 
 # unit-tested
 def likelihood_constraint(x, model_data, problem_data, ssr_0):
-    assert(len(x) == len(model_data["parameters"]))
     assert(len(x) == len(problem_data["parameters"]))
     assert(problem_data["confidence_region"]["performance_measure"] is not None)
 
-    model_data["parameters"] = x
-    problem_data["parameters"] = x
+    mmdu.apply_values_to_parameters(x, model_data, problem_data)
     ssr = problem_data["confidence_region"]["performance_measure"](None, None, model_data, problem_data)
     return ssr_0 - ssr
 
