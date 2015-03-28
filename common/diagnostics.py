@@ -70,3 +70,8 @@ def print_warning_error_code_message():
 
 def print_ellipsoid(it):
     print("ellipsoid", it)
+    
+    
+def write_info(data):
+    f = open('C:/workspace/resproj/diag.txt', 'a')
+    f.write(str(data) + "\n")
