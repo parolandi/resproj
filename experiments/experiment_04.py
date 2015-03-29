@@ -12,6 +12,7 @@ import solvers.initial_value as si
 import solvers.least_squares as sl
 import solvers.monte_carlo_multiple_least_squares as smls
 import solvers.solver_data as sd
+import solvers.solver_utils as sosout
 
 
 '''
@@ -76,7 +77,7 @@ class TestExperiment04(unittest.TestCase):
         for ii in range(len(problem_data["parameter_indices"])):
             initial_guesses.append(model_data["parameters"][problem_data["parameter_indices"][ii]])
         algo_data["initial_guesses"] = copy.deepcopy(initial_guesses) 
-        logger = sl.DecisionVariableLogger()
+        logger = sosout.DecisionVariableLogger()
         algo_data["callback"] = logger.log_decision_variables
         algo_data["method"] = 'Nelder-Mead'
 

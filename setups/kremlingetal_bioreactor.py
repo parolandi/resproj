@@ -10,9 +10,9 @@ import models.kremlingetal_bioreactor as mkb
 import models.model_data
 import models.model_data_utils as mmdu
 import setups.setup_data
-import solvers.least_squares
 import solvers.local_sensitivities
 import solvers.solver_data
+import solvers.solver_utils as sosout
 
 
 def get_parameters_to_be_estimated():
@@ -89,13 +89,15 @@ def do_base_problem_setup(model_data, data_instance):
     problem_data["inputs"] = copy.deepcopy(model_data["inputs"])
 
     problem_data["performance_measure"] = mod.sum_squared_residuals_st
+    problem_data["confidence_region"]["performance_measure"] = mod.sum_squared_residuals_st
     problem_data["parameter_indices"] = get_parameters_to_be_estimated()
     problem_data["parameters"] = numpy.zeros(len(problem_data["parameter_indices"]))
     
     for ii in range(len(problem_data["parameter_indices"])):
         problem_data["parameters"][ii] = copy.deepcopy(model_data["parameters"][problem_data["parameter_indices"][ii]])
     
-    problem_data["bounds"] = [(0,None), (0,None), (0,None), (0,None), (0,None)]
+    problem_data["bounds"] = [(0,1E30), (0,1E30), (0,1E30), (0,1E30)]
+    assert(len(get_parameters_to_be_estimated()) == len(problem_data["bounds"]))
     
     problem_data["output_indices"] = [1, 2, 3, 4, 5]
     if data_instance is not None:
@@ -197,9 +199,17 @@ def do_algorithm_setup(instrumentation_data):
     return algorithm_data
 
     
+def do_algorithm_setup_using_slsqp(instrumentation_data):
+    algorithm_data = do_algorithm_setup(instrumentation_data)
+    algorithm_data["method"] = "SLSQP"
+    logger = sosout.DecisionVariableLogger()
+    algorithm_data["callback"] = logger.let_decision_variables_be_positive_and_log
+    return algorithm_data
+
+
 def do_instrumentation_setup():
     instrumentation_data = dict(setups.setup_data.instrumentation_data)
-    instrumentation_data["logger"] = solvers.least_squares.DecisionVariableLogger()
+    instrumentation_data["logger"] = sosout.DecisionVariableLogger()
     return instrumentation_data
 
 
@@ -207,3 +217,18 @@ def do_protocol_setup():
     protocol_data = dict(wpd.protocol_data)
     protocol_data["performance_measure"] = mod.sum_squared_residuals_st
     return protocol_data
+
+# --------------------------------------------------------------------------- #
+
+def do_experiment_setup():
+    config = copy.deepcopy(setups.setup_data.experiment_setup)
+    config["algorithm_setup"] = do_algorithm_setup
+    config["data_setup"] = do_get_published_data_spliced_111111
+    config["model_setup"] = do_model_setup_model_B
+    config["problem_setup"] = do_problem_setup_with_covariance_2
+    config["protocol_setup"] = do_protocol_setup
+    config["protocol_step"]["calib"] = "do"
+    config["protocol_step"]["valid"] = "donot"
+    # TODO: () or not ()?
+    config["sensitivity_setup"] = do_sensitivity_setup()
+    return config

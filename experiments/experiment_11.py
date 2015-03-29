@@ -2,7 +2,6 @@
 import unittest
 import setups.kremlingetal_bioreactor as skb
 
-import copy
 import numpy
 import time
 
@@ -11,11 +10,11 @@ import common.utilities as cu
 import data.generator as dg
 import results.plot_tiles as rpt
 import results.plot as rpl
-import setups.setup_data as ssd
 import solvers.monte_carlo_multiple_initial_value as smiv
 
 
 '''
+Kremling bioreactor
 Prediction uncertainty
 Splicing at 111000
 Covariance trace ~10%
@@ -29,17 +28,7 @@ class TestExperiment11(unittest.TestCase):
 
     
     def do_experiment_setup(self):
-        config = copy.deepcopy(ssd.experiment_setup)
-        config["algorithm_setup"] = skb.do_algorithm_setup
-        config["data_setup"] = skb.do_get_published_data_spliced_111111
-        config["model_setup"] = skb.do_model_setup_model_B
-        config["problem_setup"] = skb.do_problem_setup_with_covariance_2
-        config["protocol_setup"] = skb.do_protocol_setup
-        config["protocol_step"]["calib"] = "do"
-        config["protocol_step"]["valid"] = "do"
-        # TODO: () or not ()?
-        config["sensitivity_setup"] = skb.do_sensitivity_setup()
-        return config
+        return skb.do_experiment_setup()
 
 
     def do_experiment_setup_with_exclude(self):

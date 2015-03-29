@@ -11,6 +11,7 @@ import models.model_data_utils as mmdu
 import models.ordinary_differential
 import setups.setup_data
 import solvers.initial_value
+import solvers.solver_utils as sosout
 
 
 def do_abstract_model_setup():
@@ -262,7 +263,7 @@ def do_algorithm_setup(instrumentation_data):
     
 def do_instrumentation_setup():
     instrumentation_data = dict(setups.setup_data.instrumentation_data)
-    instrumentation_data["logger"] = solvers.least_squares.DecisionVariableLogger()
+    instrumentation_data["logger"] = sosout.DecisionVariableLogger()
     return instrumentation_data
 
 

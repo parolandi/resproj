@@ -20,8 +20,12 @@ calib_valid_baseline = {
     "valid": copy.deepcopy(baseline),
     }
 
+
 # self.do_experiment_setup
 def test_baseline_calibration(setup, baseline, unittester):
+    """
+    baseline can be None
+    """
     config = setup()
     calibrated = wpr.do_calibration_and_compute_performance_measure(config)
     # output
@@ -48,7 +52,12 @@ def test_baseline_calibration(setup, baseline, unittester):
 
 # self.do_experiment_setup
 def test_baseline_validation(setup, baseline, unittester, point):
+    """
+    baseline can be None
+    """
     config = setup()
+    # TODO: should probably be returning here if there is no validation to perform
+    # e.g., in order to plot calib and valid
     ssdu.set_next_protocol_step(config)
     validated = wpr.do_validation_and_compute_performance_measure_at_solution_point(config, point)
     # output

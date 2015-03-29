@@ -12,6 +12,7 @@ import solvers.initial_value
 import solvers.least_squares
 import solvers.plot
 import solvers.solver_data
+import solvers.solver_utils as sosout
 import workflows.basic
 
 
@@ -165,7 +166,7 @@ def do_experiment(self, config, baseline):
     intial_guesses = copy.deepcopy(problem_instance["parameters"]) * ig_multiplier
 
     algorithm_instance = dict(solvers.solver_data.algorithm_structure)
-    logger = solvers.least_squares.DecisionVariableLogger()
+    logger = sosout.DecisionVariableLogger()
     algorithm_instance["callback"] = logger.log_decision_variables
     algorithm_instance["initial_guesses"] = intial_guesses
     algorithm_instance["method"] = slv_method
@@ -215,7 +216,7 @@ def do_experiment(self, config, baseline):
     sens_problem_instance["outputs"] = dataset["calib"]["meas"]
     sens_problem_instance["time"] = dataset["calib"]["time"]
 
-    logger = solvers.least_squares.DecisionVariableLogger()
+    logger = sosout.DecisionVariableLogger()
     algorithm_instance["callback"] = logger.log_decision_variables
     algorithm_instance["initial_guesses"] = intial_guesses
     logger.log_decision_variables(algorithm_instance["initial_guesses"])

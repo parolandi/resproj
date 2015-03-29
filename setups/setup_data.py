@@ -1,7 +1,7 @@
 
 
 '''
-logger: solvers.least_squares.DecisionVariableLogger()
+logger: solvers.solver_utilities.DecisionVariableLogger()
 '''
 instrumentation_data = {
     "logger": None,
