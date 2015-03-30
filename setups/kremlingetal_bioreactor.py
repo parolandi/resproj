@@ -199,7 +199,7 @@ def do_algorithm_setup(instrumentation_data):
     return algorithm_data
 
     
-def do_algorithm_setup_using_slsqp(instrumentation_data):
+def do_algorithm_setup_using_slsqp_with_positivity(instrumentation_data):
     algorithm_data = do_algorithm_setup(instrumentation_data)
     algorithm_data["method"] = "SLSQP"
     logger = sosout.DecisionVariableLogger()

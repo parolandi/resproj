@@ -9,6 +9,7 @@ import setups.ordinary_differential as sod
 import solvers.solver_data as ssd
 
 
+# TODO: test callback
 class TestDynamicOptimisation(unittest.TestCase):
 
 

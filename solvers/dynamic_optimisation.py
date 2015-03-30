@@ -1,9 +1,8 @@
 
+import numpy
 import scipy.optimize
 
 import metrics.ordinary_differential as mod
-
-import numpy
 
 
 # WIP: change name
@@ -45,7 +44,8 @@ def solve_std(model, problem, algorithm):
             fun = problem["performance_measure"], \
             x0 = algorithm["initial_guesses"], \
             method = algorithm["method"], \
-            bounds = problem["bounds"])
+            bounds = problem["bounds"], \
+            callback = algorithm["callback"])
     
     if not has_obj_args(problem) and not is_unconstrained(problem):
         result = scipy.optimize.minimize( \
@@ -53,7 +53,8 @@ def solve_std(model, problem, algorithm):
             constraints = problem["constraints"], \
             x0 = algorithm["initial_guesses"], \
             method = algorithm["method"], \
-            bounds = problem["bounds"])
+            bounds = problem["bounds"], \
+            callback = algorithm["callback"])
 
     if has_obj_args(problem) and is_unconstrained(problem):
         result = scipy.optimize.minimize( \
@@ -61,7 +62,8 @@ def solve_std(model, problem, algorithm):
             args = problem["performance_measure_args"], \
             x0 = algorithm["initial_guesses"], \
             method = algorithm["method"], \
-            bounds = problem["bounds"])
+            bounds = problem["bounds"], \
+            callback = algorithm["callback"])
 
     if has_obj_args(problem) and not is_unconstrained(problem):
         result = scipy.optimize.minimize( \
@@ -70,7 +72,8 @@ def solve_std(model, problem, algorithm):
             constraints = problem["constraints"], \
             x0 = algorithm["initial_guesses"], \
             method = algorithm["method"], \
-            bounds = problem["bounds"])
+            bounds = problem["bounds"], \
+            callback = algorithm["callback"])
 
     assert(result is not None)
     return result
