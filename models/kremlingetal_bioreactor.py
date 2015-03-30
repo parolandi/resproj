@@ -126,11 +126,14 @@ yvec = {
     "rsyn": 0,
     }
 
+
 # x: states
 # t: time
 # p: parameters
 # u: inputs
 def evaluate(x, t, p, u, model_form):
+    eps = 1E-30
+    
     for ii in range(len(x)):
         if x[ii] < 0:
             x[ii] = 0.0
@@ -147,8 +150,14 @@ def evaluate(x, t, p, u, model_form):
         y[ymap["r2"]] = p[pmap["k2"]] * x[xmap["E"]] * x[xmap["M1"]] / (p[pmap["KM1"]] + x[xmap["M1"]]) * p[pmap["KIA"]] / (p[pmap["KIA"]] + x[xmap["M2"]])
         y[ymap["rsyn"]] = p[pmap["ksynmax"]]
     else:
-        y[ymap["r2"]] = p[pmap["k2"]] * x[xmap["E"]] * x[xmap["M1"]] / (p[pmap["KM1"]] + x[xmap["M1"]])
-        y[ymap["rsyn"]] = p[pmap["ksynmax"]] * p[pmap["KIB"]] / (p[pmap["KIB"]] + x[xmap["M2"]])
+        den = p[pmap["KM1"]] + x[xmap["M1"]]
+        if den == 0:
+            den = eps
+        y[ymap["r2"]] = p[pmap["k2"]] * x[xmap["E"]] * x[xmap["M1"]] / den
+        den = p[pmap["KIB"]] + x[xmap["M2"]]
+        if den == 0:
+            den = eps
+        y[ymap["rsyn"]] = p[pmap["ksynmax"]] * p[pmap["KIB"]] / den
         # [umol/g/h DW] = [umol/g/h DW]
     y[ymap["r3"]] = p[pmap["r3max"]] * x[xmap["M2"]] / (p[pmap["KM2"]] + x[xmap["M2"]])
 
@@ -174,6 +183,14 @@ def evaluate_modelA(x, t, p, u):
 
 
 def evaluate_modelB(x, t, p, u):
+    '''
+    numpy.seterr(all='raise')
+    try:
+        result = evaluate(x, t, p, u, "modelB")
+    except:
+        raise
+    return result
+    '''
     return evaluate(x, t, p, u, "modelB")
 
 
