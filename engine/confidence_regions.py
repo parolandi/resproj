@@ -1,6 +1,8 @@
 
 import copy
+import logging
 import numpy
+
 
 import common.diagnostics as codi
 import engine.statistical_inference as enstin
@@ -37,6 +39,10 @@ def compute_nonlinear_confidence_region_points_extremal(model, problem, algorith
     returns solvers.monte_carlo_multiple_initial_value.ensemble_trajectoryies
     """
     hyperrect = compute_nonlinear_confidence_intervals_extremal(model, problem, algorithm_rf, best_point)
+    
+    logging.basicConfig(filename='C:/workspace/resproj/app.log',level=logging.INFO)
+    logging.info(hyperrect)
+    
     hyper = []
     for ii in range(len(hyperrect)):
         hyper.append(tuple(hyperrect[ii]))
