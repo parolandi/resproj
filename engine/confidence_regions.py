@@ -38,10 +38,12 @@ def compute_nonlinear_confidence_region_points_extremal(model, problem, algorith
     """
     returns solvers.monte_carlo_multiple_initial_value.ensemble_trajectoryies
     """
-    hyperrect = compute_nonlinear_confidence_intervals_extremal(model, problem, algorithm_rf, best_point)
+    hyperrect, statuses = compute_nonlinear_confidence_intervals_extremal(model, problem, algorithm_rf, best_point)
+    
     
     logging.basicConfig(filename='C:/workspace/resproj/app.log',level=logging.INFO)
     logging.info(hyperrect)
+    logging.info(statuses)
     
     hyper = []
     for ii in range(len(hyperrect)):
@@ -94,8 +96,8 @@ def compute_nonlinear_confidence_intervals_extremal(model, problem, algorithm, b
         problem["confidence_region"]["confidence"])
     problem["confidence_region"]["ssr"] = ssr
 
-    hyperrectangle = compute_nonlinear_confidence_hyperrectangle_extremal(model, problem, algorithm)
-    return hyperrectangle
+    hyperrectangle, statuses = compute_nonlinear_confidence_hyperrectangle_extremal(model, problem, algorithm)
+    return hyperrectangle, statuses
 
 
 def compute_nonlinear_confidence_hyperrectangle(model, problem, algorithm):
@@ -113,10 +115,12 @@ def compute_nonlinear_confidence_hyperrectangle(model, problem, algorithm):
 
 def compute_nonlinear_confidence_hyperrectangle_extremal(model, problem, algorithm):
     hyperrectangle = []
+    statuses = []
     for param_index in range(len(problem["parameter_indices"])):
-        interval = compute_nonlinear_confidence_interval_extremal(model, problem, algorithm, param_index)
+        interval, status = compute_nonlinear_confidence_interval_extremal(model, problem, algorithm, param_index)
         hyperrectangle.append(interval)
-    return hyperrectangle
+        statuses.append(status)
+    return hyperrectangle, statuses
 
 
 # TODO: handle abnormal situations
@@ -234,7 +238,7 @@ def compute_nonlinear_confidence_interval_extremal(model, problem, algorithm, in
 
     codi.write_info(upper.status)
     codi.write_info(lower.status)
-    return [lower.x[index], upper.x[index]]
+    return [lower.x[index], upper.x[index]], [lower.status, upper.status]
 
 
 # unit-tested
