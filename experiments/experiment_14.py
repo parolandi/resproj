@@ -2,7 +2,9 @@
 import unittest
 import setups.kremlingetal_bioreactor as sekrbi
 
+import logging
 import numpy
+
 import metrics.ordinary_differential as mod
 import models.model_data_utils as mmdu
 import engine.confidence_regions as ecr
@@ -12,6 +14,8 @@ import solvers.least_squares as sls
 import solvers.monte_carlo_multiple_initial_value as mcmiv
 import workflows.reporting as wr
 
+import results.plot_combinatorial as replco
+
 
 class TestExperiment14(unittest.TestCase):
 
@@ -19,6 +23,7 @@ class TestExperiment14(unittest.TestCase):
     def __init__(self, *args, **kwargs):
         super(TestExperiment14, self).__init__(*args, **kwargs)
         self.do_plotting = False
+        logging.basicConfig(filename='C:/workspace/resproj/app.log',level=logging.INFO)
 
     
     def do_experiment_setup(self):
@@ -71,10 +76,11 @@ class TestExperiment14(unittest.TestCase):
         # setup nonlin conf reg
         model, problem, algorithm_rf = setup()
         algorithm_mc = dict(mcmiv.montecarlo_multiple_simulation_params)
-        algorithm_mc["number_of_trials"] = 1
+        algorithm_mc["number_of_trials"] = 10
 
-        if False:
+        if True:
             self.do_appy_bounds(best_point["decision_variables"], problem)
+        logging.info(problem["bounds"])
         
         # do nonlin conf reg
         actual = ecr.compute_nonlinear_confidence_region_points_extremal( \
@@ -82,6 +88,8 @@ class TestExperiment14(unittest.TestCase):
         number_of_points = len(numpy.transpose(actual["objective_function"]))
         print("number of points", number_of_points)
         #self.assertEquals(number_of_points, baseline["number_of_points"])
+        
+        logging.info(actual)
 
         # plot nonlin conf reg
         if self.do_plotting:
@@ -97,6 +105,12 @@ class TestExperiment14(unittest.TestCase):
         self.do_test_compute_nonlinear_confidence_region_points( \
             self.do_setup, self.do_experiment_setup, baseline)
         self.assertFalse(True)
+        
+
+    def dn_test_plot_it(self):
+        c = numpy.loadtxt('C:/workspace/resproj/pnts.txt')
+        #replco.plot_combinatorial_region_projections(numpy.transpose(c))
+        repl.plot_scatter(numpy.transpose(c)[0], numpy.transpose(c)[2], None)
         
 
 if __name__ == "__main__":
