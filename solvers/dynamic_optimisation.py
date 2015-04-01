@@ -38,6 +38,8 @@ def solve(model, problem, algorithm):
 
 def solve_std(model, problem, algorithm):
     result = None
+    settings = {}
+    settings["maxiter"] = 1000
     
     if not has_obj_args(problem) and is_unconstrained(problem):
         result = scipy.optimize.minimize( \
@@ -45,7 +47,8 @@ def solve_std(model, problem, algorithm):
             x0 = algorithm["initial_guesses"], \
             method = algorithm["method"], \
             bounds = problem["bounds"], \
-            callback = algorithm["callback"])
+            callback = algorithm["callback"], \
+            options = settings)
     
     if not has_obj_args(problem) and not is_unconstrained(problem):
         result = scipy.optimize.minimize( \
@@ -54,7 +57,8 @@ def solve_std(model, problem, algorithm):
             x0 = algorithm["initial_guesses"], \
             method = algorithm["method"], \
             bounds = problem["bounds"], \
-            callback = algorithm["callback"])
+            callback = algorithm["callback"], \
+            options = settings)
 
     if has_obj_args(problem) and is_unconstrained(problem):
         result = scipy.optimize.minimize( \
@@ -63,7 +67,8 @@ def solve_std(model, problem, algorithm):
             x0 = algorithm["initial_guesses"], \
             method = algorithm["method"], \
             bounds = problem["bounds"], \
-            callback = algorithm["callback"])
+            callback = algorithm["callback"], \
+            options = settings)
 
     if has_obj_args(problem) and not is_unconstrained(problem):
         result = scipy.optimize.minimize( \
@@ -73,7 +78,8 @@ def solve_std(model, problem, algorithm):
             x0 = algorithm["initial_guesses"], \
             method = algorithm["method"], \
             bounds = problem["bounds"], \
-            callback = algorithm["callback"])
+            callback = algorithm["callback"], \
+            options = settings)
 
     assert(result is not None)
     return result
