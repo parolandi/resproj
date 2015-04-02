@@ -39,6 +39,8 @@ def compute_nonlinear_confidence_region_points_extremal(model, problem, algorith
     returns solvers.monte_carlo_multiple_initial_value.ensemble_trajectoryies
     """
     hyperrect, statuses = compute_nonlinear_confidence_intervals_extremal(model, problem, algorithm_rf, best_point)
+    hyperrect = problem["bounds"]
+    statuses = None
     
     
     logging.basicConfig(filename='C:/workspace/resproj/app.log',level=logging.INFO)
@@ -96,8 +98,8 @@ def compute_nonlinear_confidence_intervals_extremal(model, problem, algorithm, b
         problem["confidence_region"]["confidence"])
     problem["confidence_region"]["ssr"] = ssr
 
-    hyperrectangle, statuses = compute_nonlinear_confidence_hyperrectangle_extremal(model, problem, algorithm)
-    return hyperrectangle, statuses
+    #hyperrectangle, statuses = compute_nonlinear_confidence_hyperrectangle_extremal(model, problem, algorithm)
+    return None, None # hyperrectangle, statuses
 
 
 def compute_nonlinear_confidence_hyperrectangle(model, problem, algorithm):
@@ -224,10 +226,10 @@ def compute_nonlinear_confidence_interval_extremal(model, problem, algorithm, in
     # TODO: think how best to lead with this situation
     if (upper.status > 0 or lower.status > 0):
         codi.print_warning_error_code_message()
-        if upper.status > 0:
-            upper.x = algorithm["initial_guesses"]
-        if lower.status > 0:
-            lower.x = algorithm["initial_guesses"]
+        #if upper.status > 0:
+        #    upper.x = algorithm["initial_guesses"]
+        #if lower.status > 0:
+        #    lower.x = algorithm["initial_guesses"]
 
     model["parameters"] = opt_model_params
     problem["parameters"] = opt_problem_params
