@@ -94,6 +94,8 @@ class TestExperiment14(unittest.TestCase):
         logging.info(wall_time)
         number_of_points = len(numpy.transpose(actual["objective_function"]))
         print("number of points", number_of_points)
+        logging.info(algorithm_mc["number_of_trials"])
+        logging.info(number_of_points)
         #self.assertEquals(number_of_points, baseline["number_of_points"])
         
         logging.info(actual)

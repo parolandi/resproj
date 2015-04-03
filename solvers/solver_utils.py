@@ -1,4 +1,7 @@
 
+import logging
+
+
 class DecisionVariableLogger():
     
     def __init__(self):
@@ -20,6 +23,8 @@ class DecisionVariableLogger():
             print("corrected", x, corrected)
 
         self.decision_variables.append([x])
+        #logging.info(x)
+        
         
     def print_decision_variables(self):
         print("Decision variables", self.decision_variables)

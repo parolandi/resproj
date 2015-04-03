@@ -13,6 +13,10 @@ from experiments.experiment_08 import *
 from experiments.experiment_09 import *
 #from experiments.experiment_10 import *
 from experiments.experiment_11 import *
+#from experiments.experiment_12 import *
+#from experiments.experiment_13 import *
+#from experiments.experiment_14 import *
+
 
 import experiments.experiment as ee
 
