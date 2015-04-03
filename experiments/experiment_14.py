@@ -4,6 +4,7 @@ import setups.kremlingetal_bioreactor as sekrbi
 
 import logging
 import numpy
+import time
 
 import common.diagnostics as codi
 import metrics.ordinary_differential as mod
@@ -86,8 +87,11 @@ class TestExperiment14(unittest.TestCase):
         logging.info(problem["bounds"])
         
         # do nonlin conf reg
+        wall_time0 = time.time()
         actual = ecr.compute_nonlinear_confidence_region_points_extremal( \
             model, problem, algorithm_rf, algorithm_mc, best_point)
+        wall_time = time.time()- wall_time0
+        logging.info(wall_time)
         number_of_points = len(numpy.transpose(actual["objective_function"]))
         print("number of points", number_of_points)
         #self.assertEquals(number_of_points, baseline["number_of_points"])

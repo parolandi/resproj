@@ -2,7 +2,7 @@
 import copy
 import logging
 import numpy
-
+import time
 
 import common.diagnostics as codi
 import engine.statistical_inference as enstin
@@ -90,6 +90,7 @@ def compute_nonlinear_confidence_intervals(model, problem, algorithm, best_point
 
 
 def compute_nonlinear_confidence_intervals_extremal(model, problem, algorithm, best_point):
+    wall_time0 = time.time()
     mmdu.apply_decision_variables_to_parameters(best_point, model, problem)
     ssr = compute_f_constraint( \
         best_point["objective_function"],
@@ -99,6 +100,8 @@ def compute_nonlinear_confidence_intervals_extremal(model, problem, algorithm, b
     problem["confidence_region"]["ssr"] = ssr
 
     #hyperrectangle, statuses = compute_nonlinear_confidence_hyperrectangle_extremal(model, problem, algorithm)
+    wall_time = time.time()- wall_time0
+    logging.info(wall_time)
     return None, None # hyperrectangle, statuses
 
 
