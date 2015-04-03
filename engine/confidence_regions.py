@@ -203,6 +203,8 @@ def compute_nonlinear_confidence_interval_extremal(model, problem, algorithm, in
     algorithm["initial_guesses"] = numpy.asarray(problem["parameters"]) * 1
 
     upper = sdo.solve_std(model, problem, algorithm)
+    if upper.status > 0 and upper.x[index] > bound[1]:
+        upper.x[index] = bound[1]
 
     model["parameters"] = copy.deepcopy(opt_model_params)
     problem["parameters"] = copy.deepcopy(opt_problem_params)
@@ -225,14 +227,13 @@ def compute_nonlinear_confidence_interval_extremal(model, problem, algorithm, in
     algorithm["initial_guesses"] = numpy.asarray(problem["parameters"]) * 1
     
     lower = sdo.solve_std(model, problem, algorithm)
+    if lower.status > 0 and lower.x[index] < bound[0]:
+        lower.x[index] = bound[0]
 
     # TODO: think how best to lead with this situation
     if (upper.status > 0 or lower.status > 0):
         codi.print_warning_error_code_message()
-        #if upper.status > 0:
-        #    upper.x = algorithm["initial_guesses"]
-        #if lower.status > 0:
-        #    lower.x = algorithm["initial_guesses"]
+        # TODO: perhaps should ensure that SSR is correct
 
     model["parameters"] = opt_model_params
     problem["parameters"] = opt_problem_params
