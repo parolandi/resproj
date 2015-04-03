@@ -39,8 +39,8 @@ def compute_nonlinear_confidence_region_points_extremal(model, problem, algorith
     returns solvers.monte_carlo_multiple_initial_value.ensemble_trajectoryies
     """
     hyperrect, statuses = compute_nonlinear_confidence_intervals_extremal(model, problem, algorithm_rf, best_point)
-    hyperrect = problem["bounds"]
-    statuses = None
+    #hyperrect = problem["bounds"]
+    #statuses = None
     
     
     logging.basicConfig(filename=codi.get_name_logging_file(), level=codi.get_logging_level())
@@ -99,10 +99,10 @@ def compute_nonlinear_confidence_intervals_extremal(model, problem, algorithm, b
         problem["confidence_region"]["confidence"])
     problem["confidence_region"]["ssr"] = ssr
 
-    #hyperrectangle, statuses = compute_nonlinear_confidence_hyperrectangle_extremal(model, problem, algorithm)
+    hyperrectangle, statuses = compute_nonlinear_confidence_hyperrectangle_extremal(model, problem, algorithm)
     wall_time = time.time()- wall_time0
     logging.info(wall_time)
-    return None, None # hyperrectangle, statuses
+    return hyperrectangle, statuses # None, None
 
 
 def compute_nonlinear_confidence_hyperrectangle(model, problem, algorithm):
