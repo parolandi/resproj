@@ -5,6 +5,7 @@ import setups.kremlingetal_bioreactor as sekrbi
 import logging
 import numpy
 
+import common.diagnostics as codi
 import metrics.ordinary_differential as mod
 import models.model_data_utils as mmdu
 import engine.confidence_regions as ecr
@@ -23,7 +24,7 @@ class TestExperiment14(unittest.TestCase):
     def __init__(self, *args, **kwargs):
         super(TestExperiment14, self).__init__(*args, **kwargs)
         self.do_plotting = False
-        logging.basicConfig(filename='C:/workspace/resproj/app.log',level=logging.INFO)
+        logging.basicConfig(filename=codi.get_name_logging_file(),level=codi.get_logging_level())
 
     
     def do_experiment_setup(self):

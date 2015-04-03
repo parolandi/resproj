@@ -1,6 +1,15 @@
 
 from __future__ import print_function
+import logging
 
+
+def get_name_logging_file():
+    return "C:/workspace/resproj/app.log"
+
+
+def get_logging_level():
+    return logging.INFO
+    
 
 def legacy_code_message():
     return "Warning: this is a legacy code path"

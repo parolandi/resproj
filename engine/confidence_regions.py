@@ -43,7 +43,7 @@ def compute_nonlinear_confidence_region_points_extremal(model, problem, algorith
     statuses = None
     
     
-    logging.basicConfig(filename='C:/workspace/resproj/app.log',level=logging.INFO)
+    logging.basicConfig(filename=codi.get_name_logging_file(), level=codi.get_logging_level())
     logging.info(hyperrect)
     logging.info(statuses)
     
