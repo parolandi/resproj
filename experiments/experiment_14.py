@@ -50,7 +50,7 @@ class TestExperiment14(unittest.TestCase):
             (nominal[2]*lf,nominal[2]*uf), \
             (nominal[3]*lf,nominal[3]*uf)]
         bounds = [[1.8560954071217014e-05, 0.00028822938131456123], [5999964.775229332, 5999999.3480375186], [0.0033295619005827282, 0.040367992439463547], [0.62924327562778315, 6.2924327562778313]]
-        fc = 10
+        fc = 5
         problem["bounds"][0] = [bounds[0][0]/fc,bounds[0][1]*fc]
         problem["bounds"][1] = [bounds[1][0]/fc,bounds[1][1]*fc]
         problem["bounds"][2] = [bounds[2][0]/fc,bounds[2][1]*fc]
@@ -78,7 +78,7 @@ class TestExperiment14(unittest.TestCase):
         # setup nonlin conf reg
         model, problem, algorithm_rf = setup()
         algorithm_mc = dict(mcmiv.montecarlo_multiple_simulation_params)
-        algorithm_mc["number_of_trials"] = 160000
+        algorithm_mc["number_of_trials"] = 80000
 
         if True:
             self.do_appy_bounds(best_point["decision_variables"], problem)
