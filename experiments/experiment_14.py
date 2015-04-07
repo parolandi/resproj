@@ -59,6 +59,40 @@ class TestExperiment14(unittest.TestCase):
             problem["bounds"][2] = [bounds[2][0]/fc,bounds[2][1]*fc]
             problem["bounds"][3] = [bounds[3][0]/fc,bounds[3][1]*fc]
 
+    def do_test_compute_linearised_confidence_region(self, config, baseline):
+        # setup regression
+        model = config["model_setup"]()
+        data = config["data_setup"]()
+        problem = config["problem_setup"](model, data["calib"])
+        algorithm = config["algorithm_setup"](None)
+        algorithm["initial_guesses"] = problem["parameters"]
+        algorithm["method"] = 'SLSQP'
+
+        # do regression        
+        dvs = sls.solve(model, problem, algorithm)
+        mmdu.apply_values_to_parameters(dvs.x, model, problem)
+        obj = mod.sum_squared_residuals_st(None, None, model, problem)
+        best_point = {}
+        best_point["decision_variables"] = dvs.x
+        best_point["objective_function"] = obj
+        logging.info(best_point)
+        # plot regression
+        if False:
+            experiment = config()
+            wr.plot_tiled_trajectories_at_point(experiment, best_point)
+    
+        # setup lin conf reg
+        _ = ecr.compute_linearised_confidence_intervals(config, best_point)
+        #expected = baseline["intervals"]
+        #[self.assertAlmostEquals(act, exp, 8) for act, exp in zip(numpy.asarray(intervals).flatten(), expected.flatten())]
+        ellipsoid = ecr.compute_linearised_confidence_region_ellipsoid(config, best_point)
+        #expected = baseline["ellipsoid"]
+        #[self.assertAlmostEquals(act, exp, 8) for act, exp in zip( \
+        #    numpy.asarray(ellipsoid).flatten(), numpy.asarray(expected).flatten())]
+        
+        if True:
+            replco.plot_combinatorial_ellipsoid_projections(best_point['decision_variables'], ellipsoid)        
+
     
     def do_test_compute_nonlinear_confidence_region_points(self, setup, config, baseline):
         # setup regression
@@ -107,7 +141,7 @@ class TestExperiment14(unittest.TestCase):
         replco.plot_combinatorial_region_projections(numpy.transpose(actual["decision_variables"]))
 
 
-    def test_it(self):
+    def dn_test_it(self):
         baseline = {}
         baseline["number_of_points"] = 7834
         baseline["plotdata"] = dict(replda.plot_data)
@@ -115,7 +149,16 @@ class TestExperiment14(unittest.TestCase):
         self.do_test_compute_nonlinear_confidence_region_points( \
             self.do_setup, self.do_experiment_setup, baseline)
         self.assertFalse(True)
-        
+
+     
+    def test_it(self):
+        baseline = {}
+        baseline["number_of_points"] = -1
+        baseline["plotdata"] = dict(replda.plot_data)
+        baseline["plotdata"]["window_title"] = "LCR benchmark model"
+        self.do_test_compute_linearised_confidence_region(self.do_experiment_setup(), None)
+        self.assertFalse(True)
+
 
     def dn_test_plot_it(self):
         c = numpy.loadtxt('C:/workspace/resproj/pnts.txt')
