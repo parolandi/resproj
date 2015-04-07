@@ -24,6 +24,8 @@ def compute_nonlinear_confidence_region_points(model, problem, algorithm_rf, alg
     returns solvers.monte_carlo_multiple_initial_value.ensemble_trajectoryies
     """
     hyperrect = compute_nonlinear_confidence_intervals(model, problem, algorithm_rf, best_point)
+    #logging.basicConfig(filename=codi.get_name_logging_file(), level=codi.get_logging_level())
+    logging.info(hyperrect)
     hyper = []
     for ii in range(len(hyperrect)):
         hyper.append(tuple(hyperrect[ii]))
@@ -39,14 +41,9 @@ def compute_nonlinear_confidence_region_points_extremal(model, problem, algorith
     returns solvers.monte_carlo_multiple_initial_value.ensemble_trajectoryies
     """
     hyperrect, statuses = compute_nonlinear_confidence_intervals_extremal(model, problem, algorithm_rf, best_point)
-    #hyperrect = problem["bounds"]
-    #statuses = None
-    
-    
-    logging.basicConfig(filename=codi.get_name_logging_file(), level=codi.get_logging_level())
+    #logging.basicConfig(filename=codi.get_name_logging_file(), level=codi.get_logging_level())
     logging.info(hyperrect)
     logging.info(statuses)
-    
     hyper = []
     for ii in range(len(hyperrect)):
         hyper.append(tuple(hyperrect[ii]))
@@ -101,8 +98,9 @@ def compute_nonlinear_confidence_intervals_extremal(model, problem, algorithm, b
 
     hyperrectangle, statuses = compute_nonlinear_confidence_hyperrectangle_extremal(model, problem, algorithm)
     wall_time = time.time()- wall_time0
+    #logging.basicConfig(filename=codi.get_name_logging_file(), level=codi.get_logging_level())
     logging.info(wall_time)
-    return hyperrectangle, statuses # None, None
+    return hyperrectangle, statuses
 
 
 def compute_nonlinear_confidence_hyperrectangle(model, problem, algorithm):
@@ -349,6 +347,8 @@ def compute_linearised_confidence_region_ellipsoid(config, best_point):
     cov_matrix = workflow_results["cov_matrix"]
     ell_radius = workflow_results["ell_radius"]
     std_cov_matrix = cov_matrix * ell_radius
+    #logging.basicConfig(filename=codi.get_name_logging_file(), level=codi.get_logging_level())
+    logging.info(std_cov_matrix)
     return std_cov_matrix
 
 
@@ -366,4 +366,7 @@ def compute_linearised_confidence_intervals(config, best_point):
     hyperrectangle = []
     for ii in range(len(intervals)):
         hyperrectangle.append([nominal[ii]-intervals[ii], nominal[ii]+intervals[ii]])
+    #logging.basicConfig(filename=codi.get_name_logging_file(), level=codi.get_logging_level())
+    logging.info(intervals)
+    logging.info(hyperrectangle)
     return hyperrectangle
