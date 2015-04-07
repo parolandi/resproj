@@ -21,9 +21,6 @@ def plot_combinatorial_region_projections(region):
 def plot_combinatorial_ellipsoid_projections(center, ell):
     ellipsoid = numpy.asmatrix(ell)
     # TODO: preconditions
-    # sign eigenvals
-    eigenvals, eigenvecs = numpy.linalg.eig(ellipsoid)
-    lambdaa = numpy.sqrt(eigenvals)
 
     no_grid = ellipsoid.shape[0]
     fig = pp.figure("LCR projections")
@@ -32,18 +29,27 @@ def plot_combinatorial_ellipsoid_projections(center, ell):
             if rows == cols:
                 pass
             else:
-                plot_no = no_grid*rows+cols+1
+                subell = ellipsoid[numpy.ix_([rows,cols],[rows,cols])]
+                eigenvals, eigenvecs = numpy.linalg.eig(subell)
+                # sign eigenvals
+                lambdaa = numpy.sqrt(eigenvals)
+
+                plot_no = no_grid*cols+rows+1
                 ax = fig.add_subplot(no_grid, no_grid, plot_no)
-                ell = Ellipse(xy=center, width=lambdaa[cols]*2, height=lambdaa[rows]*2, angle=numpy.rad2deg(numpy.arccos(eigenvecs[0,0])))
-                #handle_plot_data(fig, plot_data)
+                ell = Ellipse(xy     = [center[rows],center[cols]], \
+                              width  = lambdaa[0]*2, \
+                              height = lambdaa[1]*2, \
+                              angle  = numpy.rad2deg(numpy.arccos(eigenvecs[0,0])))
+                # TODO
+                # handle_plot_data(fig, plot_data)
                 ax.add_artist(ell)
                 ell.set_clip_box(ax.bbox)
                 
-                sf = 1.1
-                height = numpy.sqrt(ellipsoid[cols,cols]) * sf
-                width = numpy.sqrt(ellipsoid[rows,rows]) * sf
-                ax.set_xlim(center[0]-height, center[0]+height)
-                ax.set_ylim(center[1]-width, center[1]+width)
+                sf = 1.0
+                height = numpy.sqrt(subell[0,0]) * sf
+                width = numpy.sqrt(subell[1,1]) * sf
+                ax.set_xlim(center[rows]-height, center[rows]+height)
+                ax.set_ylim(center[cols]-width, center[cols]+width)
                 
                 ell.set_facecolor('none')
     pp.show()
