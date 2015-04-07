@@ -44,8 +44,8 @@ class TestExperiment14(unittest.TestCase):
 
     
     def do_appy_bounds(self, nominal, problem):
-        lf = 1.5E-2
-        uf = 1.5E+2
+        lf = 1E-2
+        uf = 1E+2
         problem["bounds"] = [ \
             (nominal[0]*lf,nominal[0]*uf), \
             (nominal[1]*lf,nominal[1]*uf), \
@@ -114,7 +114,7 @@ class TestExperiment14(unittest.TestCase):
         # setup nonlin conf reg
         model, problem, algorithm_rf = setup()
         algorithm_mc = dict(mcmiv.montecarlo_multiple_simulation_params)
-        algorithm_mc["number_of_trials"] = 120000
+        algorithm_mc["number_of_trials"] = 80000
 
         if True:
             self.do_appy_bounds(best_point["decision_variables"], problem)
@@ -141,7 +141,7 @@ class TestExperiment14(unittest.TestCase):
         replco.plot_combinatorial_region_projections(numpy.transpose(actual["decision_variables"]))
 
 
-    def dn_test_it(self):
+    def test_it(self):
         baseline = {}
         baseline["number_of_points"] = 7834
         baseline["plotdata"] = dict(replda.plot_data)
@@ -151,7 +151,7 @@ class TestExperiment14(unittest.TestCase):
         self.assertFalse(True)
 
      
-    def test_it(self):
+    def donot_test_it(self):
         baseline = {}
         baseline["number_of_points"] = -1
         baseline["plotdata"] = dict(replda.plot_data)
