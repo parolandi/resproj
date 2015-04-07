@@ -131,6 +131,16 @@ def do_problem_setup_with_covariance_2(model_data, data_instance):
     return problem_data
 
 
+def do_problem_setup_with_covariance_2_and_low_confidence(model_data, data_instance):
+    problem_data = do_problem_setup_with_covariance_2(model_data, data_instance)
+    problem_data["confidence_region"]["confidence"] = 0.25
+    return problem_data
+
+
+def do_modify_problem_using_low_confidence(self, problem):
+    problem["confidence_region"]["confidence"] = 0.25
+
+
 def do_problem_setup_with_exclude_with_covariance_2(model_data, data_instance):
     problem_data = do_problem_setup_with_exclude(model_data, data_instance)
     problem_data["measurements_covariance_trace"] = numpy.array([3.80E-002, 2.46E-002, 2.53E-002, 1.16E-003, 3.20E-003])

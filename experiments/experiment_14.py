@@ -32,6 +32,12 @@ class TestExperiment14(unittest.TestCase):
         return config
 
 
+    def do_experiment_setup_with_low_confidence(self):
+        config = self.do_experiment_setup()
+        config["problem_setup"] = sekrbi.do_problem_setup_with_covariance_2_and_low_confidence
+        return config
+
+    
     def get_model_problem_algorithm(self, config):
         algorithm = config["algorithm_setup"](None)
         data = config["data_setup"]()
@@ -138,6 +144,15 @@ class TestExperiment14(unittest.TestCase):
         baseline["plotdata"] = dict(replda.plot_data)
         baseline["plotdata"]["window_title"] = "LCR benchmark model"
         self.do_test_compute_linearised_confidence_region(self.do_experiment_setup(), None)
+        self.assertFalse(True)
+
+
+    def test_lcr_low_confidence(self):
+        baseline = {}
+        baseline["number_of_points"] = -1
+        baseline["plotdata"] = dict(replda.plot_data)
+        baseline["plotdata"]["window_title"] = "LCR benchmark model"
+        self.do_test_compute_linearised_confidence_region(self.do_experiment_setup_with_low_confidence(), None)
         self.assertFalse(True)
 
 
