@@ -30,7 +30,7 @@ problem_formulation = {
 confidence_region_formulation = {
     "ssr": 0,
     "parameter_index": 0,
-    "confidence": 0.25,
+    "confidence": 0.95,
     "performance_measure": None,
     }
 
