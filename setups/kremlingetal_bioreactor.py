@@ -90,6 +90,7 @@ def do_base_problem_setup(model_data, data_instance):
 
     problem_data["performance_measure"] = mod.sum_squared_residuals_st
     problem_data["confidence_region"]["performance_measure"] = mod.sum_squared_residuals_st
+    problem_data["confidence_region"]["confidence"] = 0.95
     problem_data["parameter_indices"] = get_parameters_to_be_estimated()
     problem_data["parameters"] = numpy.zeros(len(problem_data["parameter_indices"]))
     
