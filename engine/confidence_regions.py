@@ -81,6 +81,8 @@ def compute_nonlinear_confidence_intervals(model, problem, algorithm, best_point
         len(problem["parameter_indices"]),
         problem["confidence_region"]["confidence"])
     problem["confidence_region"]["ssr"] = ssr
+    logging.info(problem["confidence_region"]["confidence"])
+    logging.info(problem["confidence_region"]["ssr"])
 
     hyperrectangle = compute_nonlinear_confidence_hyperrectangle(model, problem, algorithm)
     return hyperrectangle
@@ -97,7 +99,7 @@ def compute_nonlinear_confidence_intervals_extremal(model, problem, algorithm, b
     problem["confidence_region"]["ssr"] = ssr
 
     hyperrectangle, statuses = compute_nonlinear_confidence_hyperrectangle_extremal(model, problem, algorithm)
-    wall_time = time.time()- wall_time0
+    wall_time = time.time() - wall_time0
     #logging.basicConfig(filename=codi.get_name_logging_file(), level=codi.get_logging_level())
     logging.info(wall_time)
     return hyperrectangle, statuses
