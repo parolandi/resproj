@@ -36,9 +36,9 @@ def compute_nonlinear_confidence_region_points(model, problem, algorithm_rf, alg
     return pnts
 
 
-def compute_nonlinear_confidence_region_points_extremal(model, problem, algorithm_rf, algorithm_mc, best_point):
+def compute_nonlinear_confidence_region_extremal_internal(model, problem, algorithm_rf, algorithm_mc, best_point):
     """
-    returns solvers.monte_carlo_multiple_initial_value.ensemble_trajectoryies
+    internal
     """
     hyperrect, statuses = compute_nonlinear_confidence_intervals_extremal(model, problem, algorithm_rf, best_point)
     #logging.basicConfig(filename=codi.get_name_logging_file(), level=codi.get_logging_level())
@@ -51,7 +51,31 @@ def compute_nonlinear_confidence_region_points_extremal(model, problem, algorith
     hyperpnts = evaluate_multiple_points_in_hyperrectangle_by_nonlinear_confidence_intervals(model, problem, algorithm_mc)
     ssr = problem["confidence_region"]["ssr"]
     pnts = filter_nonlinear_confidence_region_points(hyperpnts, ssr)
-    return pnts
+    return hyperrect, pnts
+
+
+def compute_nonlinear_confidence_region_intervals_and_points_extremal(model, problem, algorithm_rf, algorithm_mc, best_point):
+    """
+    returns solvers.monte_carlo_multiple_initial_value.ensemble_trajectoryies
+    """
+    intervals, points = compute_nonlinear_confidence_region_extremal_internal(model, problem, algorithm_rf, algorithm_mc, best_point)
+    return intervals, points
+
+
+def compute_nonlinear_confidence_region_points_extremal(model, problem, algorithm_rf, algorithm_mc, best_point):
+    """
+    returns solvers.monte_carlo_multiple_initial_value.ensemble_trajectoryies
+    """
+    _, points = compute_nonlinear_confidence_region_extremal_internal(model, problem, algorithm_rf, algorithm_mc, best_point)
+    return points
+
+
+def compute_nonlinear_confidence_region_intervals_extremal(model, problem, algorithm_rf, algorithm_mc, best_point):
+    """
+    returns list of lists
+    """
+    intervals, _ = compute_nonlinear_confidence_region_extremal_internal(model, problem, algorithm_rf, algorithm_mc, best_point)
+    return intervals
 
 
 def filter_nonlinear_confidence_region_points(hyper, cutoff):
