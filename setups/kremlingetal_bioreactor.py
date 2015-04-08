@@ -133,11 +133,11 @@ def do_problem_setup_with_covariance_2(model_data, data_instance):
 
 def do_problem_setup_with_covariance_2_and_low_confidence(model_data, data_instance):
     problem_data = do_problem_setup_with_covariance_2(model_data, data_instance)
-    problem_data["confidence_region"]["confidence"] = 0.25
+    do_modify_problem_using_low_confidence(problem_data)
     return problem_data
 
 
-def do_modify_problem_using_low_confidence(self, problem):
+def do_modify_problem_using_low_confidence(problem):
     problem["confidence_region"]["confidence"] = 0.25
 
 
