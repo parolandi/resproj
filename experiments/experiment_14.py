@@ -118,19 +118,22 @@ class TestExperiment14(unittest.TestCase):
         
         # do nonlin conf reg
         wall_time0 = time.time()
-        actual = ecr.compute_nonlinear_confidence_region_points_extremal( \
+        actual_intervals, actual_points = ecr.compute_nonlinear_confidence_region_intervals_and_points_extremal( \
             model, problem, algorithm_rf, algorithm_mc, best_point)
         wall_time = time.time() - wall_time0
-        number_of_points = len(numpy.transpose(actual["objective_function"]))
-        logging.info(actual)
+        number_of_points = len(numpy.transpose(actual_points["objective_function"]))
+        logging.info(actual_points)
         logging.info(wall_time)
         logging.info(algorithm_mc["number_of_trials"])
         logging.info(number_of_points)
         self.assertEquals(number_of_points, baseline["number_of_points"])
+        expected = baseline["intervals"]
+        [self.assertAlmostEquals(act, exp, 8) for act, exp in zip( \
+            numpy.asarray(actual_intervals).flatten(), numpy.asarray(expected).flatten())]
         
         # plot nonlin conf reg
         if self.do_plotting:
-            replco.plot_combinatorial_region_projections(numpy.transpose(actual["decision_variables"]))
+            replco.plot_combinatorial_region_projections(numpy.transpose(actual_points["decision_variables"]))
 
 
     def test_ncr(self):
