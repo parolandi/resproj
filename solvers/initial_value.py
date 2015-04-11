@@ -97,8 +97,7 @@ def solve(model_data, problem_data):
                 status_s = 0
             status = status + status_s
             problem_data["time"] = times_orig
-            
-    problem_data["initial_conditions"] = initial_conditions_orig
+        problem_data["initial_conditions"] = initial_conditions_orig
     return status, y, data
 
 
