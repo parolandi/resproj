@@ -41,6 +41,12 @@ timecourse_simulation = {
     }
 
 
+forcing_function_profile = {
+    "continuous_time_intervals": [],
+    "piecewise_constant_inputs": [], 
+    }
+
+
 """
 Defines the structure of a *computational* experiment, a.k.a. a *problem*
 measurements_covariance_trace: numpy.array
@@ -50,6 +56,8 @@ an element (a need) of an algorithmic routine
 problem_structure = {
     "bounds": None,
     # TODO: establish dedicated "problem_formulation"
+    # forcing_function_profile
+    "forcing_inputs": None,
     "initial": ("estimate", "exclude", "include"),
     "initial_conditions": [],
     "inputs": [],

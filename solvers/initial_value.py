@@ -1,6 +1,9 @@
 
 import scipy.integrate
 
+import copy
+import numpy
+
 import common.utilities
 import common.diagnostics as cd
 import models.model_data as mmd
@@ -12,15 +15,19 @@ def handle_initial_point(values, problem_instance):
     return values
 
 
-'''
-Calls odepack.lsoda to solve the initial value problem for stiff and non-stiff ode's.
-Preconditions: at this point in time, all problem-specific stuff must have been done;
-this is a direct solver call and there is no context to do problem-specific things
-'''
 # TODO: deep copy?
 # TODO: instrument reporting of data
 # TODO: test @ failure
 def solve(model_data, problem_data):
+    """
+    Calls odepack.lsoda to solve the initial value problem for stiff and non-stiff ode's.
+    Preconditions: at this point in time, all problem-specific stuff must have been done;
+    this is a direct solver call and there is no context to do problem-specific things
+    returns
+        status: integer
+        y:      snapshots
+        data:   diagnostics
+    """
     assert(len(problem_data["initial_conditions"]) == len(model_data["states"]))
     assert(model_data["states"] is not None)
     # TODO: preconditions
@@ -28,18 +35,70 @@ def solve(model_data, problem_data):
     # if problem_data != model_data, then warn
 
     # TODO: sort alphabetically
-    y, data, status = scipy.integrate.odeint(
-        func        = model_data["model"], \
-        y0          = problem_data["initial_conditions"], \
-        # A sequence of time points for which to solve for y.
-        # The initial value point should be the first element of this sequence.
-        # http://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.odeint.html#scipy.integrate.odeint
-        t           = problem_data["time"], \
-        args        = (model_data["parameters"], model_data["inputs"]), \
-        full_output = True, \
-        printmessg  = False, \
-        ixpr        = False, \
-        mxstep      = 50000)
+    
+    if problem_data["forcing_inputs"] is None:
+        y, data, status = scipy.integrate.odeint(
+            func        = model_data["model"], \
+            y0          = problem_data["initial_conditions"], \
+            # A sequence of time points for which to solve for y.
+            # The initial value point should be the first element of this sequence.
+            # http://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.odeint.html#scipy.integrate.odeint
+            t           = problem_data["time"], \
+            args        = (model_data["parameters"], model_data["inputs"]), \
+            full_output = True, \
+            printmessg  = False, \
+            ixpr        = False, \
+            mxstep      = 50000)
+        if status == 2:
+            status = 0
+    else:
+        times_orig = copy.deepcopy(problem_data["time"])
+        initial_conditions_orig = copy.deepcopy(problem_data["initial_conditions"])
+        #y = []
+        data = []
+        status = 0
+        num_s = len(problem_data["forcing_inputs"]["continuous_time_intervals"])
+        initials = None
+        for ii in range(num_s-1):
+            
+            forcing_inputs = []
+            for uu in range(len(model_data["inputs"])):
+                forcing_inputs.append(problem_data["forcing_inputs"]["piecewise_constant_inputs"][ii][uu])
+            model_data["inputs"] = forcing_inputs
+            times = []
+            for tt in range(len(problem_data["time"])):
+                if problem_data["time"][tt] >= problem_data["forcing_inputs"]["continuous_time_intervals"][ii] \
+                    and problem_data["time"][tt] <= problem_data["forcing_inputs"]["continuous_time_intervals"][ii+1]:
+                    times.append(problem_data["time"][tt])
+            problem_data["time"] = times
+            if ii > 0:
+                problem_data["initial_conditions"] = initials
+             
+            y_s, data_s, status_s = scipy.integrate.odeint(
+                func        = model_data["model"], \
+                y0          = problem_data["initial_conditions"], \
+                # A sequence of time points for which to solve for y.
+                # The initial value point should be the first element of this sequence.
+                # http://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.odeint.html#scipy.integrate.odeint
+                t           = problem_data["time"], \
+                args        = (model_data["parameters"], model_data["inputs"]), \
+                full_output = True, \
+                printmessg  = False, \
+                ixpr        = False, \
+                mxstep      = 50000)
+            initials = y_s[-1]
+            if ii == 0:
+                y = copy.deepcopy(y_s)
+            else:
+                y = numpy.concatenate((y,y_s[1:]))
+            #y.append(y_s)
+            data.append(data_s)
+            if status_s == 2:
+                status_s = 0
+            status = status + status_s
+            problem_data["time"] = times_orig
+            
+    problem_data["initial_conditions"] = initial_conditions_orig
     return status, y, data
 
 
@@ -55,7 +114,7 @@ def evaluate_timecourse_snapshots(model_data, problem_data):
 
     status, snapshots, diags_stats = solve(model_data, problem_data)
     results = {}
-    is_successful = lambda x: True if x == 2 else False
+    is_successful = lambda x: True if x == 0 else False
     results["success"] = is_successful(status)
     results["snapshots"] = snapshots
     results["diags_stats"] = diags_stats

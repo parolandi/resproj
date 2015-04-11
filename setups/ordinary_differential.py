@@ -142,7 +142,7 @@ def do_sensitivity_problem_setup(model_data, data_instance):
 # -----------------------------------------------------------------------------
 
 #TODO: this could be config
-#TOFO: timecourse_simulation
+#TODO: timecourse_simulation
 def do_abstract_data_setup(model, problem, covariance_trace):
     """
     return list (of trajectory data)
