@@ -30,7 +30,7 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
         self.do_diag = False
 
     
-    def test_regression(self):
+    def test_simulation_regression(self):
         t = numpy.linspace(0.0, 20.0, 11)
         p = numpy.ones(len(testme.pmap))
         for par in testme.pmap.items():
@@ -158,6 +158,6 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
     
     # TODO: test published data
     
-    
+
 if __name__ == "__main__":
     unittest.main()
