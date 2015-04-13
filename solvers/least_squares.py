@@ -1,6 +1,8 @@
 
 import scipy.optimize
+
 import copy
+import logging
 
 # TODO: validate use of data structure
 import common.diagnostics as cdi
@@ -16,7 +18,7 @@ def solve(model_instance, problem_instance, algorithm_structure):
     if problem_instance["bounds"] is not None:
         assert(len(problem_instance["parameter_indices"]) == len(problem_instance["bounds"]))
     
-    return scipy.optimize.minimize( \
+    result = scipy.optimize.minimize( \
         args =     (None, model_instance, problem_instance), \
         bounds =   problem_instance["bounds"], \
         callback = algorithm_structure["callback"], \
@@ -26,6 +28,8 @@ def solve(model_instance, problem_instance, algorithm_structure):
         tol =      algorithm_structure["tolerance"], \
         x0 =       algorithm_structure["initial_guesses"], \
         )
+    logging.info(result)
+    return result
 
 
 # -----------------------------------------------------------------------------
