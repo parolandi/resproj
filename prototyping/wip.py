@@ -117,7 +117,7 @@ class TestWip(unittest.TestCase):
         # setup nonlin conf reg
         model, problem, algorithm_rf = self.get_model_problem_algorithm(config())
         algorithm_mc = dict(mcmiv.montecarlo_multiple_simulation_params)
-        algorithm_mc["number_of_trials"] = 120000
+        algorithm_mc["number_of_trials"] = 120000*4
         if False:
             algorithm_mc["number_of_trials"] = 100
 
