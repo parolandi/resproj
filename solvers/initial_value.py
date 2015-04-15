@@ -28,6 +28,7 @@ def solve(model_data, problem_data):
         y:      snapshots
         data:   diagnostics
     """
+    # TODO: are these assertions valid?
     assert(len(problem_data["initial_conditions"]) == len(model_data["states"]))
     assert(model_data["states"] is not None)
     # TODO: preconditions
@@ -149,6 +150,8 @@ Warning: it will unconditionally include the initial point
 def compute_trajectory_st(model, model_data, problem_data):
     # TODO: problem_data["initial"] not being handled correctly if called direction
     # TODO: preconditions
+    assert(len(model_data["parameters"]) > 0)
+    assert(len(model_data["inputs"]) > 0)
 
     if model is None:
         assert(model_data["model"] is not None)

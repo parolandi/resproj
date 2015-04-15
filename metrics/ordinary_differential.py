@@ -15,8 +15,12 @@ def handle_initial_point(values, problem_instance):
 
 
 # TODO: rename; remove "_st"
-# TODO: consider always returning list of residuals, even in degenerate case of single residual
+# TODO: !! consider always returning list of residuals, even in degenerate case of single residual
 def residuals_st(model, model_instance, problem_instance):
+    """
+    compute residuals for individual measurements for a single experiment
+    returns real or list (should always return a list)
+    """
     assert(len(problem_instance["output_indices"]) > 0)
     assert(len(problem_instance["output_indices"]) == len(problem_instance["outputs"]))
     # TODO: preconditions
@@ -56,6 +60,7 @@ def residuals_st(model, model_instance, problem_instance):
 
 # TODO: rename and reuse; residuals at point
 def residuals_dof(dof, model, model_instance, problem_instance):
+    assert(False)
     """
     It has side effects on model_instance and problem_instance
     """
@@ -72,8 +77,11 @@ def residuals_dof(dof, model, model_instance, problem_instance):
     return residuals_st(model, model_instance, problem_instance)
 
 
-# compute the ssr for each trajectory
 def sums_squared_residuals(dof, model, model_instance, problem_instance):
+    """
+    compute the ssr for each observable (trajectory) independently
+    returns list
+    """
     if dof is not None:
         assert(len(dof) == len(problem_instance["parameter_indices"]))
     # TODO: preconditions
@@ -99,11 +107,14 @@ def sums_squared_residuals(dof, model, model_instance, problem_instance):
     return sum_res
 
 
-# TODO: compute state-wise and experiment-wise
 # TODO: rename; remove "_st"
 # dof: a list/array or None
 # TODO: test empty array
 def sum_squared_residuals_st(dof, model, model_instance, problem_instance):
+    """
+    compute a single ssr for all observables collectively
+    returns real
+    """
     if dof is not None:
         assert(len(dof) == len(problem_instance["parameter_indices"]))
     # TODO: preconditions
@@ -121,3 +132,32 @@ def sum_squared_residuals_st(dof, model, model_instance, problem_instance):
     for ii in range(len(problem_instance["output_indices"])):
         res += math.fsum(res**2 for res in residuals[ii])
     return res
+
+
+# TODO: extend to handle forcing_inputs too
+def residuals(model, problem):
+    """
+    compute residuals for individual measurements for all experiments
+    returns real or list (should always return a list)
+    """
+    num_exps = len(problem["experiments"])
+    if num_exps == 0:
+        # this could return a real and should not
+        return residuals_st(None, model, problem)
+    residuals_per_exp = []
+    for ii in range(num_exps):
+        # TODO: extend to handle forcing_inputs too
+        experiment = problem["experiments"][ii]
+        problem["time"] = experiment["time"]
+        problem["initial_conditions"] = experiment["initial_condition_measurements"]
+        problem["inputs"] = experiment["input_measurements"]
+        problem["outputs"] = experiment["output_measurements"]
+        residuals_per_exp.append(residuals_st(None, model, problem))
+    residuals_per_obs = []
+    num_obs = len(problem["output_indices"])
+    for jj in range(num_obs):
+        residuals_per_obs.append(residuals_per_exp[0][jj])
+    for ii in range(1,num_exps):
+        for jj in range(num_obs):
+            residuals_per_obs[ii] = numpy.concatenate((residuals_per_obs[ii],residuals_per_exp[ii][jj]))          
+    return residuals_per_obs
