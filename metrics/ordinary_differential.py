@@ -161,3 +161,19 @@ def residuals(model, problem):
         for jj in range(num_obs):
             residuals_per_obs[ii] = numpy.concatenate((residuals_per_obs[ii],residuals_per_exp[ii][jj]))          
     return residuals_per_obs
+
+
+def sum_squared_residuals(dof, model, problem):
+    """
+    compute a single ssr for all observables collectively
+    returns real
+    """
+    if dof is not None:
+        mmdu.apply_values_to_parameters(dof, model, problem)
+    # MAYDO: this could be more pythonic?
+    res = 0.0
+    resids = residuals(model, problem)
+    for ii in range(len(problem["output_indices"])):
+        res += math.fsum(res**2 for res in resids[ii])
+    return res
+    
