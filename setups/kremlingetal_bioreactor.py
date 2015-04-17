@@ -293,3 +293,41 @@ def do_experiment_setup_0_60():
     # TODO: () or not ()?
     config["sensitivity_setup"] = do_sensitivity_setup()
     return config
+
+
+def do_experiment_setup_0_20_twice():
+    config = copy.deepcopy(setups.setup_data.experiment_setup)
+    config["algorithm_setup"] = do_algorithm_setup
+    config["data_setup"] = do_get_published_data_spliced_111111
+    config["model_setup"] = do_model_setup_model_B
+    config["problem_setup"] = do_problem_setup_twice_with_covariance_2
+    config["protocol_setup"] = do_protocol_setup
+    config["protocol_step"]["calib"] = "do"
+    config["protocol_step"]["valid"] = "donot"
+    # TODO: () or not ()?
+    config["sensitivity_setup"] = do_sensitivity_setup()
+    return config
+
+
+def do_problem_setup_twice_with_covariance_2(model_data, data_instance):
+    problem_data = do_problem_setup_twice(model_data, data_instance)
+    problem_data["measurements_covariance_trace"] = numpy.array([3.80E-002, 2.46E-002, 2.53E-002, 1.16E-003, 3.20E-003])
+    mmdu.check_correctness_of_measurements_covariance_matrix(problem_data)
+    return problem_data
+
+
+def do_problem_setup_twice(model_data, data_instance):
+    problem = do_base_problem_setup(model_data, data_instance)
+    experiment = {}
+
+    experiment["initial_condition_measurements"] = copy.deepcopy(problem["initial_conditions"])
+    experiment["time"] = copy.deepcopy(problem["time"])
+    experiment["input_measurements"] = copy.deepcopy(problem["inputs"])
+    experiment["output_measurements"] = copy.deepcopy(problem["outputs"])
+
+    problem["experiments"].append(experiment)
+    problem["experiments"].append(experiment)
+    
+    problem["performance_measure"] = mod.sum_squared_residuals
+    return problem
+
