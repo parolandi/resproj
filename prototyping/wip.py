@@ -155,7 +155,7 @@ class TestWip(unittest.TestCase):
             (nominal[3]*lf,nominal[3]*uf)]
 
 
-    def test_ncr(self):
+    def dn_test_ncr(self):
         logging.basicConfig(filename=codi.get_name_logging_file(),level=codi.get_logging_level())
         baseline = {}
         baseline["number_of_points"] = 80
@@ -200,6 +200,25 @@ class TestWip(unittest.TestCase):
         config = sekrbi.do_experiment_setup_0_60()
         config["algorithm_setup"] = sekrbi.do_algorithm_setup_using_slsqp_with_positivity
         return config
+
+
+    def do_experiment_setup_twice(self):
+        config = sekrbi.do_experiment_setup_0_20_twice()
+        #config["algorithm_setup"] = sekrbi.do_algorithm_setup_using_slsqp_with_positivity
+        return config
+
+
+    # WIP remove hard-coded sum_squared_residuals_st
+    def test_calibration_twice_workflow(self):
+        calibrated = woex.test_baseline_calibration(self.do_experiment_setup_twice, None, self)
+        if True:
+            wore.plot_tiled_trajectories_at_point(self.do_experiment_setup_twice(), calibrated)
+
+
+    def dn_test_calibration_workflow_0_20(self):
+        calibrated = woex.test_baseline_calibration(sekrbi.do_experiment_setup, None, self)
+        if True:
+            wore.plot_tiled_trajectories_at_point(sekrbi.do_experiment_setup(), calibrated)
 
 
 if __name__ == "__main__":

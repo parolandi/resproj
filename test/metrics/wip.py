@@ -106,5 +106,35 @@ class TestOrdinaryDifferentialMetrics(unittest.TestCase):
         [[self.assertAlmostEqual(exp, act, 8) for exp, act in zip(exps, acts)] for exps, acts in zip(expected, actual)]
 
 
+    def test_sum_residuals_single_experiment_linear_2p2s(self):
+        model_instance, problem_instance = self.do_setup_single()
+        problem_instance["outputs"] = self.do_get_measured(1.0)
+        
+        shape = self.do_get_measured(0).shape
+        expected = shape[0]*shape[1]
+        actual = metrics.ordinary_differential.sum_squared_residuals(model_instance, problem_instance)
+        self.assertAlmostEqual(expected, actual, 8)
+
+
+    # test sum of residuals, multiple experiments, just one
+    def test_sum_residuals_multiple_1_experiments_linear_2p2s(self):
+        model_instance, problem_instance = self.do_setup_multiple_1()
+
+        shape = self.do_get_measured(0).shape
+        expected = shape[0]*shape[1]
+        actual = metrics.ordinary_differential.sum_squared_residuals(model_instance, problem_instance)
+        self.assertAlmostEqual(expected, actual, 8)
+
+
+    # test sum of residuals, multiple experiments, this time is two
+    def test_sum_residuals_multiple_2_experiments_linear_2p2s(self):
+        model_instance, problem_instance = self.do_setup_multiple_2()
+
+        shape = self.do_get_measured(0).shape
+        expected = shape[0]*shape[1]*2
+        actual = metrics.ordinary_differential.sum_squared_residuals(model_instance, problem_instance)
+        self.assertAlmostEqual(expected, actual, 8)
+
+
 if __name__ == "__main__":
     unittest.main()
