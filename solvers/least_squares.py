@@ -19,7 +19,7 @@ def solve(model_instance, problem_instance, algorithm_structure):
         assert(len(problem_instance["parameter_indices"]) == len(problem_instance["bounds"]))
     
     result = scipy.optimize.minimize( \
-        args =     (None, model_instance, problem_instance), \
+        args =     (model_instance, problem_instance), \
         bounds =   problem_instance["bounds"], \
         callback = algorithm_structure["callback"], \
         fun =      problem_instance["performance_measure"], \

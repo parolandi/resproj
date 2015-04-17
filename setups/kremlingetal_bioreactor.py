@@ -105,8 +105,8 @@ def do_base_problem_setup(model_data, data_instance):
     problem_data["parameters"] = copy.deepcopy(model_data["parameters"])
     problem_data["inputs"] = copy.deepcopy(model_data["inputs"])
 
-    problem_data["performance_measure"] = mod.sum_squared_residuals_st
-    problem_data["confidence_region"]["performance_measure"] = mod.sum_squared_residuals_st
+    problem_data["performance_measure"] = mod.sum_squared_residuals
+    problem_data["confidence_region"]["performance_measure"] = mod.sum_squared_residuals
     problem_data["confidence_region"]["confidence"] = 0.95
     problem_data["parameter_indices"] = get_parameters_to_be_estimated()
     problem_data["parameters"] = numpy.zeros(len(problem_data["parameter_indices"]))
@@ -262,7 +262,7 @@ def do_instrumentation_setup():
 
 def do_protocol_setup():
     protocol_data = dict(wpd.protocol_data)
-    protocol_data["performance_measure"] = mod.sum_squared_residuals_st
+    protocol_data["performance_measure"] = mod.sum_squared_residuals
     return protocol_data
 
 # --------------------------------------------------------------------------- #

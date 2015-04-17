@@ -11,6 +11,7 @@ def constraint_it(x, model_data, problem_data, ssr_0):
     index = problem_data["confidence_region"]["parameter_index"]
     model_data["parameters"][index] = x[0]
     problem_data["parameters"][index] = x[0]
+    # WIP 2015-04-16
     return ssr_0 - mod.sum_squared_residuals_st(None, None, model_data, problem_data)
 
 
