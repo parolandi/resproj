@@ -277,7 +277,7 @@ def likelihood_constraint(x, model_data, problem_data, ssr_0):
     assert(problem_data["confidence_region"]["performance_measure"] is not None)
 
     mmdu.apply_values_to_parameters(x, model_data, problem_data)
-    ssr = problem_data["confidence_region"]["performance_measure"](None, None, model_data, problem_data)
+    ssr = problem_data["confidence_region"]["performance_measure"](None, model_data, problem_data)
     return ssr_0 - ssr
 
 
