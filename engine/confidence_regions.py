@@ -101,7 +101,7 @@ def compute_nonlinear_confidence_intervals(model, problem, algorithm, best_point
     mmdu.apply_decision_variables_to_parameters(best_point, model, problem)
     ssr = compute_f_constraint( \
         best_point["objective_function"],
-        problem["outputs"],
+        mmdu.get_measurement_template_for_all_experiments(problem),
         len(problem["parameter_indices"]),
         problem["confidence_region"]["confidence"])
     problem["confidence_region"]["ssr"] = ssr
@@ -117,7 +117,7 @@ def compute_nonlinear_confidence_intervals_extremal(model, problem, algorithm, b
     mmdu.apply_decision_variables_to_parameters(best_point, model, problem)
     ssr = compute_f_constraint( \
         best_point["objective_function"],
-        problem["outputs"],
+        mmdu.get_measurement_template_for_all_experiments(problem),
         len(problem["parameter_indices"]),
         problem["confidence_region"]["confidence"])
     problem["confidence_region"]["ssr"] = ssr
@@ -351,6 +351,7 @@ def compute_chisquared_constraint(ssr0, observations, confidence):
     return ssr
 
 
+# TODO: should one ideally extract the calculate number of observations?
 def compute_f_constraint(ssr0, observations, no_params, confidence):
     no_meas = mmdu.calculate_number_of_observations(observations)
     f_value = enstin.compute_one_sided_f_value(confidence, no_meas, no_params)
