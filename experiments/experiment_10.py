@@ -2,10 +2,8 @@
 import unittest
 import setups.kremlingetal_bioreactor as skb
 
-import copy
 import numpy
 
-import setups.setup_data as ssd
 import workflows.experiments as we
 import workflows.reporting as wr
 
@@ -40,7 +38,7 @@ class TestExperiment10(unittest.TestCase):
         return config
 
 
-    def dn_test_protocol_calibration_and_validation_setup_1(self):
+    def test_protocol_calibration_and_validation_setup_1(self):
         baseline = dict(we.calib_valid_baseline)
         basepoint = baseline["calib"]
         basepoint["point"]["objective_function"] = 0.30431429868139315
@@ -55,6 +53,7 @@ class TestExperiment10(unittest.TestCase):
             wr.plot_tiled_calibration_and_validation_trajectories_at_point(self.do_experiment_setup_1(), calibrated)
 
 
+    # TODO: not a very good fit!
     def test_protocol_calibration_setup_2(self):
         baseline = dict(we.calib_valid_baseline)
         basepoint = baseline["calib"]
@@ -65,8 +64,7 @@ class TestExperiment10(unittest.TestCase):
         basepoint["dv_deltas"] = numpy.array([0.00000001e-04, 0.00000001e+06, 0.00000001e-02, 0.00000001e-01])
         calibrated = we.test_baseline_calibration(self.do_experiment_setup_2, baseline["calib"], self)
         if self.do_plotting:
-            pass
-            #wr.plot_tiled_calibration_and_validation_trajectories_at_point(self.do_experiment_setup_2(), calibrated)
+            wr.plot_tiled_trajectories_at_point(self.do_experiment_setup_2(), calibrated)
 
 
 if __name__ == "__main__":
