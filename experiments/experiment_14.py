@@ -73,7 +73,7 @@ class TestExperiment14(unittest.TestCase):
         # do regression        
         dvs = sls.solve(model, problem, algorithm)
         mmdu.apply_values_to_parameters(dvs.x, model, problem)
-        obj = mod.sum_squared_residuals_st(None, None, model, problem)
+        obj = mod.sum_squared_residuals(None, model, problem)
         best_point = {}
         best_point["decision_variables"] = dvs.x
         best_point["objective_function"] = obj

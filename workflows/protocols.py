@@ -62,7 +62,7 @@ def do_validation_and_compute_performance_measure_at_solution_point(config, solu
     for ii in range(len(problem_instance["parameter_indices"])):
         model_instance["parameters"][problem_instance["parameter_indices"][ii]] = copy.deepcopy(solution_point["decision_variables"][ii])
 
-    ssr_fit = problem_instance["performance_measure"](None, None, model_instance, problem_instance)
+    ssr_fit = problem_instance["performance_measure"](None, model_instance, problem_instance)
 
     valid_sol = copy.deepcopy(solution_point)
     valid_sol["objective_function"] = ssr_fit
