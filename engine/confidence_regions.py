@@ -5,6 +5,7 @@ import numpy
 import time
 
 import common.diagnostics as codi
+import engine.diagnostics as endi
 import engine.statistical_inference as enstin
 import metrics.statistical_tests as mst
 import models.model_data_utils as mmdu
@@ -124,8 +125,11 @@ def compute_nonlinear_confidence_intervals_extremal(model, problem, algorithm, b
 
     hyperrectangle, statuses = compute_nonlinear_confidence_hyperrectangle_extremal(model, problem, algorithm)
     wall_time = time.time() - wall_time0
-    #logging.basicConfig(filename=codi.get_name_logging_file(), level=codi.get_logging_level())
-    logging.info(wall_time)
+
+    logging.info(endi.log_ssr(ssr))
+    logging.info(hyperrectangle)
+    logging.info(statuses)
+    logging.info(endi.log_wall_time(wall_time))
     return hyperrectangle, statuses
 
 
