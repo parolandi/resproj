@@ -2,8 +2,10 @@
 import unittest
 
 import copy
+import logging
 import numpy
 
+import common.diagnostics as codi
 import metrics.ordinary_differential as mod
 import models.model_data_utils as mmdu
 import engine.confidence_regions as ecr
@@ -29,6 +31,7 @@ class TestOrdinaryDifferential(unittest.TestCase):
     def __init__(self, *args, **kwargs):
         super(TestOrdinaryDifferential, self).__init__(*args, **kwargs)
         self.do_plotting = False
+        logging.basicConfig(filename=codi.get_name_logging_file(), level=codi.get_logging_level())
 
     
     def do_setup_lin(self):
@@ -51,6 +54,15 @@ class TestOrdinaryDifferential(unittest.TestCase):
     
     def do_setup_nonlin_in_params(self):
         config = self.do_experiment_setup_nonlin_in_params()
+        algorithm = config["algorithm_setup"]()
+        data = config["data_setup"]()
+        model = config["model_setup"]()
+        problem = config["problem_setup"](model, data["calib"])
+        return model, problem, algorithm
+
+    
+    def do_setup_nonlin_in_params_twice(self):
+        config = self.do_experiment_setup_nonlin_in_params_twice()
         algorithm = config["algorithm_setup"]()
         data = config["data_setup"]()
         model = config["model_setup"]()
@@ -96,6 +108,12 @@ class TestOrdinaryDifferential(unittest.TestCase):
         config["sensitivity_setup"] = solose.compute_timecourse_trajectories_and_sensitivities
         return config
 
+    
+    def do_experiment_setup_nonlin_in_params_twice(self):
+        config = self.do_experiment_setup_nonlin_in_params()
+        config["problem_setup"] = sod.do_problem_setup_without_covariance_twice
+        return config
+    
     
     def do_algorithm_setup(self):
         algorithm = copy.deepcopy(ssd.algorithm_structure)
@@ -222,7 +240,7 @@ class TestOrdinaryDifferential(unittest.TestCase):
         # do regression        
         dvs = sls.solve(model, problem, algorithm)
         mmdu.apply_values_to_parameters(dvs.x, model, problem)
-        obj = mod.sum_squared_residuals_st(None, None, model, problem)
+        obj = mod.sum_squared_residuals(None, model, problem)
         best_point = {}
         best_point["decision_variables"] = dvs.x
         best_point["objective_function"] = obj
@@ -248,7 +266,7 @@ class TestOrdinaryDifferential(unittest.TestCase):
 
         # do nonlin conf intvs
         if do_extremal:
-            intervals = ecr.compute_nonlinear_confidence_intervals_extremal( \
+            intervals, _ = ecr.compute_nonlinear_confidence_intervals_extremal( \
                 model, problem, algorithm_rf, best_point)
         else:
             intervals = ecr.compute_nonlinear_confidence_intervals( \
@@ -355,6 +373,18 @@ class TestOrdinaryDifferential(unittest.TestCase):
         baseline["plotdata"]["window_title"] = "LCR nl-in-params model"
         self.do_test_compute_linearised_confidence_region_both(self.do_experiment_setup_nonlin_in_params(), best, baseline)
 
+    
+    def test_compute_nonlinear_confidence_region_points_and_intervals_nonlin_in_params_twice(self):
+        baseline = {}
+        baseline["number_of_points"] = 1926
+        baseline["intervals"] = [[0.81310695394950572, 1.7939381493831716], [1.2251143177940427, 2.7889286158913245]]
+        baseline["plotdata"] = dict(replda.plot_data)
+        baseline["plotdata"]["window_title"] = "NCR nl-in-params model (twice)"
+        self.do_test_compute_nonlinear_confidence_region_both( \
+            self.do_setup_nonlin_in_params_twice, \
+            self.do_experiment_setup_nonlin_in_params_twice, \
+            baseline, True)
+    
     
     def test_compute_linearised_confidence_region_ellipsoid_and_intervals_nonlin(self):
         best = {}

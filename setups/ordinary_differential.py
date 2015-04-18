@@ -91,6 +91,27 @@ def do_problem_setup_without_covariance(model_data, data_instance):
     return do_base_problem_setup(model_data, data_instance)
 
 
+def do_problem_setup_without_covariance_twice(model_data, data_instance):
+    problem = do_base_problem_setup(model_data, data_instance)
+    
+    experiment = {}
+
+    experiment["initial_condition_measurements"] = copy.deepcopy(problem["initial_conditions"])
+    experiment["time"] = copy.deepcopy(problem["time"])
+    experiment["input_measurements"] = copy.deepcopy(problem["inputs"])
+    experiment["output_measurements"] = copy.deepcopy(problem["outputs"])
+
+    print(experiment)
+
+    problem["experiments"] = []
+    problem["experiments"].append(experiment)
+    problem["experiments"].append(experiment)
+    
+    problem["performance_measure"] = mod.sum_squared_residuals
+
+    return problem
+
+
 def do_problem_setup_with_covariance(model_data, data_instance):
     problem_data = do_base_problem_setup(model_data, data_instance)
     problem_data["measurements_covariance_trace"] = numpy.ones(2)
