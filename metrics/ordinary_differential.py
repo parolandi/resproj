@@ -159,7 +159,8 @@ def residuals(model, problem):
         residuals_per_obs.append(residuals_per_exp[0][jj])
     for ii in range(1,num_exps):
         for jj in range(num_obs):
-            residuals_per_obs[ii] = numpy.concatenate((residuals_per_obs[ii],residuals_per_exp[ii][jj]))          
+            #residuals_per_obs[ii] = numpy.concatenate((residuals_per_obs[ii],residuals_per_exp[ii][jj]))
+            residuals_per_obs[jj] = numpy.concatenate((residuals_per_obs[jj],residuals_per_exp[ii][jj]))
     return residuals_per_obs
 
 
