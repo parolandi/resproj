@@ -55,13 +55,13 @@ class TestModelDataUtils(unittest.TestCase):
         experiment["output_measurements"] = [0, 1, 2, 3, 4]
         problem = {}
         problem["experiments"] = [experiment, experiment]
-        actual = testme.get_measurements_for_all_experiments(problem)
+        actual = testme.get_measurement_template_for_all_experiments(problem)
         self.assertEquals(len(actual), 10)
 
         experiment["output_measurements"] = [[0, 1, 2, 3, 4], [5, 6, 7, 8, 9]]
         problem = {}
         problem["experiments"] = [experiment, experiment]
-        actual = testme.get_measurements_for_all_experiments(problem)
+        actual = testme.get_measurement_template_for_all_experiments(problem)
         self.assertEquals(len(actual), 20)
 
 

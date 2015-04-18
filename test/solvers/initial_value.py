@@ -59,8 +59,8 @@ class TestInitialValueSolvers(unittest.TestCase):
     def do_setup_2p2s_with_forcing_inputs(self):
         model, problem = self.do_setup_2p2s()
         forcing_inputs = copy.deepcopy(models.model_data.forcing_function_profile)
-        forcing_inputs["continuous_time_intervals"] = numpy.linspace(0.0, 1.0, 2, endpoint=False)
-        forcing_inputs["piecewise_constant_inputs"] = [numpy.linspace(1.0, 2.0, 2, endpoint=False), numpy.linspace(2.0, 2.0, 2, endpoint=False)]
+        forcing_inputs["continuous_time_intervals"] = [0, 0.5]
+        forcing_inputs["piecewise_constant_inputs"] = [[1, 2], [2, 2]]
         problem["forcing_inputs"] = forcing_inputs
         problem["time"] = numpy.linspace(0.0, 1.0, 10, endpoint=False)
         return model, problem

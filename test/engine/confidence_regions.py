@@ -199,7 +199,7 @@ class TestConfidenceRegions(unittest.TestCase):
     '''---------------------------------------------------------------------'''
     
     # mock
-    def do_confidence_region_performance_measure(self, dummy1, dummy2, model, problem):
+    def do_confidence_region_performance_measure(self, dummy, model, problem):
         param = numpy.asarray(problem["parameters"])
         measure = numpy.dot(param, param)
         return measure
@@ -245,7 +245,7 @@ class TestConfidenceRegions(unittest.TestCase):
     def test_compute_nonlinear_confidence_hyperrectangle_extremal_lin(self):
         model, problem, algorithm = self.do_setup_lin()
         algorithm["initial_guesses"] = numpy.asarray([1.0, 2.0])
-        problem["confidence_region"]["performance_measure"] = meordi.sum_squared_residuals_st
+        problem["confidence_region"]["performance_measure"] = meordi.sum_squared_residuals
         problem["parameters"] = [(1.01338741+1.59365765)/2, (2.0040739383273261+2.4877075291690458)/2]
         algorithm["initial_guesses"] = problem["parameters"]
         actual = numpy.asarray(testme.compute_nonlinear_confidence_hyperrectangle_extremal(model, problem, algorithm))
@@ -269,7 +269,7 @@ class TestConfidenceRegions(unittest.TestCase):
     def test_compute_nonlinear_confidence_hyperrectangle_extremal_nonlin_in_params_w_bounds_mod(self):
         model, problem, algorithm = self.do_setup_nonlin_in_params()
         algorithm["initial_guesses"] = numpy.asarray([1.0, 2.0])
-        problem["confidence_region"]["performance_measure"] = meordi.sum_squared_residuals_st
+        problem["confidence_region"]["performance_measure"] = meordi.sum_squared_residuals
         problem["parameters"] = [(1.0017616818394601+1.2653734258285729)/2, (2.0040739383273261+2.4877075291690458)/2]
         problem["bounds"] = [(0,10), (0,10)]
         algorithm["initial_guesses"] = problem["parameters"]

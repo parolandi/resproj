@@ -176,7 +176,7 @@ class TestLeastSquaresSolvers(unittest.TestCase):
     def test_solve_linear_2p2s_1dof_include_initial_model_and_metric_are_not_none(self):
         model_instance, problem_instance, algorithm_instance = self.do_setup()
         model_instance["model"] = linear_2p2s_mock
-        problem_instance["performance_measure"] = meordi.sum_squared_residuals_st
+        problem_instance["performance_measure"] = meordi.sum_squared_residuals
         algorithm_instance["method"] = 'SLSQP'
         
         model_instance["parameters"][1] = 0.5

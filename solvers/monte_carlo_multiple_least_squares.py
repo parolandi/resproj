@@ -75,7 +75,7 @@ and solves the least-squares problem
 def montecarlo_multiple_least_squares(model, problem, algorithm):
     assert(model["model"] is not None)
     assert(problem["performance_measure"] is not None)
-    assert(problem["performance_measure"] is mod.sum_squared_residuals_st)
+    assert(problem["performance_measure"] is mod.sum_squared_residuals)
     dv_count = len(problem["parameter_indices"])
     assert(len(algorithm["decision_variable_ranges"]) == dv_count)
     # TODO: preconditions!
@@ -95,7 +95,7 @@ def montecarlo_multiple_least_squares(model, problem, algorithm):
         trial_point["decision_variables"] = trial_result.x
         obj_fun = inf_obj_func
         if trial_result.success:
-            obj_fun = mod.sum_squared_residuals_st(trial_result.x, None, model, problem) 
+            obj_fun = problem["performance_measure"](trial_result.x, model, problem) 
         trial_point["objective_function"] = copy.deepcopy(obj_fun)
         result["all"].append(trial_point)
         if trial_result.success:
