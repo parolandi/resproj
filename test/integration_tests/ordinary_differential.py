@@ -376,8 +376,8 @@ class TestOrdinaryDifferential(unittest.TestCase):
     
     def test_compute_nonlinear_confidence_region_points_and_intervals_nonlin_in_params_twice(self):
         baseline = {}
-        baseline["number_of_points"] = 1926
-        baseline["intervals"] = [[0.81310695394950572, 1.7939381493831716], [1.2251143177940427, 2.7889286158913245]]
+        baseline["number_of_points"] = 2284
+        baseline["intervals"] = [[0.96398973047805259, 1.6430554105601161], [1.3483585398194338, 2.2014435078083596]]
         baseline["plotdata"] = dict(replda.plot_data)
         baseline["plotdata"]["window_title"] = "NCR nl-in-params model (twice)"
         self.do_test_compute_nonlinear_confidence_region_both( \
