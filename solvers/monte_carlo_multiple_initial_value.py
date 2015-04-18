@@ -111,21 +111,21 @@ def montecarlo_multiple_initial_value(model, problem, algorithm):
         trial_result = siv.evaluate_timecourse_trajectories(model, problem)
         if trial_result.success:
             success["decision_variables"].append(param_vals)
-            #success["trajectories"].append(trial_result.trajectories)
+            success["trajectories"].append(trial_result.trajectories)
             obj = problem["performance_measure"](param_vals, model, problem)
             success["objective_function"].append(obj)
         if not trial_result.success:
             failure["decision_variables"].append(param_vals)
-            #failure["trajectories"].append(trial_result.trajectories)
+            failure["trajectories"].append(trial_result.trajectories)
             failure["objective_function"].append(inf_obj_func)
 
     logging.info("decision variables")
     logging.info(success["decision_variables"])
     result = dict(montecarlo_multiple_simulation_result)
     result["succeeded"]["decision_variables"] = numpy.asarray(success["decision_variables"])
-    #result["succeeded"]["trajectories"] = numpy.asarray(success["trajectories"])
+    result["succeeded"]["trajectories"] = numpy.asarray(success["trajectories"])
     result["succeeded"]["objective_function"] = numpy.asarray(success["objective_function"])
     result["failed"]["decision_variables"] = numpy.asarray(failure["decision_variables"])
-    #result["failed"]["trajectories"] = numpy.asarray(failure["trajectories"])
+    result["failed"]["trajectories"] = numpy.asarray(failure["trajectories"])
     result["failed"]["objective_function"] = numpy.asarray(failure["objective_function"])
     return result
