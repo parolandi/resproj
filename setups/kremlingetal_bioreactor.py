@@ -325,6 +325,7 @@ def do_problem_setup_twice(model_data, data_instance):
     experiment["input_measurements"] = copy.deepcopy(problem["inputs"])
     experiment["output_measurements"] = copy.deepcopy(problem["outputs"])
 
+    problem["experiments"] = []
     problem["experiments"].append(experiment)
     problem["experiments"].append(experiment)
     
