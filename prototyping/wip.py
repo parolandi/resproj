@@ -93,7 +93,7 @@ class TestWip(unittest.TestCase):
         model, problem, algorithm_rf = self.get_model_problem_algorithm(config())
         algorithm_mc = dict(mcmiv.montecarlo_multiple_simulation_params)
         algorithm_mc["number_of_trials"] = 120000*4
-        if False:
+        if True:
             algorithm_mc["number_of_trials"] = 100
 
         if True:
@@ -130,7 +130,7 @@ class TestWip(unittest.TestCase):
             (nominal[3]*lf,nominal[3]*uf)]
 
 
-    def dn_test_ncr(self):
+    def done_test_ncr(self):
         logging.basicConfig(filename=codi.get_name_logging_file(),level=codi.get_logging_level())
         baseline = {}
         baseline["number_of_points"] = 80
@@ -184,7 +184,7 @@ class TestWip(unittest.TestCase):
 
 
     # WIP remove hard-coded sum_squared_residuals_st
-    def test_calibration_twice_workflow(self):
+    def dn_test_calibration_twice_workflow(self):
         calibrated = woex.test_baseline_calibration(self.do_experiment_setup_twice, None, self)
         if True:
             wore.plot_tiled_trajectories_at_point(self.do_experiment_setup_twice(), calibrated)
