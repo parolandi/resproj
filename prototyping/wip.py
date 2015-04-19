@@ -86,25 +86,6 @@ class TestWip(unittest.TestCase):
         return model, problem
 
 
-    def dn_test_evaluate_timecourse_trajectories_with_forcing_inputs(self):
-        model_instance, problem_instance = self.do_setup_2p2s_with_forcing_inputs()
-        model_instance["model"] = linear_2p2s_mock
-        #problem_instance["time"] = numpy.linspace(0.0, 1.0, 10, endpoint=False)
-        
-        # avoid false negatives
-        model_instance["states"] = numpy.multiply(problem_instance["initial_conditions"], 1.1)
-        problem_instance["parameters"] = numpy.multiply(problem_instance["parameters"], 1.1)
-        problem_instance["inputs"] = numpy.multiply(problem_instance["inputs"], 1.1)
-                
-        actual = solvers.initial_value.evaluate_timecourse_trajectories(model_instance, problem_instance)
-        expected = [[0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.7, 0.9, 1.1, 1.3],
-                    [1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9]]
-        
-        self.assertTrue(actual.success)
-        [self.assertAlmostEqual(exp, act, 8) for exp, act in zip(expected[0], actual.trajectories[0])]
-        [self.assertAlmostEqual(exp, act, 8) for exp, act in zip(expected[1], actual.trajectories[1])]
-
-
     def dn_test_calibration_workflow(self):
         calibrated = woex.test_baseline_calibration(sekrbi.do_experiment_setup_0_60, None, self)
         if True:
