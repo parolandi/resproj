@@ -19,7 +19,7 @@ class TestExperiment10(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
         super(TestExperiment10, self).__init__(*args, **kwargs)
-        self.do_plotting = True
+        self.do_plotting = False
 
     
     def do_experiment_setup_1(self):

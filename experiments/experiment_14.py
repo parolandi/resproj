@@ -17,6 +17,11 @@ import solvers.monte_carlo_multiple_initial_value as mcmiv
 import workflows.reporting as wr
 
 
+'''
+Kremling bioreactor
+Calculate and test nonlinear confidence region at low/high confidence
+Calculate and test approximate linear confidence region at low/high confidence
+'''
 class TestExperiment14(unittest.TestCase):
 
 
