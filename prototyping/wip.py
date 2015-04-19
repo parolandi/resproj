@@ -184,13 +184,13 @@ class TestWip(unittest.TestCase):
 
 
     # WIP remove hard-coded sum_squared_residuals_st
-    def dn_test_calibration_twice_workflow(self):
+    def done_test_calibration_twice_workflow(self):
         calibrated = woex.test_baseline_calibration(self.do_experiment_setup_twice, None, self)
         if True:
             wore.plot_tiled_trajectories_at_point(self.do_experiment_setup_twice(), calibrated)
 
 
-    def dn_test_calibration_workflow_0_20(self):
+    def done_test_calibration_workflow_0_20(self):
         calibrated = woex.test_baseline_calibration(sekrbi.do_experiment_setup, None, self)
         if True:
             wore.plot_tiled_trajectories_at_point(sekrbi.do_experiment_setup(), calibrated)
