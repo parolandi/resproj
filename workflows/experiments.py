@@ -6,6 +6,14 @@ import workflows.protocols as wpr
 import workflows.workflow_data_utils as wwdu
 
 import copy
+import logging
+import numpy
+import time
+
+import engine.confidence_regions as encore
+import engine.diagnostics as endi
+import results.plot_combinatorial as replco
+import solvers.monte_carlo_multiple_initial_value as mcmiv
 
 
 baseline = {
@@ -93,3 +101,53 @@ def test_baseline_calibration_and_validation(setup, baseline, unittester):
     calibrated = test_baseline_calibration(setup, baseline["calib"], unittester)
     test_baseline_validation(setup, baseline["valid"], unittester, calibrated)
     return calibrated
+
+
+# TODO: extract to protocol
+def test_calibration_with_nonlinear_confidence_region(config, baseline, unittester):
+    best_point = wpr.do_calibration_and_compute_performance_measure(config)
+
+    # setup
+    algorithm = config["algorithm_setup"](None)
+    model = config["model_setup"]()
+    data = config["data_setup"]()
+    problem  = config["problem_setup"](model, data["calib"])
+    # TODO: hard coded
+    algorithm_mc = dict(mcmiv.montecarlo_multiple_simulation_params)
+    algorithm_mc["number_of_trials"] = 120000*4
+    if True:
+        algorithm_mc["number_of_trials"] = 100
+    # TODO: hard coded
+    if True:
+        do_appy_bounds(best_point["decision_variables"], problem)
+    
+    logging.info(problem["bounds"])
+    
+    # do nonlin conf reg
+    wall_time0 = time.time()
+    actual_intervals, actual_points = encore.compute_nonlinear_confidence_region_intervals_and_points_extremal( \
+        model, problem, algorithm, algorithm_mc, best_point)
+    wall_time = time.time() - wall_time0
+    number_of_points = len(numpy.transpose(actual_points["objective_function"]))
+    logging.info(endi.log_points(actual_points))
+    logging.info(endi.log_wall_time(wall_time))
+    logging.info(endi.log_number_of_trials(algorithm_mc["number_of_trials"]))
+    logging.info(endi.log_number_of_points(number_of_points))
+    unittester.assertEquals(number_of_points, baseline["number_of_points"])
+    expected = baseline["intervals"]
+    [unittester.assertAlmostEquals(act, exp, 8) for act, exp in zip( \
+        numpy.asarray(actual_intervals).flatten(), numpy.asarray(expected).flatten())]
+    
+    # plot nonlin conf reg
+    if True:
+        replco.plot_combinatorial_region_projections(numpy.transpose(actual_points["decision_variables"]))
+
+
+def do_appy_bounds(nominal, problem):
+    lf = 1E-2
+    uf = 1E+2
+    problem["bounds"] = [ \
+        (nominal[0]*lf,nominal[0]*uf), \
+        (nominal[1]*lf,nominal[1]*uf), \
+        (nominal[2]*lf,nominal[2]*uf), \
+        (nominal[3]*lf,nominal[3]*uf)]
