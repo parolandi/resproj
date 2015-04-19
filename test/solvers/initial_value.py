@@ -59,7 +59,7 @@ class TestInitialValueSolvers(unittest.TestCase):
     def do_setup_2p2s_with_forcing_inputs(self):
         model, problem = self.do_setup_2p2s()
         forcing_inputs = copy.deepcopy(models.model_data.forcing_function_profile)
-        forcing_inputs["continuous_time_intervals"] = [0, 0.5]
+        forcing_inputs["continuous_time_intervals"] = [0, 0.5, 0.9]
         forcing_inputs["piecewise_constant_inputs"] = [[1, 2], [2, 2]]
         problem["forcing_inputs"] = forcing_inputs
         problem["time"] = numpy.linspace(0.0, 1.0, 10, endpoint=False)
@@ -244,7 +244,7 @@ class TestInitialValueSolvers(unittest.TestCase):
         problem_instance["inputs"] = numpy.multiply(problem_instance["inputs"], 1.1)
                 
         actual = solvers.initial_value.evaluate_timecourse_trajectories(model_instance, problem_instance)
-        expected = [[0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.7, 0.9, 1.0, 1.2],
+        expected = [[0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.7, 0.9, 1.1, 1.3],
                     [1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9]]
         
         self.assertTrue(actual.success)
