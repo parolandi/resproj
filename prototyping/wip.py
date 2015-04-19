@@ -86,12 +86,6 @@ class TestWip(unittest.TestCase):
         return model, problem
 
 
-    def dn_test_calibration_workflow(self):
-        calibrated = woex.test_baseline_calibration(sekrbi.do_experiment_setup_0_60, None, self)
-        if True:
-            wore.plot_tiled_trajectories_at_point(sekrbi.do_experiment_setup_0_60(), calibrated)
-
-
     def do_test_compute_nonlinear_confidence_region_points(self, config, baseline):
         best_point = self.do_regression(config())
 
