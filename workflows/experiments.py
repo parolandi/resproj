@@ -105,6 +105,9 @@ def test_baseline_calibration_and_validation(setup, baseline, unittester):
 
 # TODO: extract to protocol
 def test_calibration_with_nonlinear_confidence_region(config, baseline, unittester):
+    """
+    config setup_data.experiment_setup
+    """
     best_point = wpr.do_calibration_and_compute_performance_measure(config)
 
     # setup
