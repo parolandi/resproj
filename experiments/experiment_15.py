@@ -31,7 +31,7 @@ class TestExperiment15(unittest.TestCase):
         return config
 
     
-    def dn_test_calibration_workflow(self):
+    def test_calibration_workflow(self):
         baseline = dict(woex.calib_valid_baseline)
         basepoint = baseline["calib"]
         basepoint["point"]["objective_function"] = 191.9159661
