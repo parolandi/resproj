@@ -13,6 +13,11 @@ protocol_step_data = {
     }
 
 
+local_data = {
+    "do_plotting": True, 
+    }
+
+
 '''
 number_of_intervals: int
 data_splicing: function
@@ -41,6 +46,7 @@ experiment_setup = {
     "number_of_intervals": 0,
     "data_splicing": None,
     "algorithm_setting": "",
+    "local_setup": dict(local_data),
     }
 
 

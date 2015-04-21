@@ -143,7 +143,7 @@ def test_calibration_with_nonlinear_confidence_region(protocol, baseline, unitte
         numpy.asarray(actual_intervals).flatten(), numpy.asarray(expected).flatten())]
     
     # plot nonlin conf reg
-    if True:
+    if protocol["steps"][mcs]["local_setup"]["do_plotting"]:
         replco.plot_combinatorial_region_projections(numpy.transpose(actual_points["decision_variables"]))
 
 
@@ -174,5 +174,5 @@ def test_calibration_with_linearised_confidence_region(config, baseline, unittes
         numpy.asarray(ellipsoid).flatten(), numpy.asarray(expected).flatten(), numpy.asarray(diff).flatten())]
     
     # plot lin conf reg
-    if True:
+    if config["local_setup"]["do_plotting"]:
         replco.plot_combinatorial_ellipsoid_projections(best_point['decision_variables'], ellipsoid)
