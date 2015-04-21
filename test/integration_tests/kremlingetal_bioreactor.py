@@ -206,6 +206,20 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
             testmetoo.do_experiment_protocol_setup_0_20_calib_ncr(), baseline, self)
 
 
+    def test_nonlinear_confidence_region_1_low_confidence(self):
+        baseline = {}
+        baseline["number_of_points"] = 81
+        baseline["intervals"] = [ \
+            [1.9918149990245181e-05, 0.00027202677048785735], \
+            [5999903.1790274335, 6000588.7692325944], \
+            [0.00070910862594929702, 0.037986101795423888], \
+            [0.0062924327298415237, 62.924327562777854]]
+        baseline["plotdata"] = dict(replda.plot_data)
+        baseline["plotdata"]["window_title"] = "NCR benchmark model (25%)"
+        woex.test_calibration_with_nonlinear_confidence_region( \
+            testmetoo.do_experiment_protocol_setup_0_20_calib_ncr_low_confidence(), baseline, self)
+        
+
     def test_nonlinear_confidence_region_2(self):
         baseline = {}
         baseline["number_of_points"] = 79
