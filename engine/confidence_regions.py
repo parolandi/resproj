@@ -389,7 +389,8 @@ the estimated variance based on the optimum SSR
 """
 def compute_linearised_confidence_intervals(config, best_point):
     """
-    return list of list (list of intervals)
+    best_point: models.model_data.optimisation_problem_point
+    return: list of list (list of intervals)
     """
     workflow_results = wopr.do_sensitivity_based_workflow_at_solution_point(config, best_point)
     intervals = workflow_results["conf_intvs"]
