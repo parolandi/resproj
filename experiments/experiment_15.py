@@ -21,7 +21,8 @@ class TestExperiment15(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
         super(TestExperiment15, self).__init__(*args, **kwargs)
-        self.do_plotting = True
+        self.do_plotting = False
+        self.do_quick_tests_only = True
         logging.basicConfig(filename=codi.get_name_logging_file(),level=codi.get_logging_level())
 
     
@@ -40,6 +41,8 @@ class TestExperiment15(unittest.TestCase):
 
 
     def test_nonlinear_confidence_region(self):
+        if self.do_quick_tests_only:
+            return
         baseline = {}
         baseline["number_of_points"] = 1
         baseline["intervals"] = [ \
