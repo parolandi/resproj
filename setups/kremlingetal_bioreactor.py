@@ -10,6 +10,7 @@ import models.kremlingetal_bioreactor as mkb
 import models.model_data
 import models.model_data_utils as mmdu
 import setups.setup_data
+import setups.numerics as senu
 import solvers.local_sensitivities
 import solvers.solver_data
 import solvers.solver_utils as sosout
@@ -281,6 +282,10 @@ def do_experiment_setup():
     return config
 
 
+def do_experiment_setup_0_20():
+    return do_experiment_setup()
+    
+
 def do_experiment_setup_0_60():
     config = copy.deepcopy(setups.setup_data.experiment_setup)
     config["algorithm_setup"] = do_algorithm_setup
@@ -332,3 +337,37 @@ def do_problem_setup_twice(model_data, data_instance):
     problem["performance_measure"] = mod.sum_squared_residuals
     return problem
 
+
+# --------------------------------------------------------------------------- #
+
+def do_experiment_protocol_setup_0_20_calib_ncr():
+    protocol = copy.deepcopy(setups.setup_data.experiment_protocol)
+    protocol["steps"] = []
+    setup = do_experiment_setup_0_20()
+    setup["algorithm_setup"] = do_algorithm_setup_using_slsqp_with_positivity
+    protocol["steps"].append(copy.deepcopy(setup))
+    setup["algorithm_setup"] = senu.do_config_mcmiv_100
+    protocol["steps"].append(copy.deepcopy(setup))
+    return protocol
+
+
+def do_experiment_protocol_setup_0_60_calib_ncr():
+    protocol = copy.deepcopy(setups.setup_data.experiment_protocol)
+    protocol["steps"] = []
+    setup = do_experiment_setup_0_60()
+    setup["algorithm_setup"] = do_algorithm_setup_using_slsqp_with_positivity
+    protocol["steps"].append(copy.deepcopy(setup))
+    setup["algorithm_setup"] = senu.do_config_mcmiv_100
+    protocol["steps"].append(copy.deepcopy(setup))
+    return protocol
+
+
+def do_experiment_protocol_setup_0_20_2x_calib_ncr():
+    protocol = copy.deepcopy(setups.setup_data.experiment_protocol)
+    protocol["steps"] = []
+    setup = do_experiment_setup_0_20_twice()
+    setup["algorithm_setup"] = do_algorithm_setup_using_slsqp_with_positivity
+    protocol["steps"].append(copy.deepcopy(setup))
+    setup["algorithm_setup"] = senu.do_config_mcmiv_100
+    protocol["steps"].append(copy.deepcopy(setup))
+    return protocol

@@ -1,5 +1,4 @@
 
-
 '''
 logger: solvers.solver_utilities.DecisionVariableLogger()
 '''
@@ -42,4 +41,11 @@ experiment_setup = {
     "number_of_intervals": 0,
     "data_splicing": None,
     "algorithm_setting": "",
-}
+    }
+
+
+# TODO: this could have a name and a sequence index
+experiment_protocol = {
+    # experiment_setup
+    "protocol_step": [],
+    }

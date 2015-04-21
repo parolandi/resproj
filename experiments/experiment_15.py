@@ -25,12 +25,6 @@ class TestExperiment15(unittest.TestCase):
         logging.basicConfig(filename=codi.get_name_logging_file(),level=codi.get_logging_level())
 
     
-    def do_experiment_setup(self):
-        config = sekrbi.do_experiment_setup_0_60()
-        config["algorithm_setup"] = sekrbi.do_algorithm_setup_using_slsqp_with_positivity
-        return config
-
-    
     def test_calibration_workflow(self):
         baseline = dict(woex.calib_valid_baseline)
         basepoint = baseline["calib"]
@@ -55,7 +49,8 @@ class TestExperiment15(unittest.TestCase):
             [0.00041379366926754218, 2.0432561489154017]]
         baseline["plotdata"] = dict(replda.plot_data)
         baseline["plotdata"]["window_title"] = "NCR benchmark model (95%)"
-        woex.test_calibration_with_nonlinear_confidence_region(self.do_experiment_setup(), baseline, self)
+        woex.test_calibration_with_nonlinear_confidence_region( \
+            sekrbi.do_experiment_protocol_setup_0_60_calib_ncr(), baseline, self)
 
 
 if __name__ == "__main__":

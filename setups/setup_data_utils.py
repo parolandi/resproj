@@ -8,12 +8,25 @@ return:
     protocol
 '''
 def apply_config(config):
-    # setup
     model_instance = config["model_setup"]()
     data_instance = config["data_setup"]()
     problem_instance  = config["problem_setup"](model_instance, data_instance["calib"])
     protocol = config["protocol_setup"]()
     return model_instance, data_instance, problem_instance, protocol
+
+
+def get_model_problem_algorithm(config):
+    """
+    returns
+        model_structure
+        problem_structure
+        algorithm
+    """
+    model_instance = config["model_setup"]()
+    data_instance = config["data_setup"]()
+    problem_instance  = config["problem_setup"](model_instance, data_instance["calib"])
+    algorithm = config["algorithm_setup"](None)
+    return model_instance, problem_instance, algorithm
 
 
 def get_next_protocol_step(config):

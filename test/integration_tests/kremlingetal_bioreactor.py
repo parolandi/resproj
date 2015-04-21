@@ -35,24 +35,6 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
         logging.basicConfig(filename=codi.get_name_logging_file(),level=codi.get_logging_level())
 
     
-    def do_experiment_setup_0_20(self):
-        config = testmetoo.do_experiment_setup()
-        config["algorithm_setup"] = testmetoo.do_algorithm_setup_using_slsqp_with_positivity
-        return config
-
-    
-    def do_experiment_setup_0_20_twice(self):
-        config = testmetoo.do_experiment_setup_0_20_twice()
-        config["algorithm_setup"] = testmetoo.do_algorithm_setup_using_slsqp_with_positivity
-        return config
-
-
-    def do_experiment_setup_0_60(self):
-        config = testmetoo.do_experiment_setup_0_60()
-        config["algorithm_setup"] = testmetoo.do_algorithm_setup_using_slsqp_with_positivity
-        return config
-
-
     def test_simulation_regression(self):
         t = numpy.linspace(0.0, 20.0, 11)
         p = numpy.ones(len(testme.pmap))
@@ -220,7 +202,8 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
             [0.0062924327562778317, 62.924327562777854]]
         baseline["plotdata"] = dict(replda.plot_data)
         baseline["plotdata"]["window_title"] = "NCR benchmark model (95%)"
-        woex.test_calibration_with_nonlinear_confidence_region(self.do_experiment_setup_0_20(), baseline, self)
+        woex.test_calibration_with_nonlinear_confidence_region( \
+            testmetoo.do_experiment_protocol_setup_0_20_calib_ncr(), baseline, self)
 
 
     def test_nonlinear_confidence_region_2(self):
@@ -233,7 +216,8 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
             [19.060985194397745, 190609.85194134654]]
         baseline["plotdata"] = dict(replda.plot_data)
         baseline["plotdata"]["window_title"] = "NCR benchmark model (95%)"
-        woex.test_calibration_with_nonlinear_confidence_region(self.do_experiment_setup_0_20_twice(), baseline, self)
+        woex.test_calibration_with_nonlinear_confidence_region( \
+            testmetoo.do_experiment_protocol_setup_0_20_2x_calib_ncr(), baseline, self)
 
 
     def test_nonlinear_confidence_region_3(self):
@@ -246,7 +230,8 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
             [0.00041379366926754218, 2.0432561489154017]]
         baseline["plotdata"] = dict(replda.plot_data)
         baseline["plotdata"]["window_title"] = "NCR benchmark model (95%)"
-        woex.test_calibration_with_nonlinear_confidence_region(self.do_experiment_setup_0_60(), baseline, self)
+        woex.test_calibration_with_nonlinear_confidence_region( \
+            testmetoo.do_experiment_protocol_setup_0_60_calib_ncr(), baseline, self)
 
 
 if __name__ == "__main__":

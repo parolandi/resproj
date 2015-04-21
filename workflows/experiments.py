@@ -13,7 +13,6 @@ import time
 import engine.confidence_regions as encore
 import engine.diagnostics as endi
 import results.plot_combinatorial as replco
-import solvers.monte_carlo_multiple_initial_value as mcmiv
 
 
 baseline = {
@@ -104,38 +103,40 @@ def test_baseline_calibration_and_validation(setup, baseline, unittester):
 
 
 # TODO: extract to protocol
-def test_calibration_with_nonlinear_confidence_region(config, baseline, unittester):
+def test_calibration_with_nonlinear_confidence_region(protocol, baseline, unittester):
     """
-    config setup_data.experiment_setup
+    protocol setup_data.experiment_protocol
     """
-    best_point = wpr.do_calibration_and_compute_performance_measure(config)
+    # pre-conditions
+    assert(len(protocol["steps"]) == 2)
+    
+    nlr = 0
+    mcs = 1
 
-    # setup
-    algorithm = config["algorithm_setup"](None)
-    model = config["model_setup"]()
-    data = config["data_setup"]()
-    problem  = config["problem_setup"](model, data["calib"])
-    # TODO: hard coded
-    algorithm_mc = dict(mcmiv.montecarlo_multiple_simulation_params)
-    algorithm_mc["number_of_trials"] = 120000*4
-    if True:
-        algorithm_mc["number_of_trials"] = 100
-    # TODO: hard coded
+    # do regression/calibration
+    best_point = wpr.do_calibration_and_compute_performance_measure(protocol["steps"][nlr])
+    
+    # setup nonlin conf reg
+    algorithm_nlr = protocol["steps"][nlr]["algorithm_setup"](None)
+    model, problem, algorithm_mcs = ssdu.get_model_problem_algorithm(protocol["steps"][mcs])
     if True:
         do_appy_bounds(best_point["decision_variables"], problem)
-    
-    logging.info(problem["bounds"])
     
     # do nonlin conf reg
     wall_time0 = time.time()
     actual_intervals, actual_points = encore.compute_nonlinear_confidence_region_intervals_and_points_extremal( \
-        model, problem, algorithm, algorithm_mc, best_point)
+        model, problem, algorithm_nlr, algorithm_mcs, best_point)
     wall_time = time.time() - wall_time0
     number_of_points = len(numpy.transpose(actual_points["objective_function"]))
+
+    # logging
+    logging.info(problem["bounds"])
     logging.info(endi.log_points(actual_points))
     logging.info(endi.log_wall_time(wall_time))
-    logging.info(endi.log_number_of_trials(algorithm_mc["number_of_trials"]))
+    logging.info(endi.log_number_of_trials(algorithm_mcs["number_of_trials"]))
     logging.info(endi.log_number_of_points(number_of_points))
+    
+    # testing
     unittester.assertEquals(number_of_points, baseline["number_of_points"])
     expected = baseline["intervals"]
     [unittester.assertAlmostEquals(act, exp, 8) for act, exp in zip( \
@@ -146,6 +147,7 @@ def test_calibration_with_nonlinear_confidence_region(config, baseline, unittest
         replco.plot_combinatorial_region_projections(numpy.transpose(actual_points["decision_variables"]))
 
 
+# TODO: move out
 def do_appy_bounds(nominal, problem):
     lf = 1E-2
     uf = 1E+2
