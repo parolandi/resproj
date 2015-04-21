@@ -24,7 +24,7 @@ class TestExperiment14(unittest.TestCase):
     def __init__(self, *args, **kwargs):
         super(TestExperiment14, self).__init__(*args, **kwargs)
         self.do_plotting = False
-        self.do_reduced_mc_sample = True
+        self.do_quick_tests_only = True
         logging.basicConfig(filename=codi.get_name_logging_file(),level=codi.get_logging_level())
 
     
@@ -58,6 +58,8 @@ class TestExperiment14(unittest.TestCase):
 
 
     def test_ncr(self):
+        if self.do_quick_tests_only:
+            return
         baseline = {}
         baseline["number_of_points"] = 80
         baseline["intervals"] = [ \
@@ -72,6 +74,8 @@ class TestExperiment14(unittest.TestCase):
 
      
     def test_ncr_low_confidence(self):
+        if self.do_quick_tests_only:
+            return
         baseline = {}
         baseline["number_of_points"] = 81
         baseline["intervals"] = [ \
