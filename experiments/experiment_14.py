@@ -3,14 +3,10 @@ import unittest
 import setups.kremlingetal_bioreactor as sekrbi
 
 import logging
-import numpy
 
 import common.diagnostics as codi
-import engine.confidence_regions as ecr
-import results.plot_combinatorial as replco
 import results.plot_data as replda
 import workflows.experiments as woex
-import workflows.protocols as wopr
 
 
 '''
@@ -40,23 +36,6 @@ class TestExperiment14(unittest.TestCase):
         return config
 
     
-    def do_test_compute_linearised_confidence_region(self, config, baseline):
-        best_point = wopr.do_calibration_and_compute_performance_measure(config)
-        
-        # setup lin conf reg
-        intervals = ecr.compute_linearised_confidence_intervals(config, best_point)
-        expected = baseline["intervals"]
-        [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(numpy.asarray(intervals).flatten(), numpy.asarray(expected).flatten())]
-        ellipsoid = ecr.compute_linearised_confidence_region_ellipsoid(config, best_point)
-        expected = baseline["ellipsoid"]
-        diff = baseline["delta"]
-        [self.assertAlmostEquals(act, exp, delta=eps) for act, exp, eps in zip( \
-            numpy.asarray(ellipsoid).flatten(), numpy.asarray(expected).flatten(), numpy.asarray(diff).flatten())]
-        
-        if self.do_plotting:
-            replco.plot_combinatorial_ellipsoid_projections(best_point['decision_variables'], ellipsoid)        
-
-
     def test_ncr(self):
         if self.do_quick_tests_only:
             return
@@ -108,7 +87,8 @@ class TestExperiment14(unittest.TestCase):
             [  0.00000001e+00,  0.00000001e+12,  0.00000001e+04,  0.00000001e+08]]
         baseline["plotdata"] = dict(replda.plot_data)
         baseline["plotdata"]["window_title"] = "LCR benchmark model (95%)"
-        self.do_test_compute_linearised_confidence_region(self.do_experiment_setup(), baseline)
+        woex.test_calibration_with_linearised_confidence_region( \
+            self.do_experiment_setup(), baseline, self)
 
 
     def test_lcr_low_confidence(self):
@@ -130,7 +110,8 @@ class TestExperiment14(unittest.TestCase):
             [  0.00000001e-01,  0.00000001e+12,  0.00000001e+04,  0.00000001e+07]]
         baseline["plotdata"] = dict(replda.plot_data)
         baseline["plotdata"]["window_title"] = "LCR benchmark model (25%)"
-        self.do_test_compute_linearised_confidence_region(self.do_experiment_setup_with_low_confidence(), baseline)
+        woex.test_calibration_with_linearised_confidence_region( \
+            self.do_experiment_setup_with_low_confidence(), baseline, self)
 
 
 if __name__ == "__main__":
