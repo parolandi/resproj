@@ -101,3 +101,13 @@ def calculate_numberof_degrees_of_freedom(measurements, parameters_to_be_estimat
     n = calculate_number_of_observations(measurements)
     k = len(parameters_to_be_estimated)
     return n - k
+
+
+def get_measurement_template_for_all_experiments(problem):
+    if len(problem["experiments"]) == 0:
+        return numpy.zeros(common.utilities.size_it(problem["outputs"]))
+    else:
+        meas_count = 0
+        for ee in range(len(problem["experiments"])):
+            meas_count += common.utilities.size_it(problem["experiments"][ee]["output_measurements"])
+        return numpy.zeros(meas_count)

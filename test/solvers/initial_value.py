@@ -56,6 +56,16 @@ class TestInitialValueSolvers(unittest.TestCase):
         return model_instance, problem_instance
 
     
+    def do_setup_2p2s_with_forcing_inputs(self):
+        model, problem = self.do_setup_2p2s()
+        forcing_inputs = copy.deepcopy(models.model_data.forcing_function_profile)
+        forcing_inputs["continuous_time_intervals"] = [0, 0.5, 0.9]
+        forcing_inputs["piecewise_constant_inputs"] = [[1, 2], [2, 2]]
+        problem["forcing_inputs"] = forcing_inputs
+        problem["time"] = numpy.linspace(0.0, 1.0, 10, endpoint=False)
+        return model, problem
+
+    
     # returns 10 points from 0.0:0.9 inclusive
     def do_setup_include_initial(self):
         model_instance, problem_instance = self.do_setup()
@@ -216,6 +226,25 @@ class TestInitialValueSolvers(unittest.TestCase):
                 
         actual = solvers.initial_value.evaluate_timecourse_trajectories(model_instance, problem_instance)
         expected = [[0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9],
+                    [1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9]]
+        
+        self.assertTrue(actual.success)
+        [self.assertAlmostEqual(exp, act, 8) for exp, act in zip(expected[0], actual.trajectories[0])]
+        [self.assertAlmostEqual(exp, act, 8) for exp, act in zip(expected[1], actual.trajectories[1])]
+
+
+    def test_evaluate_timecourse_trajectories_with_forcing_inputs(self):
+        model_instance, problem_instance = self.do_setup_2p2s_with_forcing_inputs()
+        model_instance["model"] = linear_2p2s_mock
+        #problem_instance["time"] = numpy.linspace(0.0, 1.0, 10, endpoint=False)
+        
+        # avoid false negatives
+        model_instance["states"] = numpy.multiply(problem_instance["initial_conditions"], 1.1)
+        problem_instance["parameters"] = numpy.multiply(problem_instance["parameters"], 1.1)
+        problem_instance["inputs"] = numpy.multiply(problem_instance["inputs"], 1.1)
+                
+        actual = solvers.initial_value.evaluate_timecourse_trajectories(model_instance, problem_instance)
+        expected = [[0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.7, 0.9, 1.1, 1.3],
                     [1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9]]
         
         self.assertTrue(actual.success)

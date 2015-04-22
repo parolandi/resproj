@@ -40,7 +40,8 @@ def do_calibration_and_compute_performance_measure(config):
     for ii in range(len(problem_instance["parameter_indices"])):
         model_instance["parameters"][problem_instance["parameter_indices"][ii]] = copy.deepcopy(result.x[ii])
 
-    ssr_fit = problem_instance["performance_measure"](None, None, model_instance, problem_instance)
+    # WIP 2015-04-16
+    ssr_fit = problem_instance["performance_measure"](None, model_instance, problem_instance)
 
     calib_sol = dict(mmd.optimisation_problem_point)
     calib_sol["decision_variables"] = numpy.asarray(copy.deepcopy(problem_instance["parameters"]))
@@ -61,7 +62,7 @@ def do_validation_and_compute_performance_measure_at_solution_point(config, solu
     for ii in range(len(problem_instance["parameter_indices"])):
         model_instance["parameters"][problem_instance["parameter_indices"][ii]] = copy.deepcopy(solution_point["decision_variables"][ii])
 
-    ssr_fit = problem_instance["performance_measure"](None, None, model_instance, problem_instance)
+    ssr_fit = problem_instance["performance_measure"](None, model_instance, problem_instance)
 
     valid_sol = copy.deepcopy(solution_point)
     valid_sol["objective_function"] = ssr_fit
@@ -96,10 +97,12 @@ def do_basic_workflow_at_solution_point(config, solution_point):
     mmdu.apply_decision_variables_to_parameters(solution_point, model_instance, problem_instance)
     
     assert(problem_instance["performance_measure"] is protocol["performance_measure"])
-    assert(problem_instance["performance_measure"] is mod.sum_squared_residuals_st)
+    # WIP 2015-04-16
+    #assert(problem_instance["performance_measure"] is mod.sum_squared_residuals_st)
 
     # objective function
-    sum_sq_res = mod.sum_squared_residuals_st(None, None, model_instance, problem_instance)
+    # WIP 2015-04-16
+    sum_sq_res = problem_instance["performance_measure"](None, model_instance, problem_instance)
 
     # objective-function contributions
     sums_sq_res = mod.sums_squared_residuals(None, None, model_instance, problem_instance)

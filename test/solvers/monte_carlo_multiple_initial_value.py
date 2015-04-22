@@ -1,22 +1,12 @@
 
 import unittest
 import solvers.monte_carlo_multiple_initial_value as testme
+import test.mock.mock as temomo
 
 import numpy
-import models.model_data as mmd
 import solvers.initial_value as siv
-import metrics.ordinary_differential as meod
 import data.generator as dg
 import results.plot_tiles as rpt
-
-
-def linear_2p2s_mock(x, t, p, u):
-    assert(len(x) == 2)
-    assert(len(p) == 2)
-    assert(len(u) == 2)
-    
-    dx_dt = p * u - x
-    return dx_dt
 
 
 class TestMonteCarloMultipleInitiaValue(unittest.TestCase):
@@ -28,21 +18,7 @@ class TestMonteCarloMultipleInitiaValue(unittest.TestCase):
         stdev = 0.2
         
         times = numpy.arange(0.0, final_time, final_time / intervals)
-        
-        model_instance = dict(mmd.model_structure)
-        model_instance["model"] = linear_2p2s_mock
-        model_instance["parameters"] = numpy.array([1.0, 2.0])
-        model_instance["inputs"] = numpy.array([1.0, 2.0])
-        model_instance["states"] = numpy.array([10.0, 8.0])
-        model_instance["time"] = 0.0
-        
-        problem_instance = dict(mmd.problem_structure)
-        problem_instance["initial_conditions"] = numpy.array([10.0, 8.0])
-        problem_instance["time"] = times
-        problem_instance["parameters"] = numpy.array([1.0, 2.0])
-        problem_instance["parameter_indices"] = numpy.array([0, 1])
-        problem_instance["inputs"] = numpy.array([1.0, 2.0])
-        problem_instance["performance_measure"] = meod.sum_squared_residuals_st
+        model_instance, problem_instance = temomo.do_setup(times)
 
         trajs = siv.compute_timecourse_trajectories( \
             None, model_instance, problem_instance)

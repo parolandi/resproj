@@ -31,12 +31,6 @@ class TestExperiment11(unittest.TestCase):
         return skb.do_experiment_setup()
 
 
-    def do_experiment_setup_with_exclude(self):
-        config = self.do_experiment_setup()
-        config["problem_setup"] = skb.do_problem_setup_with_exclude_with_covariance_2
-        return config
-
-    
     def do_algorithm_setup(self):
         algorithm = dict(smiv.montecarlo_multiple_simulation_params)
         nominals = [7.23232059e-05, 6.00000000e+06, 1.67959956e-02, 1.00866368e-02]

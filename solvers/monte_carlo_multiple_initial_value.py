@@ -1,6 +1,7 @@
 
 from __future__ import print_function
 import copy
+import logging
 import numpy
 import time
 
@@ -91,7 +92,7 @@ def montecarlo_multiple_initial_value(model, problem, algorithm):
     """
     assert(model["model"] is not None)
     assert(problem["performance_measure"] is not None)
-    assert(problem["performance_measure"] is mod.sum_squared_residuals_st)
+    assert(problem["performance_measure"] is mod.sum_squared_residuals)
     dv_count = len(problem["parameter_indices"])
     assert(len(algorithm["decision_variable_ranges"]) == dv_count)
     # TODO: preconditions!
@@ -111,13 +112,15 @@ def montecarlo_multiple_initial_value(model, problem, algorithm):
         if trial_result.success:
             success["decision_variables"].append(param_vals)
             success["trajectories"].append(trial_result.trajectories)
-            obj = mod.sum_squared_residuals_st(param_vals, None, model, problem)
+            obj = problem["performance_measure"](param_vals, model, problem)
             success["objective_function"].append(obj)
         if not trial_result.success:
             failure["decision_variables"].append(param_vals)
             failure["trajectories"].append(trial_result.trajectories)
             failure["objective_function"].append(inf_obj_func)
 
+    logging.info("decision variables")
+    logging.info(success["decision_variables"])
     result = dict(montecarlo_multiple_simulation_result)
     result["succeeded"]["decision_variables"] = numpy.asarray(success["decision_variables"])
     result["succeeded"]["trajectories"] = numpy.asarray(success["trajectories"])

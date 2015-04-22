@@ -3,9 +3,11 @@ import unittest
 import engine.confidence_regions as testme
 
 import copy
+import logging
 import numpy
 import scipy.stats
 
+import common.diagnostics as codi
 import results.plot as repl
 import setups.ordinary_differential as sod
 import setups.setup_data as seseda
@@ -22,6 +24,7 @@ class TestConfidenceRegions(unittest.TestCase):
     def __init__(self, *args, **kwargs):
         super(TestConfidenceRegions, self).__init__(*args, **kwargs)
         self.do_plotting = False
+        logging.basicConfig(filename=codi.get_name_logging_file(), level=codi.get_logging_level())
 
     
     def do_experiment_setup_lin(self):
@@ -80,7 +83,7 @@ class TestConfidenceRegions(unittest.TestCase):
         ssr_threshold = testme.compute_f_constraint(ssr, numpy.ones(no_meas), no_params, 1-alpha)
         self.assertAlmostEquals(ssr + est_var * no_params * scipy.stats.f.isf(alpha, no_params, no_meas - no_params), ssr_threshold, 8)
     
-    
+
     def test_compute_nonlinear_confidence_interval_lin(self):
         model, problem, algorithm = self.do_setup_lin()
         actual = testme.compute_nonlinear_confidence_interval(model, problem, algorithm, 0)
@@ -196,7 +199,7 @@ class TestConfidenceRegions(unittest.TestCase):
     '''---------------------------------------------------------------------'''
     
     # mock
-    def do_confidence_region_performance_measure(self, dummy1, dummy2, model, problem):
+    def do_confidence_region_performance_measure(self, dummy, model, problem):
         param = numpy.asarray(problem["parameters"])
         measure = numpy.dot(param, param)
         return measure
@@ -242,7 +245,7 @@ class TestConfidenceRegions(unittest.TestCase):
     def test_compute_nonlinear_confidence_hyperrectangle_extremal_lin(self):
         model, problem, algorithm = self.do_setup_lin()
         algorithm["initial_guesses"] = numpy.asarray([1.0, 2.0])
-        problem["confidence_region"]["performance_measure"] = meordi.sum_squared_residuals_st
+        problem["confidence_region"]["performance_measure"] = meordi.sum_squared_residuals
         problem["parameters"] = [(1.01338741+1.59365765)/2, (2.0040739383273261+2.4877075291690458)/2]
         algorithm["initial_guesses"] = problem["parameters"]
         actual = numpy.asarray(testme.compute_nonlinear_confidence_hyperrectangle_extremal(model, problem, algorithm))
@@ -254,7 +257,7 @@ class TestConfidenceRegions(unittest.TestCase):
     def test_compute_nonlinear_confidence_hyperrectangle_extremal_nonlin_in_params(self):
         model, problem, algorithm = self.do_setup_nonlin_in_params()
         algorithm["initial_guesses"] = numpy.asarray([1.0, 2.0])
-        problem["confidence_region"]["performance_measure"] = meordi.sum_squared_residuals_st
+        problem["confidence_region"]["performance_measure"] = meordi.sum_squared_residuals
         problem["parameters"] = [(1.0017616818394601+1.2653734258285729)/2, (2.0040739383273261+2.4877075291690458)/2]
         algorithm["initial_guesses"] = problem["parameters"]
         actual = numpy.asarray(testme.compute_nonlinear_confidence_hyperrectangle_extremal(model, problem, algorithm))
@@ -266,7 +269,7 @@ class TestConfidenceRegions(unittest.TestCase):
     def test_compute_nonlinear_confidence_hyperrectangle_extremal_nonlin_in_params_w_bounds_mod(self):
         model, problem, algorithm = self.do_setup_nonlin_in_params()
         algorithm["initial_guesses"] = numpy.asarray([1.0, 2.0])
-        problem["confidence_region"]["performance_measure"] = meordi.sum_squared_residuals_st
+        problem["confidence_region"]["performance_measure"] = meordi.sum_squared_residuals
         problem["parameters"] = [(1.0017616818394601+1.2653734258285729)/2, (2.0040739383273261+2.4877075291690458)/2]
         problem["bounds"] = [(0,10), (0,10)]
         algorithm["initial_guesses"] = problem["parameters"]
@@ -279,7 +282,7 @@ class TestConfidenceRegions(unittest.TestCase):
     def test_compute_nonlinear_confidence_hyperrectangle_extremal_lin_pseudo_bounded(self):
         model, problem, algorithm = self.do_setup_lin()
         algorithm["initial_guesses"] = numpy.asarray([1.0, 2.0])
-        problem["confidence_region"]["performance_measure"] = meordi.sum_squared_residuals_st
+        problem["confidence_region"]["performance_measure"] = meordi.sum_squared_residuals
         point = [(1.01338741+1.59365765)/2, (2.0040739383273261+2.4877075291690458)/2]
         problem["parameters"] = point
         algorithm["initial_guesses"] = problem["parameters"]
@@ -288,6 +291,40 @@ class TestConfidenceRegions(unittest.TestCase):
         actual = numpy.asarray(testme.compute_nonlinear_confidence_hyperrectangle_extremal(model, problem, algorithm))
         expected = numpy.asarray(bounded)
         [self.assertAlmostEquals(act, exp, 12) for act, exp in zip(actual.flatten(), expected.flatten())]
+
+
+    def do_setup_nonlin_in_params_twice(self):
+        algorithm = self.do_algorithm_setup()
+        data = sod.do_data_setup_nonlin_in_params_spliced_111111_without_covariance()
+        model = sod.do_model_setup_nonlin_in_params()
+        problem = sod.do_problem_setup_without_covariance(model, data["calib"])
+        problem["confidence_region"]["ssr"] = 43
+        
+        experiment = {}
+    
+        experiment["initial_condition_measurements"] = copy.deepcopy(problem["initial_conditions"])
+        experiment["time"] = copy.deepcopy(problem["time"])
+        experiment["input_measurements"] = copy.deepcopy(problem["inputs"])
+        experiment["output_measurements"] = copy.deepcopy(problem["outputs"])
+    
+        problem["experiments"] = []
+        problem["experiments"].append(experiment)
+        problem["experiments"].append(experiment)
+
+        return model, problem, algorithm
+
+
+    def test_compute_nonlinear_confidence_hyperrectangle_extremal_nonlin_in_params_twice(self):
+        logging.basicConfig(filename=codi.get_name_logging_file(), level=codi.get_logging_level())
+        model, problem, algorithm = self.do_setup_nonlin_in_params_twice()
+        algorithm["initial_guesses"] = numpy.asarray([1.0, 2.0])
+        problem["confidence_region"]["performance_measure"] = meordi.sum_squared_residuals
+        problem["parameters"] = [(1.0017616818394601+1.2653734258285729)/2, (2.0040739383273261+2.4877075291690458)/2]
+        algorithm["initial_guesses"] = problem["parameters"]
+        actual = numpy.asarray(testme.compute_nonlinear_confidence_hyperrectangle_extremal(model, problem, algorithm))
+        expected = numpy.asarray( \
+            [[[ 1.13356755,  1.30357129], [ 1.72284648,  2.24589073]]])
+        [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(actual.flatten(), expected.flatten())]
 
 
 if __name__ == "__main__":

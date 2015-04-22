@@ -6,6 +6,13 @@ import workflows.protocols as wpr
 import workflows.workflow_data_utils as wwdu
 
 import copy
+import logging
+import numpy
+import time
+
+import engine.confidence_regions as encore
+import engine.diagnostics as endi
+import results.plot_combinatorial as replco
 
 
 baseline = {
@@ -93,3 +100,79 @@ def test_baseline_calibration_and_validation(setup, baseline, unittester):
     calibrated = test_baseline_calibration(setup, baseline["calib"], unittester)
     test_baseline_validation(setup, baseline["valid"], unittester, calibrated)
     return calibrated
+
+
+# TODO: extract to protocol
+def test_calibration_with_nonlinear_confidence_region(protocol, baseline, unittester):
+    """
+    protocol setup_data.experiment_protocol
+    """
+    # pre-conditions
+    assert(len(protocol["steps"]) == 2)
+    
+    nlr = 0
+    mcs = 1
+
+    # do regression/calibration
+    best_point = wpr.do_calibration_and_compute_performance_measure(protocol["steps"][nlr])
+    
+    # setup nonlin conf reg
+    algorithm_nlr = protocol["steps"][nlr]["algorithm_setup"](None)
+    model, problem, algorithm_mcs = ssdu.get_model_problem_algorithm(protocol["steps"][mcs])
+    if True:
+        do_appy_bounds(best_point["decision_variables"], problem)
+    
+    # do nonlin conf reg
+    wall_time0 = time.time()
+    actual_intervals, actual_points = encore.compute_nonlinear_confidence_region_intervals_and_points_extremal( \
+        model, problem, algorithm_nlr, algorithm_mcs, best_point)
+    wall_time = time.time() - wall_time0
+    number_of_points = len(numpy.transpose(actual_points["objective_function"]))
+
+    # logging
+    logging.info(problem["bounds"])
+    logging.info(endi.log_points(actual_points))
+    logging.info(endi.log_wall_time(wall_time))
+    logging.info(endi.log_number_of_trials(algorithm_mcs["number_of_trials"]))
+    logging.info(endi.log_number_of_points(number_of_points))
+    
+    # testing
+    expected = baseline["intervals"]
+    [unittester.assertAlmostEquals(act, exp, 8) for act, exp in zip( \
+        numpy.asarray(actual_intervals).flatten(), numpy.asarray(expected).flatten())]
+    unittester.assertEquals(number_of_points, baseline["number_of_points"])
+    
+    # plot nonlin conf reg
+    if protocol["steps"][mcs]["local_setup"]["do_plotting"]:
+        replco.plot_combinatorial_region_projections(numpy.transpose(actual_points["decision_variables"]))
+
+
+# TODO: move out
+def do_appy_bounds(nominal, problem):
+    lf = 1E-2
+    uf = 1E+2
+    problem["bounds"] = [ \
+        (nominal[0]*lf,nominal[0]*uf), \
+        (nominal[1]*lf,nominal[1]*uf), \
+        (nominal[2]*lf,nominal[2]*uf), \
+        (nominal[3]*lf,nominal[3]*uf)]
+
+
+def test_calibration_with_linearised_confidence_region(config, baseline, unittester):
+    best_point = wpr.do_calibration_and_compute_performance_measure(config)
+    
+    # intervals and ellipsoid
+    intervals = encore.compute_linearised_confidence_intervals(config, best_point)
+    ellipsoid = encore.compute_linearised_confidence_region_ellipsoid(config, best_point)
+
+    # testing
+    expected = baseline["intervals"]
+    [unittester.assertAlmostEquals(act, exp, 8) for act, exp in zip(numpy.asarray(intervals).flatten(), numpy.asarray(expected).flatten())]
+    expected = baseline["ellipsoid"]
+    diff = baseline["delta"]
+    [unittester.assertAlmostEquals(act, exp, delta=eps) for act, exp, eps in zip( \
+        numpy.asarray(ellipsoid).flatten(), numpy.asarray(expected).flatten(), numpy.asarray(diff).flatten())]
+    
+    # plot lin conf reg
+    if config["local_setup"]["do_plotting"]:
+        replco.plot_combinatorial_ellipsoid_projections(best_point['decision_variables'], ellipsoid)

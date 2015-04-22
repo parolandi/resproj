@@ -5,6 +5,7 @@ import numpy
 import time
 
 import common.diagnostics as codi
+import engine.diagnostics as endi
 import engine.statistical_inference as enstin
 import metrics.statistical_tests as mst
 import models.model_data_utils as mmdu
@@ -101,7 +102,7 @@ def compute_nonlinear_confidence_intervals(model, problem, algorithm, best_point
     mmdu.apply_decision_variables_to_parameters(best_point, model, problem)
     ssr = compute_f_constraint( \
         best_point["objective_function"],
-        problem["outputs"],
+        mmdu.get_measurement_template_for_all_experiments(problem),
         len(problem["parameter_indices"]),
         problem["confidence_region"]["confidence"])
     problem["confidence_region"]["ssr"] = ssr
@@ -117,15 +118,18 @@ def compute_nonlinear_confidence_intervals_extremal(model, problem, algorithm, b
     mmdu.apply_decision_variables_to_parameters(best_point, model, problem)
     ssr = compute_f_constraint( \
         best_point["objective_function"],
-        problem["outputs"],
+        mmdu.get_measurement_template_for_all_experiments(problem),
         len(problem["parameter_indices"]),
         problem["confidence_region"]["confidence"])
     problem["confidence_region"]["ssr"] = ssr
 
     hyperrectangle, statuses = compute_nonlinear_confidence_hyperrectangle_extremal(model, problem, algorithm)
     wall_time = time.time() - wall_time0
-    #logging.basicConfig(filename=codi.get_name_logging_file(), level=codi.get_logging_level())
-    logging.info(wall_time)
+
+    logging.info(endi.log_ssr(ssr))
+    logging.info(hyperrectangle)
+    logging.info(statuses)
+    logging.info(endi.log_wall_time(wall_time))
     return hyperrectangle, statuses
 
 
@@ -277,7 +281,7 @@ def likelihood_constraint(x, model_data, problem_data, ssr_0):
     assert(problem_data["confidence_region"]["performance_measure"] is not None)
 
     mmdu.apply_values_to_parameters(x, model_data, problem_data)
-    ssr = problem_data["confidence_region"]["performance_measure"](None, None, model_data, problem_data)
+    ssr = problem_data["confidence_region"]["performance_measure"](None, model_data, problem_data)
     return ssr_0 - ssr
 
 
@@ -351,6 +355,7 @@ def compute_chisquared_constraint(ssr0, observations, confidence):
     return ssr
 
 
+# TODO: should one ideally extract the calculate number of observations?
 def compute_f_constraint(ssr0, observations, no_params, confidence):
     no_meas = mmdu.calculate_number_of_observations(observations)
     f_value = enstin.compute_one_sided_f_value(confidence, no_meas, no_params)
@@ -384,7 +389,8 @@ the estimated variance based on the optimum SSR
 """
 def compute_linearised_confidence_intervals(config, best_point):
     """
-    return list of list (list of intervals)
+    best_point: models.model_data.optimisation_problem_point
+    return: list of list (list of intervals)
     """
     workflow_results = wopr.do_sensitivity_based_workflow_at_solution_point(config, best_point)
     intervals = workflow_results["conf_intvs"]

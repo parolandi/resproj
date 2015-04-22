@@ -26,6 +26,7 @@ class TestExperiment06(unittest.TestCase):
         self.do_plotting = False
     
     
+    # TODO: reuse
     def do_experiment_setup(self):
         config = copy.deepcopy(ssd.experiment_setup)
         config["algorithm_setup"] = skb.do_algorithm_setup

@@ -66,8 +66,8 @@ def do_base_problem_setup(model_data, data_instance):
     problem_data["parameters"] = copy.deepcopy(model_data["parameters"])
     problem_data["inputs"] = copy.deepcopy(model_data["inputs"])
 
-    problem_data["performance_measure"] = mod.sum_squared_residuals_st
-    problem_data["confidence_region"]["performance_measure"] = mod.sum_squared_residuals_st
+    problem_data["performance_measure"] = mod.sum_squared_residuals
+    problem_data["confidence_region"]["performance_measure"] = mod.sum_squared_residuals
     problem_data["parameter_indices"] = numpy.array([0, 1])
     problem_data["parameters"] = numpy.zeros(len(problem_data["parameter_indices"]))
     
@@ -89,6 +89,27 @@ def do_base_problem_setup(model_data, data_instance):
 
 def do_problem_setup_without_covariance(model_data, data_instance):
     return do_base_problem_setup(model_data, data_instance)
+
+
+def do_problem_setup_without_covariance_twice(model_data, data_instance):
+    problem = do_base_problem_setup(model_data, data_instance)
+    
+    experiment = {}
+
+    experiment["initial_condition_measurements"] = copy.deepcopy(problem["initial_conditions"])
+    experiment["time"] = copy.deepcopy(problem["time"])
+    experiment["input_measurements"] = copy.deepcopy(problem["inputs"])
+    experiment["output_measurements"] = copy.deepcopy(problem["outputs"])
+
+    print(experiment)
+
+    problem["experiments"] = []
+    problem["experiments"].append(experiment)
+    problem["experiments"].append(experiment)
+    
+    problem["performance_measure"] = mod.sum_squared_residuals
+
+    return problem
 
 
 def do_problem_setup_with_covariance(model_data, data_instance):
@@ -142,7 +163,7 @@ def do_sensitivity_problem_setup(model_data, data_instance):
 # -----------------------------------------------------------------------------
 
 #TODO: this could be config
-#TOFO: timecourse_simulation
+#TODO: timecourse_simulation
 def do_abstract_data_setup(model, problem, covariance_trace):
     """
     return list (of trajectory data)
@@ -269,5 +290,5 @@ def do_instrumentation_setup():
 
 def do_protocol_setup():
     protocol_data = dict(wpd.protocol_data)
-    protocol_data["performance_measure"] = mod.sum_squared_residuals_st
+    protocol_data["performance_measure"] = mod.sum_squared_residuals
     return protocol_data

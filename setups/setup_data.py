@@ -1,5 +1,4 @@
 
-
 '''
 logger: solvers.solver_utilities.DecisionVariableLogger()
 '''
@@ -11,6 +10,11 @@ instrumentation_data = {
 protocol_step_data = {
     "calib": ("donot", "do", "done"),
     "valid": ("donot", "do", "done"),
+    }
+
+
+local_data = {
+    "do_plotting": True, 
     }
 
 
@@ -42,4 +46,12 @@ experiment_setup = {
     "number_of_intervals": 0,
     "data_splicing": None,
     "algorithm_setting": "",
-}
+    "local_setup": dict(local_data),
+    }
+
+
+# TODO: this could have a name and a sequence index
+experiment_protocol = {
+    # experiment_setup
+    "protocol_step": [],
+    }
