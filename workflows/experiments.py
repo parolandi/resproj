@@ -137,10 +137,10 @@ def test_calibration_with_nonlinear_confidence_region(protocol, baseline, unitte
     logging.info(endi.log_number_of_points(number_of_points))
     
     # testing
-    unittester.assertEquals(number_of_points, baseline["number_of_points"])
     expected = baseline["intervals"]
     [unittester.assertAlmostEquals(act, exp, 8) for act, exp in zip( \
         numpy.asarray(actual_intervals).flatten(), numpy.asarray(expected).flatten())]
+    unittester.assertEquals(number_of_points, baseline["number_of_points"])
     
     # plot nonlin conf reg
     if protocol["steps"][mcs]["local_setup"]["do_plotting"]:
