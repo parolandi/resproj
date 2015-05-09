@@ -315,7 +315,6 @@ class TestConfidenceRegions(unittest.TestCase):
 
 
     def test_compute_nonlinear_confidence_hyperrectangle_extremal_nonlin_in_params_twice(self):
-        logging.basicConfig(filename=codi.get_name_logging_file(), level=codi.get_logging_level())
         model, problem, algorithm = self.do_setup_nonlin_in_params_twice()
         algorithm["initial_guesses"] = numpy.asarray([1.0, 2.0])
         problem["confidence_region"]["performance_measure"] = meordi.sum_squared_residuals
