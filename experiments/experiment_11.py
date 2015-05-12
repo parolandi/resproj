@@ -10,6 +10,7 @@ import common.utilities as cu
 import data.generator as dg
 import results.plot_tiles as rpt
 import results.plot as rpl
+import setups.setup_data_utils as sesedaut
 import solvers.monte_carlo_multiple_initial_value as smiv
 
 
@@ -24,11 +25,11 @@ class TestExperiment11(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
         super(TestExperiment11, self).__init__(*args, **kwargs)
-        self.do_plotting = False
+        self.do_plotting = True
 
     
     def do_experiment_setup(self):
-        return skb.do_experiment_setup()
+        return skb.do_experiment_setup_0_60()
 
 
     def do_algorithm_setup(self):
@@ -47,12 +48,9 @@ class TestExperiment11(unittest.TestCase):
 
     
     def test_prediction_uncertainty(self):
-        config = self.do_experiment_setup()
         no_volume = 1
 
-        model = config["model_setup"]()
-        data = config["data_setup"]()
-        problem = config["problem_setup"](model, data["calib"])
+        model, data, problem, _ = sesedaut.get_model_data_problem_algorithm(self.do_experiment_setup())
         algorithm = self.do_algorithm_setup()
 
         wall_time0 = time.time()
@@ -61,17 +59,17 @@ class TestExperiment11(unittest.TestCase):
         cd.print_wall_time_message(wall_time)
         ensembles = result["succeeded"]["trajectories"][:,no_volume:,:]
         
-        expected = numpy.ones(ensembles.shape[1])
         actual = cu.get_maximum_absolute_ensemble_values(ensembles)
-        [self.assertAlmostEqual(act, exp, 8) for act, exp in zip(actual.flatten(), expected.flatten())]
+        self.assertAlmostEqual(actual[0,2], 0.44510079, 8)
+        self.assertAlmostEqual(actual[99,30], 1.50490147, 8)
 
         if self.do_plotting:     
             plot_config = {}
             plot_config["output_names"] = skb.do_labels()[no_volume:]
             errors, _ = dg.compute_measurement_errors(problem, data)
             rpt.plot_ensemble_trajectories(problem["time"], ensembles, problem["outputs"], errors, plot_config)
-            rpt.show_all()
             rpl.plot_histogram_cutoff_by_count(result["succeeded"]["objective_function"], 20, 3)
+            rpt.show_all()
 
 
 if __name__ == "__main__":
