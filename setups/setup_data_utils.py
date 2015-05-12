@@ -1,18 +1,37 @@
 
-'''
-Produce data that result from config values
-return:
-    model_instance
-    data_instance
-    problem_instance
-    protocol
-'''
+'''Legacy'''
 def apply_config(config):
     model_instance = config["model_setup"]()
     data_instance = config["data_setup"]()
     problem_instance  = config["problem_setup"](model_instance, data_instance["calib"])
     protocol = config["protocol_setup"]()
     return model_instance, data_instance, problem_instance, protocol
+
+
+def get_model_data_problem_protocol(config):
+    """
+    Produce data that result from config values
+    return:
+        model_instance
+        data_instance
+        problem_instance
+        protocol
+    """
+    return apply_config(config)
+
+
+def get_model_data_problem_algorithm(config):
+    """
+    Produce data that result from config values
+    return:
+        model_instance
+        data_instance
+        problem_instance
+        algorithm_instance
+    """
+    model, data, problem, _ = apply_config(config)
+    _, _, algorithm = get_model_problem_algorithm(config)
+    return model, data, problem, algorithm
 
 
 def get_model_problem_algorithm(config):
