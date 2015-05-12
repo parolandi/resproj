@@ -67,4 +67,4 @@ def get_maximum_absolute_sensitivity_value(sensitivity_trajectories, dim_states,
 def get_maximum_absolute_ensemble_values(ensembles):
     assert(len(ensembles) > 0)
     max_ensn = numpy.max(numpy.abs(ensembles), axis=1)
-    return numpy.ones(ensembles.shape[1])
+    return max_ensn
