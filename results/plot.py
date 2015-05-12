@@ -227,9 +227,9 @@ def plot_observation_ensembles(independent,  measurements):
 
 
 def plot_histogram_cutoff_by_count(data, bins, count):
+    pp.figure()
     cutoff_data = dnp.cutoff_tail_by_count(data, count)
     pp.hist(cutoff_data, bins = bins)
-    pp.show()
 
 
 def plot_scatter(x, y, plot_data):

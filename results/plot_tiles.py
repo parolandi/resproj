@@ -189,4 +189,3 @@ def plot_ensemble_trajectories(independent, ensembles, measurements, errors, plo
             rp.plot_ensemble_trajectories(independent, ensembles[:,ii,:], measurements[ii], errors[ii], plot_data)
         else:
             rp.plot_ensemble_trajectories(independent, ensembles[:,ii,:], measurements, errors, plot_data)
-    fig.show()
