@@ -14,7 +14,8 @@ import workflows.reporting as wore
 '''
 Kremling bioreactor
 Multi-stage experiment 0-60hr interval
-TODO
+Calibration
+Nonlinear confidence region
 '''
 class TestExperiment15(unittest.TestCase):
 

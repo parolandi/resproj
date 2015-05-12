@@ -13,6 +13,7 @@ import workflows.reporting as wr
 '''
 Splicing at 000111
 Covariance trace ~10%
+0-20hr interval
 '''
 class TestExperiment09(unittest.TestCase):
 

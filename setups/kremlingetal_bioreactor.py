@@ -268,7 +268,7 @@ def do_protocol_setup():
 
 # --------------------------------------------------------------------------- #
 
-def do_experiment_setup():
+def do_experiment_setup_base():
     config = copy.deepcopy(setups.setup_data.experiment_setup)
     config["algorithm_setup"] = do_algorithm_setup
     config["data_setup"] = do_get_published_data_spliced_111111
@@ -283,7 +283,7 @@ def do_experiment_setup():
 
 
 def do_experiment_setup_0_20():
-    return do_experiment_setup()
+    return do_experiment_setup_base()
     
 
 def do_experiment_setup_0_60():
