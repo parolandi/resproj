@@ -54,6 +54,8 @@ def do_model_setup_model_B():
     return do_model_setup("modelB")
 
 
+# --------------------------------------------------------------------------- #
+
 def do_get_published_data_0_20():
     # TODO: handle gracefully
     published_data = open("C:/documents/resproj/bench/data_time_0_20.txt", 'r')
@@ -93,6 +95,14 @@ def do_get_published_data_0_60_spliced_111111():
     spliced_trajectories = deds.splice_raw_data_with_pattern_111111(trajectories_without_V)
     return spliced_trajectories
 
+
+def do_get_published_data_0_60_spliced_yesyesno():
+    trajectories_without_V = do_get_published_data_0_60()
+    spliced_trajectories = deds.splice_raw_data_with_pattern_multistage_yesyesno(trajectories_without_V)
+    return spliced_trajectories
+
+
+# --------------------------------------------------------------------------- #
 
 def do_base_problem_setup(model_data, data_instance):
     """
@@ -299,6 +309,12 @@ def do_experiment_setup_0_60():
     config["sensitivity_setup"] = do_sensitivity_setup()
     return config
 
+
+def do_experiment_setup_0_60_spliced_yesyesno():
+    config = do_experiment_setup_0_60()
+    config["data_setup"] = do_get_published_data_0_60_spliced_yesyesno
+    return config
+    
 
 def do_experiment_setup_0_20_twice():
     config = copy.deepcopy(setups.setup_data.experiment_setup)
