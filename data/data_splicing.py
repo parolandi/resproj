@@ -172,3 +172,56 @@ def splice_data_with_pattern_011011(times, meas, noise, true):
         splice_data_with_pattern_011011_get_zeros, times, meas, noise, true)
     datasets["id"] = format_dataset_id("011011", str(len(times)))
     return datasets
+
+
+def convert_mask_to_index_expression(mask):
+    end = 0
+    slices = []
+    for ii in range(len(mask)):
+        start = end
+        end = mask[ii]
+        slc = slice(start, end, 1)
+        slices.append(slc)
+    start = end
+    slc = slice(start, None, 1)
+    slices.append(slc)
+    return tuple(slices)
+
+
+def splice_data_with_pattern_any_get_ones(mask, values):
+    slices = convert_mask_to_index_expression(mask)
+    slcs = []
+    for ii in range(0, len(slices), 2):
+        slcs.append(values[slices[ii]])
+    ones = slcs[0]
+    for ii in range(1, len(slcs)):
+        ones = numpy.concatenate((ones, slcs[ii]))
+    return ones
+
+
+def splice_data_with_pattern_any_get_zeros(mask, values):
+    slices = convert_mask_to_index_expression(mask)
+    slcs = []
+    for ii in range(1, len(slices), 2):
+        slcs.append(values[slices[ii]])
+    zeros = slcs[0]
+    for ii in range(1, len(slcs)):
+        zeros = numpy.concatenate((zeros, slcs[ii]))
+    return zeros
+
+def splice_data_with_pattern_any(mask, times, meas, noise, true):
+    """
+    """
+    datasets = dict(calib_valid_data)
+    datasets["id"] = format_dataset_id("any", str(len(times)))
+    calib_meas = []
+    for ii in range(len(meas)):
+        calib_meas.append(splice_data_with_pattern_any_get_ones(mask, meas[ii]))
+    datasets["calib"]["meas"] = calib_meas
+    datasets["calib"]["time"] = splice_data_with_pattern_any_get_ones(mask, times)
+    valid_meas = []
+    for ii in range(len(meas)):
+        valid_meas.append(splice_data_with_pattern_any_get_zeros(mask, meas[ii]))
+    datasets["valid"]["meas"] = valid_meas
+    datasets["valid"]["time"] = splice_data_with_pattern_any_get_zeros(mask, times)
+    return datasets
