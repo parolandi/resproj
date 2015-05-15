@@ -12,7 +12,7 @@ import models.model_data_utils as mmdu
 import setups.setup_data
 import setups.numerics as senu
 import solvers.local_sensitivities
-import solvers.solver_data
+import solvers.solver_data as sosoda
 import solvers.solver_utils as sosout
 
 
@@ -52,7 +52,6 @@ def do_model_setup_model_A():
 
 def do_model_setup_model_B():
     return do_model_setup("modelB")
-
 
 # --------------------------------------------------------------------------- #
 
@@ -195,6 +194,7 @@ def do_problem_setup_with_exclude_with_covariance_2(model_data, data_instance):
     mmdu.check_correctness_of_measurements_covariance_matrix(problem_data)
     return problem_data
 
+# --------------------------------------------------------------------------- #
 
 def do_sensitivity_setup():
     return solvers.local_sensitivities.compute_timecourse_trajectories_and_sensitivities
@@ -231,6 +231,7 @@ def do_sensitivity_problem_setup(model_data, data_instance):
 
     return problem_data
 
+# --------------------------------------------------------------------------- #
 
 # TODO: think where this should go
 def do_labels():
@@ -240,7 +241,9 @@ def do_labels():
     
     return labels
 
+# --------------------------------------------------------------------------- #
 
+# TODO: 2015-05-15, split into abstract and NM
 def do_algorithm_setup(instrumentation_data):
     p = numpy.ones(len(mkb.pmap))
     for par in mkb.pmap.items():
@@ -249,7 +252,7 @@ def do_algorithm_setup(instrumentation_data):
     initial_guesses = []
     for ii in range(len(pi)):
         initial_guesses.append(copy.deepcopy(p[pi[ii]]))
-    algorithm_data = dict(solvers.solver_data.algorithm_structure)
+    algorithm_data = dict(sosoda.algorithm_structure)
     if instrumentation_data is not None:
         algorithm_data["callback"] = instrumentation_data["logger"].log_decision_variables
     algorithm_data["initial_guesses"] = initial_guesses
@@ -257,13 +260,19 @@ def do_algorithm_setup(instrumentation_data):
     return algorithm_data
 
     
-def do_algorithm_setup_using_slsqp_with_positivity(instrumentation_data):
+def do_algorithm_setup_using_slsqp(instrumentation_data):
     algorithm_data = do_algorithm_setup(instrumentation_data)
     algorithm_data["method"] = "SLSQP"
+    return algorithm_data
+
+
+def do_algorithm_setup_using_slsqp_with_positivity(instrumentation_data):
+    algorithm_data = do_algorithm_setup_using_slsqp(instrumentation_data)
     logger = sosout.DecisionVariableLogger()
     algorithm_data["callback"] = logger.let_decision_variables_be_positive_and_log
     return algorithm_data
 
+# --------------------------------------------------------------------------- #
 
 def do_instrumentation_setup():
     instrumentation_data = dict(setups.setup_data.instrumentation_data)
@@ -352,7 +361,6 @@ def do_problem_setup_twice(model_data, data_instance):
     
     problem["performance_measure"] = mod.sum_squared_residuals
     return problem
-
 
 # --------------------------------------------------------------------------- #
 
