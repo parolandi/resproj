@@ -142,12 +142,12 @@ def evaluate_timecourse_trajectories(model_data, problem_data):
     return result
 
 
-'''
-Computes the dynamic snapshots (or "time course") corresponding to the initial value problem.
-Warning: it will unconditionally include the initial point
-'''
 # TODO: rename; "compute_timecourse_snapshots"
 def compute_trajectory_st(model, model_data, problem_data):
+    """
+    Computes the dynamic snapshots (or "time course") corresponding to the initial value problem.
+    Warning: it will unconditionally include the initial point
+    """
     # TODO: problem_data["initial"] not being handled correctly if called direction
     # TODO: preconditions
     assert(len(model_data["parameters"]) > 0)
