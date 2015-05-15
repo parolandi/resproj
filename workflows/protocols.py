@@ -15,16 +15,15 @@ import solvers.local_sensitivities as sse
 import workflows.workflow_data as wwd
 
 
-'''
-Do calibration
-Compute performance measure
-config: setups.setup_data.experiment_setup
-return: models.model_data.optimisation_problem_point
-    the decision variable values
-    the objective function value
-'''
 def do_calibration_and_compute_performance_measure(config):
+    """
+    Do calibration
+    Compute performance measure
+    config: setups.setup_data.experiment_setup
+    return: models.model_data.optimisation_problem_point
+    """
     # setup
+    # TODO: 2015-05-15, reuse
     model_instance = config["model_setup"]()
     data_instance = config["data_setup"]()
     problem_instance  = config["problem_setup"](model_instance, data_instance["calib"])
@@ -34,13 +33,12 @@ def do_calibration_and_compute_performance_measure(config):
     result = sls.solve(model_instance, problem_instance, algorithm_instance)
 
     # verification    
-    # WIP: should this be needed?
+    # WIP: 2015-05-15, should this be needed?
     # need to do this here because problem data is kind of ignored
     problem_instance["parameters"] = copy.deepcopy(result.x)
     for ii in range(len(problem_instance["parameter_indices"])):
         model_instance["parameters"][problem_instance["parameter_indices"][ii]] = copy.deepcopy(result.x[ii])
 
-    # WIP 2015-04-16
     ssr_fit = problem_instance["performance_measure"](None, model_instance, problem_instance)
 
     calib_sol = dict(mmd.optimisation_problem_point)
@@ -56,7 +54,7 @@ def do_validation_and_compute_performance_measure_at_solution_point(config, solu
     problem_instance  = config["problem_setup"](model_instance, data_instance["valid"])
 
     # verification    
-    # WIP: should this be needed?
+    # WIP: 2015-05-15, should this be needed?
     # need to do this here because problem data is kind of ignored
     problem_instance["parameters"] = copy.deepcopy(solution_point["decision_variables"])
     for ii in range(len(problem_instance["parameter_indices"])):
@@ -97,21 +95,21 @@ def do_basic_workflow_at_solution_point(config, solution_point):
     mmdu.apply_decision_variables_to_parameters(solution_point, model_instance, problem_instance)
     
     assert(problem_instance["performance_measure"] is protocol["performance_measure"])
-    # WIP 2015-04-16
-    #assert(problem_instance["performance_measure"] is mod.sum_squared_residuals_st)
 
     # objective function
-    # WIP 2015-04-16
     sum_sq_res = problem_instance["performance_measure"](None, model_instance, problem_instance)
 
     # objective-function contributions
+    # WIP 2015-04-16, 2015-05-15
     sums_sq_res = mod.sums_squared_residuals(None, None, model_instance, problem_instance)
 
     # observables' trajectories
     if False:
+        # WIP 2015-04-16, 2015-05-15
         _ = siv.compute_timecourse_trajectories(None, model_instance, problem_instance)
      
     # residuals' trajectories
+    # WIP 2015-04-16, 2015-05-15
     residuals_values = mod.residuals_st(None, model_instance, problem_instance)
 
 
