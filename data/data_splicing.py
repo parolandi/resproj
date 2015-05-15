@@ -209,8 +209,12 @@ def splice_data_with_pattern_any_get_zeros(mask, values):
         zeros = numpy.concatenate((zeros, slcs[ii]))
     return zeros
 
-def splice_data_with_pattern_any(mask, times, meas, noise, true):
+def splice_data_with_pattern_any(mask, times, meas):
     """
+    mask       list of splicing times
+    times      time array
+    meas       list of measurements array
+    returns    calib_valid_data
     """
     datasets = dict(calib_valid_data)
     datasets["id"] = format_dataset_id("any", str(len(times)))
