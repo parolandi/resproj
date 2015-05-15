@@ -31,6 +31,7 @@ calib_valid_baseline = {
 # self.do_experiment_setup
 def test_baseline_calibration(setup, baseline, unittester):
     """
+    Does calibration, and then basic and sensitivity workflows at solution point 
     baseline can be None
     """
     config = setup()
@@ -54,6 +55,7 @@ def test_baseline_calibration(setup, baseline, unittester):
         [unittester.assertAlmostEquals(act, exp, delta=diff) for act, exp, diff in zip(actual, expected, deltas)]
     else:
         cd.print_unexpected_code_branch_message()
+    logging.info(calibrated)
     return calibrated
 
 

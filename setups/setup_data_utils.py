@@ -1,6 +1,6 @@
 
-'''Legacy'''
 def apply_config(config):
+    """Legacy"""
     model_instance = config["model_setup"]()
     data_instance = config["data_setup"]()
     problem_instance  = config["problem_setup"](model_instance, data_instance["calib"])

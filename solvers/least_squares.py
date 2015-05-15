@@ -28,6 +28,8 @@ def solve(model_instance, problem_instance, algorithm_structure):
         tol =      algorithm_structure["tolerance"], \
         x0 =       algorithm_structure["initial_guesses"], \
         )
+    logging.info("solvers.least_squares.solve")
+    logging.info(algorithm_structure)
     logging.info(result)
     return result
 
