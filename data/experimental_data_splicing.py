@@ -64,6 +64,6 @@ def splice_raw_data_with_pattern_multistage_yesyesno(data):
     returns: calib_valid_experimental_dataset
     """
     yesyesno = [30]
-    dataset = dds.splice_data_with_pattern_any(yesyesno, data[0], data[1:], None, None)
+    dataset = dds.splice_data_with_pattern_any(yesyesno, data[0], data[1:])
     dataset["id"] = dds.format_dataset_id("yesyesno", str(len(data)))                         
     return convert_pseudo_experimental_to_experimental(dataset)
