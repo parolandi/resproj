@@ -8,7 +8,7 @@ import numpy
 import common.diagnostics as codi
 import results.plot_data as replda
 import workflows.experiments as woex
-import workflows.reporting as wore
+import workflows.reporting_unlegacy as wore
 
 
 '''
@@ -23,7 +23,7 @@ class TestExperiment16(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
         super(TestExperiment16, self).__init__(*args, **kwargs)
-        self.do_plotting = False
+        self.do_plotting = True
         self.do_quick_tests_only = True
         logging.basicConfig(filename=codi.get_name_logging_file(),level=codi.get_logging_level())
         logging.info(codi.get_date_and_time())
@@ -40,7 +40,7 @@ class TestExperiment16(unittest.TestCase):
             [  0.00000001e-05,  0.00000001e+06,  0.00000001e-02,  0.00000001e-02])
 
         experiment = sekrbi.do_experiment_setup_0_60_spliced_yesyesno
-        calibrated = woex.test_baseline_calibration(experiment, baseline["calib"], self)
+        calibrated = woex.test_baseline_calibration(experiment, None, self)
         if self.do_plotting:
             wore.plot_tiled_calibration_and_validation_trajectories_at_point(experiment(), calibrated)
 

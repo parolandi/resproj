@@ -2,6 +2,8 @@
 import data.data_splicing as dds
 import models.model_data as mmd
 
+import logging
+
 
 '''
 pseudo_exp: data.data_splicing.calib_valid_data
@@ -63,7 +65,8 @@ def splice_raw_data_with_pattern_multistage_yesyesno(data):
     data:    list containing time and measurements, respectively
     returns: calib_valid_experimental_dataset
     """
-    yesyesno = [30]
+    yesyesno = [15]
     dataset = dds.splice_data_with_pattern_any(yesyesno, data[0], data[1:])
+    logging.info(dataset)
     dataset["id"] = dds.format_dataset_id("yesyesno", str(len(data)))                         
     return convert_pseudo_experimental_to_experimental(dataset)

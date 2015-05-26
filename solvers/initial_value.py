@@ -2,6 +2,7 @@
 import scipy.integrate
 
 import copy
+import logging
 import numpy
 
 import common.utilities
@@ -38,6 +39,8 @@ def solve(model_data, problem_data):
     # TODO: sort alphabetically
     
     if problem_data["forcing_inputs"] is None:
+        logging.info(problem_data)
+
         y, data, status = scipy.integrate.odeint(
             func        = model_data["model"], \
             y0          = problem_data["initial_conditions"], \
@@ -50,31 +53,49 @@ def solve(model_data, problem_data):
             printmessg  = False, \
             ixpr        = False, \
             mxstep      = 50000)
+        
         if status == 2:
             status = 0
+    
     else:
         times_orig = copy.deepcopy(problem_data["time"])
         initial_conditions_orig = copy.deepcopy(problem_data["initial_conditions"])
-        #y = []
+        initials = None
         data = []
+        y = None
         status = 0
         num_s = len(problem_data["forcing_inputs"]["continuous_time_intervals"])
-        initials = None
         for ii in range(num_s-1):
             
             forcing_inputs = []
             for uu in range(len(model_data["inputs"])):
                 forcing_inputs.append(problem_data["forcing_inputs"]["piecewise_constant_inputs"][ii][uu])
             model_data["inputs"] = forcing_inputs
+            problem_data["inputs"] = forcing_inputs
+
             times = []
             for tt in range(len(problem_data["time"])):
                 if problem_data["time"][tt] >= problem_data["forcing_inputs"]["continuous_time_intervals"][ii] \
                     and problem_data["time"][tt] <= problem_data["forcing_inputs"]["continuous_time_intervals"][ii+1]:
                     times.append(problem_data["time"][tt])
             problem_data["time"] = times
+            
+            # WIP: 2015-05-16, need to be careful with yesnoyes, for example
+            if len(times) == 0:
+                logging.warn("solvers.initialvalue: zero-length times at stage " + str(ii+1) + " of " + str(num_s-1))
+                if ii+1 == num_s-1:
+                    continue
+                else:
+                    assert(False)
+                    raise
+            
+            # no need to do anything for outputs here...
+            
             if ii > 0:
                 problem_data["initial_conditions"] = initials
              
+            #logging.info(problem_data)
+            
             y_s, data_s, status_s = scipy.integrate.odeint(
                 func        = model_data["model"], \
                 y0          = problem_data["initial_conditions"], \
@@ -87,17 +108,23 @@ def solve(model_data, problem_data):
                 printmessg  = False, \
                 ixpr        = False, \
                 mxstep      = 50000)
+            
             initials = y_s[-1]
+            # WIP: 2015-05-16, perhaps these y need to be conditional
             if ii == 0:
                 y = copy.deepcopy(y_s)
             else:
                 y = numpy.concatenate((y,y_s[1:]))
-            #y.append(y_s)
             data.append(data_s)
             if status_s == 2:
                 status_s = 0
             status = status + status_s
+            
+            # need to do this here, as this gets operated upon in the loop
             problem_data["time"] = times_orig
+            
+        # TODO: 2015-0416, this invariant needs to be done better
+        problem_data["time"] = times_orig
         problem_data["initial_conditions"] = initial_conditions_orig
     return status, y, data
 
@@ -161,6 +188,7 @@ def compute_trajectory_st(model, model_data, problem_data):
         cd.print_legacy_code_message()
 
     _, snapshot, _ = solve(model_data, problem_data)
+    
     return snapshot
 
 

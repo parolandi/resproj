@@ -32,7 +32,8 @@ calib_valid_baseline = {
 def test_baseline_calibration(setup, baseline, unittester):
     """
     Does calibration, and then basic and sensitivity workflows at solution point 
-    baseline can be None
+    baseline    testpoint, can be None
+    return      return: models.model_data.optimisation_problem_point
     """
     config = setup()
     calibrated = wpr.do_calibration_and_compute_performance_measure(config)

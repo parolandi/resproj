@@ -56,6 +56,14 @@ experiment_data = {
     }
 
 
+# WIP: 2015-05-25; assume it always starts with yes
+output_filters = {
+    "measurement_splices": [],
+    "calibration_mask": [],
+    "validation_mask": [],
+    }
+
+
 """
 Defines the structure of a *computational* experiment, a.k.a. a *problem*
 measurements_covariance_trace: numpy.array
@@ -73,8 +81,10 @@ problem_structure = {
     "initial_conditions": [],
     "inputs": [],
     "measurements_covariance_trace": None,
-    "outputs": [],
+    "outputs": [], # as in predicted
     "output_indices": [],
+    # output_filters
+    "output_filters": None,
     "performance_measure": None,
     "performance_measure_args": None,
     "parameters": [],
@@ -82,7 +92,7 @@ problem_structure = {
     # TODO: change to "times"
     "time": [],
     "confidence_region": copy.deepcopy(confidence_region_formulation),
-    # TODO: add observables
+    # TODO: add observables, ping 2 2015-05-18 (as in measured)
     "constraints": [],
     }
 

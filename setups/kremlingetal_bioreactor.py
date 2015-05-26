@@ -15,6 +15,8 @@ import solvers.local_sensitivities
 import solvers.solver_data as sosoda
 import solvers.solver_utils as sosout
 
+import models.model_data as momoda
+
 
 def get_parameters_to_be_estimated():
     return [0, 3, 8, 9]
@@ -112,6 +114,7 @@ def do_base_problem_setup(model_data, data_instance):
     problem_data = dict(models.model_data.problem_structure)
     problem_data["initial_conditions"] = copy.deepcopy(model_data["states"])
     problem_data["time"] = data_instance["time"]
+    problem_data["time"] = numpy.arange(0,61,2)
     problem_data["parameters"] = copy.deepcopy(model_data["parameters"])
     problem_data["inputs"] = copy.deepcopy(model_data["inputs"])
 
@@ -148,6 +151,10 @@ def do_problem_setup_0_60(model_data, data_instance):
                                                    numpy.asarray([0.35,0.35,2]), \
                                                    numpy.asarray([0.35,0.35,0.5])]
     problem["forcing_inputs"] = forcing_inputs
+    problem["output_filters"] = dict(momoda.output_filters)
+    problem["output_filters"]["measurement_splices"] = [slice(0,15,1)]
+    problem["output_filters"]["calibration_mask"] = [15]
+    problem["output_filters"]["validation_mask"] = [0,15]
     return problem
 
 

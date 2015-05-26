@@ -6,6 +6,9 @@ import solvers.initial_value as siv
 
 
 def plot_tiled_trajectories_at_point(config, point):
+    '''
+    Legacy-ish as of 2015-05-26
+    '''
     # setup
     model_data = config["model_setup"]()
     data_instance = config["data_setup"]()
@@ -20,10 +23,13 @@ def plot_tiled_trajectories_at_point(config, point):
     rpt.show_all()
 
 
-'''
-config: models.model_data.calib_valid_experimental_dataset
-'''
 def plot_tiled_calibration_and_validation_trajectories_at_point(config, point):
+    '''
+    Legacy-ish as of 2015-05-26
+    '''
+    '''
+    config: models.model_data.calib_valid_experimental_dataset
+    '''
     # setup
     model_data = config["model_setup"]()
     data_instance = config["data_setup"]()
@@ -45,6 +51,12 @@ def plot_tiled_calibration_and_validation_trajectories_at_point(config, point):
 
 # TODO: error should be parameterisable
 def plot_tiled_calibration_validation_and_residual_trajectories_at_point(config, point):
+    '''
+    Legacy-ish as of 2015-05-26
+    '''
+    '''
+    config: models.model_data.calib_valid_experimental_dataset
+    '''
     # setup
     model_data = config["model_setup"]()
     data_instance = config["data_setup"]()

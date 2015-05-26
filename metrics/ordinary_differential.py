@@ -7,6 +7,8 @@ import common.utilities
 import models.model_data_utils as mmdu
 import solvers.initial_value
 
+import engine.state_integration as enstin
+
 
 def handle_initial_point(values, problem_instance):
     if problem_instance["initial"] == "exclude":
@@ -22,17 +24,25 @@ def residuals(model, problem):
     num_exps = len(problem["experiments"])
     if num_exps == 0:
         # this could return a real and should not
-        return residuals_st(None, model, problem)
+        if problem["output_filters"] is None:
+            return residuals_st(None, model, problem)
+        else:
+            return residuals_single_experiment(model, problem)
     residuals_per_exp = []
     for ii in range(num_exps):
         # TODO: extend to handle forcing_inputs too
-        # WIP: 2015-05-14
+        # WIP: 2015-05-14, 2015-05-15
         experiment = problem["experiments"][ii]
         problem["time"] = experiment["time"]
         problem["initial_conditions"] = experiment["initial_condition_measurements"]
         problem["inputs"] = experiment["input_measurements"]
         problem["outputs"] = experiment["output_measurements"]
-        residuals_per_exp.append(residuals_st(None, model, problem))
+        res = None
+        if problem["output_filters"] is None:
+            res = residuals_st(None, model, problem)
+        else:
+            res = residuals_single_experiment(model, problem)
+        residuals_per_exp.append(res)
     residuals_per_obs = []
     num_obs = len(problem["output_indices"])
     for jj in range(num_obs):
@@ -57,7 +67,41 @@ def sum_squared_residuals(dof, model, problem):
     for ii in range(len(problem["output_indices"])):
         res += math.fsum(res**2 for res in resids[ii])
     return res
+
+
+# TODO: 2015-05-18, more pythonic
+def residuals_single_experiment(model, problem):
+    """
+    compute residuals for individual measurements for a single experiment
+    returns real or list (should always return a list)
+    """
+    assert(model is not None and problem is not None)
+    assert(len(problem["output_indices"]) > 0)
+    assert(len(problem["output_indices"]) == len(problem["outputs"]))
+    # TODO: preconditions
     
+    #TODO: handle initial point?
+    measured = numpy.asarray(problem["outputs"])
+    predicted = enstin.compute_timecourse_trajectories(model, problem)
+    if problem["measurements_covariance_trace"] is None:
+        cov = numpy.ones(len(problem["outputs"]))
+    else:
+        cov = problem["measurements_covariance_trace"] 
+
+    if len(measured.shape) == 1:
+        assert(False)
+        raise
+    # there is one residual per experiment
+    # but for the moment there is also a single experiment
+    # there is one residual per state (and per experiment)
+    res = numpy.empty(measured.shape)
+    for jj in range(len(problem["output_indices"])):
+        measured_s = measured[jj]
+        predicted_s = predicted[problem["output_indices"][jj]]
+        res[jj] = numpy.subtract(measured_s, predicted_s) / cov[jj]
+    return res
+
+
 # -----------------------------------------------------------------------------
 '''
 Legacy
