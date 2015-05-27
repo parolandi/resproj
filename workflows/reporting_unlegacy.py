@@ -22,7 +22,8 @@ def plot_tiled_calibration_and_validation_trajectories_at_point(config, point):
 
     # TODO: assert dimensions are correct
     # do plotting
-    predictions = enstin.compute_calibration_and_validation_timecourse_trajectories(model_data, problem_data)
+    trajectories = enstin.compute_calibration_and_validation_timecourse_trajectories(model_data, problem_data)
+    predictions = momodaut.get_observable_calibration_and_validation_trajectories(trajectories, problem_data)
     replti.plot_measurements_with_calibration_and_validation_trajectories_with_errors( \
         data_instance["calib"]["time"], data_instance["calib"]["observables"], predictions["calib"]["observables"], None, \
         data_instance["valid"]["time"], data_instance["valid"]["observables"], predictions["valid"]["observables"], None)

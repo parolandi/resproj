@@ -3,6 +3,8 @@ import copy
 import numpy
 
 import common.utilities
+import models.model_data as momoda
+
 
 # TODO: problem model verificator and synchroniser
 
@@ -74,6 +76,32 @@ def get_observable_trajectories(problem_instance, state_trajectories):
         index = problem_instance["output_indices"][ii]
         trajectories.append(state_trajectories[index])
     return numpy.asarray(trajectories)
+
+
+def get_observable_calibration_and_validation_trajectories(calib_valid_trajectories, problem_instance):
+    '''
+    Produces a subset of trajectories on the basis of the output subset
+    Raises exception if there are no "output indices"
+    calib_valid_trajectories    calib_valid_experimental_dataset
+    return                      calib_valid_experimental_dataset
+    '''
+    if len(problem_instance["output_indices"]) == 0:
+        assert(False)
+        raise
+    
+    observables = dict(momoda.calib_valid_experimental_dataset)
+    observables["id"] = calib_valid_trajectories["id"]
+    observables["calib"]["time"] = calib_valid_trajectories["calib"]["time"]
+    observables["valid"]["time"] = calib_valid_trajectories["valid"]["time"]
+    calib_observables = []
+    valid_observables = []
+    for ii in range(len(problem_instance["output_indices"])):
+        index = problem_instance["output_indices"][ii]
+        calib_observables.append(calib_valid_trajectories["calib"]["observables"][index])
+        valid_observables.append(calib_valid_trajectories["valid"]["observables"][index])
+    observables["calib"]["observables"] = numpy.asarray(calib_observables)
+    observables["valid"]["observables"] = numpy.asarray(valid_observables)
+    return observables
 
 
 def check_correctness_of_measurements_covariance_matrix(prob_inst):

@@ -10,7 +10,7 @@ import logging
 # WIP: 2015-05-18, rename trajectory filters
 def compute_timecourse_trajectories(model, problem):
     '''
-    Compute timecourse trajectories and apply trajectory filters if they exist
+    Compute timecourse trajectories and apply trajectory *splicing* filters if they exist
     This affects the outputs, not time
     return numpy.array with the trajectories (spliced or not)
     '''
@@ -29,7 +29,7 @@ def compute_timecourse_trajectories(model, problem):
 
 def compute_calibration_and_validation_timecourse_trajectories(model, problem):
     '''
-    Raises exception if "output filters" has not been defined
+    Raises     exception if "output filters" has not been defined
     returns    calib_valid_experimental_dataset
     '''
     trajectories = soiv.compute_timecourse_trajectories(None, model, problem)
