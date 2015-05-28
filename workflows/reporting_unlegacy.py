@@ -17,7 +17,7 @@ def plot_tiled_calibration_and_validation_trajectories_at_point(config, point):
     point
     config: models.model_data.calib_valid_experimental_dataset
     '''
-    model_data, data_instance, problem_data, _ = sesedaut.get_model_data_problem_protocol(config)
+    model_data, data_instance, problem_data, _ = sesedaut.get_model_data_problem_protocol_with_calib(config)
     momodaut.apply_values_to_parameters(point["decision_variables"], model_data, problem_data)
 
     # TODO: assert dimensions are correct

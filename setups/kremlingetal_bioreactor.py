@@ -118,6 +118,7 @@ def do_base_problem_setup(model_data, data_instance):
     problem_data["parameters"] = copy.deepcopy(model_data["parameters"])
     problem_data["inputs"] = copy.deepcopy(model_data["inputs"])
 
+    problem_data["performance_observables"] = mod.sums_squared_residuals_unlegacy
     problem_data["performance_measure"] = mod.sum_squared_residuals
     problem_data["confidence_region"]["performance_measure"] = mod.sum_squared_residuals
     problem_data["confidence_region"]["confidence"] = 0.95

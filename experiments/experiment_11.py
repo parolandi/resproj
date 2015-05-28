@@ -46,7 +46,7 @@ class TestExperiment11(unittest.TestCase):
     def do_test_prediction_uncertainty(self, config, baseline):
         no_volume = 1
 
-        model, data, problem, _ = sesedaut.get_model_data_problem_algorithm(config)
+        model, data, problem, _ = sesedaut.get_model_data_problem_algorithm_with_calib(config)
         algorithm = self.do_algorithm_setup()
 
         wall_time0 = time.time()

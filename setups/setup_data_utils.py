@@ -8,9 +8,9 @@ def apply_config(config):
     return model_instance, data_instance, problem_instance, protocol
 
 
-def get_model_data_problem_protocol(config):
+def get_model_data_problem_protocol_with_calib(config):
     """
-    Produce data that result from config values
+    Produce data that results from config values with *calib*
     return:
         model_instance
         data_instance
@@ -20,9 +20,9 @@ def get_model_data_problem_protocol(config):
     return apply_config(config)
 
 
-def get_model_data_problem_algorithm(config):
+def get_model_data_problem_algorithm_with_calib(config):
     """
-    Produce data that result from config values
+    Produce data that result from config values with *calib*
     return:
         model_instance
         data_instance
@@ -30,12 +30,13 @@ def get_model_data_problem_algorithm(config):
         algorithm_instance
     """
     model, data, problem, _ = apply_config(config)
-    _, _, algorithm = get_model_problem_algorithm(config)
+    _, _, algorithm = get_model_problem_algorithm_with_calib(config)
     return model, data, problem, algorithm
 
 
-def get_model_problem_algorithm(config):
+def get_model_problem_algorithm_with_calib(config):
     """
+    Produce data that result from config values with *calib*
     returns
         model_structure
         problem_structure
@@ -46,6 +47,15 @@ def get_model_problem_algorithm(config):
     problem_instance  = config["problem_setup"](model_instance, data_instance["calib"])
     algorithm = config["algorithm_setup"](None)
     return model_instance, problem_instance, algorithm
+
+
+def get_model_problem_protocol(config):
+    protocol = config["protocol_setup"]()
+    model = config["model_setup"]()
+    data = config["data_setup"]()
+    protocol_step = get_next_protocol_step(config)
+    problem = config["problem_setup"](model, data[protocol_step])
+    return model, problem, protocol
 
 
 def get_next_protocol_step(config):

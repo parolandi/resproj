@@ -85,8 +85,13 @@ problem_structure = {
     "output_indices": [],
     # output_filters
     "output_filters": None,
+    # for all experiments, for all observables
     "performance_measure": None,
     "performance_measure_args": None,
+    # for each experiment, for all observables
+    "performance_experiments": None,
+    # for each observable, for all experiments
+    "performance_observables": None,
     "parameters": [],
     "parameter_indices": [],
     # TODO: change to "times"

@@ -16,7 +16,8 @@ def linear_2p2s_mock(x, t, p, u):
 
 def do_setup(times):
     """
-    times can be None
+    times:     can be None
+    return:    model and problem
     """
     model_instance = dict(momoda.model_structure)
     model_instance["model"] = linear_2p2s_mock

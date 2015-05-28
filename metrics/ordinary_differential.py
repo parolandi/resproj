@@ -5,9 +5,10 @@ import numpy
 import common.diagnostics as cd
 import common.utilities
 import models.model_data_utils as mmdu
-import solvers.initial_value
 
 import engine.state_integration as enstin
+# legacy
+import solvers.initial_value
 
 
 def handle_initial_point(values, problem_instance):
@@ -16,10 +17,11 @@ def handle_initial_point(values, problem_instance):
     return values
 
 
+# TODO: 2015-05-28; should always return a list
 def residuals(model, problem):
     """
     compute residuals for individual measurements for all experiments
-    returns real or list (should always return a list)
+    returns real or numpy.array
     """
     num_exps = len(problem["experiments"])
     if num_exps == 0:
@@ -70,10 +72,11 @@ def sum_squared_residuals(dof, model, problem):
 
 
 # TODO: 2015-05-18, more pythonic
+# TODO: 2015-05-28; should always return a list
 def residuals_single_experiment(model, problem):
     """
     compute residuals for individual measurements for a single experiment
-    returns real or list (should always return a list)
+    returns real or numpy.array
     """
     assert(model is not None and problem is not None)
     assert(len(problem["output_indices"]) > 0)
@@ -100,6 +103,20 @@ def residuals_single_experiment(model, problem):
         predicted_s = predicted[problem["output_indices"][jj]]
         res[jj] = numpy.subtract(measured_s, predicted_s) / cov[jj]
     return res
+
+
+def sums_squared_residuals_unlegacy(model, problem):
+    """
+    compute the ssr for each observable (trajectory) independently, for all experiments
+    returns numpy.array
+    """
+    # TODO: preconditions
+    
+    sum_res = []
+    ress = residuals(model, problem)
+    for ii in range(len(problem["output_indices"])):
+        sum_res.append(math.fsum(res**2 for res in ress[ii]))
+    return numpy.asarray(sum_res)
 
 
 # -----------------------------------------------------------------------------

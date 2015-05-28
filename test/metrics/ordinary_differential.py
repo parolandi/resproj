@@ -2,7 +2,8 @@
 import unittest
 import numpy
 
-import metrics.ordinary_differential
+import metrics.ordinary_differential # as testme
+# TODO: 2015-05-28; legacy-ish, use mock instead
 import models.model_data
 
 
@@ -256,6 +257,25 @@ class TestOrdinaryDifferentialMetrics(unittest.TestCase):
             dof, linear_2p2s_mock, model_instance, problem_instance)
         expected = offset**2 * (measured.size-1)
         self.assertAlmostEqual(expected, actual, 8)
+
+
+    def test_sums_squared_residuals_unlegacy_linear_2p2s_covariance_2001(self):
+        model, problem = self.do_setup()
+        
+        # test conditions
+        model["model"] = linear_2p2s_mock
+        offset = 3.0
+        measured = numpy.asarray([[0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], \
+                                  [1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9]]) + offset
+        problem["outputs"] = measured
+        problem["output_indices"] = [0, 1]
+        cov00 = 2
+        problem["measurements_covariance_trace"] = numpy.array([cov00, 1])
+        
+        # actual and expected
+        actual = metrics.ordinary_differential.sums_squared_residuals_unlegacy(model, problem)
+        expected = [offset**2 * measured.size / 2 / cov00**2, offset**2 * measured.size / 2]
+        [self.assertAlmostEqual(exp, act, 8) for exp, act in zip(expected, actual)]
 
 
 if __name__ == "__main__":
