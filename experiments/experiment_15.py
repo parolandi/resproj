@@ -14,6 +14,7 @@ import workflows.reporting as wore
 '''
 Kremling bioreactor
 Multi-stage experiment 0-60hr interval
+No splicing
 Calibration
 Nonlinear confidence region
 '''
