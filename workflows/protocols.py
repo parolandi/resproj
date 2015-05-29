@@ -24,6 +24,17 @@ thresholded_value = {
     }
 
 
+linearised_parametric_uncertainty = {
+    "cov_matrix": None,
+    "cov_det": 0.0,
+    "est_var": 0.0,
+    "ell_radius": 0.0,
+    "conf_intvs": [],
+    "corr_matrix": None,
+    "corr_det": 0.0,
+    }
+
+
 def do_calibration_and_compute_performance_measure(config):
     """
     Do calibration
@@ -163,6 +174,72 @@ def do_basic_workflow_at_solution_point(config, solution_point):
     return workflow_results
 
 
+def do_linearised_parametric_uncertainty(problem_instance, ssr, sens_trajectories):
+    significance = problem_instance["confidence_region"]["confidence"]
+    no_obs = len(problem_instance["outputs"])
+    no_meas = mmdu.calculate_number_of_observations(problem_instance["outputs"])
+    no_params = mmdu.get_number_of_decision_variables(problem_instance)
+    no_timepoints = mmdu.get_number_of_time_points(problem_instance)
+
+    lin_par_unc = dict(linearised_parametric_uncertainty)
+    lin_par_unc["cov_matrix"] = eem.compute_covariance_matrix(no_obs, no_params, no_timepoints, sens_trajectories)
+    cov_matrix = lin_par_unc["cov_matrix"]
+    lin_par_unc["corr_matrix"] = eem.calculate_correlation_matrix(cov_matrix)
+    corr_matrix = lin_par_unc["corr_matrix"]
+    lin_par_unc["est_var"] = esi.compute_measurements_variance(ssr, no_params, no_meas)
+    est_var = lin_par_unc["est_var"]
+    lin_par_unc["ell_radius"] = esi.compute_confidence_ellipsoid_radius(no_params, no_meas, est_var, significance)
+    lin_par_unc["conf_intvs"] = esi.compute_confidence_intervals( \
+        cov_matrix, mst.calculate_two_sided_t_student_value(significance, no_meas, no_params))
+    lin_par_unc["cov_det"] = eem.calculate_determinant(cov_matrix)
+    lin_par_unc["corr_det"] = eem.calculate_determinant(corr_matrix)
+    return lin_par_unc
+
+def convert_to_sensitivity_based_workflow_results(problem_instance, lin_par_unc):
+    workflow_results = dict(wwd.sensitivity_based_point_results)
+    workflow_results["params"] = copy.deepcopy(problem_instance["parameters"])
+    workflow_results["cov_matrix"] = lin_par_unc["cov_matrix"]
+    workflow_results["cov_det"] = lin_par_unc["cov_det"]
+    workflow_results["est_var"] = lin_par_unc["est_var"]
+    workflow_results["ell_radius"] = lin_par_unc["ell_radius"]
+    workflow_results["conf_intvs"] = lin_par_unc["conf_intvs"]
+    workflow_results["corr_matrix"] = lin_par_unc["corr_matrix"]
+    workflow_results["corr_det"] = lin_par_unc["corr_det"]
+    return workflow_results
+
+
+def get_conditional_model_and_problem(config, solution_point):
+    data_instance = config["data_setup"]()
+    protocol_step = ssdu.get_next_protocol_step(config)
+    if config["sensitivity_setup"] is sse.compute_timecourse_trajectories_and_sensitivities:
+        model_instance = config["model_setup"]()
+        problem_instance  = config["problem_setup"](model_instance, data_instance[protocol_step])
+    else:
+        # TODO: use config; if possible refactor
+        assert(config["sensitivity_model_setup"] is not None)
+        model_instance = config["sensitivity_model_setup"]()
+        problem_instance  = config["sensitivity_problem_setup"](model_instance, data_instance[protocol_step])
+    mmdu.apply_decision_variables_to_parameters(solution_point, model_instance, problem_instance)
+    return model_instance, problem_instance
+
+
+# TODO: 2015-05-28; extract to engine
+def compute_sensitivity_trajectories(config, model_instance, problem_instance):
+    # full sensitivities
+    state_and_sens_trajectories = []
+    if config["sensitivity_setup"] is sse.compute_timecourse_trajectories_and_sensitivities:
+        state_and_sens_trajectories = config["sensitivity_setup"](model_instance, problem_instance)
+    else:
+        state_and_sens_trajectories = siv.compute_timecourse_trajectories( \
+            None, model_instance, problem_instance)
+    
+    system_model = config["model_setup"]()
+    dim_states = len(system_model["states"])
+    sens_trajectories = mmdu.get_sensitivity_trajectories( \
+        dim_states, problem_instance, state_and_sens_trajectories)
+    return sens_trajectories
+
+
 # TODO: change to at any point
 # TODO: 2015-05-28; solution_point can be None
 def do_sensitivity_based_workflow_at_solution_point(config, solution_point):
@@ -177,53 +254,11 @@ def do_sensitivity_based_workflow_at_solution_point(config, solution_point):
     # TODO: preconditions!
     ssr = solution_point["objective_function"]
 
-    # full sensitivities
-    state_and_sens_trajectories = []
-    data_instance = config["data_setup"]()
-    protocol_step = ssdu.get_next_protocol_step(config)
-    if config["sensitivity_setup"] is sse.compute_timecourse_trajectories_and_sensitivities:
-        model_instance = config["model_setup"]()
-        problem_instance  = config["problem_setup"](model_instance, data_instance[protocol_step])
-        mmdu.apply_decision_variables_to_parameters(solution_point, model_instance, problem_instance)
-        state_and_sens_trajectories = config["sensitivity_setup"](model_instance, problem_instance)
-    else:
-        # TODO: use config; if possible refactor
-        assert(config["sensitivity_model_setup"] is not None)
-        model_instance = config["sensitivity_model_setup"]()
-        problem_instance  = config["sensitivity_problem_setup"](model_instance, data_instance[protocol_step])
-        mmdu.apply_decision_variables_to_parameters(solution_point, model_instance, problem_instance)
-        state_and_sens_trajectories = siv.compute_timecourse_trajectories( \
-            None, model_instance, problem_instance)
-    
-    system_model = config["model_setup"]()
-    dim_states = len(system_model["states"])
-    sens_trajectories = mmdu.get_sensitivity_trajectories( \
-        dim_states, problem_instance, state_and_sens_trajectories)
-
-    significance = problem_instance["confidence_region"]["confidence"]
-    # covariance matrix, ellipsoid radius and confidence interval
-    no_obs = len(problem_instance["outputs"])
-    no_meas = mmdu.calculate_number_of_observations(problem_instance["outputs"])
-    no_params = mmdu.get_number_of_decision_variables(problem_instance)
-    no_timepoints = mmdu.get_number_of_time_points(problem_instance)
-
-    cov_matrix = eem.compute_covariance_matrix(no_obs, no_params, no_timepoints, sens_trajectories)
-    corr_matrix = eem.calculate_correlation_matrix(cov_matrix)
-    est_var = esi.compute_measurements_variance(ssr, no_params, no_meas)
-    ell_radius = esi.compute_confidence_ellipsoid_radius(no_params, no_meas, est_var, significance)
-    confidence_intervals = esi.compute_confidence_intervals( \
-        cov_matrix, mst.calculate_two_sided_t_student_value(significance, no_meas, no_params))
-
-    workflow_results = dict(wwd.sensitivity_based_point_results)
-    workflow_results["params"] = copy.deepcopy(problem_instance["parameters"])
-    workflow_results["cov_matrix"] = cov_matrix
-    workflow_results["cov_det"] = eem.calculate_determinant(cov_matrix)
-    workflow_results["est_var"] = est_var
-    workflow_results["ell_radius"] = ell_radius
-    workflow_results["conf_intvs"] = confidence_intervals
-    workflow_results["corr_matrix"] = corr_matrix
-    workflow_results["corr_det"] = eem.calculate_determinant(corr_matrix)
-
+    # TODO: config for problem_instance?
+    model_instance, problem_instance = get_conditional_model_and_problem(config, solution_point)
+    sens_trajectories = compute_sensitivity_trajectories(config, model_instance, problem_instance)
+    lin_par_unc = do_linearised_parametric_uncertainty(problem_instance, ssr, sens_trajectories)
+    workflow_results = convert_to_sensitivity_based_workflow_results(problem_instance, lin_par_unc)
     logging.info("workflows.protocols.do_sensitivity_based_workflow_at_solution_point")
     logging.info(workflow_results)
     return workflow_results
