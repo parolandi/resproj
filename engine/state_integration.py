@@ -15,7 +15,7 @@ def compute_timecourse_trajectories(model, problem):
     return numpy.array with the trajectories (spliced or not)
     '''
     trajectories = soiv.compute_timecourse_trajectories(None, model, problem)
-    if problem["output_filters"] is None:
+    if problem["output_filters"] is None or problem["output_filters"]["measurement_splices"] is None:
         return trajectories
     
     assert(problem["output_filters"]["measurement_splices"] is not None)
@@ -30,7 +30,7 @@ def compute_timecourse_trajectories(model, problem):
 def compute_calibration_and_validation_timecourse_trajectories(model, problem):
     '''
     Raises     exception if "output filters" has not been defined
-    returns    calib_valid_experimental_dataset
+    returns    models.model_data.calib_valid_experimental_dataset
     '''
     trajectories = soiv.compute_timecourse_trajectories(None, model, problem)
     if problem["output_filters"] is None:
