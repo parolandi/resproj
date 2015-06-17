@@ -198,13 +198,13 @@ class TestDataSplicing(unittest.TestCase):
         times = numpy.arange(15)
         meas = [numpy.arange(15,30)]
         
-        actual = testme.splice_data_with_pattern_any(mask, times, meas, None, None)
+        actual = testme.splice_data_with_pattern_any(mask, times, meas)
         calib = numpy.concatenate((numpy.arange(0,5), numpy.arange(10,15)))
         [self.assertEqual(cal, act) for cal, act in zip(actual["calib"]["time"], calib)]
         calib = numpy.concatenate((numpy.arange(15,20), numpy.arange(25,30)))
         [self.assertEqual(cal, act) for cal, act in zip(actual["calib"]["meas"][0], calib)]
         
-        actual = testme.splice_data_with_pattern_any(mask, times, meas, None, None)
+        actual = testme.splice_data_with_pattern_any(mask, times, meas)
         valid = numpy.arange(5,10)
         [self.assertEqual(val, act) for val, act in zip(actual["valid"]["time"], valid)]
         valid = numpy.arange(20,25)
