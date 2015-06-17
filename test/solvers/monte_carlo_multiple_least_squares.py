@@ -83,7 +83,6 @@ class TestMonteCarloMultipleLeastSquares(unittest.TestCase):
         actual = [result["local"][ii]["objective_function"] for ii in range(len(result["local"]))]
         [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(actual, expected)]
         actual = result["global"]["objective_function"]
-        print(actual)
         expected = 1.66318434515
         self.assertAlmostEquals(actual, expected, 8)
         actual = result["global"]["decision_variables"]
