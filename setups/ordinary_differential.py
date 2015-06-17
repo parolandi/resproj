@@ -67,6 +67,7 @@ def do_base_problem_setup(model_data, data_instance):
     problem_data["inputs"] = copy.deepcopy(model_data["inputs"])
 
     problem_data["performance_measure"] = mod.sum_squared_residuals
+    problem_data["performance_observables"] = mod.sums_squared_residuals_unlegacy
     problem_data["confidence_region"]["performance_measure"] = mod.sum_squared_residuals
     problem_data["parameter_indices"] = numpy.array([0, 1])
     problem_data["parameters"] = numpy.zeros(len(problem_data["parameter_indices"]))
@@ -100,8 +101,6 @@ def do_problem_setup_without_covariance_twice(model_data, data_instance):
     experiment["time"] = copy.deepcopy(problem["time"])
     experiment["input_measurements"] = copy.deepcopy(problem["inputs"])
     experiment["output_measurements"] = copy.deepcopy(problem["outputs"])
-
-    print(experiment)
 
     problem["experiments"] = []
     problem["experiments"].append(experiment)

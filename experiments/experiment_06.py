@@ -43,13 +43,13 @@ class TestExperiment06(unittest.TestCase):
 
     
     def do_experiment_setup_with_covariance_1(self):
-        config = self.do_experiment_setup_0_20()
+        config = skb.do_experiment_setup_0_20()
         config["problem_setup"] = skb.do_problem_setup_with_covariance_1
         return config
 
     
     def do_experiment_setup_with_covariance_2(self):
-        config = self.do_experiment_setup_0_20()
+        config = skb.do_experiment_setup_0_20()
         config["problem_setup"] = skb.do_problem_setup_with_covariance_2
         return config
 

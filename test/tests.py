@@ -8,6 +8,7 @@ from test.data.generator import *
 from test.engine.confidence_regions import *
 from test.engine.estimation_matrices import *
 from test.engine.statistical_inference import *
+from test.engine.state_integration import *
 from test.metrics.algebraic_legacy import *
 from test.metrics.algebraic import *
 from test.metrics.confidence_measures import *
@@ -34,6 +35,8 @@ from test.solvers.monte_carlo_multiple_least_squares import *
 from test.solvers.monte_carlo_sampling import *
 from test.solvers.nonlinear_algebraic import *
 from test.solvers.solver_data import *
+from test.workflows.protocols import *
+#from test.workflows.reporting import *
 
 
 if __name__ == '__main__':
