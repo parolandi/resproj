@@ -21,6 +21,7 @@ class TestReporting(unittest.TestCase):
         point = {}
         point["decision_variables"] = numpy.array([1.0, 2.0])
         testme.plot_tiled_calibration_and_validation_trajectories_at_point(testmetoo.do_experiment(), point)
+        self.assertTrue(True)
 
 
 if __name__ == "__main__":
