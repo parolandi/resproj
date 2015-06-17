@@ -3,6 +3,7 @@ import unittest
 import setups.kremlingetal_bioreactor as testme
 
 
+# TODO: 2015-05-31; test base problem setup
 class TestKremlingEtAlBioreactor(unittest.TestCase):
 
 

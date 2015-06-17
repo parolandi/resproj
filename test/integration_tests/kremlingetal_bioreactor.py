@@ -25,6 +25,7 @@ import workflows.experiments as woex
 import workflows.reporting as wore
 
 
+# TODO: 2015-05-31; establish quick_tests
 class TestKremlingEtAlBioreactor(unittest.TestCase):
 
 
