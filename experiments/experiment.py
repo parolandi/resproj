@@ -298,6 +298,4 @@ def do_experiment(self, config, baseline):
     if show_plots:
         fig.suptitle("Dataset" + dataset["id"] + "-s-" + slv_method)
         solvers.plot.show_figure()
-    print(slv_method)
-    print(dataset["id"])
     results.report_workflows.report_results(all_results)

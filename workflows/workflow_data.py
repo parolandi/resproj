@@ -7,6 +7,7 @@ point_results = {
     "params": [],
     "ssr": 0.0,
     "ssrs": [],
+    # WIP: 2015-05-27; no more
     "ress_vals": [],
     "ssr_test": False,
     "ssrs_tests": [],
@@ -26,6 +27,7 @@ system_based_point_results = {
     "params": [],
     "ssr": [], # float
     "ssrs": [],
+    # WIP: 2015-05-27; no more
     "ress_vals": [],
     "ssr_test": [], # boolean
     "ssrs_tests": [],

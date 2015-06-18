@@ -1,6 +1,11 @@
 
 from __future__ import print_function
 import logging
+import time
+
+
+def get_date_and_time():
+    return time.strftime("%Y/%m/%d") + "@" + time.strftime("%H:%M:%S")
 
 
 def get_name_logging_file():

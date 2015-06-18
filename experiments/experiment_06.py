@@ -17,6 +17,7 @@ import common.diagnostics as cd
 Full data set 111111
 Covariance trace
 Also calibrate with 111111 but calibrate-validate; e.g., 111000
+0-20hr interval
 '''
 class TestExperiment06(unittest.TestCase):
 
@@ -42,13 +43,13 @@ class TestExperiment06(unittest.TestCase):
 
     
     def do_experiment_setup_with_covariance_1(self):
-        config = self.do_experiment_setup()
+        config = skb.do_experiment_setup_0_20()
         config["problem_setup"] = skb.do_problem_setup_with_covariance_1
         return config
 
     
     def do_experiment_setup_with_covariance_2(self):
-        config = self.do_experiment_setup()
+        config = skb.do_experiment_setup_0_20()
         config["problem_setup"] = skb.do_problem_setup_with_covariance_2
         return config
 

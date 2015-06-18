@@ -13,6 +13,7 @@ import workflows.experiments as woex
 Kremling bioreactor
 Calculate and test nonlinear confidence region at low/high confidence
 Calculate and test approximate linear confidence region at low/high confidence
+0-20 hr interval
 '''
 class TestExperiment14(unittest.TestCase):
 
@@ -25,7 +26,7 @@ class TestExperiment14(unittest.TestCase):
 
     
     def do_experiment_setup(self):
-        config = sekrbi.do_experiment_setup()
+        config = sekrbi.do_experiment_setup_0_20()
         config["algorithm_setup"] = sekrbi.do_algorithm_setup_using_slsqp_with_positivity
         return config
 

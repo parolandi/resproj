@@ -12,8 +12,10 @@ import models.model_data_utils as mmdu
 import setups.setup_data
 import setups.numerics as senu
 import solvers.local_sensitivities
-import solvers.solver_data
+import solvers.solver_data as sosoda
 import solvers.solver_utils as sosout
+
+import models.model_data as momoda
 
 
 def get_parameters_to_be_estimated():
@@ -53,6 +55,7 @@ def do_model_setup_model_A():
 def do_model_setup_model_B():
     return do_model_setup("modelB")
 
+# --------------------------------------------------------------------------- #
 
 def do_get_published_data_0_20():
     # TODO: handle gracefully
@@ -94,6 +97,14 @@ def do_get_published_data_0_60_spliced_111111():
     return spliced_trajectories
 
 
+def do_get_published_data_0_60_spliced_yesyesno():
+    trajectories_without_V = do_get_published_data_0_60()
+    spliced_trajectories = deds.splice_raw_data_with_pattern_multistage_yesyesno(trajectories_without_V)
+    return spliced_trajectories
+
+
+# --------------------------------------------------------------------------- #
+
 def do_base_problem_setup(model_data, data_instance):
     """
     returns problem
@@ -106,6 +117,7 @@ def do_base_problem_setup(model_data, data_instance):
     problem_data["parameters"] = copy.deepcopy(model_data["parameters"])
     problem_data["inputs"] = copy.deepcopy(model_data["inputs"])
 
+    problem_data["performance_observables"] = mod.sums_squared_residuals_unlegacy
     problem_data["performance_measure"] = mod.sum_squared_residuals
     problem_data["confidence_region"]["performance_measure"] = mod.sum_squared_residuals
     problem_data["confidence_region"]["confidence"] = 0.95
@@ -130,6 +142,12 @@ def do_problem_setup(model_data, data_instance):
     return do_base_problem_setup(model_data, data_instance)
 
 
+def do_problem_setup_unlegacy(model_data, data_instance):
+    problem = do_base_problem_setup(model_data, data_instance)
+    problem["time"] = numpy.arange(0,61,2)
+    return problem
+    
+
 # TODO: extract
 def do_problem_setup_0_60(model_data, data_instance):
     problem = do_base_problem_setup(model_data, data_instance)
@@ -139,6 +157,25 @@ def do_problem_setup_0_60(model_data, data_instance):
                                                    numpy.asarray([0.35,0.35,2]), \
                                                    numpy.asarray([0.35,0.35,0.5])]
     problem["forcing_inputs"] = forcing_inputs
+    problem["output_filters"] = dict(momoda.output_filters)
+    problem["output_filters"]["measurement_splices"] = [slice(0,31,1)]
+    problem["output_filters"]["calibration_mask"] = [31]
+    problem["output_filters"]["validation_mask"] = [0]
+    return problem
+
+
+def do_problem_setup_0_60_spliced_yesyesno(model_data, data_instance):
+    problem = do_problem_setup_unlegacy(model_data, data_instance)
+    forcing_inputs = copy.deepcopy(models.model_data.forcing_function_profile)
+    forcing_inputs["continuous_time_intervals"] = [0,20,30,60]
+    forcing_inputs["piecewise_constant_inputs"] = [numpy.asarray([0.25,0.25,2]), \
+                                                   numpy.asarray([0.35,0.35,2]), \
+                                                   numpy.asarray([0.35,0.35,0.5])]
+    problem["forcing_inputs"] = forcing_inputs
+    problem["output_filters"] = dict(momoda.output_filters)
+    problem["output_filters"]["measurement_splices"] = [slice(0,15,1)]
+    problem["output_filters"]["calibration_mask"] = [15]
+    problem["output_filters"]["validation_mask"] = [0,15]
     return problem
 
 
@@ -169,6 +206,13 @@ def do_problem_setup_0_60_with_covariance_2(model_data, data_instance):
     return problem_data
 
 
+def do_problem_setup_0_60_spliced_yesyesno_with_covariance_2(model_data, data_instance):
+    problem_data = do_problem_setup_0_60_spliced_yesyesno(model_data, data_instance)
+    problem_data["measurements_covariance_trace"] = numpy.array([3.80E-002, 2.46E-002, 2.53E-002, 1.16E-003, 3.20E-003])
+    mmdu.check_correctness_of_measurements_covariance_matrix(problem_data)
+    return problem_data
+
+
 def do_problem_setup_with_covariance_2_and_low_confidence(model_data, data_instance):
     problem_data = do_problem_setup_with_covariance_2(model_data, data_instance)
     do_modify_problem_using_low_confidence(problem_data)
@@ -185,6 +229,7 @@ def do_problem_setup_with_exclude_with_covariance_2(model_data, data_instance):
     mmdu.check_correctness_of_measurements_covariance_matrix(problem_data)
     return problem_data
 
+# --------------------------------------------------------------------------- #
 
 def do_sensitivity_setup():
     return solvers.local_sensitivities.compute_timecourse_trajectories_and_sensitivities
@@ -221,6 +266,7 @@ def do_sensitivity_problem_setup(model_data, data_instance):
 
     return problem_data
 
+# --------------------------------------------------------------------------- #
 
 # TODO: think where this should go
 def do_labels():
@@ -230,7 +276,9 @@ def do_labels():
     
     return labels
 
+# --------------------------------------------------------------------------- #
 
+# TODO: 2015-05-15, split into abstract and NM
 def do_algorithm_setup(instrumentation_data):
     p = numpy.ones(len(mkb.pmap))
     for par in mkb.pmap.items():
@@ -239,7 +287,7 @@ def do_algorithm_setup(instrumentation_data):
     initial_guesses = []
     for ii in range(len(pi)):
         initial_guesses.append(copy.deepcopy(p[pi[ii]]))
-    algorithm_data = dict(solvers.solver_data.algorithm_structure)
+    algorithm_data = dict(sosoda.algorithm_structure)
     if instrumentation_data is not None:
         algorithm_data["callback"] = instrumentation_data["logger"].log_decision_variables
     algorithm_data["initial_guesses"] = initial_guesses
@@ -247,13 +295,19 @@ def do_algorithm_setup(instrumentation_data):
     return algorithm_data
 
     
-def do_algorithm_setup_using_slsqp_with_positivity(instrumentation_data):
+def do_algorithm_setup_using_slsqp(instrumentation_data):
     algorithm_data = do_algorithm_setup(instrumentation_data)
     algorithm_data["method"] = "SLSQP"
+    return algorithm_data
+
+
+def do_algorithm_setup_using_slsqp_with_positivity(instrumentation_data):
+    algorithm_data = do_algorithm_setup_using_slsqp(instrumentation_data)
     logger = sosout.DecisionVariableLogger()
     algorithm_data["callback"] = logger.let_decision_variables_be_positive_and_log
     return algorithm_data
 
+# --------------------------------------------------------------------------- #
 
 def do_instrumentation_setup():
     instrumentation_data = dict(setups.setup_data.instrumentation_data)
@@ -268,7 +322,7 @@ def do_protocol_setup():
 
 # --------------------------------------------------------------------------- #
 
-def do_experiment_setup():
+def do_experiment_setup_base():
     config = copy.deepcopy(setups.setup_data.experiment_setup)
     config["algorithm_setup"] = do_algorithm_setup
     config["data_setup"] = do_get_published_data_spliced_111111
@@ -276,14 +330,14 @@ def do_experiment_setup():
     config["problem_setup"] = do_problem_setup_with_covariance_2
     config["protocol_setup"] = do_protocol_setup
     config["protocol_step"]["calib"] = "do"
-    config["protocol_step"]["valid"] = "donot"
+    config["protocol_step"]["valid"] = "do"
     # TODO: () or not ()?
     config["sensitivity_setup"] = do_sensitivity_setup()
     return config
 
 
 def do_experiment_setup_0_20():
-    return do_experiment_setup()
+    return do_experiment_setup_base()
     
 
 def do_experiment_setup_0_60():
@@ -299,6 +353,13 @@ def do_experiment_setup_0_60():
     config["sensitivity_setup"] = do_sensitivity_setup()
     return config
 
+
+def do_experiment_setup_0_60_spliced_yesyesno():
+    config = do_experiment_setup_0_60()
+    config["problem_setup"] = do_problem_setup_0_60_spliced_yesyesno_with_covariance_2
+    config["data_setup"] = do_get_published_data_0_60_spliced_yesyesno
+    return config
+    
 
 def do_experiment_setup_0_20_twice():
     config = copy.deepcopy(setups.setup_data.experiment_setup)
@@ -336,7 +397,6 @@ def do_problem_setup_twice(model_data, data_instance):
     
     problem["performance_measure"] = mod.sum_squared_residuals
     return problem
-
 
 # --------------------------------------------------------------------------- #
 

@@ -5,6 +5,9 @@ import numpy
 import common.diagnostics as cd
 import common.utilities
 import models.model_data_utils as mmdu
+
+import engine.state_integration as enstin
+# legacy
 import solvers.initial_value
 
 
@@ -13,6 +16,114 @@ def handle_initial_point(values, problem_instance):
         values = common.utilities.exclude_initial_point(values)
     return values
 
+
+# TODO: 2015-05-28; should always return a list
+def residuals(model, problem):
+    """
+    compute residuals for individual measurements for all experiments
+    returns real or numpy.array
+    """
+    num_exps = len(problem["experiments"])
+    if num_exps == 0:
+        # this could return a real and should not
+        if problem["output_filters"] is None:
+            return residuals_st(None, model, problem)
+        else:
+            return residuals_single_experiment(model, problem)
+    residuals_per_exp = []
+    for ii in range(num_exps):
+        # TODO: extend to handle forcing_inputs too
+        # WIP: 2015-05-14, 2015-05-15
+        experiment = problem["experiments"][ii]
+        problem["time"] = experiment["time"]
+        problem["initial_conditions"] = experiment["initial_condition_measurements"]
+        problem["inputs"] = experiment["input_measurements"]
+        problem["outputs"] = experiment["output_measurements"]
+        res = None
+        if problem["output_filters"] is None:
+            res = residuals_st(None, model, problem)
+        else:
+            res = residuals_single_experiment(model, problem)
+        residuals_per_exp.append(res)
+    residuals_per_obs = []
+    num_obs = len(problem["output_indices"])
+    for jj in range(num_obs):
+        residuals_per_obs.append(residuals_per_exp[0][jj])
+    for ii in range(1,num_exps):
+        for jj in range(num_obs):
+            residuals_per_obs[jj] = numpy.concatenate((residuals_per_obs[jj],residuals_per_exp[ii][jj]))
+    return residuals_per_obs
+
+
+def sum_squared_residuals(dof, model, problem):
+    """
+    compute a single ssr for all observables collectively, for all experiments
+    dof        values of decision variables (degrees-of-freedom); it can be None
+    returns    real
+    """
+    if dof is not None:
+        mmdu.apply_values_to_parameters(dof, model, problem)
+    # MAYDO: this could be more pythonic?
+    res = 0.0
+    resids = residuals(model, problem)
+    for ii in range(len(problem["output_indices"])):
+        res += math.fsum(res**2 for res in resids[ii])
+    return res
+
+
+# TODO: 2015-05-18, more pythonic
+# TODO: 2015-05-28; should always return a list
+def residuals_single_experiment(model, problem):
+    """
+    compute residuals for individual measurements for a single experiment
+    returns real or numpy.array
+    """
+    assert(model is not None and problem is not None)
+    assert(len(problem["output_indices"]) > 0)
+    assert(len(problem["output_indices"]) == len(problem["outputs"]))
+    # TODO: preconditions
+    
+    #TODO: handle initial point?
+    measured = numpy.asarray(problem["outputs"])
+    predicted = enstin.compute_timecourse_trajectories(model, problem)
+    if problem["measurements_covariance_trace"] is None:
+        cov = numpy.ones(len(problem["outputs"]))
+    else:
+        cov = problem["measurements_covariance_trace"] 
+
+    if len(measured.shape) == 1:
+        assert(False)
+        raise
+    # there is one residual per experiment
+    # but for the moment there is also a single experiment
+    # there is one residual per state (and per experiment)
+    res = numpy.empty(measured.shape)
+    for jj in range(len(problem["output_indices"])):
+        measured_s = measured[jj]
+        predicted_s = predicted[problem["output_indices"][jj]]
+        res[jj] = numpy.subtract(measured_s, predicted_s) / cov[jj]
+    return res
+
+
+def sums_squared_residuals_unlegacy(model, problem):
+    """
+    compute the ssr for each observable (trajectory) independently, for all experiments
+    returns numpy.array
+    """
+    # TODO: preconditions
+    
+    sum_res = []
+    ress = residuals(model, problem)
+    for ii in range(len(problem["output_indices"])):
+        sum_res.append(math.fsum(res**2 for res in ress[ii]))
+    return numpy.asarray(sum_res)
+
+
+# -----------------------------------------------------------------------------
+'''
+Legacy
+'''
+# -----------------------------------------------------------------------------
 
 # TODO: rename; remove "_st"
 # TODO: !! consider always returning list of residuals, even in degenerate case of single residual
@@ -132,49 +243,3 @@ def sum_squared_residuals_st(dof, model, model_instance, problem_instance):
     for ii in range(len(problem_instance["output_indices"])):
         res += math.fsum(res**2 for res in residuals[ii])
     return res
-
-
-# TODO: extend to handle forcing_inputs too
-def residuals(model, problem):
-    """
-    compute residuals for individual measurements for all experiments
-    returns real or list (should always return a list)
-    """
-    num_exps = len(problem["experiments"])
-    if num_exps == 0:
-        # this could return a real and should not
-        return residuals_st(None, model, problem)
-    residuals_per_exp = []
-    for ii in range(num_exps):
-        # TODO: extend to handle forcing_inputs too
-        experiment = problem["experiments"][ii]
-        problem["time"] = experiment["time"]
-        problem["initial_conditions"] = experiment["initial_condition_measurements"]
-        problem["inputs"] = experiment["input_measurements"]
-        problem["outputs"] = experiment["output_measurements"]
-        residuals_per_exp.append(residuals_st(None, model, problem))
-    residuals_per_obs = []
-    num_obs = len(problem["output_indices"])
-    for jj in range(num_obs):
-        residuals_per_obs.append(residuals_per_exp[0][jj])
-    for ii in range(1,num_exps):
-        for jj in range(num_obs):
-            #residuals_per_obs[ii] = numpy.concatenate((residuals_per_obs[ii],residuals_per_exp[ii][jj]))
-            residuals_per_obs[jj] = numpy.concatenate((residuals_per_obs[jj],residuals_per_exp[ii][jj]))
-    return residuals_per_obs
-
-
-def sum_squared_residuals(dof, model, problem):
-    """
-    compute a single ssr for all observables collectively
-    returns real
-    """
-    if dof is not None:
-        mmdu.apply_values_to_parameters(dof, model, problem)
-    # MAYDO: this could be more pythonic?
-    res = 0.0
-    resids = residuals(model, problem)
-    for ii in range(len(problem["output_indices"])):
-        res += math.fsum(res**2 for res in resids[ii])
-    return res
-    

@@ -6,6 +6,7 @@ solver_settings = {
     "maxiter": None,
     "eps": None,
     "ftol": None,
+    "maxfev": None, # NM
     }
 
 

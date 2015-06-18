@@ -31,7 +31,9 @@ calib_valid_baseline = {
 # self.do_experiment_setup
 def test_baseline_calibration(setup, baseline, unittester):
     """
-    baseline can be None
+    Does calibration, and then basic and sensitivity workflows at solution point 
+    baseline    testpoint, can be None
+    return      return: models.model_data.optimisation_problem_point
     """
     config = setup()
     calibrated = wpr.do_calibration_and_compute_performance_measure(config)
@@ -118,7 +120,7 @@ def test_calibration_with_nonlinear_confidence_region(protocol, baseline, unitte
     
     # setup nonlin conf reg
     algorithm_nlr = protocol["steps"][nlr]["algorithm_setup"](None)
-    model, problem, algorithm_mcs = ssdu.get_model_problem_algorithm(protocol["steps"][mcs])
+    model, problem, algorithm_mcs = ssdu.get_model_problem_algorithm_with_calib(protocol["steps"][mcs])
     if True:
         do_appy_bounds(best_point["decision_variables"], problem)
     

@@ -25,6 +25,7 @@ import workflows.experiments as woex
 import workflows.reporting as wore
 
 
+# TODO: 2015-05-31; establish quick_tests
 class TestKremlingEtAlBioreactor(unittest.TestCase):
 
 
@@ -165,6 +166,9 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
     
 
     def test_calibration_workflow_1(self):
+        """
+        0-20hr
+        """
         baseline = dict(woex.calib_valid_baseline)
         basepoint = baseline["calib"]
         basepoint["point"]["objective_function"] = 55.730316319527418
@@ -173,12 +177,15 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
         basepoint["of_delta"] = 0.0000001
         basepoint["dv_deltas"] = numpy.array([  0.00000001e-05,  0.00000001e+06,  0.00000001e-03,  0.00000001e-01])
 
-        calibrated = woex.test_baseline_calibration(testmetoo.do_experiment_setup, baseline["calib"], self)
+        calibrated = woex.test_baseline_calibration(testmetoo.do_experiment_setup_0_20, baseline["calib"], self)
         if self.do_plotting:
-            wore.plot_tiled_trajectories_at_point(testmetoo.do_experiment_setup(), calibrated)
+            wore.plot_tiled_trajectories_at_point(testmetoo.do_experiment_setup_0_20(), calibrated)
 
 
     def test_calibration_workflow_2(self):
+        """
+        0-20hr twice
+        """
         baseline = dict(woex.calib_valid_baseline)
         basepoint = baseline["calib"]
         basepoint["point"]["objective_function"] = 111.46063263905484
@@ -193,6 +200,10 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
 
 
     def test_nonlinear_confidence_region_1(self):
+        """
+        0-20hr
+        high confidence
+        """
         baseline = {}
         baseline["number_of_points"] = 80
         baseline["intervals"] = [ \
@@ -207,6 +218,10 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
 
 
     def test_nonlinear_confidence_region_1_low_confidence(self):
+        """
+        0-20hr
+        low confidence
+        """
         baseline = {}
         baseline["number_of_points"] = 81
         baseline["intervals"] = [ \
@@ -221,6 +236,10 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
         
 
     def test_nonlinear_confidence_region_2(self):
+        """
+        0-20hr twice
+        high confidence
+        """
         baseline = {}
         baseline["number_of_points"] = 79
         baseline["intervals"] = [ \
@@ -235,6 +254,10 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
 
 
     def test_nonlinear_confidence_region_3(self):
+        """
+        0-60hr
+        high confidence
+        """
         baseline = {}
         baseline["number_of_points"] = 1
         baseline["intervals"] = [ \
