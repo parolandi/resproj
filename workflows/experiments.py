@@ -56,7 +56,6 @@ def test_baseline_calibration(setup, baseline, unittester):
         [unittester.assertAlmostEquals(act, exp, delta=diff) for act, exp, diff in zip(actual, expected, deltas)]
     else:
         cd.print_unexpected_code_branch_message()
-    logging.info(calibrated)
     return calibrated
 
 

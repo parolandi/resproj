@@ -39,8 +39,6 @@ def solve(model_data, problem_data):
     # TODO: sort alphabetically
     
     if problem_data["forcing_inputs"] is None:
-        logging.info(problem_data)
-
         y, data, status = scipy.integrate.odeint(
             func        = model_data["model"], \
             y0          = problem_data["initial_conditions"], \
@@ -94,8 +92,6 @@ def solve(model_data, problem_data):
             if ii > 0:
                 problem_data["initial_conditions"] = initials
              
-            #logging.info(problem_data)
-            
             y_s, data_s, status_s = scipy.integrate.odeint(
                 func        = model_data["model"], \
                 y0          = problem_data["initial_conditions"], \

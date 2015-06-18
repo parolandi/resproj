@@ -4,7 +4,6 @@ import data.data_splicing as dadasp
 import solvers.initial_value as soiv
 
 import numpy
-import logging
 
 
 # WIP: 2015-05-18, rename trajectory filters
@@ -23,7 +22,6 @@ def compute_timecourse_trajectories(model, problem):
     for ii in range(len(model["states"])):
         spliced_trajectories.append( \
             dadasp.splice_data(problem["output_filters"]["measurement_splices"], trajectories[ii]))
-    logging.info(spliced_trajectories)
     return numpy.asarray(spliced_trajectories)    
 
 
@@ -52,8 +50,6 @@ def compute_calibration_and_validation_timecourse_trajectories(model, problem):
                     problem["output_filters"]["validation_mask"]),
                     trajectories[ii]))
     
-    #logging.info(calib_trajectories)
-    #logging.info(valid_trajectories)
     calib_valid_trajectories = dict(momoda.calib_valid_experimental_dataset)
     
     calib_valid_trajectories["calib"]["time"] = dadasp.splice_data( \
