@@ -3,9 +3,11 @@ import unittest
 import setups.kremlingetal_bioreactor as skb
 
 import copy
+import logging
 import numpy
 import time
 
+import common.diagnostics as codi
 import metrics.ordinary_differential as mo
 import results.plot_tiles as rpt
 import solvers.initial_value as si
@@ -23,6 +25,9 @@ class TestExperiment04(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
         super(TestExperiment04, self).__init__(*args, **kwargs)
+        logging.basicConfig(filename=codi.get_name_logging_file(),level=codi.get_logging_level())
+        logging.info("exp-04")
+        logging.info(codi.get_date_and_time())
         self.do_plotting = False
         self.model_key = "modelB"
         

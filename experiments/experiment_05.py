@@ -3,8 +3,10 @@ import unittest
 import setups.kremlingetal_bioreactor as skb
 
 import copy
+import logging
 import numpy
 
+import common.diagnostics as codi
 import metrics.ordinary_differential as mod
 import models.model_data as mmd
 import setups.setup_data as ssd
@@ -21,6 +23,9 @@ class TestExperiment05(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
         super(TestExperiment05, self).__init__(*args, **kwargs)
+        logging.basicConfig(filename=codi.get_name_logging_file(),level=codi.get_logging_level())
+        logging.info("exp-05")
+        logging.info(codi.get_date_and_time())
         self.do_plotting = False
     
     

@@ -3,8 +3,10 @@ import unittest
 import setups.kremlingetal_bioreactor as skb
 
 import copy
+import logging
 import numpy
 
+import common.diagnostics as codi
 import setups.setup_data as ssd
 import workflows.experiments as we
 import workflows.reporting as wr
@@ -20,6 +22,9 @@ class TestExperiment08(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
         super(TestExperiment08, self).__init__(*args, **kwargs)
+        logging.basicConfig(filename=codi.get_name_logging_file(),level=codi.get_logging_level())
+        logging.info("exp-08")
+        logging.info(codi.get_date_and_time())
         self.do_plotting = False
 
     
