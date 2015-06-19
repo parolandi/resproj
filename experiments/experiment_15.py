@@ -40,9 +40,10 @@ class TestExperiment15(unittest.TestCase):
         basepoint["dv_deltas"] = numpy.array( \
             [  0.00000001e-05,  0.00000001e+06,  0.00000001e-02,  0.00000001e-02])
 
-        calibrated = woex.test_baseline_calibration(sekrbi.do_experiment_setup_0_60, baseline["calib"], self)
+        experiment = sekrbi.do_experiment_setup_0_60
+        calibrated = woex.test_baseline_calibration(experiment, basepoint, self)
         if self.do_plotting:
-            wore.plot_tiled_trajectories_at_point(sekrbi.do_experiment_setup_0_60(), calibrated)
+            wore.plot_tiled_trajectories_at_point(experiment(), calibrated)
 
 
     def dn_test_nonlinear_confidence_region(self):
