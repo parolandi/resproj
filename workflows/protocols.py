@@ -3,11 +3,12 @@ import copy
 import logging
 import numpy
 
+import data.data_splicing as dadasp
+import engine.statistical_inference as esi
+import engine.estimation_matrices as eem
 import metrics.statistical_tests as mst
 import models.model_data as mmd
 import models.model_data_utils as mmdu
-import engine.statistical_inference as esi
-import engine.estimation_matrices as eem
 import setups.setup_data_utils as ssdu
 import solvers.initial_value as siv
 import solvers.least_squares as sls
@@ -42,13 +43,22 @@ def do_calibration_and_compute_performance_measure(config):
     config: setups.setup_data.experiment_setup
     return: models.model_data.optimisation_problem_point
     """
+    logging.debug("workflows.protocols.do_calibration_and_compute_performance_measure")
     # setup
     # TODO: 2015-05-15, reuse
     model_instance = config["model_setup"]()
     data_instance = config["data_setup"]()
     problem_instance  = config["problem_setup"](model_instance, data_instance["calib"])
     algorithm_instance = config["algorithm_setup"](None)
+    # TODO: 2015-06-20; assert this is a calibration protocol step
+    
+    # housekeeping
+    measurement_splices = problem_instance["output_filters"]["measurement_splices"]
 
+    # WIP: 2015-06-21; refactor, extract
+    problem_instance["output_filters"]["measurement_splices"] = \
+        dadasp.convert_mask_to_index_expression(problem_instance["output_filters"]["calibration_mask"])
+    
     # least-squares
     result = sls.solve(model_instance, problem_instance, algorithm_instance)
 
@@ -64,15 +74,28 @@ def do_calibration_and_compute_performance_measure(config):
     calib_sol = dict(mmd.optimisation_problem_point)
     calib_sol["decision_variables"] = numpy.asarray(copy.deepcopy(problem_instance["parameters"]))
     calib_sol["objective_function"] = ssr_fit
+    
+    # housekeeping
+    problem_instance["output_filters"]["measurement_splices"] = measurement_splices
+    
     return calib_sol 
 
 
 def do_validation_and_compute_performance_measure_at_solution_point(config, solution_point):
+    logging.debug("workflows.protocols.do_validation_and_compute_performance_measure_at_solution_point")
     # setup
     model_instance = config["model_setup"]()
     data_instance = config["data_setup"]()
     problem_instance  = config["problem_setup"](model_instance, data_instance["valid"])
+    # TODO: 2015-06-20; assert this is a validation protocol step
 
+    # housekeeping
+    measurement_splices = problem_instance["output_filters"]["measurement_splices"]
+
+    # WIP: 2015-06-21; refactor, extract
+    problem_instance["output_filters"]["measurement_splices"] = \
+        dadasp.convert_mask_to_index_expression(problem_instance["output_filters"]["validation_mask"])
+    
     # verification    
     # WIP: 2015-05-15, should this be needed?
     # need to do this here because problem data is kind of ignored
@@ -85,6 +108,10 @@ def do_validation_and_compute_performance_measure_at_solution_point(config, solu
 
     valid_sol = copy.deepcopy(solution_point)
     valid_sol["objective_function"] = ssr_fit
+
+    # housekeeping
+    problem_instance["output_filters"]["measurement_splices"] = measurement_splices
+
     return valid_sol 
 
 
@@ -146,17 +173,27 @@ def do_basic_workflow_at_solution_point(config, solution_point):
     '''
     Compute SSR; total and contributions
     Compute chi-squared test; total and contributions
+    Do for calibration or validation
     config:         setups.setup_data.experiment_setup
     solution_point: models.model_data.optimisation_problem_point
     return:         workflows.workflow_data.system_based_point_results
     '''
+    logging.debug("workflows.protocols.do_basic_workflow_at_solution_point")
     assert(solution_point is not None)
     # TODO: preconditions!
 
     stdev = hack.hacks.get_stdev()
     # setup
-    model_instance, problem_instance, protocol = \
-        ssdu.get_model_problem_protocol(config)
+    model_instance, problem_instance, protocol, protocol_step = ssdu.get_model_problem_protocol_and_step(config)
+    # WIP: 2015-06-21; refactor, extract
+    if protocol_step == "calib":
+        problem_instance["output_filters"]["measurement_splices"] = \
+            dadasp.convert_mask_to_index_expression(problem_instance["output_filters"]["calibration_mask"])
+    elif protocol_step == "valid":
+        problem_instance["output_filters"]["measurement_splices"] = \
+            dadasp.convert_mask_to_index_expression(problem_instance["output_filters"]["validation_mask"])
+    else:
+        raise
     mmdu.apply_decision_variables_to_parameters(solution_point, model_instance, problem_instance)
     assert(problem_instance["performance_measure"] is protocol["performance_measure"])
     # objective function
@@ -194,6 +231,7 @@ def do_linearised_parametric_uncertainty(problem_instance, ssr, sens_trajectorie
     lin_par_unc["cov_det"] = eem.calculate_determinant(cov_matrix)
     lin_par_unc["corr_det"] = eem.calculate_determinant(corr_matrix)
     return lin_par_unc
+
 
 def convert_to_sensitivity_based_workflow_results(problem_instance, lin_par_unc):
     workflow_results = dict(wwd.sensitivity_based_point_results)
@@ -250,6 +288,7 @@ def do_sensitivity_based_workflow_at_solution_point(config, solution_point):
     solution_point:
     return: workflows.workflow_data.sensitivity_based_point_results
     """
+    logging.debug("workflows.protocols.do_sensitivity_based_workflow_at_solution_point")
     assert(solution_point is not None)
     # TODO: preconditions!
     ssr = solution_point["objective_function"]
