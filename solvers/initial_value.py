@@ -91,7 +91,11 @@ def solve(model_data, problem_data):
             
             if ii > 0:
                 problem_data["initial_conditions"] = initials
-             
+            
+            logging.debug("solvers.initial_value.solve")
+            logging.debug(model_data)
+            logging.debug(problem_data)
+            
             y_s, data_s, status_s = scipy.integrate.odeint(
                 func        = model_data["model"], \
                 y0          = problem_data["initial_conditions"], \
@@ -120,6 +124,7 @@ def solve(model_data, problem_data):
             problem_data["time"] = times_orig
             
         # TODO: 2015-0416, this invariant needs to be done better
+        # TODO: 2015-0621; not fully invariant; e.g., forcing inputs
         problem_data["time"] = times_orig
         problem_data["initial_conditions"] = initial_conditions_orig
     return status, y, data
