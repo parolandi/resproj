@@ -180,6 +180,7 @@ def splice_data_with_pattern_011011(times, meas, noise, true):
     return datasets
 
 
+# TODO: 2015-06-21; refactor, extract to common
 def convert_mask_to_index_expression(mask):
     end = 0
     slices = []
