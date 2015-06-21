@@ -376,7 +376,7 @@ def do_experiment_setup_0_60():
     config["problem_setup"] = do_problem_setup_0_60_with_covariance_2
     config["protocol_setup"] = do_protocol_setup
     config["protocol_step"]["calib"] = "do"
-    config["protocol_step"]["valid"] = "donot"
+    config["protocol_step"]["valid"] = "do"
     # TODO: () or not ()?
     config["sensitivity_setup"] = do_sensitivity_setup()
     return config
