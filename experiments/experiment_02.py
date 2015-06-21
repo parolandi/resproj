@@ -1,5 +1,8 @@
 import unittest
 
+import logging
+
+import common.diagnostics as codi
 import data.data_splicing
 import experiments.experiment
 
@@ -10,6 +13,13 @@ Examine the effect of changing the number of data points between
 using CG
 '''
 class TestExperiment02(unittest.TestCase):
+
+
+    def __init__(self, *args, **kwargs):
+        super(TestExperiment02, self).__init__(*args, **kwargs)
+        logging.basicConfig(filename=codi.get_name_logging_file(),level=codi.get_logging_level())
+        logging.info("exp-02")
+        logging.info(codi.get_date_and_time())
 
 
     CG_method = "key-CG"

@@ -23,6 +23,8 @@ class TestExperiment14(unittest.TestCase):
         self.do_plotting = False
         self.do_quick_tests_only = True
         logging.basicConfig(filename=codi.get_name_logging_file(),level=codi.get_logging_level())
+        logging.info("exp-14")
+        logging.info(codi.get_date_and_time())
 
     
     def do_experiment_setup(self):

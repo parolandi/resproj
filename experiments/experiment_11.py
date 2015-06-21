@@ -27,6 +27,8 @@ class TestExperiment11(unittest.TestCase):
     def __init__(self, *args, **kwargs):
         super(TestExperiment11, self).__init__(*args, **kwargs)
         logging.basicConfig(filename=codi.get_name_logging_file(),level=codi.get_logging_level())
+        logging.info("exp-11")
+        logging.info(codi.get_date_and_time())
         self.do_plotting = False
 
     

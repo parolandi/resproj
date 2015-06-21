@@ -16,6 +16,10 @@ def get_logging_level():
     return logging.INFO
     
 
+def get_debugging_level():
+    return logging.DEBUG
+
+
 def legacy_code_message():
     return "Warning: this is a legacy code path"
 

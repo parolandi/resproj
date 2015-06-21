@@ -49,13 +49,13 @@ def get_model_problem_algorithm_with_calib(config):
     return model_instance, problem_instance, algorithm
 
 
-def get_model_problem_protocol(config):
+def get_model_problem_protocol_and_step(config):
     protocol = config["protocol_setup"]()
     model = config["model_setup"]()
     data = config["data_setup"]()
     protocol_step = get_next_protocol_step(config)
     problem = config["problem_setup"](model, data[protocol_step])
-    return model, problem, protocol
+    return model, problem, protocol, protocol_step
 
 
 def get_next_protocol_step(config):

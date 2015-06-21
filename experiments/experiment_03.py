@@ -1,6 +1,9 @@
 
 import unittest
 
+import logging
+
+import common.diagnostics as codi
 import data.data_splicing
 import experiments.experiment
 
@@ -13,6 +16,13 @@ using CG
 class TestExperiment03(unittest.TestCase):
 
 
+    def __init__(self, *args, **kwargs):
+        super(TestExperiment03, self).__init__(*args, **kwargs)
+        logging.basicConfig(filename=codi.get_name_logging_file(),level=codi.get_logging_level())
+        logging.info("exp-03")
+        logging.info(codi.get_date_and_time())
+
+    
     number_of_intervals = 30
     CG_method = "key-CG"
 

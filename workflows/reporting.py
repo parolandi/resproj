@@ -1,4 +1,6 @@
 
+import logging
+
 import data.generator as dg
 import models.model_data_utils as mmdu
 import results.plot_tiles as rpt
@@ -9,6 +11,7 @@ def plot_tiled_trajectories_at_point(config, point):
     '''
     Legacy-ish as of 2015-05-26
     '''
+    logging.info("reporting.plot_tiled_trajectories_at_point")
     # setup
     model_data = config["model_setup"]()
     data_instance = config["data_setup"]()
@@ -30,6 +33,7 @@ def plot_tiled_calibration_and_validation_trajectories_at_point(config, point):
     '''
     config: models.model_data.calib_valid_experimental_dataset
     '''
+    logging.info("reporting.plot_tiled_calibration_and_validation_trajectories_at_point")
     # setup
     model_data = config["model_setup"]()
     data_instance = config["data_setup"]()
@@ -57,6 +61,7 @@ def plot_tiled_calibration_validation_and_residual_trajectories_at_point(config,
     '''
     config: models.model_data.calib_valid_experimental_dataset
     '''
+    logging.info("reporting.plot_tiled_calibration_validation_and_residual_trajectories_at_point")
     # setup
     model_data = config["model_setup"]()
     data_instance = config["data_setup"]()
