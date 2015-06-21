@@ -67,6 +67,7 @@ def test_baseline_validation(setup, baseline, unittester, point):
     config = setup()
     # TODO: should probably be returning here if there is no validation to perform
     # e.g., in order to plot calib and valid
+    # WIP 2015-06-20; this is buggy, it should be set higher up and or checked for correctness
     ssdu.set_next_protocol_step(config)
     validated = wpr.do_validation_and_compute_performance_measure_at_solution_point(config, point)
     # output
