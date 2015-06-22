@@ -1,6 +1,7 @@
 
 import numpy
 
+# TODO: 2015-06-21; rename to solver parameter settings
 solver_settings = {
     "disp": None,
     "maxiter": None,
@@ -20,6 +21,7 @@ def prune_solver_settings(settings):
 
 algorithm_structure = {
     "callback": None,
+    "class": None,
     "initial_guesses": numpy.empty(1),
     "method": "",
     "tolerance": None,
