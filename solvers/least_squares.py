@@ -11,6 +11,9 @@ import common.diagnostics as cdi
 # TODO: exceptions
 # raise ValueError unknown solver
 def solve(model_instance, problem_instance, algorithm_structure):
+    """
+    return: OptimizeResult
+    """
     assert(len(problem_instance["parameter_indices"]) == len(algorithm_structure["initial_guesses"]))
     assert(model_instance["model"] is not None)
     assert(problem_instance["performance_measure"] is not None)
