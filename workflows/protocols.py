@@ -11,8 +11,8 @@ import models.model_data as mmd
 import models.model_data_utils as mmdu
 import setups.setup_data_utils as ssdu
 import solvers.initial_value as siv
-import solvers.least_squares as sls
 import solvers.local_sensitivities as sse
+import solvers.nlp_interface as sonlin
 import workflows.workflow_data as wwd
 
 import hack.hacks
@@ -60,7 +60,11 @@ def do_calibration_and_compute_performance_measure(config):
         dadasp.convert_mask_to_index_expression(problem_instance["output_filters"]["calibration_mask"])
     
     # least-squares
-    result = sls.solve(model_instance, problem_instance, algorithm_instance)
+    # TODO: 2015-06-23; legacy
+    if algorithm_instance["class"] is not None:
+        result = sonlin.solve(model_instance, problem_instance, algorithm_instance)
+    else:
+        result = sonlin.solesq.solve(model_instance, problem_instance, algorithm_instance)
 
     # verification    
     # WIP: 2015-05-15, should this be needed?

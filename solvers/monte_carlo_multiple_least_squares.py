@@ -2,6 +2,7 @@
 from __future__ import print_function
 
 import copy
+import logging
 import time
 
 import metrics.ordinary_differential as mod
@@ -11,8 +12,9 @@ import solvers.solver_data as ss
 
 
 montecarlo_multiple_optimisation_params = {
-    "number_of_trials": 0,
+    "class": None,
     "decision_variable_ranges": [],
+    "number_of_trials": 0,
     "random_number_generator_seed": 117,
     "subsolver_params": dict(ss.algorithm_structure)
     }
@@ -81,10 +83,12 @@ def montecarlo_multiple_least_squares(model, problem, algorithm):
     # TODO: preconditions!
     
     monte_carlo_points = smcs.do_sampling(algorithm)
-
+    logging.debug("mc-points: " + str(monte_carlo_points))
+    
     result = dict(montecarlo_multiple_optimisation_result)
     subsolver_algorithm = dict(algorithm["subsolver_params"])
     for ii in range(algorithm["number_of_trials"]):
+        logging.info("mc-trial (heart beat): " + str(ii))
         initial_guesses = []
         for jj in range(dv_count):
             initial_guesses.append(monte_carlo_points[jj][ii])

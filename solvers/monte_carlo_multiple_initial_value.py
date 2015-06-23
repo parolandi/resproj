@@ -13,8 +13,9 @@ import solvers.solver_data as ss
 
 
 montecarlo_multiple_simulation_params = {
-    "number_of_trials": 0,
+    "class": None,
     "decision_variable_ranges": [()], # tuples
+    "number_of_trials": 0,
     "random_number_generator_seed": 117,
     "subsolver_params": dict(ss.algorithm_structure)
     }

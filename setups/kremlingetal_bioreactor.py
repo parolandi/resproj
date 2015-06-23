@@ -335,6 +335,24 @@ def do_algorithm_setup_using_slsqp_with_positivity(instrumentation_data):
     algorithm_data["callback"] = logger.let_decision_variables_be_positive_and_log
     return algorithm_data
 
+
+def do_algorithm_config_mcm_ranges_10xpm(data):
+    data["decision_variable_ranges"] = [ \
+        (7.21144459e-05*0.1, 7.21144459e-05*10), \
+        (5.92826673e+06*0.1, 5.92826673e+06*10), \
+        (1.21249611e-02*0.1, 1.21249611e-02*10), \
+        (1.71735070e-02*0.1, 1.71735070e-02*10)]
+    return data
+
+
+def do_algorithm_setup_global_neldermead_100_10xpm(instrumentation_data):
+    data = dict(senu.sonlin.somcmlesq.montecarlo_multiple_optimisation_params)
+    data = senu.do_config_mcm_100(data)
+    data = senu.do_config_mcmls_nlp(data)
+    data = senu.do_config_mcmls_nm(data)
+    data = do_algorithm_config_mcm_ranges_10xpm(data)
+    return data
+
 # --------------------------------------------------------------------------- #
 
 def do_instrumentation_setup():
@@ -379,6 +397,12 @@ def do_experiment_setup_0_60():
     config["protocol_step"]["valid"] = "do"
     # TODO: () or not ()?
     config["sensitivity_setup"] = do_sensitivity_setup()
+    return config
+
+
+def do_experiment_setup_0_60_with_global_neldermead_100_10xpm():
+    config = do_experiment_setup_0_60()
+    config["algorithm_setup"] = do_algorithm_setup_global_neldermead_100_10xpm
     return config
 
 
