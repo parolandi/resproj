@@ -413,10 +413,22 @@ def do_experiment_setup_0_60_spliced_yesyesno():
     return config
     
 
+def do_experiment_setup_0_60_spliced_yesyesno_with_global_neldermead_100_10xpm():
+    config = do_experiment_setup_0_60_spliced_yesyesno()
+    config["algorithm_setup"] = do_algorithm_setup_global_neldermead_100_10xpm
+    return config
+
+
 def do_experiment_setup_0_60_spliced_yesnoyes():
     config = do_experiment_setup_0_60()
     config["problem_setup"] = do_problem_setup_0_60_spliced_yesnoyes_with_covariance_2
     config["data_setup"] = do_get_published_data_0_60_spliced_yesnoyes
+    return config
+
+
+def do_experiment_setup_0_60_spliced_yesnoyes_with_global_neldermead_100_10xpm():
+    config = do_experiment_setup_0_60_spliced_yesnoyes()
+    config["algorithm_setup"] = do_algorithm_setup_global_neldermead_100_10xpm
     return config
 
 

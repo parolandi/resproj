@@ -1,0 +1,1148 @@
+INFO:root:exp-17
+INFO:root:2015/06/23@08:50:02
+INFO:root:exp-17
+INFO:root:2015/06/23@08:50:02
+INFO:root:mc-trial (heart beat): 0
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00032948875085712394, 9325043.3814942371, 0.098753792727234349, 0.10455090342552711]}
+INFO:root:  status: 1
+    nfev: 803
+ success: False
+     fun: 168.10200752302475
+       x: array([  7.20351788e-05,   5.46598939e+06,   8.02886360e-03,
+         1.00368008e-01])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 358
+INFO:root:mc-trial (heart beat): 1
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00022091523465604814, 44135513.496092901, 0.10652684546428015, 0.0094712737620009195]}
+INFO:root:  status: 1
+    nfev: 800
+ success: False
+     fun: 654.18114174335301
+       x: array([  7.57760342e-05,   1.20946018e+07,   1.39053325e-02,
+         3.73498466e-03])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 415
+INFO:root:mc-trial (heart beat): 2
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00017210262486843541, 14917460.708742345, 0.057473905290137246, 0.13907785966460096]}
+INFO:root:  status: 0
+    nfev: 589
+ success: True
+     fun: 173.83555947697795
+       x: array([  7.18656069e-05,   5.37477721e+06,   7.46186022e-03,
+         3.11174301e-01])
+ message: 'Optimization terminated successfully.'
+     nit: 267
+INFO:root:mc-trial (heart beat): 3
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.0006392587701621969, 17975538.111147542, 0.070784757714955626, 0.031416710418163477]}
+INFO:root:  status: 1
+    nfev: 805
+ success: False
+     fun: 164.28715433764839
+       x: array([  7.21210829e-05,   5.54017375e+06,   8.50667763e-03,
+         6.35271349e-02])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 362
+INFO:root:mc-trial (heart beat): 4
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00014031967849565367, 19432994.709959451, 0.01460362820281207, 0.17110762893922399]}
+INFO:root:  status: 1
+    nfev: 804
+ success: False
+     fun: 176.25114492950323
+       x: array([  7.17863778e-05,   5.33615063e+06,   7.26883644e-03,
+         1.13269086e+00])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 343
+INFO:root:mc-trial (heart beat): 5
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00067228767563451484, 22243514.754444517, 0.025569647278091277, 0.07206274034193888]}
+INFO:root:  status: 1
+    nfev: 805
+ success: False
+     fun: 171.90408027093486
+       x: array([  7.19144135e-05,   5.40596121e+06,   7.63510981e-03,
+         1.89377293e-01])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 397
+INFO:root:mc-trial (heart beat): 6
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [3.9625581291153735e-05, 47839829.262239829, 0.001659926211145699, 0.10692162990933542]}
+INFO:root:  status: 1
+    nfev: 804
+ success: False
+     fun: 153.05931536000679
+       x: array([  7.26449869e-05,   5.90892918e+06,   1.29557236e-02,
+         1.43717428e-02])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 466
+INFO:root:mc-trial (heart beat): 7
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00054959024263423126, 53410335.851386987, 0.081829871144656452, 0.079359690981279513]}
+INFO:root:  status: 0
+    nfev: 789
+ success: True
+     fun: 170.99548307606887
+       x: array([  7.19385354e-05,   5.41966556e+06,   7.72413081e-03,
+         1.58193943e-01])
+ message: 'Optimization terminated successfully.'
+     nit: 388
+INFO:root:mc-trial (heart beat): 8
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [6.9900084875654619e-05, 25398921.433045626, 0.097311123420785531, 0.13967801890186918]}
+INFO:root:  status: 1
+    nfev: 805
+ success: False
+     fun: 175.58590941900039
+       x: array([  7.18108751e-05,   5.34655642e+06,   7.31949830e-03,
+         6.67794844e-01])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 357
+INFO:root:mc-trial (heart beat): 9
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00010769631643834637, 28897107.060879905, 0.091501476866224951, 0.030068094508224029]}
+INFO:root:  status: 1
+    nfev: 802
+ success: False
+     fun: 163.15057487390368
+       x: array([  7.25965451e-05,   6.29275812e+06,   2.24851128e-02,
+         5.34496991e-03])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 372
+INFO:root:mc-trial (heart beat): 10
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00048972283048112685, 10366980.951747483, 0.082720657869912478, 0.053519046406738741]}
+INFO:root:  status: 0
+    nfev: 569
+ success: True
+     fun: 166.47375120317295
+       x: array([  7.20247226e-05,   5.51146562e+06,   8.20739346e-03,
+         8.14418391e-02])
+ message: 'Optimization terminated successfully.'
+     nit: 259
+INFO:root:mc-trial (heart beat): 11
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00069720026517038514, 38767854.115213118, 0.086183763826713874, 0.065131695276251067]}
+INFO:root:  status: 1
+    nfev: 800
+ success: False
+     fun: 172.45317939756939
+       x: array([  7.18917372e-05,   5.39749541e+06,   7.58507276e-03,
+         2.13952242e-01])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 411
+INFO:root:mc-trial (heart beat): 12
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00059125485878345953, 28038511.315837316, 0.027317324437669963, 0.0083129778759686943]}
+INFO:root:  status: 1
+    nfev: 801
+ success: False
+     fun: 154.22950091397666
+       x: array([  7.24572281e-05,   5.79430600e+06,   1.11568288e-02,
+         2.10124956e-02])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 362
+INFO:root:mc-trial (heart beat): 13
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00064876921832041881, 12973526.522211721, 0.087852740643681648, 0.021000898621293909]}
+INFO:root:  status: 1
+    nfev: 801
+ success: False
+     fun: 179.81853866168024
+       x: array([  7.26719400e-05,   6.51307789e+06,   3.93017779e-02,
+         2.52544265e-03])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 376
+INFO:root:mc-trial (heart beat): 14
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00053850028844533741, 58852177.16682224, 0.039096659718008048, 0.090665203305224373]}
+INFO:root:  status: 0
+    nfev: 570
+ success: True
+     fun: 2231.710318388336
+       x: array([  7.01919876e-05,   1.56393571e+08,   6.41468224e-03,
+         6.05762176e-04])
+ message: 'Optimization terminated successfully.'
+     nit: 250
+INFO:root:mc-trial (heart beat): 15
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00052613041850371398, 40601142.166114233, 0.07394338936673682, 0.085023918053625872]}
+INFO:root:  status: 1
+    nfev: 805
+ success: False
+     fun: 171.49721543861523
+       x: array([  7.19269492e-05,   5.41276924e+06,   7.67318238e-03,
+         1.74201058e-01])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 364
+INFO:root:mc-trial (heart beat): 16
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00011493877665493512, 50996881.404711172, 0.099831172831306617, 0.127723761365994]}
+INFO:root:  status: 1
+    nfev: 805
+ success: False
+     fun: 171.05710747703677
+       x: array([  7.19490144e-05,   5.41816215e+06,   7.71751689e-03,
+         1.60009319e-01])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 397
+INFO:root:mc-trial (heart beat): 17
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00052936086194891479, 5354841.8290895401, 0.087898462018050169, 0.0055921789031450134]}
+INFO:root:  status: 1
+    nfev: 804
+ success: False
+     fun: 157.86756772396694
+       x: array([  7.26789832e-05,   6.18015576e+06,   1.83619937e-02,
+         7.31474922e-03])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 319
+INFO:root:mc-trial (heart beat): 18
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00020836459733511979, 28063233.439596836, 0.065938313195333678, 0.065835228512167596]}
+INFO:root:  status: 1
+    nfev: 805
+ success: False
+     fun: 169.07776497025742
+       x: array([  7.19819193e-05,   5.45312853e+06,   7.92082646e-03,
+         1.15279214e-01])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 385
+INFO:root:mc-trial (heart beat): 19
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00042396561998947783, 27398931.912777171, 0.072917971157013109, 0.11752529334997271]}
+INFO:root:  status: 0
+    nfev: 742
+ success: True
+     fun: 172.73296551039013
+       x: array([  7.18815708e-05,   5.39422469e+06,   7.55804142e-03,
+         2.28798824e-01])
+ message: 'Optimization terminated successfully.'
+     nit: 351
+INFO:root:mc-trial (heart beat): 20
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [2.676884264088865e-05, 49157336.414876223, 0.044182495454285278, 0.12326616163245425]}
+INFO:root:  status: 0
+    nfev: 650
+ success: True
+     fun: 166.25664561482191
+       x: array([  7.21305029e-05,   5.48783048e+06,   8.26339022e-03,
+         7.93074592e-02])
+ message: 'Optimization terminated successfully.'
+     nit: 302
+INFO:root:mc-trial (heart beat): 21
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [2.8848854182349661e-05, 46701786.417292088, 0.084472074148930834, 0.12250864376758935]}
+INFO:root:  status: 1
+    nfev: 803
+ success: False
+     fun: 635.67905516403312
+       x: array([  5.75033459e-05,   9.47056037e+06,   1.14306627e-02,
+         1.43537867e-02])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 343
+INFO:root:mc-trial (heart beat): 22
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [2.281652069927765e-05, 3617639.4443906965, 0.039683885279830924, 0.096539706970519529]}
+INFO:root:  status: 1
+    nfev: 803
+ success: False
+     fun: 153.0549136416362
+       x: array([  7.25629316e-05,   5.90558959e+06,   1.29256725e-02,
+         1.44991787e-02])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 371
+INFO:root:mc-trial (heart beat): 23
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00039201579843969588, 38636230.519650862, 0.067089836031595185, 0.030900464632485206]}
+INFO:root:  status: 1
+    nfev: 805
+ success: False
+     fun: 159.56813814389722
+       x: array([  7.22600389e-05,   5.62802379e+06,   9.33074855e-03,
+         3.92292854e-02])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 347
+INFO:root:mc-trial (heart beat): 24
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [6.2560200153988216e-05, 10245690.983034616, 0.018073441105172457, 0.10025808719358562]}
+INFO:root:  status: 1
+    nfev: 800
+ success: False
+     fun: 153.05361753285615
+       x: array([  7.25891982e-05,   5.90570445e+06,   1.29164837e-02,
+         1.45061600e-02])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 452
+INFO:root:mc-trial (heart beat): 25
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00064028525676000051, 45229612.670061342, 0.068994250540244564, 0.1002948878009689]}
+INFO:root:  status: 1
+    nfev: 804
+ success: False
+     fun: 171.93403037874447
+       x: array([  7.19189264e-05,   5.40377055e+06,   7.63364948e-03,
+         1.90561465e-01])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 382
+INFO:root:mc-trial (heart beat): 26
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00070032974180446331, 46014609.448599391, 0.024614643792078669, 0.086352416391922385]}
+INFO:root:  status: 1
+    nfev: 800
+ success: False
+     fun: 171.31693266084488
+       x: array([  7.19347582e-05,   5.41486716e+06,   7.69180019e-03,
+         1.68120195e-01])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 435
+INFO:root:mc-trial (heart beat): 27
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00059927200639479168, 7361618.8019852582, 0.04565311341506878, 0.13101839247200237]}
+INFO:root:  status: 0
+    nfev: 574
+ success: True
+     fun: 171.41951254782305
+       x: array([  7.18909006e-05,   5.43021942e+06,   7.66475883e-03,
+         1.71162919e-01])
+ message: 'Optimization terminated successfully.'
+     nit: 267
+INFO:root:mc-trial (heart beat): 28
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00056901999061862623, 33919546.014165916, 0.019197954258875629, 0.14301388531735834]}
+INFO:root:  status: 1
+    nfev: 800
+ success: False
+     fun: 176.19616413305934
+       x: array([  7.27710792e-05,   6.42035030e+06,   3.48375285e-02,
+         2.95540835e-03])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 412
+INFO:root:mc-trial (heart beat): 29
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00052865134229831241, 36242859.327401206, 0.030970589565821643, 0.08833899091727386]}
+INFO:root:  status: 1
+    nfev: 800
+ success: False
+     fun: 674.94089906734689
+       x: array([  7.19135235e-05,   9.41651301e+06,   3.59996267e-03,
+         4.91697493e+00])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 477
+INFO:root:mc-trial (heart beat): 30
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00070928768597826688, 3641806.1617494859, 0.10054421371586582, 0.1022644382662907]}
+INFO:root:  status: 1
+    nfev: 800
+ success: False
+     fun: 153.05359460422974
+       x: array([  7.25854112e-05,   5.90680042e+06,   1.29245008e-02,
+         1.44824904e-02])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 447
+INFO:root:mc-trial (heart beat): 31
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00037055686599229455, 24158720.477956977, 0.067734605297054745, 0.08308334172602716]}
+INFO:root:  status: 0
+    nfev: 747
+ success: True
+     fun: 170.71384585961576
+       x: array([  7.19412518e-05,   5.42683926e+06,   7.74959110e-03,
+         1.50302668e-01])
+ message: 'Optimization terminated successfully.'
+     nit: 359
+INFO:root:mc-trial (heart beat): 32
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00065573579172319564, 38813143.11794921, 0.0030772298312461517, 0.07593788712175184]}
+INFO:root:  status: 1
+    nfev: 801
+ success: False
+     fun: 155.90273866782678
+       x: array([  7.23570620e-05,   5.71247000e+06,   1.05754994e-02,
+         2.45233849e-02])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 480
+INFO:root:mc-trial (heart beat): 33
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00043449251566147145, 50775297.014401823, 0.0097114866936502571, 0.04995954657087176]}
+INFO:root:  status: 1
+    nfev: 802
+ success: False
+     fun: 168.37178886684637
+       x: array([  7.20107076e-05,   5.46796129e+06,   7.99219475e-03,
+         1.04162886e-01])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 352
+INFO:root:mc-trial (heart beat): 34
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00039748079153242144, 53269971.299581051, 0.0034557794745723762, 0.056831258813000593]}
+INFO:root:  status: 0
+    nfev: 495
+ success: True
+     fun: 156.11960000793587
+       x: array([  7.24013932e-05,   5.76130979e+06,   1.02156984e-02,
+         2.69141089e-02])
+ message: 'Optimization terminated successfully.'
+     nit: 239
+INFO:root:mc-trial (heart beat): 35
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00054460001191078855, 56128085.729867049, 0.031032924995346715, 0.07426984728708981]}
+INFO:root:  status: 1
+    nfev: 803
+ success: False
+     fun: 158.3462168309926
+       x: array([  7.22944030e-05,   5.67764092e+06,   9.57744024e-03,
+         3.46151840e-02])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 437
+INFO:root:mc-trial (heart beat): 36
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [7.9831641720198385e-05, 39853183.474815078, 0.043998905482921687, 0.1524000334880351]}
+INFO:root:  status: 1
+    nfev: 801
+ success: False
+     fun: 1675.5013128779556
+       x: array([  6.97656171e-05,   4.76806432e+07,   3.06490432e-03,
+         5.60934217e-03])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 434
+INFO:root:mc-trial (heart beat): 37
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [3.048703424002123e-05, 51132035.168770283, 0.082094406896785016, 0.0069309441381815362]}
+INFO:root:  status: 1
+    nfev: 800
+ success: False
+     fun: 1306.6535065834221
+       x: array([  8.43558230e-05,   1.66186743e+07,   2.26623163e-03,
+         5.19684135e-02])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 489
+INFO:root:mc-trial (heart beat): 38
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00054453731224953915, 41805406.424047358, 0.084824657836793577, 0.1394012222872586]}
+INFO:root:  status: 1
+    nfev: 804
+ success: False
+     fun: 173.36369443397376
+       x: array([  7.18698259e-05,   5.38157774e+06,   7.50469555e-03,
+         2.70179423e-01])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 400
+INFO:root:mc-trial (heart beat): 39
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00026728446056313804, 30282088.356562182, 0.0096572776258996781, 0.097085128445846866]}
+INFO:root:  status: 1
+    nfev: 803
+ success: False
+     fun: 169.32714167114534
+       x: array([  7.19787428e-05,   5.45837533e+06,   7.87993810e-03,
+         1.19598270e-01])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 325
+INFO:root:mc-trial (heart beat): 40
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [4.9373807833583789e-05, 39724377.411595166, 0.078539825417133266, 0.0044256173457183148]}
+INFO:root:  status: 0
+    nfev: 685
+ success: True
+     fun: 157.23519596486634
+       x: array([  7.29214734e-05,   6.10283652e+06,   1.79357920e-02,
+         7.65632467e-03])
+ message: 'Optimization terminated successfully.'
+     nit: 319
+INFO:root:mc-trial (heart beat): 41
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00023638610947722866, 1081786.6964241674, 0.036956288589009789, 0.012323694179697711]}
+INFO:root:  status: 1
+    nfev: 800
+ success: False
+     fun: 178.32806984748956
+       x: array([  7.26981716e-05,   6.45610587e+06,   3.61996454e-02,
+         2.77374962e-03])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 496
+INFO:root:mc-trial (heart beat): 42
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00050359278402466244, 29753527.857520454, 0.0094270944897325085, 0.0044712288182724175]}
+INFO:root:  status: 1
+    nfev: 805
+ success: False
+     fun: 153.05357065923184
+       x: array([  7.25896255e-05,   5.90649309e+06,   1.29246175e-02,
+         1.44829197e-02])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 453
+INFO:root:mc-trial (heart beat): 43
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00061926987056592846, 48436332.614562139, 0.025016245809119275, 0.11464235888944943]}
+INFO:root:  status: 1
+    nfev: 804
+ success: False
+     fun: 161.96489350207466
+       x: array([  7.27409383e-05,   6.19489629e+06,   2.17104258e-02,
+         5.70406323e-03])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 442
+INFO:root:mc-trial (heart beat): 44
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [5.7735627932713871e-05, 20090937.346338034, 0.051019236317538047, 0.13818668123847264]}
+INFO:root:  status: 1
+    nfev: 804
+ success: False
+     fun: 167.04259133443398
+       x: array([  7.21508614e-05,   5.47407296e+06,   8.15951953e-03,
+         8.72525363e-02])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 343
+INFO:root:mc-trial (heart beat): 45
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.0003170565221947748, 6194433.0491279503, 0.11789570333821324, 0.14422162256212837]}
+INFO:root:  status: 0
+    nfev: 610
+ success: True
+     fun: 173.02910186541672
+       x: array([  7.19382635e-05,   5.36931019e+06,   7.55070979e-03,
+         2.45891625e-01])
+ message: 'Optimization terminated successfully.'
+     nit: 284
+INFO:root:mc-trial (heart beat): 46
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00050266128462854139, 38326609.010431744, 0.081798952936306846, 0.045314591901277033]}
+INFO:root:  status: 0
+    nfev: 752
+ success: True
+     fun: 166.25808367429485
+       x: array([  7.20626657e-05,   5.50365455e+06,   8.24602474e-03,
+         7.94168631e-02])
+ message: 'Optimization terminated successfully.'
+     nit: 357
+INFO:root:mc-trial (heart beat): 47
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00058915664182599965, 16367471.990228642, 0.1002829463011011, 0.0040201816071077602]}
+INFO:root:  status: 1
+    nfev: 804
+ success: False
+     fun: 194.62005718779818
+       x: array([  7.25930622e-05,   6.73349537e+06,   7.04709473e-02,
+         1.26166246e-03])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 408
+INFO:root:mc-trial (heart beat): 48
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00061492650236894019, 58348721.171787933, 0.078126316687081365, 0.059637160395901861]}
+INFO:root:  status: 1
+    nfev: 800
+ success: False
+     fun: 228.91746519218688
+       x: array([  7.54914486e-05,   6.88796783e+06,   1.30799602e-01,
+         5.72500816e-04])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 481
+INFO:root:mc-trial (heart beat): 49
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00013445788526029299, 6807044.7811201122, 0.085312121500587132, 0.13400602721004129]}
+INFO:root:  status: 1
+    nfev: 802
+ success: False
+     fun: 153.05367908881942
+       x: array([  7.25877850e-05,   5.90623278e+06,   1.29294436e-02,
+         1.44713732e-02])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 455
+INFO:root:mc-trial (heart beat): 50
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00050448552998916491, 43453126.506286383, 0.06403399489004212, 0.1527398090810633]}
+INFO:root:  status: 1
+    nfev: 803
+ success: False
+     fun: 172.84788042514123
+       x: array([  7.18858926e-05,   5.39095008e+06,   7.54855518e-03,
+         2.35450326e-01])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 340
+INFO:root:mc-trial (heart beat): 51
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00036436169156161901, 45516948.892072521, 0.029951198929728636, 0.026039535039204989]}
+INFO:root:  status: 0
+    nfev: 679
+ success: True
+     fun: 161.85353310787664
+       x: array([  7.21937628e-05,   5.58716364e+06,   8.88291740e-03,
+         4.93168978e-02])
+ message: 'Optimization terminated successfully.'
+     nit: 320
+INFO:root:mc-trial (heart beat): 52
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00052742677382122054, 11172591.473598951, 0.076524088866587944, 0.043343778020128364]}
+INFO:root:  status: 0
+    nfev: 685
+ success: True
+     fun: 171.28112155088317
+       x: array([  7.18944992e-05,   5.42784580e+06,   7.68503324e-03,
+         1.66790337e-01])
+ message: 'Optimization terminated successfully.'
+     nit: 321
+INFO:root:mc-trial (heart beat): 53
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00051853640505807573, 10240305.367083158, 0.014363643722094983, 0.17007369066948846]}
+INFO:root:  status: 0
+    nfev: 538
+ success: True
+     fun: 174.14106569374053
+       x: array([  7.18546054e-05,   5.36705294e+06,   7.44024598e-03,
+         3.44389828e-01])
+ message: 'Optimization terminated successfully.'
+     nit: 242
+INFO:root:mc-trial (heart beat): 54
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00014111350210796822, 11127496.463138193, 0.079584788339466209, 0.16966292646108072]}
+INFO:root:  status: 0
+    nfev: 610
+ success: True
+     fun: 173.81022500062846
+       x: array([  7.18604863e-05,   5.37498197e+06,   7.46468411e-03,
+         3.08693491e-01])
+ message: 'Optimization terminated successfully.'
+     nit: 274
+INFO:root:mc-trial (heart beat): 55
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00044332711765134356, 58188734.678004503, 0.005922828113545683, 0.16424876778731362]}
+INFO:root:  status: 0
+    nfev: 436
+ success: True
+     fun: 2026.8951093113226
+       x: array([  6.96015693e-05,   1.00338978e+08,   4.05566781e-04,
+         2.53672000e-01])
+ message: 'Optimization terminated successfully.'
+     nit: 207
+INFO:root:mc-trial (heart beat): 56
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00055641493307859028, 26447256.993918348, 0.038388201507417181, 0.12173368337542281]}
+INFO:root:  status: 0
+    nfev: 783
+ success: True
+     fun: 153.19718449414378
+       x: array([  7.25558354e-05,   5.86982896e+06,   1.22494619e-02,
+         1.64093759e-02])
+ message: 'Optimization terminated successfully.'
+     nit: 387
+INFO:root:mc-trial (heart beat): 57
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00015961855979429037, 27346223.95954309, 0.0060526583852604614, 0.12570334811321826]}
+INFO:root:  status: 1
+    nfev: 803
+ success: False
+     fun: 174.45435748884077
+       x: array([  7.18484896e-05,   5.35851492e+06,   7.41965916e-03,
+         3.85805687e-01])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 301
+INFO:root:mc-trial (heart beat): 58
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00070923922326334831, 12328309.748770161, 0.081329971267932163, 0.10984762104197035]}
+INFO:root:  status: 1
+    nfev: 800
+ success: False
+     fun: 166.96312465016297
+       x: array([  7.20796606e-05,   5.47660965e+06,   8.17361435e-03,
+         8.64856365e-02])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 392
+INFO:root:mc-trial (heart beat): 59
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.0005178015208573049, 25427984.371879932, 0.11402778810262532, 0.1334397051494618]}
+INFO:root:  status: 0
+    nfev: 686
+ success: True
+     fun: 173.28933264691719
+       x: array([  7.18687210e-05,   5.38367282e+06,   7.51014970e-03,
+         2.64609473e-01])
+ message: 'Optimization terminated successfully.'
+     nit: 318
+INFO:root:mc-trial (heart beat): 60
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00040433393158416267, 8856957.1860478204, 0.071913478949279061, 0.075010428678289054]}
+INFO:root:  status: 1
+    nfev: 800
+ success: False
+     fun: 169.80927283602054
+       x: array([  7.19535734e-05,   5.44731702e+06,   7.83688998e-03,
+         1.28990529e-01])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 295
+INFO:root:mc-trial (heart beat): 61
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00031472241959243797, 15665758.45651442, 0.067020801994644164, 0.082249642705003762]}
+INFO:root:  status: 1
+    nfev: 803
+ success: False
+     fun: 173.01399959098364
+       x: array([  7.18829571e-05,   5.38778593e+06,   7.53437893e-03,
+         2.45705572e-01])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 327
+INFO:root:mc-trial (heart beat): 62
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [5.7048733703058622e-05, 53762917.608927488, 0.11770825816827259, 0.041542616123197061]}
+INFO:root:  status: 1
+    nfev: 800
+ success: False
+     fun: 203.54571968278665
+       x: array([  7.25452029e-05,   6.80577428e+06,   1.18085857e-01,
+         7.19159456e-04])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 429
+INFO:root:mc-trial (heart beat): 63
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00050109868317281916, 8536744.9508445449, 0.028940327279293635, 0.098467816306994596]}
+INFO:root:  status: 1
+    nfev: 800
+ success: False
+     fun: 153.05358341454419
+       x: array([  7.25907504e-05,   5.90689737e+06,   1.29259409e-02,
+         1.44776358e-02])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 460
+INFO:root:mc-trial (heart beat): 64
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.000546237547700686, 43374498.895132966, 0.012323501936070003, 0.042840313043726014]}
+INFO:root:  status: 1
+    nfev: 802
+ success: False
+     fun: 169.31665203119724
+       x: array([  7.19813012e-05,   5.44955232e+06,   7.89310757e-03,
+         1.19490198e-01])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 305
+INFO:root:mc-trial (heart beat): 65
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00057633117431165248, 33478538.52412108, 0.10525016655737574, 0.1259333875191038]}
+INFO:root:  status: 0
+    nfev: 757
+ success: True
+     fun: 174.62803684707873
+       x: array([  7.18328929e-05,   5.36320388e+06,   7.39529118e-03,
+         4.13442951e-01])
+ message: 'Optimization terminated successfully.'
+     nit: 370
+INFO:root:mc-trial (heart beat): 66
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00054602888988150231, 30668816.978475563, 0.039878222622940954, 0.1112138261273002]}
+INFO:root:  status: 0
+    nfev: 773
+ success: True
+     fun: 161.91016712783187
+       x: array([  7.21858446e-05,   5.58939177e+06,   8.86923297e-03,
+         4.95943579e-02])
+ message: 'Optimization terminated successfully.'
+     nit: 376
+INFO:root:mc-trial (heart beat): 67
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00035660830006080163, 31428866.33830351, 0.061734902679637396, 0.026481616673834391]}
+INFO:root:  status: 1
+    nfev: 801
+ success: False
+     fun: 160.91603883635315
+       x: array([  7.21946993e-05,   5.60602279e+06,   9.05427330e-03,
+         4.48873086e-02])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 357
+INFO:root:mc-trial (heart beat): 68
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.0005647307276206683, 11542097.276658956, 0.11311024849036114, 0.11180846221218263]}
+INFO:root:  status: 1
+    nfev: 804
+ success: False
+     fun: 171.64526452015528
+       x: array([  7.19145677e-05,   5.41067031e+06,   7.65995670e-03,
+         1.79441072e-01])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 333
+INFO:root:mc-trial (heart beat): 69
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00030399677948945178, 49024624.645348676, 0.038792364822591179, 0.13399454156148727]}
+INFO:root:  status: 1
+    nfev: 800
+ success: False
+     fun: 558.55627455821332
+       x: array([  6.97813246e-05,   1.08028196e+07,   5.04114184e-03,
+         3.37886422e-02])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 479
+INFO:root:mc-trial (heart beat): 70
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00043975714868799484, 55203516.247411571, 0.067381484547746284, 0.020841755466652324]}
+INFO:root:  status: 1
+    nfev: 800
+ success: False
+     fun: 200.08453163767834
+       x: array([  7.26814742e-05,   6.73907011e+06,   9.46848251e-02,
+         9.14115353e-04])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 465
+INFO:root:mc-trial (heart beat): 71
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00047979743067819717, 46190181.134837694, 0.0022083092607527513, 0.056134507286959949]}
+INFO:root:  status: 1
+    nfev: 802
+ success: False
+     fun: 153.05355129802885
+       x: array([  7.25868987e-05,   5.90624422e+06,   1.29253549e-02,
+         1.44838955e-02])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 448
+INFO:root:mc-trial (heart beat): 72
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00052757485420196594, 6709736.019540837, 0.09402368861299075, 0.10436885817646888]}
+INFO:root:  status: 1
+    nfev: 804
+ success: False
+     fun: 170.16241517118783
+       x: array([  7.19406684e-05,   5.44099937e+06,   7.80007323e-03,
+         1.36648361e-01])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 320
+INFO:root:mc-trial (heart beat): 73
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00011106208090229574, 36172688.379765943, 0.058396076014202158, 0.037512906913135698]}
+INFO:root:  status: 0
+    nfev: 730
+ success: True
+     fun: 167.55405221991771
+       x: array([  7.20303147e-05,   5.48054206e+06,   8.08868353e-03,
+         9.33212663e-02])
+ message: 'Optimization terminated successfully.'
+     nit: 351
+INFO:root:mc-trial (heart beat): 74
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00060546089629517062, 36183460.761282742, 0.090218732586639358, 0.12734960773997472]}
+INFO:root:  status: 1
+    nfev: 802
+ success: False
+     fun: 172.98394222440362
+       x: array([  7.18854724e-05,   5.38715572e+06,   7.53791731e-03,
+         2.43791390e-01])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 360
+INFO:root:mc-trial (heart beat): 75
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00035583028972129894, 54365426.52814123, 0.041598510957891244, 0.073813638438786314]}
+INFO:root:  status: 1
+    nfev: 805
+ success: False
+     fun: 170.01815461784372
+       x: array([  7.19653583e-05,   5.43590239e+06,   7.82232798e-03,
+         1.33464533e-01])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 355
+INFO:root:mc-trial (heart beat): 76
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00070499008576237535, 2325102.5160817257, 0.052604975926636495, 0.06038122226581228]}
+INFO:root:  status: 1
+    nfev: 801
+ success: False
+     fun: 153.05370880913225
+       x: array([  7.25816269e-05,   5.90508758e+06,   1.29091050e-02,
+         1.45277515e-02])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 402
+INFO:root:mc-trial (heart beat): 77
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00030198994344007683, 11813243.94741584, 0.1138892586145967, 0.12846871614746308]}
+INFO:root:  status: 0
+    nfev: 682
+ success: True
+     fun: 172.0879510256953
+       x: array([  7.19014674e-05,   5.40423944e+06,   7.61767122e-03,
+         1.97002444e-01])
+ message: 'Optimization terminated successfully.'
+     nit: 316
+INFO:root:mc-trial (heart beat): 78
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00058882402438333536, 56437818.44183366, 0.099606368317807725, 0.059740892190639786]}
+INFO:root:  status: 1
+    nfev: 802
+ success: False
+     fun: 169.84177565992795
+       x: array([  7.19618690e-05,   5.44075071e+06,   7.83845472e-03,
+         1.29702104e-01])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 315
+INFO:root:mc-trial (heart beat): 79
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [8.0291710997466652e-05, 30859929.989631969, 0.055916889111785717, 0.16510862949760183]}
+INFO:root:  status: 0
+    nfev: 797
+ success: True
+     fun: 175.81289089424004
+       x: array([  7.18085844e-05,   5.34251946e+06,   7.30199585e-03,
+         7.77898357e-01])
+ message: 'Optimization terminated successfully.'
+     nit: 389
+INFO:root:mc-trial (heart beat): 80
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00066434576382466692, 26319898.728734598, 0.024898037570490951, 0.1135941132889882]}
+INFO:root:  status: 1
+    nfev: 803
+ success: False
+     fun: 170.76247042309961
+       x: array([  7.27415961e-05,   6.34376823e+06,   2.91521128e-02,
+         3.74047570e-03])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 424
+INFO:root:mc-trial (heart beat): 81
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00051316062791138123, 5029360.3239632826, 0.0070526852294961534, 0.017804227235311255]}
+INFO:root:  status: 0
+    nfev: 591
+ success: True
+     fun: 153.05363120711212
+       x: array([  7.25862257e-05,   5.90781801e+06,   1.29356451e-02,
+         1.44543579e-02])
+ message: 'Optimization terminated successfully.'
+     nit: 302
+INFO:root:mc-trial (heart beat): 82
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [3.812835049657752e-05, 3987180.9381814022, 0.077034549695129281, 0.09297253903131035]}
+INFO:root:  status: 1
+    nfev: 800
+ success: False
+     fun: 153.05358608034754
+       x: array([  7.25893489e-05,   5.90534667e+06,   1.29231458e-02,
+         1.44920607e-02])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 440
+INFO:root:mc-trial (heart beat): 83
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00033254839983896045, 23364490.577790204, 0.069631635318540025, 0.028414231903723441]}
+INFO:root:  status: 1
+    nfev: 801
+ success: False
+     fun: 162.25816998052335
+       x: array([  7.21666486e-05,   5.58029521e+06,   8.81575687e-03,
+         5.13818546e-02])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 352
+INFO:root:mc-trial (heart beat): 84
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00047159181036397649, 45944210.556084424, 0.069695534571835527, 0.016251466631178282]}
+INFO:root:  status: 1
+    nfev: 805
+ success: False
+     fun: 204.6797541453611
+       x: array([  7.26828587e-05,   6.79342237e+06,   1.28644779e-01,
+         6.55932380e-04])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 465
+INFO:root:mc-trial (heart beat): 85
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00065777169177165843, 1232641.021035075, 0.055993116110989616, 0.10423764616717518]}
+INFO:root:  status: 1
+    nfev: 801
+ success: False
+     fun: 153.05356758531693
+       x: array([  7.25920710e-05,   5.90558666e+06,   1.29232330e-02,
+         1.44890323e-02])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 438
+INFO:root:mc-trial (heart beat): 86
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [2.2696640045651771e-05, 6575281.3617441943, 0.048344991055751609, 0.073946872014193504]}
+INFO:root:  status: 1
+    nfev: 804
+ success: False
+     fun: 153.05356569022521
+       x: array([  7.25868493e-05,   5.90621365e+06,   1.29217200e-02,
+         1.44914488e-02])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 365
+INFO:root:mc-trial (heart beat): 87
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00070631247249375968, 25501821.502005011, 0.081188087428121461, 0.11452926651999783]}
+INFO:root:  status: 1
+    nfev: 804
+ success: False
+     fun: 175.57690074424144
+       x: array([  7.18124917e-05,   5.34618134e+06,   7.32097711e-03,
+         6.64038805e-01])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 373
+INFO:root:mc-trial (heart beat): 88
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.0004503130023978291, 44426805.831557721, 0.044935272144905843, 0.11901764805666953]}
+INFO:root:  status: 1
+    nfev: 801
+ success: False
+     fun: 1791.6317978303473
+       x: array([  6.95288171e-05,   5.73296303e+07,   8.49692895e-03,
+         1.33594544e-03])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 482
+INFO:root:mc-trial (heart beat): 89
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00038216064241398652, 38139764.511815734, 0.041038063882061229, 0.1174876434218442]}
+INFO:root:  status: 1
+    nfev: 805
+ success: False
+     fun: 173.71863403448796
+       x: array([  7.18628354e-05,   5.37798990e+06,   7.47065633e-03,
+         2.99971418e-01])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 359
+INFO:root:mc-trial (heart beat): 90
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00042004410153596324, 19800077.351117186, 0.046248748042291524, 0.019861728975332518]}
+INFO:root:  status: 0
+    nfev: 762
+ success: True
+     fun: 154.99005061924524
+       x: array([  7.24355307e-05,   5.75683463e+06,   1.07314019e-02,
+         2.35785283e-02])
+ message: 'Optimization terminated successfully.'
+     nit: 369
+INFO:root:mc-trial (heart beat): 91
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00053058108079528422, 27636210.009201553, 0.020078605223800811, 0.097635986771902147]}
+INFO:root:  status: 0
+    nfev: 790
+ success: True
+     fun: 173.10631276475638
+       x: array([  7.18760783e-05,   5.38608843e+06,   7.52716297e-03,
+         2.51760044e-01])
+ message: 'Optimization terminated successfully.'
+     nit: 388
+INFO:root:mc-trial (heart beat): 92
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00034720026684344571, 24670784.153254975, 0.091497970234033943, 0.0061151282770715446]}
+INFO:root:  status: 0
+    nfev: 593
+ success: True
+     fun: 153.1590330733745
+       x: array([  7.25534463e-05,   5.87309580e+06,   1.23475784e-02,
+         1.61204958e-02])
+ message: 'Optimization terminated successfully.'
+     nit: 303
+INFO:root:mc-trial (heart beat): 93
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00040542548748457745, 14188245.309230614, 0.083974873181792642, 0.10603927642138367]}
+INFO:root:  status: 0
+    nfev: 741
+ success: True
+     fun: 171.67062976239646
+       x: array([  7.19138468e-05,   5.41203031e+06,   7.65519046e-03,
+         1.80389336e-01])
+ message: 'Optimization terminated successfully.'
+     nit: 361
+INFO:root:mc-trial (heart beat): 94
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00062212002181394625, 16740090.038118985, 0.056278098697696705, 0.11932617471422018]}
+INFO:root:  status: 1
+    nfev: 800
+ success: False
+     fun: 160.05949948238128
+       x: array([  7.23029969e-05,   5.59607318e+06,   9.25442221e-03,
+         4.11106753e-02])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 344
+INFO:root:mc-trial (heart beat): 95
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00070626481913025794, 53084474.013207436, 0.025482613750078102, 0.0075391165137344805]}
+INFO:root:  status: 1
+    nfev: 802
+ success: False
+     fun: 153.3564154102551
+       x: array([  7.25249281e-05,   5.84972136e+06,   1.19721477e-02,
+         1.73988772e-02])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 375
+INFO:root:mc-trial (heart beat): 96
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00036197237384568429, 33223098.776054967, 0.10897124283343039, 0.04592021076211817]}
+INFO:root:  status: 1
+    nfev: 801
+ success: False
+     fun: 156.40172879381706
+       x: array([  7.23689203e-05,   5.71498704e+06,   1.01562473e-02,
+         2.81133316e-02])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 390
+INFO:root:mc-trial (heart beat): 97
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00045047781827372034, 16686407.747237688, 0.075568852043626525, 0.073814067628034871]}
+INFO:root:  status: 0
+    nfev: 649
+ success: True
+     fun: 170.07446509976992
+       x: array([  7.19432858e-05,   5.44266307e+06,   7.80961608e-03,
+         1.34670069e-01])
+ message: 'Optimization terminated successfully.'
+     nit: 315
+INFO:root:mc-trial (heart beat): 98
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00044394662503798558, 50552811.231278069, 0.017113822522746465, 0.078547723871579211]}
+INFO:root:  status: 0
+    nfev: 616
+ success: True
+     fun: 171.23315954661689
+       x: array([  7.19290313e-05,   5.41852948e+06,   7.69766895e-03,
+         1.65424249e-01])
+ message: 'Optimization terminated successfully.'
+     nit: 293
+INFO:root:mc-trial (heart beat): 99
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'solver_settings': None, 'class': None, 'tolerance': None, 'method': 'Nelder-Mead', 'initial_guesses': [0.00065657694474775016, 13517272.482701393, 0.019722815158273729, 0.046887345004031224]}
+INFO:root:  status: 1
+    nfev: 804
+ success: False
+     fun: 169.1379277603063
+       x: array([  7.19872504e-05,   5.45378380e+06,   7.91138725e-03,
+         1.16314250e-01])
+ message: 'Maximum number of function evaluations has been exceeded.'
+     nit: 356
+INFO:root:workflows.protocols.do_basic_workflow_at_solution_point
+INFO:root:{'ssr_thresh_lb': 96.821859590974384, 'ssrs_thresh_lb': [10.982320734473674, 10.982320734473674, 10.982320734473674, 10.982320734473674, 10.982320734473674], 'ssr_thresh_ub': 158.96240375149276, 'ress_vals': [], 'ssr': 153.05363120711212, 'ssrs_thresh_ub': [36.780712084035542, 36.780712084035542, 36.780712084035542, 36.780712084035542, 36.780712084035542], 'ssrs': array([ 10.52107737,  16.73183417,  51.16692781,  45.38365522,  29.25013663]), 'params': array([  7.25862257e-05,   5.90781801e+06,   1.29356451e-02,
+         1.44543579e-02]), 'ssr_test': True, 'ssrs_tests': [False, True, False, False, True]}
+INFO:root:workflows.protocols.do_sensitivity_based_workflow_at_solution_point
+INFO:root:{'corr_matrix': matrix([[ 1.        , -0.3933035 ,  0.0802996 , -0.0393084 ],
+        [-0.3933035 ,  1.        , -0.10490314, -0.33294729],
+        [ 0.0802996 , -0.10490314,  1.        , -0.88786513],
+        [-0.0393084 , -0.33294729, -0.88786513,  1.        ]]), 'cov_det': 0.10754386473973745, 'ell_radius': 11.873029909378989, 'params': array([  7.25862257e-05,   5.90781801e+06,   1.29356451e-02,
+         1.44545025e-02]), 'est_var': 1.214711358786604, 'corr_det': 0.0057565709308471016, 'cov_matrix': matrix([[  1.43691104e-09,  -2.11356526e+02,   1.76942418e-07,
+          -2.06167272e-07],
+        [ -2.11356526e+02,   2.00976745e+14,  -8.64500089e+04,
+          -6.53082101e+05],
+        [  1.76942418e-07,  -8.64500089e+04,   3.37914875e-03,
+          -7.14118109e-03],
+        [ -2.06167272e-07,  -6.53082101e+05,  -7.14118109e-03,
+           1.91442685e-02]]), 'conf_intvs': array([  7.50160658e-05,   2.80551275e+07,   1.15038444e-01,
+         2.73815943e-01])}
+INFO:root:solvers.least_squares.solve
+INFO:root:{'callback': None, 'tolerance': None, 'method': 'Nelder-Mead', 'solver_settings': None, 'initial_guesses': [6.9999999999999994e-05, 6000000.0, 0.016799999999999999, 0.01], 'class': None}
+INFO:root:  status: 0
+    nfev: 372
+ success: True
+     fun: 153.05359591605975
+       x: array([  7.25907845e-05,   5.90654541e+06,   1.29296870e-02,
+         1.44696117e-02])
+ message: 'Optimization terminated successfully.'
+     nit: 181
+INFO:root:workflows.protocols.do_basic_workflow_at_solution_point
+INFO:root:{'ssr_thresh_lb': 96.821859590974384, 'ssrs_thresh_lb': [10.982320734473674, 10.982320734473674, 10.982320734473674, 10.982320734473674, 10.982320734473674, 10.982320734473674, 10.982320734473674, 10.982320734473674, 10.982320734473674, 10.982320734473674], 'ssr_thresh_ub': 158.96240375149276, 'ress_vals': [], 'ssr': 153.05359591605975, 'ssrs_thresh_ub': [36.780712084035542, 36.780712084035542, 36.780712084035542, 36.780712084035542, 36.780712084035542, 36.780712084035542, 36.780712084035542, 36.780712084035542, 36.780712084035542, 36.780712084035542], 'ssrs': array([ 10.52740524,  16.73529906,  51.15085039,  45.38687479,  29.25316644]), 'params': array([  7.25907845e-05,   5.90654541e+06,   1.29296870e-02,
+         1.44696117e-02]), 'ssr_test': True, 'ssrs_tests': [False, True, False, False, True, False, True, False, False, True]}
+INFO:root:workflows.protocols.do_sensitivity_based_workflow_at_solution_point
+INFO:root:{'corr_matrix': matrix([[ 1.        , -0.41115479,  0.1434338 , -0.09470142],
+        [-0.41115479,  1.        , -0.58263498,  0.07941679],
+        [ 0.1434338 , -0.58263498,  1.        , -0.83548114],
+        [-0.09470142,  0.07941679, -0.83548114,  1.        ]]), 'cov_det': 0.063390286965890205, 'ell_radius': 11.873027171699935, 'params': array([  7.25907845e-05,   5.90654541e+06,   1.29296870e-02,
+         1.44697564e-02]), 'est_var': 1.2147110786988868, 'corr_det': 0.0067140703059744523, 'cov_matrix': matrix([[  1.46150828e-09,  -2.31549478e+02,   3.10638689e-07,
+          -3.48685358e-07],
+        [ -2.31549478e+02,   2.17007937e+14,  -4.86225547e+05,
+           1.12674772e+05],
+        [  3.10638689e-07,  -4.86225547e+05,   3.20927417e-03,
+          -4.55844395e-03],
+        [ -3.48685358e-07,   1.12674772e+05,  -4.55844395e-03,
+           9.27583716e-03]]), 'conf_intvs': array([  7.56554088e-05,   2.91525905e+07,   1.12109587e-01,
+         1.90596930e-01])}

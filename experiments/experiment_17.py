@@ -63,5 +63,23 @@ class TestExperiment17(unittest.TestCase):
             wore.plot_tiled_calibration_and_validation_trajectories_at_point(experiment(), calibrated)
 
     
+    def test_calibration_and_validation_global(self):
+        baseline = dict(woex.calib_valid_baseline)
+        basepoint = baseline["calib"]
+        basepoint["point"]["objective_function"] = 153.05359591605975
+        basepoint["point"]["decision_variables"] = numpy.array( \
+            [  7.25907845138e-05, 5906545.40918, 0.0129296870173, 0.0144696117475])
+        basepoint["of_delta"] = 0.000000001
+        basepoint["dv_deltas"] = numpy.array( \
+            [  0.00000001e-05,  0.00000001e+06,  0.00000001e-02,  0.00000001e-02])
+        basepoint = baseline["valid"]
+        basepoint["point"]["objective_function"] = 40.78092219391061
+        
+        experiment = sekrbi.do_experiment_setup_0_60_spliced_yesnoyes_with_global_neldermead_100_10xpm
+        calibrated = woex.test_baseline_calibration_and_validation(experiment, baseline, self)
+        if self.do_plotting:
+            wore.plot_tiled_calibration_and_validation_trajectories_at_point(experiment(), calibrated)
+
+
 if __name__ == "__main__":
     unittest.main()
