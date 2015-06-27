@@ -115,6 +115,12 @@ def do_get_published_data_0_60_spliced_yesnoyes():
     return spliced_trajectories
 
 
+def do_get_published_data_0_60_spliced_yes15no5yes10():
+    trajectories_without_V = do_get_published_data_0_60()
+    spliced_trajectories = deds.splice_raw_data_with_pattern_multistage_yes15no5yes10(trajectories_without_V)
+    return spliced_trajectories
+    
+
 # --------------------------------------------------------------------------- #
 
 def do_base_problem_setup(model_data, data_instance):
@@ -212,6 +218,15 @@ def do_problem_setup_0_60_spliced_yes10yes15no5(model_data, data_instance):
     return problem
 
 
+def do_problem_setup_0_60_spliced_yes15no5yes10(model_data, data_instance):
+    problem = do_base_problem_setup_0_60(model_data, data_instance)
+    problem["output_filters"] = dict(momoda.output_filters)
+    problem["output_filters"]["measurement_splices"] = []
+    problem["output_filters"]["calibration_mask"] = [15,20]
+    problem["output_filters"]["validation_mask"] = [0,15,20]
+    return problem
+
+
 def do_problem_setup_0_60_spliced_yesnoyes(model_data, data_instance):
     problem = do_problem_setup_unlegacy(model_data, data_instance)
     forcing_inputs = copy.deepcopy(models.model_data.forcing_function_profile)
@@ -270,6 +285,13 @@ def do_problem_setup_0_60_spliced_yes10yes15no5_with_covariance_2(model_data, da
 
 def do_problem_setup_0_60_spliced_yesnoyes_with_covariance_2(model_data, data_instance):
     problem_data = do_problem_setup_0_60_spliced_yesnoyes(model_data, data_instance)
+    problem_data["measurements_covariance_trace"] = numpy.array([3.80E-002, 2.46E-002, 2.53E-002, 1.16E-003, 3.20E-003])
+    mmdu.check_correctness_of_measurements_covariance_matrix(problem_data)
+    return problem_data
+
+
+def do_problem_setup_0_60_spliced_yes15no5yes10_with_covariance_2(model_data, data_instance):
+    problem_data = do_problem_setup_0_60_spliced_yes15no5yes10(model_data, data_instance)
     problem_data["measurements_covariance_trace"] = numpy.array([3.80E-002, 2.46E-002, 2.53E-002, 1.16E-003, 3.20E-003])
     mmdu.check_correctness_of_measurements_covariance_matrix(problem_data)
     return problem_data
@@ -475,6 +497,19 @@ def do_experiment_setup_0_60_spliced_yes10yes15no5():
 
 def do_experiment_setup_0_60_spliced_yes10yes15no5_with_global_neldermead_100_10xpm():
     config = do_experiment_setup_0_60_spliced_yes10yes15no5()
+    config["algorithm_setup"] = do_algorithm_setup_global_neldermead_100_10xpm
+    return config
+
+
+def do_experiment_setup_0_60_spliced_yes15no5yes10():
+    config = do_experiment_setup_0_60()
+    config["problem_setup"] = do_problem_setup_0_60_spliced_yes15no5yes10_with_covariance_2
+    config["data_setup"] = do_get_published_data_0_60_spliced_yes15no5yes10
+    return config
+
+
+def do_experiment_setup_0_60_spliced_yes15no5yes10_with_global_neldermead_100_10xpm():
+    config = do_experiment_setup_0_60_spliced_yes15no5yes10()
     config["algorithm_setup"] = do_algorithm_setup_global_neldermead_100_10xpm
     return config
 
