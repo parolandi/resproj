@@ -64,7 +64,7 @@ class TestExperiment15(unittest.TestCase):
             wore.plot_tiled_trajectories_at_point(experiment(), calibrated)
 
 
-    def dn_test_nonlinear_confidence_region(self):
+    def test_nonlinear_confidence_region(self):
         if self.do_quick_tests_only:
             return
         baseline = {}
