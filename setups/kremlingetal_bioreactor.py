@@ -236,7 +236,7 @@ def do_problem_setup_0_60_spliced_yesnoyes(model_data, data_instance):
                                                    numpy.asarray([0.35,0.35,0.5])]
     problem["forcing_inputs"] = forcing_inputs
     problem["output_filters"] = dict(momoda.output_filters)
-    problem["output_filters"]["measurement_splices"] = []
+    problem["output_filters"]["measurement_splices"] = [10,15]
     problem["output_filters"]["calibration_mask"] = [10,15]
     problem["output_filters"]["validation_mask"] = [0,10,15]
     return problem
@@ -462,6 +462,12 @@ def do_experiment_setup_0_60_with_global_neldermead_100_10xpm():
     return config
 
 
+def do_experiment_setup_0_60_with_slsqp_with_positivity():
+    config = do_experiment_setup_0_60()
+    config["algorithm_setup"] = do_algorithm_setup_using_slsqp_with_positivity
+    return config
+
+
 def do_experiment_setup_0_60_spliced_yesyesno():
     config = do_experiment_setup_0_60()
     config["problem_setup"] = do_problem_setup_0_60_spliced_yesyesno_with_covariance_2
@@ -584,6 +590,7 @@ def do_experiment_protocol_setup_0_60_calib_ncr():
     protocol["steps"].append(copy.deepcopy(setup))
     setup["algorithm_setup"] = senu.do_config_mcmiv_100
     protocol["steps"].append(copy.deepcopy(setup))
+    setup["local_setup"]["do_plotting"] = True
     return protocol
 
 
@@ -591,6 +598,17 @@ def do_experiment_protocol_setup_0_20_2x_calib_ncr():
     protocol = copy.deepcopy(setups.setup_data.experiment_protocol)
     protocol["steps"] = []
     setup = do_experiment_setup_0_20_twice()
+    setup["algorithm_setup"] = do_algorithm_setup_using_slsqp_with_positivity
+    protocol["steps"].append(copy.deepcopy(setup))
+    setup["algorithm_setup"] = senu.do_config_mcmiv_100
+    protocol["steps"].append(copy.deepcopy(setup))
+    return protocol
+
+
+def do_experiment_protocol_setup_0_60_yesnoyes_ncr():
+    protocol = copy.deepcopy(setups.setup_data.experiment_protocol)
+    protocol["steps"] = []
+    setup = do_experiment_setup_0_60_spliced_yesnoyes()
     setup["algorithm_setup"] = do_algorithm_setup_using_slsqp_with_positivity
     protocol["steps"].append(copy.deepcopy(setup))
     setup["algorithm_setup"] = senu.do_config_mcmiv_100

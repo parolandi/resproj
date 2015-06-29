@@ -21,6 +21,12 @@ def solve(model_instance, problem_instance, algorithm_structure):
     if problem_instance["bounds"] is not None:
         assert(len(problem_instance["parameter_indices"]) == len(problem_instance["bounds"]))
     
+    algorithm_structure["solver_settings"] = {}
+    #algorithm_structure["solver_settings"]["iprint"] = 3
+    #algorithm_structure["solver_settings"]["full_output"] = True
+    algorithm_structure["solver_settings"]["eps"] = 1e-6
+    algorithm_structure["solver_settings"]["nit"] = 100
+    
     result = scipy.optimize.minimize( \
         args =     (model_instance, problem_instance), \
         bounds =   problem_instance["bounds"], \

@@ -37,6 +37,7 @@ solution_trajectory = {
 """
 Multiple points
 """
+# TODO: 2015-06-28; intended to be numpy.array
 ensemble_trajectoryies = {
     "decision_variables": [],
     "trajectories": [],
@@ -120,8 +121,11 @@ def montecarlo_multiple_initial_value(model, problem, algorithm):
             failure["trajectories"].append(trial_result.trajectories)
             failure["objective_function"].append(inf_obj_func)
 
-    logging.info("decision variables")
+    logging.debug("solvers.montecarlo_multiple_initial_value")
+    logging.info("decision variables; objective function")
     logging.info(success["decision_variables"])
+    logging.info(success["objective_function"])
+
     result = dict(montecarlo_multiple_simulation_result)
     result["succeeded"]["decision_variables"] = numpy.asarray(success["decision_variables"])
     result["succeeded"]["trajectories"] = numpy.asarray(success["trajectories"])

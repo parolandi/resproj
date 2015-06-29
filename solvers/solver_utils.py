@@ -6,13 +6,14 @@ class DecisionVariableLogger():
     
     def __init__(self):
         self.decision_variables = []
+
     
     def log_decision_variables(self, x):
         self.decision_variables.append([x])
 
 
     def let_decision_variables_be_positive_and_log(self, x):
-        logit = False
+        logit = True
         
         eps = 1E-30
         corrected = []
@@ -30,6 +31,7 @@ class DecisionVariableLogger():
         
     def print_decision_variables(self):
         print("Decision variables", self.decision_variables)
+
         
     def get_decision_variables(self):
         return self.decision_variables

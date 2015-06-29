@@ -41,8 +41,8 @@ def compute_nonlinear_confidence_region_extremal_internal(model, problem, algori
     internal
     """
     hyperrect, statuses = compute_nonlinear_confidence_intervals_extremal(model, problem, algorithm_rf, best_point)
-    logging.info(hyperrect)
-    logging.info(statuses)
+    #logging.info(hyperrect)
+    #logging.info(statuses)
     hyper = []
     for ii in range(len(hyperrect)):
         hyper.append(tuple(hyperrect[ii]))
@@ -78,21 +78,31 @@ def compute_nonlinear_confidence_region_intervals_extremal(model, problem, algor
 
 
 def filter_nonlinear_confidence_region_points(hyper, cutoff):
+    """
+    returns solvers.monte_carlo_multiple_initial_value.ensemble_trajectoryies
+    """
     hypo = copy.deepcopy(mcmiv.ensemble_trajectoryies)
     for ii in range(len(hyper["objective_function"])):
         if (check_test(hyper["objective_function"][ii], cutoff)):
             hypo["objective_function"].append(hyper["objective_function"][ii])
             hypo["decision_variables"].append(hyper["decision_variables"][ii])
+    hypo["objective_function"] = numpy.array(hypo["objective_function"])
+    hypo["decision_variables"] = numpy.array(hypo["decision_variables"])
+    logging.debug("engine.confidence_regions.filter_nonlinear_confidence_region_points")
+    logging.info("NCR hyperpoints: " + str(hypo))
     return hypo
 
 
 def evaluate_multiple_points_in_hyperrectangle_by_nonlinear_confidence_intervals(model, problem, algorithm):
+    '''
+    return numpy.array
+    '''
     result = mcmiv.solve(model, problem, algorithm)
     points = result["succeeded"]["decision_variables"]
     ssrs = result["succeeded"]["objective_function"]
     hyper = copy.deepcopy(mcmiv.ensemble_trajectoryies)
-    hyper["objective_function"] = ssrs
-    hyper["decision_variables"] = points
+    hyper["objective_function"] = numpy.array(ssrs)
+    hyper["decision_variables"] = numpy.array(points)
     return hyper
 
 
@@ -124,10 +134,11 @@ def compute_nonlinear_confidence_intervals_extremal(model, problem, algorithm, b
     hyperrectangle, statuses = compute_nonlinear_confidence_hyperrectangle_extremal(model, problem, algorithm)
     wall_time = time.time() - wall_time0
 
-    logging.info(endi.log_ssr(ssr))
-    logging.info(hyperrectangle)
-    logging.info(statuses)
-    logging.info(endi.log_wall_time(wall_time))
+    logging.debug("engine.confidence_regions.compute_nonlinear_confidence_intervals_extremal")
+    logging.info("NCR constraint " + endi.log_ssr(ssr))
+    logging.info("NCR hyperrectangle bounds: " + str(hyperrectangle))
+    logging.info("NCR hyperrectangle statuses: " + str(statuses))
+    logging.info("NCR hyperrectangle time: " + endi.log_wall_time(wall_time))
     return hyperrectangle, statuses
 
 
@@ -229,6 +240,7 @@ def compute_nonlinear_confidence_interval_extremal(model, problem, algorithm, in
     algorithm["initial_guesses"] = numpy.asarray(problem["parameters"]) * 1
 
     upper = sdo.solve_std(model, problem, algorithm)
+    logging.info(upper)
     if upper.status > 0 and upper.x[index] > bound[1]:
         upper.x[index] = bound[1]
 
@@ -253,6 +265,7 @@ def compute_nonlinear_confidence_interval_extremal(model, problem, algorithm, in
     algorithm["initial_guesses"] = numpy.asarray(problem["parameters"]) * 1
     
     lower = sdo.solve_std(model, problem, algorithm)
+    logging.info(lower)
     if lower.status > 0 and lower.x[index] < bound[0]:
         lower.x[index] = bound[0]
 

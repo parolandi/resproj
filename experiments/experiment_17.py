@@ -6,6 +6,7 @@ import logging
 import numpy
 
 import common.diagnostics as codi
+#import results.plot_data as replda
 import workflows.experiments as woex
 import workflows.reporting_unlegacy as wore
 
@@ -13,8 +14,8 @@ import workflows.reporting_unlegacy as wore
 '''
 Kremling bioreactor
 Multi-stage experiment 0-60hr interval
-Splicing yes-yes-no
-Calibration
+Splicing yes-no-yes
+Calibration, calib/valid (local and global)
 Nonlinear confidence region
 '''
 class TestExperiment17(unittest.TestCase):
@@ -29,7 +30,7 @@ class TestExperiment17(unittest.TestCase):
         logging.info(codi.get_date_and_time())
 
     
-    def test_calibration_workflow(self):
+    def dn_test_calibration_workflow(self):
         baseline = dict(woex.calib_valid_baseline)
         basepoint = baseline["calib"]
         basepoint["point"]["objective_function"] = 153.05359591605975
@@ -45,7 +46,7 @@ class TestExperiment17(unittest.TestCase):
             wore.plot_tiled_calibration_and_validation_trajectories_at_point(experiment(), calibrated)
 
 
-    def test_calibration_and_validation(self):
+    def dn_test_calibration_and_validation(self):
         baseline = dict(woex.calib_valid_baseline)
         basepoint = baseline["calib"]
         basepoint["point"]["objective_function"] = 153.05359591605975
@@ -63,7 +64,9 @@ class TestExperiment17(unittest.TestCase):
             wore.plot_tiled_calibration_and_validation_trajectories_at_point(experiment(), calibrated)
 
     
-    def test_calibration_and_validation_global(self):
+    def dn_test_calibration_and_validation_global(self):
+        if self.do_quick_tests_only:
+            return
         baseline = dict(woex.calib_valid_baseline)
         basepoint = baseline["calib"]
         basepoint["point"]["objective_function"] = 153.05359591605975

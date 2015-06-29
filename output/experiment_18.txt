@@ -49,6 +49,7 @@ objective function: 149.207796219
 * Correlation matrix determinant*
 0.0146171818664
 decision variables: [  7.12884597e-05   5.77667582e+06   9.31968630e-03   4.32751249e-02]
+
 =valid=
 objective function: 53.5921083595
 * Parameters *
