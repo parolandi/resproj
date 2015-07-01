@@ -27,20 +27,24 @@ def solve(model, problem, algorithm):
         assert(problem["constraints"] is None)
         # can't handle anything else
         assert(False)
-    
+
+    settings = {}
+    settings["maxiter"] = 100
+
     result = scipy.optimize.minimize( \
         fun = problem["performance_measure"], \
         constraints = constraints, \
         x0 = algorithm["initial_guesses"], \
         method = algorithm["method"], \
-        bounds = problem["bounds"])
+        bounds = problem["bounds"], \
+        options = settings)
     return result
 
 
 def solve_std(model, problem, algorithm):
     result = None
     settings = {}
-    settings["maxiter"] = 1000
+    settings["maxiter"] = 100
     
     if not has_obj_args(problem) and is_unconstrained(problem):
         result = scipy.optimize.minimize( \
