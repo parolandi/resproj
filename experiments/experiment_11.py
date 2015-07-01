@@ -17,7 +17,7 @@ import solvers.monte_carlo_multiple_initial_value as smiv
 '''
 Kremling bioreactor
 Prediction uncertainty
-Splicing at 111000
+No splicing
 Covariance trace ~10%
 Both 0-20 and 0-60
 '''
