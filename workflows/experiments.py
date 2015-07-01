@@ -133,7 +133,7 @@ def test_calibration_with_nonlinear_confidence_region(protocol, baseline, unitte
     number_of_points = len(numpy.transpose(actual_points["objective_function"]))
 
     # logging
-    logging.info(problem["bounds"])
+    logging.info("bounds: " + str(problem["bounds"]))
     logging.info(endi.log_points(actual_points))
     logging.info(endi.log_wall_time(wall_time))
     logging.info(endi.log_number_of_trials(algorithm_mcs["number_of_trials"]))
