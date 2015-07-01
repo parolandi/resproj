@@ -13,13 +13,18 @@ class DecisionVariableLogger():
 
 
     def let_decision_variables_be_positive_and_log(self, x):
-        logit = True
+        logit = False
         
-        eps = 1E-30
+        eps_lb = 1E-10
+        eps_ub = 1E+10
         corrected = []
         for ii in range(len(x)):
-            if x[ii] < eps:
-                x[ii] = eps
+            if x[ii] < eps_lb:
+                x[ii] = eps_lb
+                corrected.append(ii)
+        for ii in range(len(x)):
+            if x[ii] > eps_ub:
+                x[ii] = eps_ub
                 corrected.append(ii)
         if len(corrected) > 0 and logit:
             print("corrected", x, corrected)
