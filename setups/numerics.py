@@ -23,6 +23,13 @@ def do_config_mcmls_nlp(data):
     return data
 
 
+def do_config_mcmiv_10(dummy):
+    assert(dummy is None)
+    algorithm_mc = dict(mcmiv.montecarlo_multiple_simulation_params)
+    algorithm_mc["number_of_trials"] = 10
+    return algorithm_mc
+
+
 def do_config_mcmiv_100(dummy):
     assert(dummy is None)
     algorithm_mc = dict(mcmiv.montecarlo_multiple_simulation_params)
