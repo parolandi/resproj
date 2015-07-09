@@ -587,10 +587,11 @@ def do_experiment_protocol_setup_0_60_calib_ncr():
     protocol["steps"] = []
     setup = do_experiment_setup_0_60()
     setup["algorithm_setup"] = do_algorithm_setup_using_slsqp_with_positivity
-    protocol["steps"].append(copy.deepcopy(setup))
-    setup["algorithm_setup"] = senu.do_config_mcmiv_100
-    protocol["steps"].append(copy.deepcopy(setup))
     setup["local_setup"]["do_plotting"] = True
+    protocol["steps"].append(copy.deepcopy(setup))
+    setup["algorithm_setup"] = senu.do_config_mcmiv_10
+    setup["local_setup"]["do_plotting"] = True
+    protocol["steps"].append(copy.deepcopy(setup))
     return protocol
 
 
