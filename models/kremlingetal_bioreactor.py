@@ -159,7 +159,7 @@ def evaluate(xx, t, p, u, model_form):
             den = eps
         y[ymap["r2"]] = p[pmap["k2"]] * x[xmap["E"]] * x[xmap["M1"]] / den
         den = p[pmap["KIB"]] + x[xmap["M2"]]
-        if den <= 0:
+        if den <= eps:
             den = eps
         y[ymap["rsyn"]] = p[pmap["ksynmax"]] * p[pmap["KIB"]] / den
         # [umol/g/h DW] = [umol/g/h DW]
