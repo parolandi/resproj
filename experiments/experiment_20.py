@@ -37,14 +37,14 @@ class TestExperiment20(unittest.TestCase):
         baseline["point"] = {}
         baseline["point"]["objective_function"] = 191.9159661
         baseline["point"]["decision_variables"] = numpy.array( \
-            [  7.21144459e-05,  5.92826673e+06,  1.21249611e-02,  1.71735070e-02])
+            [  7.212144459e-05,  5.92826673e+06,  1.21249611e-02,  1.71735070e-02])
         # WIP; more than 1? how many required for full characterisation?
-        baseline["number_of_points"] = 1
+        baseline["number_of_points"] = 0
         baseline["intervals"] = [ \
-            [4.721085304328252e-05, 0.00014639408975853561], \
-            [5999537.6911295187, 10015366.695155494], \
-            [0.0030218129834986489, 1.742703135385864], \
-            [0.00041379366926754218, 2.0432561489154017]]
+            [7.1658496326300477e-05, 7.4404418807739317e-05], \
+            [5999999.0032838425, 6659493.2891191998], \
+            [0.0079139594140585634, 0.16454952777015888], \
+            [0.0011241165870377707, 0.093956469210582788]]
         baseline["plotdata"] = dict(replda.plot_data)
         baseline["plotdata"]["window_title"] = "NCR benchmark model (95%)"
         woex.test_calibration_with_nonlinear_confidence_region( \
