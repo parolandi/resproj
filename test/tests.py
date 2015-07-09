@@ -19,6 +19,7 @@ from test.models.kremlingetal_bioreactor import *
 from test.models.model_data_utils import *
 from test.models.ordinary_differential import *
 # TODO: ensure that call can be made but plot is not shown 
+#from test.results.plot_3d import *
 #from test.results.plot_combinatorial import *
 #from test.results.plot_tiles import *
 #from test.results.plot import *
