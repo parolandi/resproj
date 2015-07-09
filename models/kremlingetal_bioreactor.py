@@ -1,4 +1,6 @@
 
+import copy
+import logging
 import numpy
 
 
@@ -131,12 +133,14 @@ yvec = {
 # t: time
 # p: parameters
 # u: inputs
-def evaluate(x, t, p, u, model_form):
-    eps = 1E-30
+def evaluate(xx, t, p, u, model_form):
+    eps = 1E-15
     
+    x = copy.deepcopy(xx)
     for ii in range(len(x)):
-        if x[ii] < 0:
-            x[ii] = 0.0
+        if x[ii] < eps:
+            x[ii] = eps
+            #logging.info("var-index: " + str(ii))
     
     Mw = 342.3 * 1E-6 # molar mass of substrate
     # [g/umol] = [g/mol] * [mol/umol]
@@ -151,11 +155,11 @@ def evaluate(x, t, p, u, model_form):
         y[ymap["rsyn"]] = p[pmap["ksynmax"]]
     else:
         den = p[pmap["KM1"]] + x[xmap["M1"]]
-        if den == 0:
+        if den <= eps:
             den = eps
         y[ymap["r2"]] = p[pmap["k2"]] * x[xmap["E"]] * x[xmap["M1"]] / den
         den = p[pmap["KIB"]] + x[xmap["M2"]]
-        if den == 0:
+        if den <= 0:
             den = eps
         y[ymap["rsyn"]] = p[pmap["ksynmax"]] * p[pmap["KIB"]] / den
         # [umol/g/h DW] = [umol/g/h DW]
