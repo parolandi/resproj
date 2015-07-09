@@ -17,7 +17,8 @@ montecarlo_multiple_simulation_params = {
     "decision_variable_ranges": [()], # tuples
     "number_of_trials": 0,
     "random_number_generator_seed": 117,
-    "subsolver_params": dict(ss.algorithm_structure)
+    "subsolver_params": dict(ss.algorithm_structure),
+    "enable_trajectories": False
     }
 
 
@@ -86,6 +87,7 @@ def solve(model, problem, algorithm):
 
 
 # TODO: total number of runs
+# TODO: 2015-07-09; parameterise constants
 def montecarlo_multiple_initial_value(model, problem, algorithm):
     """
     This does a montecarlo randomisation of initial guesses
@@ -105,7 +107,11 @@ def montecarlo_multiple_initial_value(model, problem, algorithm):
     
     success = copy.deepcopy(ensemble_trajectoryies)
     failure = copy.deepcopy(ensemble_trajectoryies)
+    wall_time0 = time.time()
     for ii in range(algorithm["number_of_trials"]):
+        if ii % 1000 == 0:
+            wall_time = time.time() - wall_time0
+            logging.info("mcmiv heartbeat (iter - wall time): " + str(ii) + " -s " + str(wall_time))
         param_vals = []
         for jj in range(dv_count):
             param_vals.append(monte_carlo_points[jj][ii])
@@ -113,12 +119,14 @@ def montecarlo_multiple_initial_value(model, problem, algorithm):
         trial_result = siv.evaluate_timecourse_trajectories(model, problem)
         if trial_result.success:
             success["decision_variables"].append(param_vals)
-            success["trajectories"].append(trial_result.trajectories)
+            if algorithm["enable_trajectories"]:
+                success["trajectories"].append(trial_result.trajectories)
             obj = problem["performance_measure"](param_vals, model, problem)
             success["objective_function"].append(obj)
         if not trial_result.success:
             failure["decision_variables"].append(param_vals)
-            failure["trajectories"].append(trial_result.trajectories)
+            if algorithm["enable_trajectories"]:
+                failure["trajectories"].append(trial_result.trajectories)
             failure["objective_function"].append(inf_obj_func)
 
     logging.debug("solvers.montecarlo_multiple_initial_value")
@@ -128,9 +136,10 @@ def montecarlo_multiple_initial_value(model, problem, algorithm):
 
     result = dict(montecarlo_multiple_simulation_result)
     result["succeeded"]["decision_variables"] = numpy.asarray(success["decision_variables"])
-    result["succeeded"]["trajectories"] = numpy.asarray(success["trajectories"])
     result["succeeded"]["objective_function"] = numpy.asarray(success["objective_function"])
     result["failed"]["decision_variables"] = numpy.asarray(failure["decision_variables"])
-    result["failed"]["trajectories"] = numpy.asarray(failure["trajectories"])
     result["failed"]["objective_function"] = numpy.asarray(failure["objective_function"])
+    if algorithm["enable_trajectories"]:
+        result["succeeded"]["trajectories"] = numpy.asarray(success["trajectories"])
+        result["failed"]["trajectories"] = numpy.asarray(failure["trajectories"])
     return result
