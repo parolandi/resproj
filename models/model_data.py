@@ -72,6 +72,7 @@ an element (a need) of an algorithmic routine
 """
 problem_structure = {
     "bounds": None,
+    "decision_variables": [],
     # TODO: establish dedicated "problem_formulation"
     # list of experiment_data
     "experiments": [],

@@ -53,11 +53,13 @@ def do_calibration_and_compute_performance_measure(config):
     # TODO: 2015-06-20; assert this is a calibration protocol step
     
     # housekeeping
-    measurement_splices = problem_instance["output_filters"]["measurement_splices"]
+    if problem_instance["output_filters"] is not None:
+        measurement_splices = problem_instance["output_filters"]["measurement_splices"]
 
     # WIP: 2015-06-21; refactor, extract
-    problem_instance["output_filters"]["measurement_splices"] = \
-        dadasp.convert_mask_to_index_expression(problem_instance["output_filters"]["calibration_mask"])
+    if problem_instance["output_filters"] is not None:
+        problem_instance["output_filters"]["measurement_splices"] = \
+            dadasp.convert_mask_to_index_expression(problem_instance["output_filters"]["calibration_mask"])
     
     # least-squares
     # TODO: 2015-06-23; legacy
@@ -80,7 +82,8 @@ def do_calibration_and_compute_performance_measure(config):
     calib_sol["objective_function"] = ssr_fit
     
     # housekeeping
-    problem_instance["output_filters"]["measurement_splices"] = measurement_splices
+    if problem_instance["output_filters"] is not None:
+        problem_instance["output_filters"]["measurement_splices"] = measurement_splices
     
     return calib_sol 
 
@@ -94,11 +97,13 @@ def do_validation_and_compute_performance_measure_at_solution_point(config, solu
     # TODO: 2015-06-20; assert this is a validation protocol step
 
     # housekeeping
-    measurement_splices = problem_instance["output_filters"]["measurement_splices"]
+    if problem_instance["output_filters"] is not None:
+        measurement_splices = problem_instance["output_filters"]["measurement_splices"]
 
     # WIP: 2015-06-21; refactor, extract
-    problem_instance["output_filters"]["measurement_splices"] = \
-        dadasp.convert_mask_to_index_expression(problem_instance["output_filters"]["validation_mask"])
+    if problem_instance["output_filters"] is not None:
+        problem_instance["output_filters"]["measurement_splices"] = \
+            dadasp.convert_mask_to_index_expression(problem_instance["output_filters"]["validation_mask"])
     
     # verification    
     # WIP: 2015-05-15, should this be needed?
@@ -114,7 +119,8 @@ def do_validation_and_compute_performance_measure_at_solution_point(config, solu
     valid_sol["objective_function"] = ssr_fit
 
     # housekeeping
-    problem_instance["output_filters"]["measurement_splices"] = measurement_splices
+    if problem_instance["output_filters"] is not None:
+        problem_instance["output_filters"]["measurement_splices"] = measurement_splices
 
     return valid_sol 
 
@@ -190,14 +196,15 @@ def do_basic_workflow_at_solution_point(config, solution_point):
     # setup
     model_instance, problem_instance, protocol, protocol_step = ssdu.get_model_problem_protocol_and_step(config)
     # WIP: 2015-06-21; refactor, extract
-    if protocol_step == "calib":
-        problem_instance["output_filters"]["measurement_splices"] = \
-            dadasp.convert_mask_to_index_expression(problem_instance["output_filters"]["calibration_mask"])
-    elif protocol_step == "valid":
-        problem_instance["output_filters"]["measurement_splices"] = \
-            dadasp.convert_mask_to_index_expression(problem_instance["output_filters"]["validation_mask"])
-    else:
-        raise
+    if problem_instance["output_filters"] is not None:
+        if protocol_step == "calib":
+            problem_instance["output_filters"]["measurement_splices"] = \
+                dadasp.convert_mask_to_index_expression(problem_instance["output_filters"]["calibration_mask"])
+        elif protocol_step == "valid":
+            problem_instance["output_filters"]["measurement_splices"] = \
+                dadasp.convert_mask_to_index_expression(problem_instance["output_filters"]["validation_mask"])
+        else:
+            raise
     mmdu.apply_decision_variables_to_parameters(solution_point, model_instance, problem_instance)
     assert(problem_instance["performance_measure"] is protocol["performance_measure"])
     # objective function

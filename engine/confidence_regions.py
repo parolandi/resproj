@@ -38,6 +38,9 @@ def compute_nonlinear_confidence_region_points(model, problem, algorithm_rf, alg
 
 # TODO: 2015-07-09; parameterise constants
 def trim_hyperrectangle_ranges(problem, hyperrect):
+    if len(problem["decision_variables"]) == 0:
+        return hyperrect
+    
     optimal_estimates = copy.deepcopy(problem["decision variables"])
     logging.info("NCR hyperrect uncorrected: " + str(hyperrect))
     for ii in range(len(optimal_estimates)):
