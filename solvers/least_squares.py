@@ -21,9 +21,11 @@ def solve(model_instance, problem_instance, algorithm_structure):
     if problem_instance["bounds"] is not None:
         assert(len(problem_instance["parameter_indices"]) == len(problem_instance["bounds"]))
     
+    # WIP: 2015-07-11; hard-coded cannot be
     algorithm_structure["solver_settings"] = {}
+    # WIP: 2015-0718; regressions
     algorithm_structure["solver_settings"]["eps"] = 1e-6
-    algorithm_structure["solver_settings"]["maxiter"] = 100
+    #algorithm_structure["solver_settings"]["maxiter"] = 100
     
     result = scipy.optimize.minimize( \
         args =     (model_instance, problem_instance), \
@@ -33,7 +35,7 @@ def solve(model_instance, problem_instance, algorithm_structure):
         method =   algorithm_structure["method"], \
         options =  algorithm_structure["solver_settings"], \
         tol =      algorithm_structure["tolerance"], \
-        x0 =       algorithm_structure["initial_guesses"], \
+        x0 =       algorithm_structure["initial_guesses"] \
         )
     logging.info("solvers.least_squares.solve")
     logging.info(algorithm_structure)
