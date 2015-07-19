@@ -122,9 +122,10 @@ def test_calibration_with_nonlinear_confidence_region(protocol, baseline, unitte
     # setup nonlin conf reg
     algorithm_nlr = protocol["steps"][nlr]["algorithm_setup"](None)
     model, problem, algorithm_mcs = ssdu.get_model_problem_algorithm_with_calib(protocol["steps"][mcs])
+    # WIP: 2015-07-16; rework
     if True:
         do_appy_bounds(best_point["decision_variables"], problem)
-    problem["decision variables"] = best_point["decision_variables"]
+    problem["decision_variables"] = best_point["decision_variables"]
     
     # do nonlin conf reg
     wall_time0 = time.time()
@@ -134,6 +135,8 @@ def test_calibration_with_nonlinear_confidence_region(protocol, baseline, unitte
     number_of_points = len(numpy.transpose(actual_points["objective_function"]))
 
     # logging
+    logging.info("best point: " + str(best_point))
+    logging.info("ncr intervals: " + str(actual_intervals))
     logging.info("bounds: " + str(problem["bounds"]))
     logging.info(endi.log_points(actual_points))
     logging.info(endi.log_wall_time(wall_time))
