@@ -85,6 +85,8 @@ def do_calibration_and_compute_performance_measure(config):
     if problem_instance["output_filters"] is not None:
         problem_instance["output_filters"]["measurement_splices"] = measurement_splices
     
+    logging.info("Calibration: " + str(result))
+    logging.info("Calibration: " + str(calib_sol))
     return calib_sol 
 
 
@@ -122,6 +124,7 @@ def do_validation_and_compute_performance_measure_at_solution_point(config, solu
     if problem_instance["output_filters"] is not None:
         problem_instance["output_filters"]["measurement_splices"] = measurement_splices
 
+    logging.info("Validation: " + str(valid_sol))
     return valid_sol 
 
 
