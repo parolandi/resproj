@@ -1,6 +1,7 @@
 
 import copy
 import logging
+import math
 import numpy
 import time
 
@@ -39,14 +40,15 @@ def compute_nonlinear_confidence_region_points(model, problem, algorithm_rf, alg
 # TODO: 2015-07-09; parameterise constants
 def trim_hyperrectangle_ranges(problem, hyperrect):
     if len(problem["decision_variables"]) == 0:
+        logging.warn("NCR hyperrect: no decision variables found!")
         return hyperrect
     
-    optimal_estimates = copy.deepcopy(problem["decision variables"])
+    optimal_estimates = copy.deepcopy(problem["decision_variables"])
     logging.info("NCR hyperrect uncorrected: " + str(hyperrect))
     for ii in range(len(optimal_estimates)):
-        if hyperrect[ii][0] < optimal_estimates[ii] * 0.1:
+        if hyperrect[ii][0] < optimal_estimates[ii] * 0.1 or math.isnan(hyperrect[ii][0]):
             hyperrect[ii][0] = optimal_estimates[ii] * 0.1
-        if hyperrect[ii][1] > optimal_estimates[ii] * 10:
+        if hyperrect[ii][1] > optimal_estimates[ii] * 10 or math.isnan(hyperrect[ii][1]):
             hyperrect[ii][1] = optimal_estimates[ii] * 10
     
     logging.info("NCR hyperrect corrected: " + str(hyperrect))
