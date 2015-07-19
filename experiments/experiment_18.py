@@ -50,14 +50,14 @@ class TestExperiment18(unittest.TestCase):
     def test_calibration_and_validation_global(self):
         baseline = dict(woex.calib_valid_baseline)
         basepoint = baseline["calib"]
-        basepoint["point"]["objective_function"] = 149.20779621854706
+        basepoint["point"]["objective_function"] = 149.20785325292013
         basepoint["point"]["decision_variables"] = numpy.array( \
-            [  7.12884597e-05, 5.77667582e+06, 9.31968630e-03, 4.32751249e-02])
+            [  7.12866349e-05, 5.77559492e+06, 9.31849303e-03, 4.33282246e-02])
         basepoint["of_delta"] = 0.000000001
         basepoint["dv_deltas"] = numpy.array( \
             [  0.00000001e-05,  0.00000001e+06,  0.00000001e-03,  0.00000001e-02])
         basepoint = baseline["valid"]
-        basepoint["point"]["objective_function"] = 53.59210835953211
+        basepoint["point"]["objective_function"] = 53.60188061455396
         
         experiment = sekrbi.do_experiment_setup_0_60_spliced_yes10yes15no5_with_global_neldermead_100_10xpm
         calibrated = woex.test_baseline_calibration_and_validation(experiment, baseline, self)

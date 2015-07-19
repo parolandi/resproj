@@ -565,7 +565,7 @@ def do_experiment_protocol_setup_0_20_calib_ncr():
     setup = do_experiment_setup_0_20()
     setup["algorithm_setup"] = do_algorithm_setup_using_slsqp_with_positivity
     protocol["steps"].append(copy.deepcopy(setup))
-    setup["algorithm_setup"] = senu.do_config_mcmiv_100
+    setup["algorithm_setup"] = senu.do_config_mcmiv_10
     protocol["steps"].append(copy.deepcopy(setup))
     return protocol
 
@@ -574,10 +574,12 @@ def do_experiment_protocol_setup_0_20_calib_ncr_low_confidence():
     protocol = copy.deepcopy(setups.setup_data.experiment_protocol)
     protocol["steps"] = []
     setup = do_experiment_setup_0_20()
+    # reset
     setup["problem_setup"] = do_problem_setup_with_covariance_2_and_low_confidence
+    
     setup["algorithm_setup"] = do_algorithm_setup_using_slsqp_with_positivity
     protocol["steps"].append(copy.deepcopy(setup))
-    setup["algorithm_setup"] = senu.do_config_mcmiv_100
+    setup["algorithm_setup"] = senu.do_config_mcmiv_10
     protocol["steps"].append(copy.deepcopy(setup))
     return protocol
 
@@ -587,10 +589,10 @@ def do_experiment_protocol_setup_0_60_calib_ncr():
     protocol["steps"] = []
     setup = do_experiment_setup_0_60()
     setup["algorithm_setup"] = do_algorithm_setup_using_slsqp_with_positivity
-    setup["local_setup"]["do_plotting"] = True
+    setup["local_setup"]["do_plotting"] = False
     protocol["steps"].append(copy.deepcopy(setup))
     setup["algorithm_setup"] = senu.do_config_mcmiv_10
-    setup["local_setup"]["do_plotting"] = True
+    setup["local_setup"]["do_plotting"] = False
     protocol["steps"].append(copy.deepcopy(setup))
     return protocol
 
@@ -601,7 +603,7 @@ def do_experiment_protocol_setup_0_20_2x_calib_ncr():
     setup = do_experiment_setup_0_20_twice()
     setup["algorithm_setup"] = do_algorithm_setup_using_slsqp_with_positivity
     protocol["steps"].append(copy.deepcopy(setup))
-    setup["algorithm_setup"] = senu.do_config_mcmiv_100
+    setup["algorithm_setup"] = senu.do_config_mcmiv_10
     protocol["steps"].append(copy.deepcopy(setup))
     return protocol
 

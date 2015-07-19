@@ -40,6 +40,7 @@ class TestExperiment14(unittest.TestCase):
 
     
     def test_ncr(self):
+        logging.info("test_ncr")
         if self.do_quick_tests_only:
             return
         baseline = {}
@@ -56,6 +57,7 @@ class TestExperiment14(unittest.TestCase):
 
      
     def test_ncr_low_confidence(self):
+        logging.info("test_ncr_low_confidence")
         if self.do_quick_tests_only:
             return
         baseline = {}
@@ -72,6 +74,7 @@ class TestExperiment14(unittest.TestCase):
 
 
     def test_lcr(self):
+        logging.info("experiments.experiment_14.test_lcr")
         baseline = {}
         baseline["intervals"] = [ \
             [4.9423053215497172e-05, 0.00026694444088288676], \
@@ -95,6 +98,7 @@ class TestExperiment14(unittest.TestCase):
 
 
     def test_lcr_low_confidence(self):
+        logging.info("experiments.experiment_14.test_lcr_low_confidence")
         baseline = {}
         baseline["intervals"] = [ \
             [0.00014082795520386246, 0.00017553953889452146], \

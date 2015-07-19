@@ -42,12 +42,12 @@ class TestExperiment21(unittest.TestCase):
         # WIP; more than 1? how many required for full characterisation?
         baseline["number_of_points"] = 1
         baseline["intervals"] = [ \
-            [4.721085304328252e-05, 0.00014639408975853561], \
-            [5999537.6911295187, 10015366.695155494], \
-            [0.0030218129834986489, 1.742703135385864], \
-            [0.00041379366926754218, 2.0432561489154017]]
+            [5.290868700986391e-05, 5.9982979192172701e-05], \
+            [5999999.8424311681, 6000006.1113730492], \
+            [0.012383467073734807, 0.018396424802685732], \
+            [0.0019274127411634636, 0.011544395853880906]]
         baseline["plotdata"] = dict(replda.plot_data)
-        baseline["plotdata"]["window_title"] = "Exp-17: NCR benchmark model (95%)"
+        baseline["plotdata"]["window_title"] = "Exp-21: NCR benchmark model (95%)"
         
         experiment = sekrbi.do_experiment_protocol_setup_0_60_yesnoyes_ncr
         woex.test_calibration_with_nonlinear_confidence_region(experiment(), baseline, self)

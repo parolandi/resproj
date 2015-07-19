@@ -34,9 +34,15 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
         self.do_plotting = False
         self.do_diag = False
         logging.basicConfig(filename=codi.get_name_logging_file(),level=codi.get_logging_level())
+        logging.info("integration-kremlingetal")
+        logging.info(codi.get_date_and_time())
 
     
-    def test_simulation_regression(self):
+    def __del__(self):
+        logging.info(codi.get_date_and_time())
+        
+    
+    def dn_test_simulation_regression(self):
         t = numpy.linspace(0.0, 20.0, 11)
         p = numpy.ones(len(testme.pmap))
         for par in testme.pmap.items():
@@ -97,7 +103,7 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
         [self.assertAlmostEquals(exp, act) for exp, act in zip(expected, actual)]
         
     
-    def test_states_and_sensitivites_numerical(self):
+    def dn_test_states_and_sensitivites_numerical(self):
         model_instance = testmetoo.do_model_setup_model_B()
         data_instance = testmetoo.do_get_published_data_spliced_111111()
         problem_instance = testmetoo.do_problem_setup(model_instance, data_instance["calib"])
@@ -111,7 +117,7 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
             rpt.plot_states_and_sensitivities(problem_instance["time"], states, sens, 4)
         
 
-    def test_confidence_intervals(self):
+    def dn_test_confidence_intervals(self):
         model_instance = testmetoo.do_model_setup_model_B()
         data_instance = testmetoo.do_get_published_data_spliced_111111()
         problem_instance = testmetoo.do_problem_setup(model_instance, data_instance["calib"])
@@ -165,7 +171,7 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
     # TODO: test published data
     
 
-    def test_calibration_workflow_1(self):
+    def dn_test_calibration_workflow_1(self):
         """
         0-20hr
         """
@@ -182,7 +188,7 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
             wore.plot_tiled_trajectories_at_point(testmetoo.do_experiment_setup_0_20(), calibrated)
 
 
-    def test_calibration_workflow_2(self):
+    def dn_test_calibration_workflow_2(self):
         """
         0-20hr twice
         """
@@ -199,18 +205,18 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
             wore.plot_tiled_trajectories_at_point(testmetoo.do_experiment_setup_0_20_twice(), calibrated)
 
 
-    def test_nonlinear_confidence_region_1(self):
+    def dn_test_nonlinear_confidence_region_1(self):
         """
         0-20hr
         high confidence
         """
         baseline = {}
-        baseline["number_of_points"] = 80
+        baseline["number_of_points"] = 7
         baseline["intervals"] = [ \
-            [1.8560953554168591e-05, 0.00028858598850377325], \
-            [5999621.511495593, 311185069.71460104], \
-            [0.00063242352072096094, 0.040354449881673735], \
-            [0.0062924327562778317, 62.924327562777854]]
+            [8.7877664758340916e-06, 0.00097664158182386913], \
+            [5975591.7850671606, 6033670.7422847906], \
+            [0.000318286331714282, 0.13774505804762396], \
+            [0.076550649819184358, 765.50649818986938]]
         baseline["plotdata"] = dict(replda.plot_data)
         baseline["plotdata"]["window_title"] = "NCR benchmark model (95%)"
         woex.test_calibration_with_nonlinear_confidence_region( \
@@ -222,13 +228,14 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
         0-20hr
         low confidence
         """
+        logging.info("test_nonlinear_confidence_region_1_low_confidence")
         baseline = {}
-        baseline["number_of_points"] = 81
+        baseline["number_of_points"] = 7
         baseline["intervals"] = [ \
-            [1.9918149990245181e-05, 0.00027202677048785735], \
-            [5999903.1790274335, 6000588.7692325944], \
-            [0.00070910862594929702, 0.037986101795423888], \
-            [0.0062924327298415237, 62.924327562777854]]
+            [8.7877664765267612e-05, 0.00091161675201924708], \
+            [5989004.64542278, 59997311.159375802], \
+            [0.0031828633171412839, 0.12535166073367088], \
+            [0.76550649818986949, 76.55064981898694]]
         baseline["plotdata"] = dict(replda.plot_data)
         baseline["plotdata"]["window_title"] = "NCR benchmark model (25%)"
         woex.test_calibration_with_nonlinear_confidence_region( \
@@ -240,31 +247,32 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
         0-20hr twice
         high confidence
         """
+        logging.info("test_nonlinear_confidence_region_2")
         baseline = {}
-        baseline["number_of_points"] = 79
+        baseline["number_of_points"] = 7
         baseline["intervals"] = [ \
-            [9.4443554952357333e-06, 0.00098451779116363056], \
-            [4489764.8093958469, 175771143.75246286], \
-            [7.7677934047834407e-05, 0.1382704734970987], \
-            [19.060985194397745, 190609.85194134654]]
+            [3.794665551363583e-05, 0.00048712291659836306], \
+            [5996213.5841236981, 40766889.75868506], \
+            [0.0043411808986001232, 0.067726699233570442], \
+            [191.44094891849093, 19144.094891849094]]
         baseline["plotdata"] = dict(replda.plot_data)
         baseline["plotdata"]["window_title"] = "NCR benchmark model (95%)"
         woex.test_calibration_with_nonlinear_confidence_region( \
             testmetoo.do_experiment_protocol_setup_0_20_2x_calib_ncr(), baseline, self)
 
 
-    def test_nonlinear_confidence_region_3(self):
+    def dn_test_nonlinear_confidence_region_3(self):
         """
         0-60hr
         high confidence
         """
         baseline = {}
-        baseline["number_of_points"] = 1
+        baseline["number_of_points"] = 0
         baseline["intervals"] = [ \
             [4.721085304328252e-05, 0.00014639408975853561], \
-            [5999537.6911295187, 10015366.695155494], \
-            [0.0030218129834986489, 1.742703135385864], \
-            [0.00041379366926754218, 2.0432561489154017]]
+            [3514875.6358198333, 60000000.497653082], \
+            [0.0030218129834986489, 0.23636311749750868], 
+            [0.0020432561489153152, 0.2043256148915315]]
         baseline["plotdata"] = dict(replda.plot_data)
         baseline["plotdata"]["window_title"] = "NCR benchmark model (95%)"
         woex.test_calibration_with_nonlinear_confidence_region( \

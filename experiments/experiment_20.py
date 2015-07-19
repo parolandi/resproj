@@ -31,6 +31,7 @@ class TestExperiment20(unittest.TestCase):
 
 
     def test_nonlinear_confidence_region(self):
+        logging.debug("test_nonlinear_confidence_region")
         if self.do_quick_tests_only:
             return
         baseline = {}

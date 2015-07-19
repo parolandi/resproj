@@ -30,7 +30,7 @@ class TestExperiment15(unittest.TestCase):
         logging.info(codi.get_date_and_time())
 
     
-    def dn_test_calibration_workflow(self):
+    def test_calibration_workflow(self):
         baseline = dict(woex.calib_valid_baseline)
         basepoint = baseline["calib"]
         basepoint["point"]["objective_function"] = 191.9159661
@@ -64,7 +64,7 @@ class TestExperiment15(unittest.TestCase):
             wore.plot_tiled_trajectories_at_point(experiment(), calibrated)
 
     
-    def dn_test_calibration_workflow_global(self):
+    def test_calibration_workflow_global(self):
         if self.do_quick_tests_only:
             return
         baseline = dict(woex.calib_valid_baseline)
