@@ -3,6 +3,7 @@ from __future__ import print_function
 
 import copy
 import logging
+import numpy
 import time
 
 import metrics.ordinary_differential as mod
@@ -30,6 +31,7 @@ solution_point = {
 
 
 # TODO: success
+# TODO: 2015-07-11; numpy.array
 montecarlo_multiple_optimisation_result = {
     "all": [],
     "local": [],
@@ -44,7 +46,7 @@ def print_montecarlo_multiple_least_squares(wall_time, result, nom_params, nom_s
     print("number of local optima:     ", len(result["local"]))
     print("ssr (local)                 ", [result["local"][ii]["objective_function"] for ii in range(len(result["local"]))])
     print("nominal parameter values:   ", nom_params)
-    print("optimal parameter estimates:", result["global"]["decision_variables"].tolist())
+    print("optimal parameter estimates:", result["global"]["decision_variables"])
     print("ssr (raw):                  ", nom_ssr)
     print("ssr (opt):                  ", fit_ssr)
     print("ssr (fit):                  ", result["global"]["objective_function"])        
@@ -96,7 +98,7 @@ def montecarlo_multiple_least_squares(model, problem, algorithm):
         trial_result = sls.solve(model, problem, subsolver_algorithm)
         sp_copy = copy.deepcopy(solution_point)
         trial_point = dict(sp_copy)
-        trial_point["decision_variables"] = trial_result.x
+        trial_point["decision_variables"] = numpy.asarray(trial_result.x)
         obj_fun = inf_obj_func
         if trial_result.success:
             obj_fun = problem["performance_measure"](trial_result.x, model, problem) 
