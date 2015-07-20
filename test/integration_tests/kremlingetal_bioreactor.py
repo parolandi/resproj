@@ -42,7 +42,7 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
         logging.info(codi.get_date_and_time())
         
     
-    def dn_test_simulation_regression(self):
+    def test_simulation_regression(self):
         t = numpy.linspace(0.0, 20.0, 11)
         p = numpy.ones(len(testme.pmap))
         for par in testme.pmap.items():
@@ -103,7 +103,7 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
         [self.assertAlmostEquals(exp, act) for exp, act in zip(expected, actual)]
         
     
-    def dn_test_states_and_sensitivites_numerical(self):
+    def test_states_and_sensitivites_numerical(self):
         model_instance = testmetoo.do_model_setup_model_B()
         data_instance = testmetoo.do_get_published_data_spliced_111111()
         problem_instance = testmetoo.do_problem_setup(model_instance, data_instance["calib"])
@@ -117,7 +117,7 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
             rpt.plot_states_and_sensitivities(problem_instance["time"], states, sens, 4)
         
 
-    def dn_test_confidence_intervals(self):
+    def test_confidence_intervals(self):
         model_instance = testmetoo.do_model_setup_model_B()
         data_instance = testmetoo.do_get_published_data_spliced_111111()
         problem_instance = testmetoo.do_problem_setup(model_instance, data_instance["calib"])
@@ -171,7 +171,7 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
     # TODO: test published data
     
 
-    def dn_test_calibration_workflow_1(self):
+    def test_calibration_workflow_1(self):
         """
         0-20hr
         """
@@ -188,7 +188,7 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
             wore.plot_tiled_trajectories_at_point(testmetoo.do_experiment_setup_0_20(), calibrated)
 
 
-    def dn_test_calibration_workflow_2(self):
+    def test_calibration_workflow_2(self):
         """
         0-20hr twice
         """
@@ -205,7 +205,7 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
             wore.plot_tiled_trajectories_at_point(testmetoo.do_experiment_setup_0_20_twice(), calibrated)
 
 
-    def dn_test_nonlinear_confidence_region_1(self):
+    def test_nonlinear_confidence_region_1(self):
         """
         0-20hr
         high confidence
@@ -261,7 +261,7 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
             testmetoo.do_experiment_protocol_setup_0_20_2x_calib_ncr(), baseline, self)
 
 
-    def dn_test_nonlinear_confidence_region_3(self):
+    def test_nonlinear_confidence_region_3(self):
         """
         0-60hr
         high confidence
