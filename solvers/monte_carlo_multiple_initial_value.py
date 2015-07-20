@@ -111,7 +111,7 @@ def montecarlo_multiple_initial_value(model, problem, algorithm):
     for ii in range(algorithm["number_of_trials"]):
         if ii % 1000 == 0:
             wall_time = time.time() - wall_time0
-            logging.info("mcmiv heartbeat (iter - wall time): " + str(ii) + " -s " + str(wall_time))
+            logging.info("mcmiv heartbeat (iter - wall time): " + str(ii) + " - " + str(wall_time))
         param_vals = []
         for jj in range(dv_count):
             param_vals.append(monte_carlo_points[jj][ii])
