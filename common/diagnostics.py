@@ -33,7 +33,9 @@ def unexpected_code_branch_message():
     
 
 def print_unexpected_code_branch_message():
-    print(unexpected_code_branch_message())
+    msg = unexpected_code_branch_message()
+    print(msg)
+    logging.warn(msg)
 
 
 def wall_time_message():
