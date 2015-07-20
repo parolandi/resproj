@@ -409,7 +409,7 @@ def compute_linearised_confidence_region_ellipsoid(config, best_point):
     cov_matrix = workflow_results["cov_matrix"]
     ell_radius = workflow_results["ell_radius"]
     std_cov_matrix = cov_matrix * ell_radius
-    logging.info(std_cov_matrix)
+    logging.info("Ellipsoid: \n" + str(std_cov_matrix))
     return std_cov_matrix
 
 
@@ -428,6 +428,6 @@ def compute_linearised_confidence_intervals(config, best_point):
     hyperrectangle = []
     for ii in range(len(intervals)):
         hyperrectangle.append([nominal[ii]-intervals[ii], nominal[ii]+intervals[ii]])
-    logging.info(intervals)
-    logging.info(hyperrectangle)
+    logging.info("Confidence intervals: \n" + str(intervals))
+    logging.info("Confidence hyperrectangle: \n" + str(hyperrectangle))
     return hyperrectangle
