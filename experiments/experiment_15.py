@@ -58,6 +58,7 @@ class TestExperiment15(unittest.TestCase):
         basepoint["dv_deltas"] = numpy.array( \
             [  0.00000001e-05,  0.00000001e+06,  0.00000001e-02,  0.00000001e-02])
         '''
+        self.assertTrue(True)
         experiment = sekrbi.do_experiment_setup_0_60_with_slsqp_with_positivity
         calibrated = woex.test_baseline_calibration(experiment, basepoint, self)
         if self.do_plotting:
