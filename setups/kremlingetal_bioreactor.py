@@ -392,6 +392,7 @@ def do_algorithm_setup_using_slsqp_with_positivity(instrumentation_data):
     return algorithm_data
 
 
+# TODO 2015-07-20; this must be a factor 
 def do_algorithm_config_mcm_ranges_10xpm(data):
     data["decision_variable_ranges"] = [ \
         (7.21144459e-05*0.1, 7.21144459e-05*10), \
