@@ -38,43 +38,55 @@ class TestExperiment14(unittest.TestCase):
         return config
 
     
+    def get_baseline_ncr(self):
+        baseline = self.get_baseline_point()
+        baseline["number_of_points"] = 0
+        # [[0, 0], [0, 8], [9, 0], [9, 0]]
+        baseline["intervals"] = [ \
+            [6.7423531083919105e-05, 7.1302641907052986e-05], \
+            [5947316.8411110211, 10772179.620071167], \
+            [0.00078654642854026713, 0.0086133532544531884], \
+            [0.056175862279003279, 5.6175862279003272]]
+        baseline["plotdata"] = dict(replda.plot_data)
+        baseline["plotdata"]["window_title"] = "NCR benchmark model (25%)"
+        return baseline
+
+    
     def test_ncr(self):
         logging.debug("experiments.experiment_14.test_ncr")
         if self.do_quick_tests_only:
+            codi.print_and_log_return_on_quick_tests_only()
             return
-        baseline = {}
-        baseline["number_of_points"] = 80
-        baseline["intervals"] = [ \
-            [1.8560953554168591e-05, 0.00028858598850377325], \
-            [5999621.511495593, 311185069.71460104], \
-            [0.00063242352072096094, 0.040354449881673735], \
-            [0.0062924327562778317, 62.924327562777854]]
-        baseline["plotdata"] = dict(replda.plot_data)
-        baseline["plotdata"]["window_title"] = "NCR benchmark model (95%)"
+        baseline = self.get_baseline_ncr()
         woex.test_calibration_with_nonlinear_confidence_region( \
             sekrbi.do_experiment_protocol_setup_0_20_calib_ncr(), baseline, self)
 
      
+    def get_baseline_ncr_low_confidence(self):
+        baseline = self.get_baseline_point()
+        baseline["number_of_points"] = 4
+        baseline["intervals"] = [ \
+            [6.9175518497167294e-05, 7.1302641907052973e-05], \
+            [5702025.6330806362, 5952809.792997444], \
+            [0.0080379219184788138, 0.0081855207184086225], \
+            [0.056175862279003279, 1.2635196340831445]]
+        baseline["plotdata"] = dict(replda.plot_data)
+        baseline["plotdata"]["window_title"] = "NCR benchmark model (25%)"
+        return baseline
+
+    
     def test_ncr_low_confidence(self):
         logging.debug("experiments.experiment_14.test_ncr_low_confidence")
         if self.do_quick_tests_only:
+            codi.print_and_log_return_on_quick_tests_only()
             return
-        baseline = {}
-        baseline["number_of_points"] = 81
-        baseline["intervals"] = [ \
-            [1.9918149990245181e-05, 0.00027202677048785735], \
-            [5999903.1790274335, 6000588.7692325944], \
-            [0.00070910862594929702, 0.037986101795423888], \
-            [0.0062924327298415237, 62.924327562777854]]
-        baseline["plotdata"] = dict(replda.plot_data)
-        baseline["plotdata"]["window_title"] = "NCR benchmark model (25%)"
+        baseline = self.get_baseline_ncr_low_confidence()
         woex.test_calibration_with_nonlinear_confidence_region( \
             sekrbi.do_experiment_protocol_setup_0_20_calib_ncr_low_confidence(), baseline, self)
 
 
-    def dn_test_lcr(self):
-        logging.debug("experiments.experiment_14.test_lcr")
-        baseline = {}
+    def get_baseline_lcr(self):
+        baseline = self.get_baseline_point()
         baseline["intervals"] = [ \
             [-3.3298285820135265e-05, 0.00017450561705501587], \
             [-49451538.410624318, 61357157.092140831], \
@@ -92,13 +104,26 @@ class TestExperiment14(unittest.TestCase):
             [  0.00000001e-02,  0.00000001e+10,  0.00000001e+01,  0.00000001e+05]]
         baseline["plotdata"] = dict(replda.plot_data)
         baseline["plotdata"]["window_title"] = "LCR benchmark model (95%)"
+        return baseline
+
+
+    def test_lcr(self):
+        logging.debug("experiments.experiment_14.test_lcr")
+        baseline = self.get_baseline_lcr()
         woex.test_calibration_with_linearised_confidence_region( \
             sekrbi.do_experiment_setup_0_20(), baseline, self)
 
 
-    def test_lcr_low_confidence(self):
-        logging.debug("experiments.experiment_14.test_lcr_low_confidence")
+    def get_baseline_point(self):
         baseline = {}
+        baseline["decision_variables"] = [  7.06036656e-05, 5.95280934e+06, 7.86546429e-03, 5.61758623e-01]
+        baseline["decision_variables_eps"] = [  0.00000001e-05, 0.00000001e+06, 0.00000001e-03, 0.00000001e-01]
+        baseline["objective_function"] = 55.73031631952742
+        return baseline
+
+
+    def get_baseline_lcr_low_confidence(self):
+        baseline = self.get_baseline_point()
         baseline["intervals"] = [ \
             [5.4023221176441136e-05, 8.7184110058439464e-05], \
             [-2888494.3784842957, 14794113.060000809], \
@@ -116,6 +141,12 @@ class TestExperiment14(unittest.TestCase):
             [  0.00000001e-03,  0.00000001e+09,  0.00000001e+01,  0.00000001e+04]]
         baseline["plotdata"] = dict(replda.plot_data)
         baseline["plotdata"]["window_title"] = "LCR benchmark model (25%)"
+        return baseline
+
+
+    def test_lcr_low_confidence(self):
+        logging.debug("experiments.experiment_14.test_lcr_low_confidence")
+        baseline = self.get_baseline_lcr_low_confidence()
         woex.test_calibration_with_linearised_confidence_region( \
             self.do_experiment_setup_with_low_confidence(), baseline, self)
 
