@@ -26,6 +26,7 @@ def solve(model_instance, problem_instance, algorithm_structure):
     # WIP: 2015-0718; regressions
     algorithm_structure["solver_settings"]["eps"] = 1e-6
     #algorithm_structure["solver_settings"]["maxiter"] = 100
+    algorithm_structure["method"] = "Nelder-Mead"
     
     result = scipy.optimize.minimize( \
         args =     (model_instance, problem_instance), \
