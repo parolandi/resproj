@@ -85,8 +85,9 @@ def do_calibration_and_compute_performance_measure(config):
     if problem_instance["output_filters"] is not None:
         problem_instance["output_filters"]["measurement_splices"] = measurement_splices
     
-    logging.info("Calibration: " + str(result))
-    logging.info("Calibration: " + str(calib_sol))
+    logging.debug("workflows.protocols.do_calibration_and_compute_performance_measure")
+    logging.info("Calibration: \n" + str(result))
+    logging.info("Calibration: \n" + str(calib_sol))
     return calib_sol 
 
 

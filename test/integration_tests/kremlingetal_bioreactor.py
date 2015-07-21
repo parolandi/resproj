@@ -43,6 +43,7 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
         
     
     def test_simulation_regression(self):
+        logging.debug("test.integration_tests.kremlingetal_bioreactor.test_simulation_regression")
         t = numpy.linspace(0.0, 20.0, 11)
         p = numpy.ones(len(testme.pmap))
         for par in testme.pmap.items():
@@ -104,6 +105,7 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
         
     
     def test_states_and_sensitivites_numerical(self):
+        logging.debug("test.integration_tests.kremlingetal_bioreactor.test_states_and_sensitivites_numerical")
         model_instance = testmetoo.do_model_setup_model_B()
         data_instance = testmetoo.do_get_published_data_spliced_111111()
         problem_instance = testmetoo.do_problem_setup(model_instance, data_instance["calib"])
@@ -118,6 +120,7 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
         
 
     def test_confidence_intervals(self):
+        logging.debug("test.integration_tests.kremlingetal_bioreactor.test_confidence_intervals")
         model_instance = testmetoo.do_model_setup_model_B()
         data_instance = testmetoo.do_get_published_data_spliced_111111()
         problem_instance = testmetoo.do_problem_setup(model_instance, data_instance["calib"])
@@ -175,6 +178,7 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
         """
         0-20hr
         """
+        logging.debug("test.integration_tests.kremlingetal_bioreactor.test_calibration_workflow_1")
         baseline = dict(woex.calib_valid_baseline)
         basepoint = baseline["calib"]
         basepoint["point"]["objective_function"] = 55.730316319527418
@@ -192,6 +196,7 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
         """
         0-20hr twice
         """
+        logging.debug("test.integration_tests.kremlingetal_bioreactor.test_calibration_workflow_2")
         baseline = dict(woex.calib_valid_baseline)
         basepoint = baseline["calib"]
         basepoint["point"]["objective_function"] = 111.46063263905484
@@ -210,6 +215,7 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
         0-20hr
         high confidence
         """
+        logging.debug("test.integration_tests.kremlingetal_bioreactor.test_nonlinear_confidence_region_1")
         baseline = {}
         baseline["number_of_points"] = 7
         baseline["intervals"] = [ \
@@ -228,7 +234,7 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
         0-20hr
         low confidence
         """
-        logging.info("test_nonlinear_confidence_region_1_low_confidence")
+        logging.debug("test.integration_tests.kremlingetal_bioreactor.test_nonlinear_confidence_region_1_low_confidence")
         baseline = {}
         baseline["number_of_points"] = 7
         baseline["intervals"] = [ \
@@ -247,7 +253,7 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
         0-20hr twice
         high confidence
         """
-        logging.info("test_nonlinear_confidence_region_2")
+        logging.debug("test.integration_tests.kremlingetal_bioreactor.test_nonlinear_confidence_region_2")
         baseline = {}
         baseline["number_of_points"] = 7
         baseline["intervals"] = [ \
@@ -266,6 +272,7 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
         0-60hr
         high confidence
         """
+        logging.debug("test.integration_tests.kremlingetal_bioreactor.test_nonlinear_confidence_region_3")
         baseline = {}
         baseline["number_of_points"] = 0
         baseline["intervals"] = [ \
