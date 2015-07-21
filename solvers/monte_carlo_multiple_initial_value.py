@@ -94,6 +94,7 @@ def montecarlo_multiple_initial_value(model, problem, algorithm):
     and solves the initial value problem
     return montecarlo_multiple_simulation_result
     """
+    logging.debug("solvers.montecarlo_multiple_initial_value")
     assert(model["model"] is not None)
     assert(problem["performance_measure"] is not None)
     assert(problem["performance_measure"] is mod.sum_squared_residuals)

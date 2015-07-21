@@ -4,6 +4,15 @@ import logging
 import time
 
 
+def get_return_on_quick_tests_only():
+    return "doing quick tests only!"
+
+
+def print_and_log_return_on_quick_tests_only():
+    print("Warning: " + get_return_on_quick_tests_only())
+    logging.warn(get_return_on_quick_tests_only())
+    
+
 def get_date_and_time():
     return time.strftime("%Y/%m/%d") + "@" + time.strftime("%H:%M:%S")
 

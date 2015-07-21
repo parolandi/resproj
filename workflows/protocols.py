@@ -86,8 +86,8 @@ def do_calibration_and_compute_performance_measure(config):
         problem_instance["output_filters"]["measurement_splices"] = measurement_splices
     
     logging.debug("workflows.protocols.do_calibration_and_compute_performance_measure")
-    logging.info("Calibration: \n" + str(result))
-    logging.info("Calibration: \n" + str(calib_sol))
+    logging.info("calibration: \n" + str(result))
+    logging.info("calibration: \n" + str(calib_sol))
     return calib_sol 
 
 
@@ -313,6 +313,6 @@ def do_sensitivity_based_workflow_at_solution_point(config, solution_point):
     sens_trajectories = compute_sensitivity_trajectories(config, model_instance, problem_instance)
     lin_par_unc = do_linearised_parametric_uncertainty(problem_instance, ssr, sens_trajectories)
     workflow_results = convert_to_sensitivity_based_workflow_results(problem_instance, lin_par_unc)
-    logging.info("workflows.protocols.do_sensitivity_based_workflow_at_solution_point")
-    logging.info(workflow_results)
+    logging.debug("workflows.protocols.do_sensitivity_based_workflow_at_solution_point")
+    logging.info("sensitivity results: \n" + str(workflow_results))
     return workflow_results

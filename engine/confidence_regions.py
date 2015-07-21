@@ -118,7 +118,7 @@ def evaluate_multiple_points_in_hyperrectangle_by_nonlinear_confidence_intervals
     '''
     return numpy.array
     '''
-    logging.debug("engine.confidence_regions.compute_nonlinear_confidence_region_extremal_internal")
+    logging.debug("engine.confidence_regions.evaluate_multiple_points_in_hyperrectangle_by_nonlinear_confidence_intervals")
     result = mcmiv.solve(model, problem, algorithm)
     points = result["succeeded"]["decision_variables"]
     ssrs = result["succeeded"]["objective_function"]
