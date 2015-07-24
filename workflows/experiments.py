@@ -129,6 +129,10 @@ def test_calibration_with_nonlinear_confidence_region(protocol, baseline, unitte
     # setup nonlin conf reg
     algorithm_nlr = protocol["steps"][nlr]["algorithm_setup"](None)
     model, problem, algorithm_mcs = ssdu.get_model_problem_algorithm_with_calib(protocol["steps"][mcs])
+    if algorithm_mcs["solvers"] is not None:
+        if algorithm_mcs["solvers"]["parameter_confidence_estimation"] is not None:
+            algorithm_nlr = algorithm_mcs["solvers"]["parameter_confidence_estimation"]["region_estimation"]["nonlinear_programming"]
+            algorithm_mcs = algorithm_mcs["solvers"]["parameter_confidence_estimation"]["region_estimation"]["monte_carlo_simulation"]
     # WIP: 2015-07-16; rework
     if True:
         do_appy_bounds(best_point["decision_variables"], problem)

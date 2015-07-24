@@ -63,10 +63,15 @@ def do_calibration_and_compute_performance_measure(config):
     
     # least-squares
     # TODO: 2015-06-23; legacy
-    if algorithm_instance["class"] is not None:
-        result = sonlin.solve(model_instance, problem_instance, algorithm_instance)
+    if algorithm_instance["solvers"] is not None:
+        if algorithm_instance["solvers"]["model_calibration"] is not None:
+            result = algorithm_instance["solvers"]["model_calibration"]( \
+                model_instance, problem_instance, algorithm_instance["solvers"]["model_calibration"]["settings"])
     else:
-        result = sonlin.solesq.solve(model_instance, problem_instance, algorithm_instance)
+        if algorithm_instance["class"] is not None:
+            result = sonlin.solve(model_instance, problem_instance, algorithm_instance)
+        else:
+            result = sonlin.solesq.solve(model_instance, problem_instance, algorithm_instance)
 
     # verification    
     # WIP: 2015-05-15, should this be needed?

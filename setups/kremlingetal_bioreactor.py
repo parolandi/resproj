@@ -2,6 +2,7 @@
 import copy
 import numpy
 
+import algorithms.algorithm_data as alalda
 import common.utilities as cu
 import data.experimental_data_splicing as deds
 import workflows.protocol_data as wpd
@@ -410,6 +411,41 @@ def do_algorithm_setup_global_neldermead_100_10xpm(instrumentation_data):
     data = do_algorithm_config_mcm_ranges_10xpm(data)
     return data
 
+
+def do_algorithm_setup_modelcalib_nm(instrumentation_data):
+    algorithm_data = dict(alalda.algorithmic_data)
+    algorithm_data["solvers"] = dict(alalda.solvers_data)
+    
+    algorithm_data["solvers"]["model_calibration"] = dict(alalda.numerics_data)
+    ls = algorithm_data["solvers"]["model_calibration"]["least_squares"]
+    ls["method"] = 'Nelder-Mead'
+    ls["initial_guesses"] = [7e-05, 6000000.0, 0.0168, 0.01]
+    ls["callback"] = None
+    
+    algorithm_data["solvers"]["parameter_confidence_estimation"] = dict(alalda.numerics_data)
+    re = algorithm_data["solvers"]["parameter_confidence_estimation"]["region_estimation"]
+    
+    re["nonlinear_programming"]["method"] = 'SLSQP'
+    logger = sosout.DecisionVariableLogger()
+    re["nonlinear_programming"]["callback"] = logger.let_decision_variables_be_positive_and_log
+    
+    re["monte_carlo_simulation"]["method"] = senu.mcmiv.solve
+    re["monte_carlo_simulation"]["number_of_trials"] = 10
+    do_algorithm_config_mcm_ranges_10xpm(re["monte_carlo_simulation"])  
+
+    return algorithm_data
+
+
+def do_algorithm_setup_modelcalib_slsqp(instrumentation_data):
+    algorithm_data = dict(alalda.solvers_data)
+    algorithm_data["model_calibration"] = dict(alalda.numerics_data)
+    ls = algorithm_data["model_calibration"]["least_squares"]
+    ls["method"] = 'SLSQP'
+    ls["initial_guesses"] = [7e-05, 6000000.0, 0.0168, 0.01]
+    ls["callback"] = None
+    return algorithm_data
+
+
 # --------------------------------------------------------------------------- #
 
 def do_instrumentation_setup():
@@ -595,6 +631,19 @@ def do_experiment_protocol_setup_0_60_calib_ncr():
     setup["algorithm_setup"] = senu.do_config_mcmiv_10
     setup["local_setup"]["do_plotting"] = False
     protocol["steps"].append(copy.deepcopy(setup))
+    return protocol
+
+
+def do_experiment_setup_0_60_calib_ncr_bis():
+    protocol = copy.deepcopy(setups.setup_data.experiment_protocol)
+    protocol["steps"] = []
+    setup = do_experiment_setup_0_60()
+    
+    setup["algorithm_setup"] = do_algorithm_setup_modelcalib_nm
+    setup["local_setup"]["do_plotting"] = False
+    protocol["steps"].append(copy.deepcopy(setup))
+    protocol["steps"].append(copy.deepcopy(setup))
+    
     return protocol
 
 
