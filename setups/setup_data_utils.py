@@ -75,6 +75,18 @@ def get_model_problem_protocol_and_step(config):
     return model, problem, protocol, protocol_step
 
 
+def get_model_problem_protocol_and_step_handle_unlegacy(config):
+    try:
+        model_instance, \
+        problem_instance, \
+        protocol, \
+        protocol_step = get_model_problem_protocol_and_step(config["steps"][0])
+    except:
+        # setup
+        model_instance, problem_instance, protocol, protocol_step = get_model_problem_protocol_and_step(config)
+    return model_instance, problem_instance, protocol, protocol_step
+
+
 def get_next_protocol_step(config):
     step = ""
     if config["protocol_step"]["calib"] == "do":
