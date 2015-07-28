@@ -103,8 +103,7 @@ def montecarlo_multiple_initial_value(model, problem, algorithm):
     # TODO: preconditions!
     
     monte_carlo_points = smcs.do_sampling(algorithm)
-    # TODO
-    _ = dict(algorithm["subsolver_params"])
+    # TODO; 2015-07-28 sub-solver algorithmic parameters
     
     success = copy.deepcopy(ensemble_trajectoryies)
     failure = copy.deepcopy(ensemble_trajectoryies)
