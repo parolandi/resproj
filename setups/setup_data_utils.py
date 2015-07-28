@@ -34,6 +34,7 @@ def get_model_data_problem_algorithm_with_calib_handle_unlegacy(config):
         problem_instance  = config["problem_setup"](model_instance, data_instance["calib"])
         algorithm_instance = config["algorithm_setup"](None)
         # TODO: 2015-06-20; assert this is a calibration protocol step
+    return model_instance, data_instance, problem_instance, algorithm_instance
 
 
 def get_model_data_problem_algorithm_with_calib(config):
