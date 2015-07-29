@@ -122,7 +122,25 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
             rpt.plot_states_and_sensitivities(problem_instance["time"], states, sens, 4)
         
 
+    def test_states_and_sensitivites_analytical(self):
+        logging.debug("test.integration_tests.kremlingetal_bioreactor.test_states_and_sensitivites_analytical")
+        sens_model_instance = testmetoo.do_sensitivity_model_setup()
+        data_instance = testmetoo.do_get_published_data_spliced_111111()
+        sens_problem_instance = testmetoo.do_sensitivity_problem_setup(sens_model_instance, data_instance["calib"])
+        states_and_sens = siv.compute_timecourse_trajectories(None, sens_model_instance, sens_problem_instance)
+        states = states_and_sens[0:6]
+        sens = states_and_sens[6:]
+        self.assertTrue(True)
+        if self.do_plotting:
+            rpt.plot_states_and_sensitivities(sens_problem_instance["time"], states, sens, 4)
+
+    # ----------------------------------------------------------------------- #
+    # Linear confidence region tests
+
     def test_linear_confidence_intervals(self):
+        """
+        It does this for a fixed ssr and st-dev
+        """
         logging.debug("test.integration_tests.kremlingetal_bioreactor.test_linear_confidence_intervals")
         model_instance = testmetoo.do_model_setup_model_B()
         data_instance = testmetoo.do_get_published_data_spliced_111111()
@@ -164,19 +182,6 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
             codi.print_measurements_est_var_and_ellipsoid_radius(no_meas, est_var, ell_radius)
             codi.print_covariance_matrix_and_determinant(cov_matrix, det)
             codi.print_decision_variables_and_confidence_intervals(problem_instance["parameters"], confidence_intervals)
-
-    
-    def test_states_and_sensitivites_analytical(self):
-        logging.debug("test.integration_tests.kremlingetal_bioreactor.test_states_and_sensitivites_analytical")
-        sens_model_instance = testmetoo.do_sensitivity_model_setup()
-        data_instance = testmetoo.do_get_published_data_spliced_111111()
-        sens_problem_instance = testmetoo.do_sensitivity_problem_setup(sens_model_instance, data_instance["calib"])
-        states_and_sens = siv.compute_timecourse_trajectories(None, sens_model_instance, sens_problem_instance)
-        states = states_and_sens[0:6]
-        sens = states_and_sens[6:]
-        self.assertTrue(True)
-        if self.do_plotting:
-            rpt.plot_states_and_sensitivities(sens_problem_instance["time"], states, sens, 4)
 
     # ----------------------------------------------------------------------- #
     # Calibration tests
