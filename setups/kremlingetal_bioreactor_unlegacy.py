@@ -50,6 +50,25 @@ def do_protocol_setup_0_20_default():
     return protocol
 
 
+def do_protocol_setup_0_20_low_confidence():
+    protocol = do_protocol_setup_0_20_default()
+    problem = sekrbi.do_problem_setup_with_covariance_2_and_low_confidence
+    protocol["steps"][0]["problem_setup"] = problem
+    protocol["steps"][1]["problem_setup"] = problem
+    return protocol
+
+
+def do_protocol_setup_0_20_2x_default():
+    protocol = copy.deepcopy(seseda.experiment_protocol)
+    protocol["steps"] = []
+    setup = sekrbi.do_experiment_setup_0_20_twice()
+    setup["algorithm_setup"] = do_algorithm_setup_modelcalib_nm
+    setup["local_setup"]["do_plotting"] = False
+    protocol["steps"].append(copy.deepcopy(setup))
+    protocol["steps"].append(copy.deepcopy(setup))
+    return protocol
+
+
 def do_protocol_setup_0_60_default():
     protocol = copy.deepcopy(seseda.experiment_protocol)
     protocol["steps"] = []
