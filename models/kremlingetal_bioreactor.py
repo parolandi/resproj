@@ -3,6 +3,8 @@ import copy
 import logging
 import numpy
 
+import common.diagnostics as codi
+
 
 pmap = {
     "Yxs": 0, #
@@ -203,7 +205,8 @@ w.r.t Yxs, k2, ksynmax, KIB
 '''
 def evaluate_system_and_sensitivities(xs, t, p, u):
     # this is not quite ready
-    assert(False)
+    codi.print_unexpected_code_branch_message()
+    logging.WARN(codi.unexpected_code_branch_message())
     
     Mw = 342.3 * 1E-6 # molar mass of substrate
     dim_dv = 4
