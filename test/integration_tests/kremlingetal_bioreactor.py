@@ -109,7 +109,7 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
     
     def test_states_and_sensitivites_numerical(self):
         logging.debug("test.integration_tests.kremlingetal_bioreactor.test_states_and_sensitivites_numerical")
-        model_instance = tes.do_model_setup_model_B()
+        model_instance = testmetoo.do_model_setup_model_B()
         data_instance = testmetoo.do_get_published_data_spliced_111111()
         problem_instance = testmetoo.do_problem_setup(model_instance, data_instance["calib"])
         states_and_sens = sls.compute_timecourse_trajectories_and_sensitivities(model_instance, problem_instance)
