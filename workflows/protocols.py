@@ -53,9 +53,11 @@ def execute_algorithm_handle_legacy(model_instance, problem_instance, algorithm_
     except:
         pass
     else:
-        if result is not None and algorithm_instance["class"] is not None:
+        if algorithm_instance["class"] is not None:
+            assert(result is None)
             result = sonlin.solve(model_instance, problem_instance, algorithm_instance)
         else:
+            assert(result is None)
             result = sonlin.solesq.solve(model_instance, problem_instance, algorithm_instance)
     assert(result is not None)
     return result
