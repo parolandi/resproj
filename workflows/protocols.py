@@ -36,6 +36,31 @@ linearised_parametric_uncertainty = {
     }
 
 
+# TODO: 2015-06-23; legacy
+def execute_algorithm_handle_legacy(model_instance, problem_instance, algorithm_instance):
+    result = None
+    try:
+        _ = algorithm_instance["solvers"]
+    except:
+        pass
+    else:
+        if algorithm_instance["solvers"] is not None:
+            if algorithm_instance["solvers"]["model_calibration"] is not None:
+                result = algorithm_instance["solvers"]["model_calibration"]["least_squares"]["numerics"]( \
+                    model_instance, problem_instance, algorithm_instance["solvers"]["model_calibration"]["least_squares"])
+    try:
+        _ = algorithm_instance["class"]
+    except:
+        pass
+    else:
+        if result is not None and algorithm_instance["class"] is not None:
+            result = sonlin.solve(model_instance, problem_instance, algorithm_instance)
+        else:
+            result = sonlin.solesq.solve(model_instance, problem_instance, algorithm_instance)
+    assert(result is not None)
+    return result
+
+
 def do_calibration_and_compute_performance_measure(config):
     """
     Do calibration
@@ -59,17 +84,8 @@ def do_calibration_and_compute_performance_measure(config):
             dadasp.convert_mask_to_index_expression(problem_instance["output_filters"]["calibration_mask"])
     
     # least-squares
-    # TODO: 2015-06-23; legacy
-    if algorithm_instance["solvers"] is not None:
-        if algorithm_instance["solvers"]["model_calibration"] is not None:
-            result = algorithm_instance["solvers"]["model_calibration"]["least_squares"]["numerics"]( \
-                model_instance, problem_instance, algorithm_instance["solvers"]["model_calibration"]["least_squares"])
-    else:
-        if algorithm_instance["class"] is not None:
-            result = sonlin.solve(model_instance, problem_instance, algorithm_instance)
-        else:
-            result = sonlin.solesq.solve(model_instance, problem_instance, algorithm_instance)
-
+    result = execute_algorithm_handle_legacy(model_instance, problem_instance, algorithm_instance)
+    
     # verification    
     # WIP: 2015-05-15, should this be needed?
     # need to do this here because problem data is kind of ignored
