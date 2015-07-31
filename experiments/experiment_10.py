@@ -38,9 +38,9 @@ class TestExperiment10(unittest.TestCase):
     
     def do_experiment_setup_2(self):
         config = skb.do_experiment_setup_0_20()
-        #config["algorithm_setup"] = skb.do_algorithm_setup_using_slsqp_with_positivity
+        config["algorithm_setup"] = skb.do_algorithm_setup_using_slsqp_with_positivity
         config["data_setup"] = skb.do_get_published_data_spliced_111111
-        #config["problem_setup"] = skb.do_problem_setup_with_covariance_2
+        config["problem_setup"] = skb.do_problem_setup_with_covariance_2
         return config
 
 
