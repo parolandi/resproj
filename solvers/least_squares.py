@@ -22,11 +22,11 @@ def solve(model_instance, problem_instance, algorithm_structure):
         assert(len(problem_instance["parameter_indices"]) == len(problem_instance["bounds"]))
     
     # WIP: 2015-07-11; hard-coded cannot be
-    algorithm_structure["solver_settings"] = {}
+    #algorithm_structure["solver_settings"] = {}
     # WIP: 2015-0718; regressions
-    algorithm_structure["solver_settings"]["eps"] = 1e-6
+    #algorithm_structure["solver_settings"]["eps"] = 1e-6
     #algorithm_structure["solver_settings"]["maxiter"] = 100
-    algorithm_structure["method"] = "Nelder-Mead"
+    #algorithm_structure["method"] = "Nelder-Mead"
     
     result = scipy.optimize.minimize( \
         args =     (model_instance, problem_instance), \
@@ -34,7 +34,7 @@ def solve(model_instance, problem_instance, algorithm_structure):
         callback = algorithm_structure["callback"], \
         fun =      problem_instance["performance_measure"], \
         method =   algorithm_structure["method"], \
-        options =  algorithm_structure["solver_settings"], \
+        #options =  algorithm_structure["solver_settings"], \
         tol =      algorithm_structure["tolerance"], \
         x0 =       algorithm_structure["initial_guesses"] \
         )
