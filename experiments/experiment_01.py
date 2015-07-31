@@ -26,7 +26,7 @@ class TestExperiment01(unittest.TestCase):
     def __init__(self, *args, **kwargs):
         super(TestExperiment01, self).__init__(*args, **kwargs)
         logging.basicConfig(filename=codi.get_name_logging_file(),level=codi.get_logging_level())
-        logging.info("exp-02")
+        logging.info("exp-01")
         logging.info(codi.get_date_and_time())
 
     
