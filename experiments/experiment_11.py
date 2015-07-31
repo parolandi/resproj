@@ -42,6 +42,7 @@ class TestExperiment11(unittest.TestCase):
                 (nominals[ii]*(1-conf_intvs[ii]), nominals[ii]*(1+conf_intvs[ii])))
         algorithm["number_of_trials"] = 100
         algorithm["subsolver_params"]["method"] = "Nelder-Mead"
+        algorithm["enable_trajectories"] = True
         return algorithm
 
     
