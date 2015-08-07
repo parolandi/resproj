@@ -6,6 +6,7 @@ import logging
 import numpy
 
 import common.diagnostics as codi
+import common.environment as coen
 import workflows.experiments as woex
 import workflows.reporting_unlegacy as wore
 
@@ -22,10 +23,15 @@ class TestExperiment18(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
         super(TestExperiment18, self).__init__(*args, **kwargs)
-        self.do_plotting = True
-        self.do_quick_tests_only = True
+        self.do_plotting = coen.get_doing_plotting()
+        self.do_quick_tests_only = coen.get_doing_quick_tests_only()
         logging.basicConfig(filename=codi.get_name_logging_file(),level=codi.get_logging_level())
-        logging.info("exp-18")
+        logging.info("exp-18: start")
+        logging.info(codi.get_date_and_time())
+
+
+    def __del__(self):
+        logging.info("exp-18: finish")
         logging.info(codi.get_date_and_time())
 
     

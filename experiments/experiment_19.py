@@ -23,7 +23,7 @@ class TestExperiment19(unittest.TestCase):
     def __init__(self, *args, **kwargs):
         super(TestExperiment19, self).__init__(*args, **kwargs)
         self.do_plotting = True
-        self.do_quick_tests_only = True
+        self.do_quick_tests_only = False
         logging.basicConfig(filename=codi.get_name_logging_file(),level=codi.get_logging_level())
         logging.info("exp-19")
         logging.info(codi.get_date_and_time())
