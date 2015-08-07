@@ -255,11 +255,11 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
     
     def get_baseline_nonlinear_confidence_region_0_20_high_confidence(self):
         baseline = self.get_baseline_point_0_20()
-        baseline["number_of_points"] = 0
+        baseline["number_of_points"] = 5
         baseline["intervals"] = [ \
             [6.7423531083919105e-05, 7.1302641907052986e-05], \
-            [5947316.8411110211, 10772179.620071167], \
-            [0.00078654642854026713, 0.0086133532544531884], \
+            [5762389.5624994077, 6378145.4846736873], \
+            [0.0078654640574383552, 0.0086133532544531884], \
             [0.056175862279003279, 5.6175862279003272]]
         baseline["plotdata"] = dict(replda.plot_data)
         baseline["plotdata"]["window_title"] = "NCR benchmark model (95%)"
@@ -278,7 +278,7 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
         baseline["number_of_points"] = 4
         baseline["intervals"] = [ \
             [6.9175518497167294e-05, 7.1302641907052973e-05], \
-            [5702025.6330806362, 5952809.792997444], \
+            [5702299.2268772349, 5952809.792997444], \
             [0.0080379219184788138, 0.0081855207184086225], \
             [0.056175862279003279, 1.2635196340831445]]
         baseline["plotdata"] = dict(replda.plot_data)
@@ -334,7 +334,7 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
         baseline["number_of_points"] = 0
         baseline["intervals"] = [ \
             [7.1815198110426653e-05, 7.2828378864918741e-05], \
-            [5927978.9164478695, 5928271.2840146916], \
+            [5927979.0165858017, 5928271.2840146916], \
             [0.0012124961140420856, 0.12124961140420856], \
             [0.0017173506980212713, 0.1717350698021271]]
         baseline["plotdata"] = dict(replda.plot_data)
