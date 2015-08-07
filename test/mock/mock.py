@@ -202,3 +202,11 @@ def do_protocol():
     protocol_data = dict(woprda.protocol_data)
     protocol_data["performance_measure"] = meordi.sum_squared_residuals
     return protocol_data
+
+
+# TODO: 2015-06-22; does it make sense to avoid this dependency?
+def get_model_data_problem(config):
+    model_instance = config["model_setup"]()
+    data_instance = config["data_setup"]()
+    problem_instance  = config["problem_setup"](model_instance, data_instance["calib"])
+    return model_instance, data_instance, problem_instance

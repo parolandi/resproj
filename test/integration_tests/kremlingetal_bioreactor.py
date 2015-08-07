@@ -2,6 +2,7 @@
 import unittest
 import models.kremlingetal_bioreactor as testme
 import setups.kremlingetal_bioreactor as testmetoo
+import setups.kremlingetal_bioreactor_unlegacy as testmetri
 
 import copy
 import logging
@@ -34,9 +35,18 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
         self.do_plotting = False
         self.do_diag = False
         logging.basicConfig(filename=codi.get_name_logging_file(),level=codi.get_logging_level())
+        logging.info("integration-kremlingetal")
+        logging.info(codi.get_date_and_time())
 
     
-    def test_simulation_regression(self):
+    def __del__(self):
+        logging.info(codi.get_date_and_time())
+    
+    # ----------------------------------------------------------------------- #
+    # Simulation, state-and-sensitivities (numerical, analytical) tests
+
+    def test_simulation(self):
+        logging.debug("test.integration_tests.kremlingetal_bioreactor.test_simulation")
         t = numpy.linspace(0.0, 20.0, 11)
         p = numpy.ones(len(testme.pmap))
         for par in testme.pmap.items():
@@ -98,6 +108,7 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
         
     
     def test_states_and_sensitivites_numerical(self):
+        logging.debug("test.integration_tests.kremlingetal_bioreactor.test_states_and_sensitivites_numerical")
         model_instance = testmetoo.do_model_setup_model_B()
         data_instance = testmetoo.do_get_published_data_spliced_111111()
         problem_instance = testmetoo.do_problem_setup(model_instance, data_instance["calib"])
@@ -111,7 +122,26 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
             rpt.plot_states_and_sensitivities(problem_instance["time"], states, sens, 4)
         
 
-    def test_confidence_intervals(self):
+    def test_states_and_sensitivites_analytical(self):
+        logging.debug("test.integration_tests.kremlingetal_bioreactor.test_states_and_sensitivites_analytical")
+        sens_model_instance = testmetoo.do_sensitivity_model_setup()
+        data_instance = testmetoo.do_get_published_data_spliced_111111()
+        sens_problem_instance = testmetoo.do_sensitivity_problem_setup(sens_model_instance, data_instance["calib"])
+        states_and_sens = siv.compute_timecourse_trajectories(None, sens_model_instance, sens_problem_instance)
+        states = states_and_sens[0:6]
+        sens = states_and_sens[6:]
+        self.assertTrue(True)
+        if self.do_plotting:
+            rpt.plot_states_and_sensitivities(sens_problem_instance["time"], states, sens, 4)
+
+    # ----------------------------------------------------------------------- #
+    # Linear confidence region tests
+
+    def test_linear_confidence_intervals(self):
+        """
+        It does this for a fixed ssr and st-dev
+        """
+        logging.debug("test.integration_tests.kremlingetal_bioreactor.test_linear_confidence_intervals")
         model_instance = testmetoo.do_model_setup_model_B()
         data_instance = testmetoo.do_get_published_data_spliced_111111()
         problem_instance = testmetoo.do_problem_setup(model_instance, data_instance["calib"])
@@ -119,7 +149,6 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
         no_meas = mmdu.calculate_number_of_observations(problem_instance["outputs"])
         no_params = mmdu.get_number_of_decision_variables(problem_instance)
         no_timepoints = mmdu.get_number_of_time_points(problem_instance)
-        ssr = 0.045095700772591826
 
         # sensitivities
         states_and_sens = sls.compute_timecourse_trajectories_and_sensitivities(model_instance, problem_instance)
@@ -138,10 +167,15 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
         delta = [0.00000001e-05, 0.00000001e+07, 0.00000001e+00, 0.00000001e+00]
         [self.assertAlmostEquals(act, exp, delta=dif) for act, exp, dif in zip(confidence_intervals, expected, delta)] 
 
+        # given
+        ssr = 0.045095700772591826
+        st_dev = 0.9
+        
         est_var = engine.statistical_inference.compute_measurements_variance( \
             ssr, no_params, no_meas)
         ell_radius = engine.statistical_inference.compute_confidence_ellipsoid_radius( \
-            no_params, no_meas, est_var, 0.9)
+            no_params, no_meas, est_var, st_dev)
+        self.assertTrue(True)
 
         if self.do_diag:
             codi.print_maximum_sensitivities(sens_max)
@@ -149,26 +183,10 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
             codi.print_covariance_matrix_and_determinant(cov_matrix, det)
             codi.print_decision_variables_and_confidence_intervals(problem_instance["parameters"], confidence_intervals)
 
-    
-    # TODO: not being tested at the moment
-    def do_not_test_states_and_sensitivites_analytical(self):
-        sens_model_instance = testmetoo.do_sensitivity_model_setup()
-        data_instance = testmetoo.do_get_published_data_spliced_111111()
-        sens_problem_instance = testmetoo.do_sensitivity_problem_setup(sens_model_instance, data_instance["calib"])
-        states_and_sens = siv.compute_timecourse_trajectories(None, sens_model_instance, sens_problem_instance)
-        states = states_and_sens[0:6]
-        sens = states_and_sens[6:]
-        if self.do_plotting:
-            rpt.plot_states_and_sensitivities(sens_problem_instance["time"], states, sens, 4)
+    # ----------------------------------------------------------------------- #
+    # Calibration tests
 
-    
-    # TODO: test published data
-    
-
-    def test_calibration_workflow_1(self):
-        """
-        0-20hr
-        """
+    def get_baseline_workflow_0_20(self):
         baseline = dict(woex.calib_valid_baseline)
         basepoint = baseline["calib"]
         basepoint["point"]["objective_function"] = 55.730316319527418
@@ -176,16 +194,18 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
             [7.06036656e-05, 5.95280934e+06, 7.86546429e-03, 5.61758623e-01])
         basepoint["of_delta"] = 0.0000001
         basepoint["dv_deltas"] = numpy.array([  0.00000001e-05,  0.00000001e+06,  0.00000001e-03,  0.00000001e-01])
+        return baseline
 
-        calibrated = woex.test_baseline_calibration(testmetoo.do_experiment_setup_0_20, baseline["calib"], self)
+
+    def test_calibration_workflow_0_20(self):
+        logging.debug("test.integration_tests.kremlingetal_bioreactor.test_calibration_workflow_0_20")
+        baseline = self.get_baseline_workflow_0_20()
+        calibrated = woex.test_baseline_calibration(testmetri.do_protocol_setup_0_20_default, baseline["calib"], self)
         if self.do_plotting:
-            wore.plot_tiled_trajectories_at_point(testmetoo.do_experiment_setup_0_20(), calibrated)
+            wore.plot_tiled_trajectories_at_point(testmetri.do_protocol_setup_0_20_default(), calibrated)
 
 
-    def test_calibration_workflow_2(self):
-        """
-        0-20hr twice
-        """
+    def get_baseline_workflow_0_20_2x(self):
         baseline = dict(woex.calib_valid_baseline)
         basepoint = baseline["calib"]
         basepoint["point"]["objective_function"] = 111.46063263905484
@@ -193,82 +213,140 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
             [7.06036656e-05, 5.95280934e+06, 7.86546429e-03, 5.61758623e-01])
         basepoint["of_delta"] = 0.0000001
         basepoint["dv_deltas"] = numpy.array([  0.00000001e-05,  0.00000001e+06,  0.00000001e-03,  0.00000001e-01])
-
-        calibrated = woex.test_baseline_calibration(testmetoo.do_experiment_setup_0_20_twice, baseline["calib"], self)
+        return baseline
+        
+            
+    def test_calibration_workflow_0_20_2x(self):
+        logging.debug("test.integration_tests.kremlingetal_bioreactor.test_calibration_workflow_0_20_2x")
+        baseline = self.get_baseline_workflow_0_20_2x()
+        calibrated = woex.test_baseline_calibration(testmetri.do_protocol_setup_0_20_2x_default, baseline["calib"], self)
         if self.do_plotting:
-            wore.plot_tiled_trajectories_at_point(testmetoo.do_experiment_setup_0_20_twice(), calibrated)
+            wore.plot_tiled_trajectories_at_point(testmetri.do_protocol_setup_0_20_2x_default(), calibrated)
 
 
-    def test_nonlinear_confidence_region_1(self):
-        """
-        0-20hr
-        high confidence
-        """
+    def get_baseline_workflow_0_60(self):
+        baseline = dict(woex.calib_valid_baseline)
+        basepoint = baseline["calib"]
+        basepoint["point"]["objective_function"] = 191.91596609953936
+        basepoint["point"]["decision_variables"] = numpy.array( \
+            [7.21144459e-05, 5.92826673e+06, 1.21249611e-02, 1.71735070e-02])
+        basepoint["of_delta"] = 0.0000001
+        basepoint["dv_deltas"] = numpy.array([  0.00000001e-05,  0.00000001e+06,  0.00000001e-02,  0.00000001e-02])
+        return baseline
+
+
+    def test_calibration_workflow_0_60(self):
+        logging.debug("test.integration_tests.kremlingetal_bioreactor.test_calibration_workflow_0_60")
+        baseline = self.get_baseline_workflow_0_60()
+        calibrated = woex.test_baseline_calibration(testmetri.do_protocol_setup_0_60_default, baseline["calib"], self)
+        if self.do_plotting:
+            wore.plot_tiled_trajectories_at_point(testmetri.do_protocol_setup_0_60_default(), calibrated)
+
+    # ----------------------------------------------------------------------- #
+    # Nonlinear confidence region tests
+    
+    def get_baseline_point_0_20(self):
         baseline = {}
-        baseline["number_of_points"] = 80
+        baseline["decision_variables"] = [  7.06036656e-05, 5.95280934e+06, 7.86546429e-03, 5.61758623e-01]
+        baseline["decision_variables_eps"] = [  0.00000001e-05, 0.00000001e+06, 0.00000001e-03, 0.00000001e-01]
+        baseline["objective_function"] = 55.73031631952742
+        return baseline
+
+    
+    def get_baseline_nonlinear_confidence_region_0_20_high_confidence(self):
+        baseline = self.get_baseline_point_0_20()
+        baseline["number_of_points"] = 5
         baseline["intervals"] = [ \
-            [1.8560953554168591e-05, 0.00028858598850377325], \
-            [5999621.511495593, 311185069.71460104], \
-            [0.00063242352072096094, 0.040354449881673735], \
-            [0.0062924327562778317, 62.924327562777854]]
+            [6.7423531083919105e-05, 7.1302641907052986e-05], \
+            [5762389.5624994077, 6378145.4846736873], \
+            [0.0078654640574383552, 0.0086133532544531884], \
+            [0.056175862279003279, 5.6175862279003272]]
         baseline["plotdata"] = dict(replda.plot_data)
         baseline["plotdata"]["window_title"] = "NCR benchmark model (95%)"
+        return baseline
+
+    
+    def test_nonlinear_confidence_region_0_20_high_confidence(self):
+        logging.debug("test.integration_tests.kremlingetal_bioreactor.test_nonlinear_confidence_region_0_20_high_confidence")
+        baseline = self.get_baseline_nonlinear_confidence_region_0_20_high_confidence()
         woex.test_calibration_with_nonlinear_confidence_region( \
-            testmetoo.do_experiment_protocol_setup_0_20_calib_ncr(), baseline, self)
+            testmetri.do_protocol_setup_0_20_default(), baseline, self)
 
 
-    def test_nonlinear_confidence_region_1_low_confidence(self):
-        """
-        0-20hr
-        low confidence
-        """
-        baseline = {}
-        baseline["number_of_points"] = 81
+    def get_baseline_nonlinear_confidence_region_0_20_low_confidence(self):
+        baseline = self.get_baseline_point_0_20()
+        baseline["number_of_points"] = 4
         baseline["intervals"] = [ \
-            [1.9918149990245181e-05, 0.00027202677048785735], \
-            [5999903.1790274335, 6000588.7692325944], \
-            [0.00070910862594929702, 0.037986101795423888], \
-            [0.0062924327298415237, 62.924327562777854]]
+            [6.9175518497167294e-05, 7.1302641907052973e-05], \
+            [5702299.2268772349, 5952809.792997444], \
+            [0.0080379219184788138, 0.0081855207184086225], \
+            [0.056175862279003279, 1.2635196340831445]]
         baseline["plotdata"] = dict(replda.plot_data)
-        baseline["plotdata"]["window_title"] = "NCR benchmark model (25%)"
+        baseline["plotdata"]["window_title"] = "NCR benchmark model (95%)"
+        return baseline
+
+    
+    def test_nonlinear_confidence_region_0_20_low_confidence(self):
+        logging.debug("test.integration_tests.kremlingetal_bioreactor.test_nonlinear_confidence_region_0_20_low_confidence")
+        baseline = self.get_baseline_nonlinear_confidence_region_0_20_low_confidence()
         woex.test_calibration_with_nonlinear_confidence_region( \
-            testmetoo.do_experiment_protocol_setup_0_20_calib_ncr_low_confidence(), baseline, self)
+            testmetri.do_protocol_setup_0_20_low_confidence(), baseline, self)
         
 
-    def test_nonlinear_confidence_region_2(self):
-        """
-        0-20hr twice
-        high confidence
-        """
+    def get_baseline_point_0_20_2x(self):
         baseline = {}
-        baseline["number_of_points"] = 79
+        baseline["decision_variables"] = [  7.06036656e-05, 5.95280934e+06, 7.86546429e-03, 5.61758623e-01]
+        baseline["decision_variables_eps"] = [  0.00000001e-05, 0.00000001e+06, 0.00000001e-03, 0.00000001e-01]
+        baseline["objective_function"] = 111.46063263905484
+        return baseline
+
+    
+    def get_baseline_nonlinear_confidence_region_0_20_2x_high_confidence(self):
+        baseline = self.get_baseline_point_0_20_2x()
+        baseline["number_of_points"] = 0
         baseline["intervals"] = [ \
-            [9.4443554952357333e-06, 0.00098451779116363056], \
-            [4489764.8093958469, 175771143.75246286], \
-            [7.7677934047834407e-05, 0.1382704734970987], \
-            [19.060985194397745, 190609.85194134654]]
+            [6.8391446924375102e-05, 7.1302641907052973e-05], \
+            [595280.93407582573, 5952809.9915759964], \
+            [0.00078654642854026713, 0.0083685242152988573], \
+            [0.056175862279003279, 5.6175862279003272]]
         baseline["plotdata"] = dict(replda.plot_data)
         baseline["plotdata"]["window_title"] = "NCR benchmark model (95%)"
+        return baseline
+
+
+    def test_nonlinear_confidence_region_0_20_2x_high_confidence(self):
+        logging.debug("test.integration_tests.kremlingetal_bioreactor.test_nonlinear_confidence_region_0_20_2x_high_confidence")
+        baseline = self.get_baseline_nonlinear_confidence_region_0_20_2x_high_confidence()
         woex.test_calibration_with_nonlinear_confidence_region( \
-            testmetoo.do_experiment_protocol_setup_0_20_2x_calib_ncr(), baseline, self)
+            testmetri.do_protocol_setup_0_20_2x_default(), baseline, self)
 
 
-    def test_nonlinear_confidence_region_3(self):
-        """
-        0-60hr
-        high confidence
-        """
+    def get_baseline_point_0_60(self):
         baseline = {}
-        baseline["number_of_points"] = 1
+        baseline["decision_variables"] = [  7.21144459e-05, 5.92826673e+06, 1.21249611e-02, 1.71735070e-02]
+        baseline["decision_variables_eps"] = [  0.00000001e-05, 0.00000001e+06, 0.00000001e-02, 0.00000001e-02]
+        baseline["objective_function"] = 191.91596609953936
+        return baseline
+
+    
+    def get_baseline_nonlinear_confidence_region_0_60_high_confidence(self):
+        baseline = self.get_baseline_point_0_60()
+        baseline["number_of_points"] = 0
         baseline["intervals"] = [ \
-            [4.721085304328252e-05, 0.00014639408975853561], \
-            [5999537.6911295187, 10015366.695155494], \
-            [0.0030218129834986489, 1.742703135385864], \
-            [0.00041379366926754218, 2.0432561489154017]]
+            [7.1815198110426653e-05, 7.2828378864918741e-05], \
+            [5927979.0165858017, 5928271.2840146916], \
+            [0.0012124961140420856, 0.12124961140420856], \
+            [0.0017173506980212713, 0.1717350698021271]]
         baseline["plotdata"] = dict(replda.plot_data)
         baseline["plotdata"]["window_title"] = "NCR benchmark model (95%)"
+        return baseline
+
+
+    def test_nonlinear_confidence_region_0_60_high_confidence(self):
+        logging.debug("test.integration_tests.kremlingetal_bioreactor.test_nonlinear_confidence_region_0_60_high_confidence")
+        baseline = self.get_baseline_nonlinear_confidence_region_0_60_high_confidence()
         woex.test_calibration_with_nonlinear_confidence_region( \
-            testmetoo.do_experiment_protocol_setup_0_60_calib_ncr(), baseline, self)
+            testmetri.do_protocol_setup_0_60_default(), baseline, self)
 
 
 if __name__ == "__main__":

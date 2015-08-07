@@ -13,7 +13,7 @@ import workflows.reporting as wr
 '''
 Kremling bioreactor
 Calibration and validation
-Splicing at 000111
+Splicing at 000111 and 111111
 Covariance trace
 0-20hr interval
 '''

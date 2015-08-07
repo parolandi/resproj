@@ -63,18 +63,40 @@ def splice_raw_data_with_pattern_multistage_yesyesno(data):
     data:    list containing time and measurements, respectively
     returns: calib_valid_experimental_dataset
     """
-    yesyesno = [15]
+    yesyesno = [15] # 15+15
     dataset = dds.splice_data_with_pattern_any(yesyesno, data[0], data[1:])
     dataset["id"] = dds.format_dataset_id("yesyesno", str(len(data)))                         
     return convert_pseudo_experimental_to_experimental(dataset)
 
 
+def splice_raw_data_with_pattern_multistage_yes10yes15no5(data):
+    """
+    data:    list containing time and measurements, respectively
+    returns: calib_valid_experimental_dataset
+    """
+    yes10yes15no5 = [25] # 25+5
+    dataset = dds.splice_data_with_pattern_any(yes10yes15no5, data[0], data[1:])
+    dataset["id"] = dds.format_dataset_id("yes10yes15no5", str(len(data)))                         
+    return convert_pseudo_experimental_to_experimental(dataset)
+    
+    
 def splice_raw_data_with_pattern_multistage_yesnoyes(data):
     """
     data:    list containing time and measurements, respectively
     returns: calib_valid_experimental_dataset
     """
-    yesnoyes = [10,15]
+    yesnoyes = [10,15] # 25+5
     dataset = dds.splice_data_with_pattern_any(yesnoyes, data[0], data[1:])
     dataset["id"] = dds.format_dataset_id("yesnoyes", str(len(data)))                         
+    return convert_pseudo_experimental_to_experimental(dataset)
+
+
+def splice_raw_data_with_pattern_multistage_yes15no5yes10(data):
+    """
+    data:    list containing time and measurements, respectively
+    returns: calib_valid_experimental_dataset
+    """
+    yes15no5yes10 = [15,20] # 25+5
+    dataset = dds.splice_data_with_pattern_any(yes15no5yes10, data[0], data[1:])
+    dataset["id"] = dds.format_dataset_id("yes15no5yes10", str(len(data)))                         
     return convert_pseudo_experimental_to_experimental(dataset)

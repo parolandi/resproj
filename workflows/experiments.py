@@ -119,11 +119,39 @@ def test_calibration_with_nonlinear_confidence_region(protocol, baseline, unitte
     # do regression/calibration
     best_point = wpr.do_calibration_and_compute_performance_measure(protocol["steps"][nlr])
     
+    try:
+        baseline["objective_function"]
+        unittester.assertAlmostEquals( \
+            best_point["objective_function"], baseline["objective_function"])
+        [unittester.assertAlmostEquals(act, exp, delta=eps) for act, exp, eps in zip( \
+            numpy.asarray(best_point["decision_variables"]).flatten(), \
+            numpy.asarray(baseline["decision_variables"]).flatten(), \
+            numpy.asarray(baseline["decision_variables_eps"]).flatten())]
+    except:
+        pass
+    
+    try:
+        baseline["point"]["objective_function"]
+        unittester.assertAlmostEquals( \
+            best_point["objective_function"], baseline["point"]["objective_function"])
+        [unittester.assertAlmostEquals(act, exp, delta=eps) for act, exp, eps in zip( \
+            numpy.asarray(best_point["decision_variables"]).flatten(), \
+            numpy.asarray(baseline["point"]["decision_variables"]).flatten(), \
+            numpy.asarray(baseline["decision_variables_eps"]).flatten())]
+    except:
+        pass
+
     # setup nonlin conf reg
     algorithm_nlr = protocol["steps"][nlr]["algorithm_setup"](None)
     model, problem, algorithm_mcs = ssdu.get_model_problem_algorithm_with_calib(protocol["steps"][mcs])
+    if algorithm_mcs["solvers"] is not None:
+        if algorithm_mcs["solvers"]["parameter_confidence_estimation"] is not None:
+            algorithm_nlr = algorithm_mcs["solvers"]["parameter_confidence_estimation"]["region_estimation"]["nonlinear_programming"]
+            algorithm_mcs = algorithm_mcs["solvers"]["parameter_confidence_estimation"]["region_estimation"]["monte_carlo_simulation"]
+    # WIP: 2015-07-16; rework
     if True:
         do_appy_bounds(best_point["decision_variables"], problem)
+    problem["decision_variables"] = best_point["decision_variables"]
     
     # do nonlin conf reg
     wall_time0 = time.time()
@@ -133,17 +161,22 @@ def test_calibration_with_nonlinear_confidence_region(protocol, baseline, unitte
     number_of_points = len(numpy.transpose(actual_points["objective_function"]))
 
     # logging
-    logging.info(problem["bounds"])
+    logging.info("best point: " + str(best_point))
+    logging.info("ncr intervals: " + str(actual_intervals))
+    logging.info("bounds: " + str(problem["bounds"]))
     logging.info(endi.log_points(actual_points))
     logging.info(endi.log_wall_time(wall_time))
     logging.info(endi.log_number_of_trials(algorithm_mcs["number_of_trials"]))
     logging.info(endi.log_number_of_points(number_of_points))
     
     # testing
-    expected = baseline["intervals"]
-    [unittester.assertAlmostEquals(act, exp, 8) for act, exp in zip( \
-        numpy.asarray(actual_intervals).flatten(), numpy.asarray(expected).flatten())]
-    unittester.assertEquals(number_of_points, baseline["number_of_points"])
+    if baseline is not None:
+        expected = baseline["intervals"]
+        [unittester.assertAlmostEquals(act, exp, 8) for act, exp in zip( \
+            numpy.asarray(actual_intervals).flatten(), numpy.asarray(expected).flatten())]
+        unittester.assertEquals(number_of_points, baseline["number_of_points"])
+    else:
+        cd.print_unexpected_code_branch_message()
     
     # plot nonlin conf reg
     if protocol["steps"][mcs]["local_setup"]["do_plotting"]:
@@ -163,6 +196,14 @@ def do_appy_bounds(nominal, problem):
 
 def test_calibration_with_linearised_confidence_region(config, baseline, unittester):
     best_point = wpr.do_calibration_and_compute_performance_measure(config)
+    assert(baseline is not None)
+
+    unittester.assertAlmostEquals( \
+        best_point["objective_function"], baseline["objective_function"])
+    [unittester.assertAlmostEquals(act, exp, delta=eps) for act, exp, eps in zip( \
+        numpy.asarray(best_point["decision_variables"]).flatten(), \
+        numpy.asarray(baseline["decision_variables"]).flatten(), \
+        numpy.asarray(baseline["decision_variables_eps"]).flatten())]
     
     # intervals and ellipsoid
     intervals = encore.compute_linearised_confidence_intervals(config, best_point)

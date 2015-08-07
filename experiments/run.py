@@ -12,13 +12,18 @@ from experiments.experiment_06 import *
 from experiments.experiment_07 import *
 from experiments.experiment_08 import *
 from experiments.experiment_09 import *
-#from experiments.experiment_10 import *
+from experiments.experiment_10 import *
 from experiments.experiment_11 import *
 #from experiments.experiment_12 import *
 #from experiments.experiment_13 import *
 from experiments.experiment_14 import *
 from experiments.experiment_15 import *
 from experiments.experiment_16 import *
+from experiments.experiment_17 import *
+from experiments.experiment_18 import *
+from experiments.experiment_19 import *
+from experiments.experiment_20 import *
+#from experiments.experiment_21 import *
 
 
 import experiments.experiment as ee

@@ -11,6 +11,9 @@ import common.diagnostics as cdi
 # TODO: exceptions
 # raise ValueError unknown solver
 def solve(model_instance, problem_instance, algorithm_structure):
+    """
+    return: OptimizeResult
+    """
     assert(len(problem_instance["parameter_indices"]) == len(algorithm_structure["initial_guesses"]))
     assert(model_instance["model"] is not None)
     assert(problem_instance["performance_measure"] is not None)
@@ -18,19 +21,26 @@ def solve(model_instance, problem_instance, algorithm_structure):
     if problem_instance["bounds"] is not None:
         assert(len(problem_instance["parameter_indices"]) == len(problem_instance["bounds"]))
     
+    # WIP: 2015-07-11; hard-coded cannot be
+    #algorithm_structure["solver_settings"] = {}
+    # WIP: 2015-0718; regressions
+    #algorithm_structure["solver_settings"]["eps"] = 1e-6
+    #algorithm_structure["solver_settings"]["maxiter"] = 100
+    #algorithm_structure["method"] = "Nelder-Mead"
+    
     result = scipy.optimize.minimize( \
         args =     (model_instance, problem_instance), \
         bounds =   problem_instance["bounds"], \
         callback = algorithm_structure["callback"], \
         fun =      problem_instance["performance_measure"], \
         method =   algorithm_structure["method"], \
-        options =  algorithm_structure["solver_settings"], \
+        #options =  algorithm_structure["solver_settings"], \
         tol =      algorithm_structure["tolerance"], \
-        x0 =       algorithm_structure["initial_guesses"], \
+        x0 =       algorithm_structure["initial_guesses"] \
         )
-    logging.info("solvers.least_squares.solve")
-    logging.info(algorithm_structure)
-    logging.info(result)
+    logging.debug("solvers.least_squares.solve")
+    logging.info("algorithm :\n" + str(algorithm_structure))
+    logging.info("result :\n" + str(result))
     return result
 
 

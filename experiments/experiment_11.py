@@ -17,7 +17,7 @@ import solvers.monte_carlo_multiple_initial_value as smiv
 '''
 Kremling bioreactor
 Prediction uncertainty
-Splicing at 111000
+No splicing
 Covariance trace ~10%
 Both 0-20 and 0-60
 '''
@@ -42,6 +42,7 @@ class TestExperiment11(unittest.TestCase):
                 (nominals[ii]*(1-conf_intvs[ii]), nominals[ii]*(1+conf_intvs[ii])))
         algorithm["number_of_trials"] = 100
         algorithm["subsolver_params"]["method"] = "Nelder-Mead"
+        algorithm["enable_trajectories"] = True
         return algorithm
 
     

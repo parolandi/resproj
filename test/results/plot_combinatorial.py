@@ -63,5 +63,10 @@ class TestPlotCombinatorial(unittest.TestCase):
         testme.plot_combinatorial_ellipsoid_projections(center, ellipsoid)
 
 
+    def test_plot_combinatorial_region_projections_from_file(self):
+        region = numpy.loadtxt("C:/workspace/resproj/test/mock/multiplepoints.txt",delimiter=',')
+        testme.plot_combinatorial_region_projections(numpy.transpose(region))
+
+
 if __name__ == "__main__":
     unittest.main()

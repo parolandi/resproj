@@ -2,6 +2,7 @@
 import copy
 import numpy
 
+import algorithms.algorithm_data as alalda
 import common.utilities as cu
 import data.experimental_data_splicing as deds
 import workflows.protocol_data as wpd
@@ -103,11 +104,23 @@ def do_get_published_data_0_60_spliced_yesyesno():
     return spliced_trajectories
 
 
+def do_get_published_data_0_60_spliced_yes10yes10no5():
+    trajectories_without_V = do_get_published_data_0_60()
+    spliced_trajectories = deds.splice_raw_data_with_pattern_multistage_yes10yes15no5(trajectories_without_V)
+    return spliced_trajectories
+    
+    
 def do_get_published_data_0_60_spliced_yesnoyes():
     trajectories_without_V = do_get_published_data_0_60()
     spliced_trajectories = deds.splice_raw_data_with_pattern_multistage_yesnoyes(trajectories_without_V)
     return spliced_trajectories
 
+
+def do_get_published_data_0_60_spliced_yes15no5yes10():
+    trajectories_without_V = do_get_published_data_0_60()
+    spliced_trajectories = deds.splice_raw_data_with_pattern_multistage_yes15no5yes10(trajectories_without_V)
+    return spliced_trajectories
+    
 
 # --------------------------------------------------------------------------- #
 
@@ -170,6 +183,18 @@ def do_problem_setup_0_60(model_data, data_instance):
     return problem
 
 
+# unlegacy
+def do_base_problem_setup_0_60(model_data, data_instance):
+    problem = do_problem_setup_unlegacy(model_data, data_instance)
+    forcing_inputs = copy.deepcopy(models.model_data.forcing_function_profile)
+    forcing_inputs["continuous_time_intervals"] = [0,20,30,60]
+    forcing_inputs["piecewise_constant_inputs"] = [numpy.asarray([0.25,0.25,2]), \
+                                                   numpy.asarray([0.35,0.35,2]), \
+                                                   numpy.asarray([0.35,0.35,0.5])]
+    problem["forcing_inputs"] = forcing_inputs
+    return problem
+
+
 def do_problem_setup_0_60_spliced_yesyesno(model_data, data_instance):
     problem = do_problem_setup_unlegacy(model_data, data_instance)
     forcing_inputs = copy.deepcopy(models.model_data.forcing_function_profile)
@@ -185,6 +210,24 @@ def do_problem_setup_0_60_spliced_yesyesno(model_data, data_instance):
     return problem
 
 
+def do_problem_setup_0_60_spliced_yes10yes15no5(model_data, data_instance):
+    problem = do_base_problem_setup_0_60(model_data, data_instance)
+    problem["output_filters"] = dict(momoda.output_filters)
+    problem["output_filters"]["measurement_splices"] = []
+    problem["output_filters"]["calibration_mask"] = [25]
+    problem["output_filters"]["validation_mask"] = [0,25]
+    return problem
+
+
+def do_problem_setup_0_60_spliced_yes15no5yes10(model_data, data_instance):
+    problem = do_base_problem_setup_0_60(model_data, data_instance)
+    problem["output_filters"] = dict(momoda.output_filters)
+    problem["output_filters"]["measurement_splices"] = []
+    problem["output_filters"]["calibration_mask"] = [15,20]
+    problem["output_filters"]["validation_mask"] = [0,15,20]
+    return problem
+
+
 def do_problem_setup_0_60_spliced_yesnoyes(model_data, data_instance):
     problem = do_problem_setup_unlegacy(model_data, data_instance)
     forcing_inputs = copy.deepcopy(models.model_data.forcing_function_profile)
@@ -194,7 +237,7 @@ def do_problem_setup_0_60_spliced_yesnoyes(model_data, data_instance):
                                                    numpy.asarray([0.35,0.35,0.5])]
     problem["forcing_inputs"] = forcing_inputs
     problem["output_filters"] = dict(momoda.output_filters)
-    problem["output_filters"]["measurement_splices"] = []
+    problem["output_filters"]["measurement_splices"] = [10,15]
     problem["output_filters"]["calibration_mask"] = [10,15]
     problem["output_filters"]["validation_mask"] = [0,10,15]
     return problem
@@ -234,8 +277,22 @@ def do_problem_setup_0_60_spliced_yesyesno_with_covariance_2(model_data, data_in
     return problem_data
 
 
+def do_problem_setup_0_60_spliced_yes10yes15no5_with_covariance_2(model_data, data_instance):
+    problem_data = do_problem_setup_0_60_spliced_yes10yes15no5(model_data, data_instance)
+    problem_data["measurements_covariance_trace"] = numpy.array([3.80E-002, 2.46E-002, 2.53E-002, 1.16E-003, 3.20E-003])
+    mmdu.check_correctness_of_measurements_covariance_matrix(problem_data)
+    return problem_data
+
+
 def do_problem_setup_0_60_spliced_yesnoyes_with_covariance_2(model_data, data_instance):
     problem_data = do_problem_setup_0_60_spliced_yesnoyes(model_data, data_instance)
+    problem_data["measurements_covariance_trace"] = numpy.array([3.80E-002, 2.46E-002, 2.53E-002, 1.16E-003, 3.20E-003])
+    mmdu.check_correctness_of_measurements_covariance_matrix(problem_data)
+    return problem_data
+
+
+def do_problem_setup_0_60_spliced_yes15no5yes10_with_covariance_2(model_data, data_instance):
+    problem_data = do_problem_setup_0_60_spliced_yes15no5yes10(model_data, data_instance)
     problem_data["measurements_covariance_trace"] = numpy.array([3.80E-002, 2.46E-002, 2.53E-002, 1.16E-003, 3.20E-003])
     mmdu.check_correctness_of_measurements_covariance_matrix(problem_data)
     return problem_data
@@ -335,6 +392,36 @@ def do_algorithm_setup_using_slsqp_with_positivity(instrumentation_data):
     algorithm_data["callback"] = logger.let_decision_variables_be_positive_and_log
     return algorithm_data
 
+
+# TODO 2015-07-20; this must be a factor 
+def do_algorithm_config_mcm_ranges_10xpm(data):
+    data["decision_variable_ranges"] = [ \
+        (7.21144459e-05*0.1, 7.21144459e-05*10), \
+        (5.92826673e+06*0.1, 5.92826673e+06*10), \
+        (1.21249611e-02*0.1, 1.21249611e-02*10), \
+        (1.71735070e-02*0.1, 1.71735070e-02*10)]
+    return data
+
+
+def do_algorithm_setup_global_neldermead_100_10xpm(instrumentation_data):
+    data = dict(senu.sonlin.somcmlesq.montecarlo_multiple_optimisation_params)
+    data = senu.do_config_mcm_100(data)
+    data = senu.do_config_mcmls_nlp(data)
+    data = senu.do_config_mcmls_nm(data)
+    data = do_algorithm_config_mcm_ranges_10xpm(data)
+    return data
+
+
+def do_algorithm_setup_modelcalib_slsqp(instrumentation_data):
+    algorithm_data = dict(alalda.solvers_data)
+    algorithm_data["model_calibration"] = dict(alalda.numerics_data)
+    ls = algorithm_data["model_calibration"]["least_squares"]
+    ls["method"] = 'SLSQP'
+    ls["initial_guesses"] = [7e-05, 6000000.0, 0.0168, 0.01]
+    ls["callback"] = None
+    return algorithm_data
+
+
 # --------------------------------------------------------------------------- #
 
 def do_instrumentation_setup():
@@ -382,6 +469,18 @@ def do_experiment_setup_0_60():
     return config
 
 
+def do_experiment_setup_0_60_with_global_neldermead_100_10xpm():
+    config = do_experiment_setup_0_60()
+    config["algorithm_setup"] = do_algorithm_setup_global_neldermead_100_10xpm
+    return config
+
+
+def do_experiment_setup_0_60_with_slsqp_with_positivity():
+    config = do_experiment_setup_0_60()
+    config["algorithm_setup"] = do_algorithm_setup_using_slsqp_with_positivity
+    return config
+
+
 def do_experiment_setup_0_60_spliced_yesyesno():
     config = do_experiment_setup_0_60()
     config["problem_setup"] = do_problem_setup_0_60_spliced_yesyesno_with_covariance_2
@@ -389,10 +488,48 @@ def do_experiment_setup_0_60_spliced_yesyesno():
     return config
     
 
+def do_experiment_setup_0_60_spliced_yesyesno_with_global_neldermead_100_10xpm():
+    config = do_experiment_setup_0_60_spliced_yesyesno()
+    config["algorithm_setup"] = do_algorithm_setup_global_neldermead_100_10xpm
+    return config
+
+
 def do_experiment_setup_0_60_spliced_yesnoyes():
     config = do_experiment_setup_0_60()
     config["problem_setup"] = do_problem_setup_0_60_spliced_yesnoyes_with_covariance_2
     config["data_setup"] = do_get_published_data_0_60_spliced_yesnoyes
+    return config
+
+
+def do_experiment_setup_0_60_spliced_yesnoyes_with_global_neldermead_100_10xpm():
+    config = do_experiment_setup_0_60_spliced_yesnoyes()
+    config["algorithm_setup"] = do_algorithm_setup_global_neldermead_100_10xpm
+    return config
+
+
+def do_experiment_setup_0_60_spliced_yes10yes15no5():
+    config = do_experiment_setup_0_60()
+    config["problem_setup"] = do_problem_setup_0_60_spliced_yes10yes15no5_with_covariance_2
+    config["data_setup"] = do_get_published_data_0_60_spliced_yes10yes10no5
+    return config
+
+
+def do_experiment_setup_0_60_spliced_yes10yes15no5_with_global_neldermead_100_10xpm():
+    config = do_experiment_setup_0_60_spliced_yes10yes15no5()
+    config["algorithm_setup"] = do_algorithm_setup_global_neldermead_100_10xpm
+    return config
+
+
+def do_experiment_setup_0_60_spliced_yes15no5yes10():
+    config = do_experiment_setup_0_60()
+    config["problem_setup"] = do_problem_setup_0_60_spliced_yes15no5yes10_with_covariance_2
+    config["data_setup"] = do_get_published_data_0_60_spliced_yes15no5yes10
+    return config
+
+
+def do_experiment_setup_0_60_spliced_yes15no5yes10_with_global_neldermead_100_10xpm():
+    config = do_experiment_setup_0_60_spliced_yes15no5yes10()
+    config["algorithm_setup"] = do_algorithm_setup_global_neldermead_100_10xpm
     return config
 
 
@@ -441,7 +578,7 @@ def do_experiment_protocol_setup_0_20_calib_ncr():
     setup = do_experiment_setup_0_20()
     setup["algorithm_setup"] = do_algorithm_setup_using_slsqp_with_positivity
     protocol["steps"].append(copy.deepcopy(setup))
-    setup["algorithm_setup"] = senu.do_config_mcmiv_100
+    setup["algorithm_setup"] = senu.do_config_mcmiv_10
     protocol["steps"].append(copy.deepcopy(setup))
     return protocol
 
@@ -450,10 +587,12 @@ def do_experiment_protocol_setup_0_20_calib_ncr_low_confidence():
     protocol = copy.deepcopy(setups.setup_data.experiment_protocol)
     protocol["steps"] = []
     setup = do_experiment_setup_0_20()
+    # reset
     setup["problem_setup"] = do_problem_setup_with_covariance_2_and_low_confidence
+    
     setup["algorithm_setup"] = do_algorithm_setup_using_slsqp_with_positivity
     protocol["steps"].append(copy.deepcopy(setup))
-    setup["algorithm_setup"] = senu.do_config_mcmiv_100
+    setup["algorithm_setup"] = senu.do_config_mcmiv_10
     protocol["steps"].append(copy.deepcopy(setup))
     return protocol
 
@@ -463,8 +602,10 @@ def do_experiment_protocol_setup_0_60_calib_ncr():
     protocol["steps"] = []
     setup = do_experiment_setup_0_60()
     setup["algorithm_setup"] = do_algorithm_setup_using_slsqp_with_positivity
+    setup["local_setup"]["do_plotting"] = False
     protocol["steps"].append(copy.deepcopy(setup))
-    setup["algorithm_setup"] = senu.do_config_mcmiv_100
+    setup["algorithm_setup"] = senu.do_config_mcmiv_10
+    setup["local_setup"]["do_plotting"] = False
     protocol["steps"].append(copy.deepcopy(setup))
     return protocol
 
@@ -473,6 +614,17 @@ def do_experiment_protocol_setup_0_20_2x_calib_ncr():
     protocol = copy.deepcopy(setups.setup_data.experiment_protocol)
     protocol["steps"] = []
     setup = do_experiment_setup_0_20_twice()
+    setup["algorithm_setup"] = do_algorithm_setup_using_slsqp_with_positivity
+    protocol["steps"].append(copy.deepcopy(setup))
+    setup["algorithm_setup"] = senu.do_config_mcmiv_10
+    protocol["steps"].append(copy.deepcopy(setup))
+    return protocol
+
+
+def do_experiment_protocol_setup_0_60_yesnoyes_ncr():
+    protocol = copy.deepcopy(setups.setup_data.experiment_protocol)
+    protocol["steps"] = []
+    setup = do_experiment_setup_0_60_spliced_yesnoyes()
     setup["algorithm_setup"] = do_algorithm_setup_using_slsqp_with_positivity
     protocol["steps"].append(copy.deepcopy(setup))
     setup["algorithm_setup"] = senu.do_config_mcmiv_100
