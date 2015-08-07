@@ -6,6 +6,7 @@ import setups.kremlingetal_bioreactor_unlegacy as sekrbiun
 import logging
 
 import common.diagnostics as codi
+import common.environment as coen
 import experiments.baselines as exba
 import results.plot_data as replda
 import workflows.experiments as woex
@@ -22,9 +23,14 @@ class TestExperiment14(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
         super(TestExperiment14, self).__init__(*args, **kwargs)
-        self.do_quick_tests_only = True
+        self.do_quick_tests_only = coen.get_doing_quick_tests_only()
         logging.basicConfig(filename=codi.get_name_logging_file(),level=codi.get_logging_level())
-        logging.info("exp-14")
+        logging.info("exp-14: start")
+        logging.info(codi.get_date_and_time())
+
+
+    def __del__(self):
+        logging.info("exp-14: finish")
         logging.info(codi.get_date_and_time())
 
     

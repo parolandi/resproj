@@ -6,6 +6,7 @@ import logging
 import numpy
 
 import common.diagnostics as codi
+import common.environment as coen
 import results.plot_data as replda
 import workflows.experiments as woex
 
@@ -24,10 +25,15 @@ class TestExperiment21(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
         super(TestExperiment21, self).__init__(*args, **kwargs)
-        self.do_plotting = True
-        self.do_quick_tests_only = False
+        self.do_plotting = coen.get_doing_plotting()
+        self.do_quick_tests_only = coen.get_doing_quick_tests_only()
         logging.basicConfig(filename=codi.get_name_logging_file(),level=codi.get_logging_level())
-        logging.info("exp-21")
+        logging.info("exp-21: start")
+        logging.info(codi.get_date_and_time())
+
+
+    def __del__(self):
+        logging.info("exp-21: finish")
         logging.info(codi.get_date_and_time())
 
 

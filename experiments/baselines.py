@@ -1,6 +1,7 @@
 
 import numpy
 
+
 def set_baseline_point(baseline):
     baseline["decision_variables"] = numpy.array([7.06036656e-05, 5.95280934e+06, 7.86546429e-03, 5.61758623e-01])
     baseline["objective_function"] = 55.73031631952742
