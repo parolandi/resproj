@@ -6,6 +6,7 @@ import logging
 import time
 
 import common.diagnostics as codi
+import common.environment as coen
 import common.utilities as cu
 import data.generator as dg
 import results.plot_tiles as rpt
@@ -26,10 +27,15 @@ class TestExperiment11(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
         super(TestExperiment11, self).__init__(*args, **kwargs)
+        self.plotting = coen.get_doing_plotting()
         logging.basicConfig(filename=codi.get_name_logging_file(),level=codi.get_logging_level())
-        logging.info("exp-11")
+        logging.info("exp-11: start")
         logging.info(codi.get_date_and_time())
-        self.do_plotting = False
+
+
+    def __del__(self):
+        logging.info("exp-11: finish")
+        logging.info(codi.get_date_and_time())
 
     
     def do_algorithm_setup(self):

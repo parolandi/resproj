@@ -8,6 +8,7 @@ import numpy
 import time
 
 import common.diagnostics as codi
+import common.environment as coen
 import metrics.ordinary_differential as mo
 import results.plot_tiles as rpt
 import solvers.initial_value as si
@@ -25,11 +26,16 @@ class TestExperiment04(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
         super(TestExperiment04, self).__init__(*args, **kwargs)
+        self.plotting = coen.get_doing_plotting()
         logging.basicConfig(filename=codi.get_name_logging_file(),level=codi.get_logging_level())
-        logging.info("exp-04")
+        logging.info("exp-04: start")
         logging.info(codi.get_date_and_time())
-        self.do_plotting = False
         self.model_key = "modelB"
+
+
+    def __del__(self):
+        logging.info("exp-04: finish")
+        logging.info(codi.get_date_and_time())
         
 
     '''
