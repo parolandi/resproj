@@ -13,6 +13,7 @@ import models.model_data
 import solvers.initial_value
 
 import common.diagnostics as codi
+import common.environment as coen
 import common.utilities as cu
 import metrics.statistical_tests as mestte
 import models.model_data_utils as mmdu
@@ -32,7 +33,7 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
         super(TestKremlingEtAlBioreactor, self).__init__(*args, **kwargs)
-        self.do_plotting = False
+        self.do_plotting = coen.get_doing_plotting()
         self.do_diag = False
         logging.basicConfig(filename=codi.get_name_logging_file(),level=codi.get_logging_level())
         logging.info("integration-kremlingetal")

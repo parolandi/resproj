@@ -8,6 +8,7 @@ import numpy
 import scipy.stats
 
 import common.diagnostics as codi
+import common.environment as coen
 import results.plot as repl
 import setups.ordinary_differential as sod
 import setups.setup_data as seseda
@@ -23,7 +24,7 @@ class TestConfidenceRegions(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
         super(TestConfidenceRegions, self).__init__(*args, **kwargs)
-        self.do_plotting = False
+        self.do_plotting = coen.get_doing_plotting()
         logging.basicConfig(filename=codi.get_name_logging_file(), level=codi.get_logging_level())
 
     

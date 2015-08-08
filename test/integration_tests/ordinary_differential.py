@@ -6,6 +6,7 @@ import logging
 import numpy
 
 import common.diagnostics as codi
+import common.environment as coen
 import metrics.ordinary_differential as mod
 import models.model_data_utils as mmdu
 import engine.confidence_regions as ecr
@@ -30,7 +31,7 @@ class TestOrdinaryDifferential(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
         super(TestOrdinaryDifferential, self).__init__(*args, **kwargs)
-        self.do_plotting = False
+        self.do_plotting = coen.get_doing_plotting()
         logging.basicConfig(filename=codi.get_name_logging_file(), level=codi.get_logging_level())
 
     
