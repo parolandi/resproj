@@ -304,8 +304,8 @@ def compute_nonlinear_confidence_interval_extremal(model, problem, algorithm, in
     problem["constraints"] = cnstrnts
     problem["bounds"] = bounds
 
-    codi.write_info(upper.status)
-    codi.write_info(lower.status)
+    #codi.write_info(upper.status)
+    #codi.write_info(lower.status)
     return [lower.x[index], upper.x[index]], [lower.status, upper.status]
 
 
