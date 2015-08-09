@@ -13,6 +13,7 @@ import solvers.solver_utils as sosout
 
 def do_algorithm_setup_default(instrumentation_data):
     """
+    In a nutshell: local calibration gradient-free, local region gradient-based followed by montecarlo
     Settings as follows
     solvers.model_calibration.least_squares.numerics        := lq.solve
     solvers.model_calibration.least_squares.method          := nelder-mead
@@ -89,6 +90,17 @@ def do_protocol_setup_0_60_default():
     protocol = copy.deepcopy(seseda.experiment_protocol)
     protocol["steps"] = []
     setup = sekrbi.do_experiment_setup_0_60()
+    setup["algorithm_setup"] = do_algorithm_setup_default
+    setup["local_setup"]["do_plotting"] = False
+    protocol["steps"].append(copy.deepcopy(setup))
+    protocol["steps"].append(copy.deepcopy(setup))
+    return protocol
+
+
+def do_protocol_setup_0_60_yesnoyes():
+    protocol = copy.deepcopy(seseda.experiment_protocol)
+    protocol["steps"] = []
+    setup = sekrbi.do_experiment_setup_0_60_spliced_yesnoyes()
     setup["algorithm_setup"] = do_algorithm_setup_default
     setup["local_setup"]["do_plotting"] = False
     protocol["steps"].append(copy.deepcopy(setup))
