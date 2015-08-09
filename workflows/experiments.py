@@ -105,20 +105,7 @@ def test_baseline_calibration_and_validation(setup, baseline, unittester):
     return calibrated
 
 
-# TODO: extract to protocol
-def test_calibration_with_nonlinear_confidence_region(protocol, baseline, unittester):
-    """
-    protocol setup_data.experiment_protocol
-    """
-    # pre-conditions
-    assert(len(protocol["steps"]) == 2)
-    
-    nlr = 0
-    mcs = 1
-
-    # do regression/calibration
-    best_point = wpr.do_calibration_and_compute_performance_measure(protocol["steps"][nlr])
-    
+def handle_test_objective_function_and_decision_variables(unittester, baseline, best_point):
     try:
         baseline["objective_function"]
         unittester.assertAlmostEquals( \
@@ -140,6 +127,23 @@ def test_calibration_with_nonlinear_confidence_region(protocol, baseline, unitte
             numpy.asarray(baseline["decision_variables_eps"]).flatten())]
     except:
         pass
+
+
+# TODO: extract to protocol
+def test_calibration_with_nonlinear_confidence_region(protocol, baseline, unittester):
+    """
+    protocol setup_data.experiment_protocol
+    """
+    # pre-conditions
+    assert(len(protocol["steps"]) == 2)
+    
+    nlr = 0
+    mcs = 1
+
+    # do regression/calibration
+    best_point = wpr.do_calibration_and_compute_performance_measure(protocol["steps"][nlr])
+    
+    handle_test_objective_function_and_decision_variables(unittester, baseline, best_point)
 
     # setup nonlin conf reg
     algorithm_nlr = protocol["steps"][nlr]["algorithm_setup"](None)
@@ -194,16 +198,20 @@ def do_appy_bounds(nominal, problem):
         (nominal[3]*lf,nominal[3]*uf)]
 
 
-def test_calibration_with_linearised_confidence_region(config, baseline, unittester):
-    best_point = wpr.do_calibration_and_compute_performance_measure(config)
-    assert(baseline is not None)
-
+def test_best_point(unittester, baseline, best_point):
     unittester.assertAlmostEquals( \
         best_point["objective_function"], baseline["objective_function"])
     [unittester.assertAlmostEquals(act, exp, delta=eps) for act, exp, eps in zip( \
         numpy.asarray(best_point["decision_variables"]).flatten(), \
         numpy.asarray(baseline["decision_variables"]).flatten(), \
         numpy.asarray(baseline["decision_variables_eps"]).flatten())]
+
+
+def test_calibration_with_linearised_confidence_region(config, baseline, unittester):
+    best_point = wpr.do_calibration_and_compute_performance_measure(config)
+    assert(baseline is not None)
+
+    test_best_point(unittester, baseline, best_point)
     
     # intervals and ellipsoid
     intervals = encore.compute_linearised_confidence_intervals(config, best_point)

@@ -72,7 +72,7 @@ def do_calibration_and_compute_performance_measure(config):
     """
     logging.debug("workflows.protocols.do_calibration_and_compute_performance_measure")
     model_instance, \
-    data_instance, \
+    _, \
     problem_instance, \
     algorithm_instance = ssdu.get_model_data_problem_algorithm_with_calib_handle_unlegacy(config)
     
