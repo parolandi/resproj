@@ -24,6 +24,7 @@ from experiments.experiment_18 import *
 from experiments.experiment_19 import *
 from experiments.experiment_20 import *
 from experiments.experiment_21 import *
+from experiments.experiment_22 import *
 
 
 import experiments.experiment as ee
