@@ -18,6 +18,7 @@ No splicing
 Calculate and test nonlinear confidence region at high confidence
 #Calculate and test nonlinear confidence region at low confidence
 #Calculate and test approximate linear confidence region at low/high confidence
+See also: exp-15
 '''
 
 # WIP: 2015-06-28; extract from exp-14

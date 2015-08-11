@@ -18,6 +18,7 @@ Splicing yes-no-yes
 Calculate and test nonlinear confidence region at high confidence
 #Calculate and test nonlinear confidence region at low confidence
 #Calculate and test approximate linear confidence region at low/high confidence
+See also: exp-17
 '''
 
 # WIP: 2015-06-28; extract from exp-14
@@ -39,7 +40,7 @@ class TestExperiment21(unittest.TestCase):
 
 
     def test_nonlinear_confidence_region(self):
-        logging.debug("experiments.experiment_17.test_calibration_and_validation")
+        logging.debug("experiments.experiment_21.test_calibration_and_validation")
         if self.do_quick_tests_only:
             codi.print_and_log_return_on_quick_tests_only()
             return

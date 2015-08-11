@@ -16,7 +16,7 @@ Kremling bioreactor
 Multi-stage experiment 0-60hr interval
 Splicing yes-yes-no
 Calibration
-Nonlinear confidence region
+See also: exp-22
 '''
 class TestExperiment16(unittest.TestCase):
 
