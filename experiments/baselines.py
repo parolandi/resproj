@@ -42,6 +42,8 @@ def set_baseline_eps_0_60_yesnoyes(baseline):
     baseline["of_delta"] = 0.000000001
     baseline["dv_deltas"] = numpy.array( \
         [0.00000001e-05, 0.00000001e+06, 0.00000001e-02, 0.00000001e-02])
+    baseline["decision_variables_eps"] = numpy.array( \
+        [  0.00000001e-05,  0.00000001e+06,  0.00000001e-02,  0.00000001e-02])
     return baseline
 
 
@@ -58,3 +60,35 @@ def set_baseline_point_0_60_yesnoyes_global(baseline):
 
 def get_baseline_point_0_60_yesnoyes_global():
     return 40.76668320905531
+
+
+def set_baseline_point_0_60_yes10yes15no5(baseline):
+    baseline["point"]["objective_function"] = 149.207796219
+    baseline["point"]["decision_variables"] = numpy.array( \
+        [  7.12884597e-05, 5.77667582e+06, 9.31968630e-03, 4.32751249e-02])
+    return baseline
+
+
+def set_baseline_eps_0_60_yes10yes15no5(baseline):
+    baseline["of_delta"] = 0.000000001
+    baseline["dv_deltas"] = numpy.array( \
+        [  0.00000001e-05,  0.00000001e+06,  0.00000001e-03,  0.00000001e-02])
+    baseline["decision_variables_eps"] = numpy.array( \
+        [  0.00000001e-05,  0.00000001e+06,  0.00000001e-03,  0.00000001e-02])
+    return baseline
+
+
+def set_baseline_point_0_60_yes15no5yes10(baseline):
+    baseline["point"]["objective_function"] = 169.703820093
+    baseline["point"]["decision_variables"] = numpy.array( \
+        [  7.22076277e-05, 6.00994312e+06, 1.11374646e-02, 2.03026444e-02])
+    return baseline
+
+
+def set_baseline_eps_0_60_yes15no5yes10(baseline):
+    baseline["of_delta"] = 0.000000001
+    baseline["dv_deltas"] = numpy.array( \
+        [  0.00000001e-05,  0.00000001e+06,  0.00000001e-02,  0.00000001e-02])
+    baseline["decision_variables_eps"] = numpy.array( \
+        [  0.00000001e-05,  0.00000001e+06,  0.00000001e-02,  0.00000001e-02])
+    return baseline

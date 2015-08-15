@@ -117,3 +117,25 @@ def do_protocol_setup_0_60_yesyesno():
     protocol["steps"].append(copy.deepcopy(setup))
     protocol["steps"].append(copy.deepcopy(setup))
     return protocol
+
+
+def do_protocol_setup_0_60_yes10yes15no5():
+    protocol = copy.deepcopy(seseda.experiment_protocol)
+    protocol["steps"] = []
+    setup = sekrbi.do_experiment_setup_0_60_spliced_yes10yes15no5()
+    setup["algorithm_setup"] = do_algorithm_setup_default
+    setup["local_setup"]["do_plotting"] = False
+    protocol["steps"].append(copy.deepcopy(setup))
+    protocol["steps"].append(copy.deepcopy(setup))
+    return protocol
+
+
+def do_protocol_setup_0_60_yes15n05yes10():
+    protocol = copy.deepcopy(seseda.experiment_protocol)
+    protocol["steps"] = []
+    setup = sekrbi.do_experiment_setup_0_60_spliced_yes15no5yes10()
+    setup["algorithm_setup"] = do_algorithm_setup_default
+    setup["local_setup"]["do_plotting"] = False
+    protocol["steps"].append(copy.deepcopy(setup))
+    protocol["steps"].append(copy.deepcopy(setup))
+    return protocol
