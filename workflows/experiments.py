@@ -106,27 +106,36 @@ def test_baseline_calibration_and_validation(setup, baseline, unittester):
 
 
 def handle_test_objective_function_and_decision_variables(unittester, baseline, best_point):
+    did_test = False
     try:
         baseline["objective_function"]
+    except:
+        pass
+    else:
+        did_test = True
         unittester.assertAlmostEquals( \
             best_point["objective_function"], baseline["objective_function"])
         [unittester.assertAlmostEquals(act, exp, delta=eps) for act, exp, eps in zip( \
             numpy.asarray(best_point["decision_variables"]).flatten(), \
             numpy.asarray(baseline["decision_variables"]).flatten(), \
             numpy.asarray(baseline["decision_variables_eps"]).flatten())]
-    except:
-        pass
     
     try:
         baseline["point"]["objective_function"]
+    except:
+        pass
+    else:
+        did_test = True
         unittester.assertAlmostEquals( \
             best_point["objective_function"], baseline["point"]["objective_function"])
         [unittester.assertAlmostEquals(act, exp, delta=eps) for act, exp, eps in zip( \
             numpy.asarray(best_point["decision_variables"]).flatten(), \
             numpy.asarray(baseline["point"]["decision_variables"]).flatten(), \
             numpy.asarray(baseline["decision_variables_eps"]).flatten())]
-    except:
-        pass
+
+    if not did_test:
+        print(cd.unexpected_code_branch_message())
+        logging.warn(cd.unexpected_code_branch_message())
 
 
 # TODO: extract to protocol
@@ -143,7 +152,7 @@ def test_calibration_with_nonlinear_confidence_region(protocol, baseline, unitte
     # do regression/calibration
     best_point = wpr.do_calibration_and_compute_performance_measure(protocol["steps"][nlr])
     
-    handle_test_objective_function_and_decision_variables(unittester, baseline, best_point)
+    handle_test_objective_function_and_decision_variables(unittester, baseline["calib"], best_point)
 
     # setup nonlin conf reg
     algorithm_nlr = protocol["steps"][nlr]["algorithm_setup"](None)
