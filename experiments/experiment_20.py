@@ -1,5 +1,6 @@
 
 import unittest
+import setups.kremlingetal_bioreactor as sekrbi
 import setups.kremlingetal_bioreactor_unlegacy as sekrbitoo
 import experiments.baselines as exba
 
@@ -7,7 +8,7 @@ import logging
 
 import common.diagnostics as codi
 import common.environment as coen
-import results.plot_data as replda
+import results.plot_utils as replut
 import workflows.experiments as woex
 
 
@@ -45,21 +46,33 @@ class TestExperiment20(unittest.TestCase):
             codi.print_and_log_return_on_quick_tests_only()
             return
         baseline = dict(woex.calib_valid_baseline)
+        baseline["plotdata"] = dict(replut.plda.plot_data)
         basepoint = baseline["calib"]
         basepoint = exba.set_baseline_point_0_60(basepoint)
         basepoint = exba.set_baseline_eps_0_60(basepoint)
-        baseline["number_of_points"] = 0
-        # [[0, 0], [8, 0], [9, 8], [9, 9]]
-        baseline["intervals"] = [ \
-            [7.1815198110426653e-05, 7.2828378864918741e-05], \
-            [5927979.0165858017, 5928271.2840146916], \
-            [0.0012124961140420856, 0.12124961140420856], \
-            [0.0017173506980212713, 0.1717350698021271]]
-        baseline["plotdata"] = dict(replda.plot_data)
-        baseline["plotdata"]["window_title"] = "Exp-20: NCR benchmark model (95%)"
+        baseline = exba.set_baseline_nonlinconfreg_0_60(baseline)
+        baseline = replut.set_window_title(baseline, "Exp-20: NCR benchmark model (95%)")
         
         experiment = sekrbitoo.do_protocol_setup_0_60_default
         woex.test_calibration_with_nonlinear_confidence_region(experiment(), baseline, self)
+
+
+    def get_baseline_linearised_confidence_region(self):
+        baseline = dict(woex.calib_valid_baseline)
+        baseline["plotdata"] = dict(replut.plda.plot_data)
+        basepoint = baseline["calib"]
+        basepoint = exba.set_baseline_point_0_60(basepoint)
+        basepoint = exba.set_baseline_eps_0_60(basepoint)
+        baseline = exba.set_baseline_linconfreg_0_60(baseline)
+        baseline = replut.set_window_title(baseline, "Exp-20: LCR benchmark model (95%)")
+        return baseline
+
+
+    def test_linearised_confidence_region(self):
+        logging.debug("experiments.experiment_14.test_linearised_confidence_region")
+        baseline = self.get_baseline_linearised_confidence_region()
+        woex.test_calibration_with_linearised_confidence_region( \
+            sekrbi.do_experiment_setup_0_60(), baseline, self)
 
 
 if __name__ == "__main__":
