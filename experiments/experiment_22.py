@@ -18,7 +18,8 @@ Multi-stage experiment 0-60hr interval
 Splicing yes-yes-no
 Calculate and test nonlinear confidence region at high confidence
 #Calculate and test nonlinear confidence region at low confidence
-#Calculate and test approximate linear confidence region at low/high confidence
+Calculate and test approximate linear confidence region at high confidence
+#Calculate and test approximate linear confidence region at low confidence
 See also: exp-16
 '''
 
