@@ -40,11 +40,7 @@ class TestExperiment20(unittest.TestCase):
         logging.info(codi.get_date_and_time())
 
 
-    def test_nonlinear_confidence_region(self):
-        logging.debug("experiments.experiment_20.test_nonlinear_confidence_region")
-        if self.do_quick_tests_only:
-            codi.print_and_log_return_on_quick_tests_only()
-            return
+    def get_baseline_nonlinear_confidence_region(self):
         baseline = dict(woex.calib_valid_baseline)
         baseline["plotdata"] = dict(replut.plda.plot_data)
         basepoint = baseline["calib"]
@@ -52,7 +48,15 @@ class TestExperiment20(unittest.TestCase):
         basepoint = exba.set_baseline_eps_0_60(basepoint)
         baseline = exba.set_baseline_nonlinconfreg_0_60(baseline)
         baseline = replut.set_window_title(baseline, "Exp-20: NCR benchmark model (95%)")
-        
+        return baseline
+
+    
+    def test_nonlinear_confidence_region(self):
+        logging.debug("experiments.experiment_20.test_nonlinear_confidence_region")
+        if self.do_quick_tests_only:
+            codi.print_and_log_return_on_quick_tests_only()
+            return
+        baseline = self.get_baseline_nonlinear_confidence_region()
         experiment = sekrbitoo.do_protocol_setup_0_60_default
         woex.test_calibration_with_nonlinear_confidence_region(experiment(), baseline, self)
 
@@ -71,8 +75,8 @@ class TestExperiment20(unittest.TestCase):
     def test_linearised_confidence_region(self):
         logging.debug("experiments.experiment_14.test_linearised_confidence_region")
         baseline = self.get_baseline_linearised_confidence_region()
-        woex.test_calibration_with_linearised_confidence_region( \
-            sekrbi.do_experiment_setup_0_60(), baseline, self)
+        experiment = sekrbi.do_experiment_setup_0_60
+        woex.test_calibration_with_linearised_confidence_region(experiment(), baseline, self)
 
 
 if __name__ == "__main__":
