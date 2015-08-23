@@ -133,6 +133,18 @@ def set_baseline_nonlinconfreg_0_60(baseline):
         [0.0017173506980212713, 0.1717350698021271]]
     return baseline
 
+
+def set_baseline_nonlinconfreg_0_60_yesnoyes(baseline):
+    baseline["number_of_points"] = 0
+    # [9, 4], [9, 4], [9, 9], [8, 9]
+    baseline["intervals"] = [ \
+        [5.303839254978861e-05, 6.7928643137517991e-05], \
+        [5900150.185800408, 59065454.091839552], \
+        [0.01009237303638489, 0.01429891307608047], \
+        [0.018628141421802392, 0.033995558368361149]]
+    return baseline
+
+
 # --------------------------------------------------------------------------- #
 
 def set_baseline_linconfreg_0_20(baseline):
