@@ -18,7 +18,8 @@ Multi-stage experiment 0-60hr interval
 No splicing
 Calculate and test nonlinear confidence region at high confidence
 #Calculate and test nonlinear confidence region at low confidence
-#Calculate and test approximate linear confidence region at low/high confidence
+Calculate and test approximate linear confidence region at high confidence
+#Calculate and test approximate linear confidence region at low confidence
 See also: exp-15
 '''
 
@@ -73,7 +74,7 @@ class TestExperiment20(unittest.TestCase):
 
 
     def test_linearised_confidence_region(self):
-        logging.debug("experiments.experiment_14.test_linearised_confidence_region")
+        logging.debug("experiments.experiment_20.test_linearised_confidence_region")
         baseline = self.get_baseline_linearised_confidence_region()
         experiment = sekrbi.do_experiment_setup_0_60
         woex.test_calibration_with_linearised_confidence_region(experiment(), baseline, self)
