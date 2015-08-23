@@ -216,24 +216,25 @@ def test_best_point(unittester, baseline, best_point):
         numpy.asarray(baseline["decision_variables_eps"]).flatten())]
 
 
-def test_calibration_with_linearised_confidence_region(config, baseline, unittester):
-    best_point = wpr.do_calibration_and_compute_performance_measure(config)
-    assert(baseline is not None)
-
-    test_best_point(unittester, baseline["calib"], best_point)
-    
-    # intervals and ellipsoid
-    intervals = encore.compute_linearised_confidence_intervals(config, best_point)
-    ellipsoid = encore.compute_linearised_confidence_region_ellipsoid(config, best_point)
-
-    # testing
+def test_intervals_and_ellipsoid(intervals, ellipsoid, baseline, unittester):
     expected = baseline["intervals"]
-    [unittester.assertAlmostEquals(act, exp, 8) for act, exp in zip(numpy.asarray(intervals).flatten(), numpy.asarray(expected).flatten())]
+    [unittester.assertAlmostEquals(act, exp, 8) for act, exp in zip( \
+        numpy.asarray(intervals).flatten(), numpy.asarray(expected).flatten())]
     expected = baseline["ellipsoid"]
     diff = baseline["delta"]
     [unittester.assertAlmostEquals(act, exp, delta=eps) for act, exp, eps in zip( \
         numpy.asarray(ellipsoid).flatten(), numpy.asarray(expected).flatten(), numpy.asarray(diff).flatten())]
+
+
+def test_calibration_with_linearised_confidence_region(config, baseline, unittester):
+    assert(baseline is not None)
+
+    best_point = wpr.do_calibration_and_compute_performance_measure(config)
+    test_best_point(unittester, baseline["calib"], best_point)
     
-    # plot lin conf reg
+    intervals = encore.compute_linearised_confidence_intervals(config, best_point)
+    ellipsoid = encore.compute_linearised_confidence_region_ellipsoid(config, best_point)
+    test_intervals_and_ellipsoid(intervals, ellipsoid, baseline, unittester)
+    
     if config["local_setup"]["do_plotting"]:
         replco.plot_combinatorial_ellipsoid_projections(best_point['decision_variables'], ellipsoid)
