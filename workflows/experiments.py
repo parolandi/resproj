@@ -209,10 +209,10 @@ def do_appy_bounds(nominal, problem):
 
 def test_best_point(unittester, baseline, best_point):
     unittester.assertAlmostEquals( \
-        best_point["objective_function"], baseline["objective_function"])
+        best_point["objective_function"], baseline["point"]["objective_function"])
     [unittester.assertAlmostEquals(act, exp, delta=eps) for act, exp, eps in zip( \
         numpy.asarray(best_point["decision_variables"]).flatten(), \
-        numpy.asarray(baseline["decision_variables"]).flatten(), \
+        numpy.asarray(baseline["point"]["decision_variables"]).flatten(), \
         numpy.asarray(baseline["decision_variables_eps"]).flatten())]
 
 
@@ -220,7 +220,7 @@ def test_calibration_with_linearised_confidence_region(config, baseline, unittes
     best_point = wpr.do_calibration_and_compute_performance_measure(config)
     assert(baseline is not None)
 
-    test_best_point(unittester, baseline, best_point)
+    test_best_point(unittester, baseline["calib"], best_point)
     
     # intervals and ellipsoid
     intervals = encore.compute_linearised_confidence_intervals(config, best_point)
