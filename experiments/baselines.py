@@ -1,6 +1,9 @@
 
 import numpy
 
+# Calibration and validation only
+# --------------------------------------------------------------------------- #
+# Semi-legacy
 
 def set_baseline_point(baseline):
     baseline["decision_variables"] = numpy.array([7.06036656e-05, 5.95280934e+06, 7.86546429e-03, 5.61758623e-01])
@@ -15,11 +18,21 @@ def set_baseline_eps(baseline):
     return baseline
 
 
+# --------------------------------------------------------------------------- #
+# 0-20 hr
+
 def set_baseline_point_0_20(baseline):
     baseline["point"]["decision_variables"] = numpy.array([7.06036656e-05, 5.95280934e+06, 7.86546429e-03, 5.61758623e-01])
     baseline["point"]["objective_function"] = 55.73031631952742
     return baseline
 
+
+def set_baseline_eps_0_20(baseline):
+    return set_baseline_eps(baseline)
+
+
+# --------------------------------------------------------------------------- #
+# 0-60 hr
 
 def set_baseline_point_0_60(baseline):
     baseline["point"]["objective_function"] = 191.9159661
@@ -36,6 +49,9 @@ def set_baseline_eps_0_60(baseline):
         [  0.00000001e-05,  0.00000001e+06,  0.00000001e-02,  0.00000001e-02])
     return baseline
 
+
+# --------------------------------------------------------------------------- #
+# Yes-no-yes 0-60 hr
 
 def set_baseline_point_0_60_yesnoyes(baseline):
     baseline["point"]["objective_function"] = 153.05359591605975
@@ -67,6 +83,31 @@ def set_baseline_point_0_60_yesnoyes_global(baseline):
 def get_baseline_point_0_60_yesnoyes_global():
     return 40.76668320905531
 
+# --------------------------------------------------------------------------- #
+# Yes-yes-no 0-60 hr
+
+def set_baseline_point_0_60_yesyesno(baseline):
+    baseline["point"]["objective_function"] = 91.42486076854522
+    baseline["point"]["decision_variables"] = numpy.array( \
+        [  7.09002587e-05,   6.01415123e+06,   7.70693208e-03, 1.85838333e-01])
+    return baseline
+
+
+def set_baseline_eps_0_60_yesyesno(baseline):
+    baseline["of_delta"] = 0.000000001
+    baseline["dv_deltas"] = numpy.array( \
+        [  0.00000001e-05,  0.00000001e+06,  0.00000001e-03,  0.00000001e-01])
+    baseline["decision_variables_eps"] = numpy.array( \
+        [  0.00000001e-05,  0.00000001e+06,  0.00000001e-03,  0.00000001e-01])
+    return baseline
+
+
+def get_baseline_point_0_60_yesyesno():
+    return 181.34162033753552
+
+
+# --------------------------------------------------------------------------- #
+# Yes10-yes15-no5 0-60 hr
 
 def set_baseline_point_0_60_yes10yes15no5(baseline):
     baseline["point"]["objective_function"] = 149.207796219
@@ -84,6 +125,9 @@ def set_baseline_eps_0_60_yes10yes15no5(baseline):
     return baseline
 
 
+# --------------------------------------------------------------------------- #
+# Yes15-no5-yes10 0-60 hr
+
 def set_baseline_point_0_60_yes15no5yes10(baseline):
     baseline["point"]["objective_function"] = 169.703820093
     baseline["point"]["decision_variables"] = numpy.array( \
@@ -99,7 +143,9 @@ def set_baseline_eps_0_60_yes15no5yes10(baseline):
         [  0.00000001e-05,  0.00000001e+06,  0.00000001e-02,  0.00000001e-02])
     return baseline
 
+# Nonlinear confidence regions
 # --------------------------------------------------------------------------- #
+# 0-20 hr
 
 def set_baseline_nonlinconfreg_0_20(baseline):
     baseline["number_of_points"] = 5
@@ -123,6 +169,9 @@ def set_baseline_nonlinconfreg_0_20_lowconf(baseline):
     return baseline
 
 
+# --------------------------------------------------------------------------- #
+# 0-60 hr
+
 def set_baseline_nonlinconfreg_0_60(baseline):
     baseline["number_of_points"] = 0
     # [[0, 0], [8, 0], [9, 8], [9, 9]]
@@ -134,6 +183,9 @@ def set_baseline_nonlinconfreg_0_60(baseline):
     return baseline
 
 
+# --------------------------------------------------------------------------- #
+# Yes-no-yes 0-60 hr
+
 def set_baseline_nonlinconfreg_0_60_yesnoyes(baseline):
     baseline["number_of_points"] = 0
     # [9, 4], [9, 4], [9, 9], [8, 9]
@@ -144,10 +196,12 @@ def set_baseline_nonlinconfreg_0_60_yesnoyes(baseline):
         [0.018628141421802392, 0.033995558368361149]]
     return baseline
 
-
+# Linear confidence regions
 # --------------------------------------------------------------------------- #
+# 0-20 hr
 
 def set_baseline_linconfreg_0_20(baseline):
+    # TODO
     baseline["intervals"] = [ \
         [-3.3298285820135265e-05, 0.00017450561705501587], \
         [-49451538.410624318, 61357157.092140831], \
@@ -167,6 +221,7 @@ def set_baseline_linconfreg_0_20(baseline):
 
 
 def set_baseline_linconfreg_0_20_lowconf(baseline):
+    # TODO
     baseline["intervals"] = [ \
         [5.4023221176441136e-05, 8.7184110058439464e-05], \
         [-2888494.3784842957, 14794113.060000809], \
@@ -185,7 +240,11 @@ def set_baseline_linconfreg_0_20_lowconf(baseline):
     return baseline
 
 
+# --------------------------------------------------------------------------- #
+# 0-60 hr
+
 def set_baseline_linconfreg_0_60(baseline):
+    # TODO
     baseline["intervals"] = [ \
         [-3.6187550012739073e-06, 0.00014784764670326163], \
         [-24913161.381240699, 36769694.845824882], \
@@ -203,6 +262,8 @@ def set_baseline_linconfreg_0_60(baseline):
         [  0.00000001e-06,  0.00000001e+04,  0.00000001e-02,  0.00000001e-01]]
     return baseline
 
+# --------------------------------------------------------------------------- #
+# Yes-no-yes 0-60 hr
 
 def set_baseline_linconfreg_0_60_yesnoyes(baseline):
     #[  7.56554088e-05   2.91525905e+07   1.12109587e-01   1.90596930e-01]
