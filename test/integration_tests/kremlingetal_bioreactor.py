@@ -247,10 +247,10 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
     # Nonlinear confidence region tests
     
     def get_baseline_point_0_20(self):
-        baseline = {}
-        baseline["decision_variables"] = [  7.06036656e-05, 5.95280934e+06, 7.86546429e-03, 5.61758623e-01]
-        baseline["decision_variables_eps"] = [  0.00000001e-05, 0.00000001e+06, 0.00000001e-03, 0.00000001e-01]
-        baseline["objective_function"] = 55.73031631952742
+        baseline = dict(woex.calib_valid_baseline)
+        baseline["calib"]["point"]["decision_variables"] = [  7.06036656e-05, 5.95280934e+06, 7.86546429e-03, 5.61758623e-01]
+        baseline["calib"]["decision_variables_eps"] = [  0.00000001e-05, 0.00000001e+06, 0.00000001e-03, 0.00000001e-01]
+        baseline["calib"]["point"]["objective_function"] = 55.73031631952742
         return baseline
 
     
@@ -295,10 +295,10 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
         
 
     def get_baseline_point_0_20_2x(self):
-        baseline = {}
-        baseline["decision_variables"] = [  7.06036656e-05, 5.95280934e+06, 7.86546429e-03, 5.61758623e-01]
-        baseline["decision_variables_eps"] = [  0.00000001e-05, 0.00000001e+06, 0.00000001e-03, 0.00000001e-01]
-        baseline["objective_function"] = 111.46063263905484
+        baseline = dict(woex.calib_valid_baseline)
+        baseline["calib"]["point"]["decision_variables"] = [  7.06036656e-05, 5.95280934e+06, 7.86546429e-03, 5.61758623e-01]
+        baseline["calib"]["decision_variables_eps"] = [  0.00000001e-05, 0.00000001e+06, 0.00000001e-03, 0.00000001e-01]
+        baseline["calib"]["point"]["objective_function"] = 111.46063263905484
         return baseline
 
     
@@ -323,10 +323,10 @@ class TestKremlingEtAlBioreactor(unittest.TestCase):
 
 
     def get_baseline_point_0_60(self):
-        baseline = {}
-        baseline["decision_variables"] = [  7.21144459e-05, 5.92826673e+06, 1.21249611e-02, 1.71735070e-02]
-        baseline["decision_variables_eps"] = [  0.00000001e-05, 0.00000001e+06, 0.00000001e-02, 0.00000001e-02]
-        baseline["objective_function"] = 191.91596609953936
+        baseline = dict(woex.calib_valid_baseline)
+        baseline["calib"]["point"]["decision_variables"] = [  7.21144459e-05, 5.92826673e+06, 1.21249611e-02, 1.71735070e-02]
+        baseline["calib"]["decision_variables_eps"] = [  0.00000001e-05, 0.00000001e+06, 0.00000001e-02, 0.00000001e-02]
+        baseline["calib"]["point"]["objective_function"] = 191.91596609953936
         return baseline
 
     
