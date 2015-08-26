@@ -49,7 +49,7 @@ class TestExperiment16(unittest.TestCase):
         logging.debug("experiments.experiment_16.test_calibration_workflow")
         experiment = sekrbi.do_experiment_setup_0_60_spliced_yesyesno
         baseline = self.get_baseline_calibration_and_validation()
-        calibrated = woex.test_baseline_calibration(experiment, baseline, self)
+        calibrated = woex.test_baseline_calibration(experiment, baseline["calib"], self)
         if self.do_plotting:
             wore.plot_tiled_calibration_and_validation_trajectories_at_point(experiment(), calibrated)
 

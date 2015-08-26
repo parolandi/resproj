@@ -48,6 +48,7 @@ class TestExperiment21(unittest.TestCase):
         basepoint = baseline["calib"]
         basepoint = exba.set_baseline_point_0_60_yesnoyes(basepoint)
         basepoint = exba.set_baseline_eps_0_60_yesnoyes(basepoint)
+        baseline = exba.set_baseline_nonlinconfreg_0_60_yesnoyes(baseline)
         baseline = replut.set_window_title(baseline, "Exp-21: NCR benchmark model (95%)")
         return baseline
         

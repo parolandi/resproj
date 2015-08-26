@@ -23,7 +23,7 @@ class TestExperiment07(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
         super(TestExperiment07, self).__init__(*args, **kwargs)
-        self.plotting = coen.get_doing_plotting()
+        self.do_plotting = coen.get_doing_plotting()
         logging.basicConfig(filename=codi.get_name_logging_file(),level=codi.get_logging_level())
         logging.info("exp-07: start")
         logging.info(codi.get_date_and_time())
