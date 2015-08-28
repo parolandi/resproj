@@ -63,6 +63,7 @@ class TestExperiment17(unittest.TestCase):
     def test_calibration_and_validation_global(self):
         logging.debug("experiments.experiment_17.test_calibration_and_validation_global")
         if self.do_quick_tests_only:
+            codi.print_and_log_return_on_quick_tests_only()
             return
         baseline = dict(woex.calib_valid_baseline)
         basepoint = baseline["calib"]

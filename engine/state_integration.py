@@ -17,7 +17,9 @@ def compute_timecourse_trajectories(model, problem):
     if problem["output_filters"] is None or problem["output_filters"]["measurement_splices"] is None:
         return trajectories
     
-    assert(problem["output_filters"]["measurement_splices"] is not None)
+    assert( \
+        problem["output_filters"]["measurement_splices"] is not None \
+        and len(problem["output_filters"]["measurement_splices"]) > 0)
     spliced_trajectories = []
     for ii in range(len(model["states"])):
         spliced_trajectories.append( \

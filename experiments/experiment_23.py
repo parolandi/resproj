@@ -8,7 +8,6 @@ import logging
 
 import common.diagnostics as codi
 import common.environment as coen
-import results.plot_data as replda
 import results.plot_utils as replut
 import workflows.experiments as woex
 
@@ -16,50 +15,49 @@ import workflows.experiments as woex
 '''
 Kremling bioreactor
 Multi-stage experiment 0-60hr interval
-Splicing yes-no-yes
+Splicing yes10-yes15-no5
 Calculate and test nonlinear confidence region at high confidence
 #Calculate and test nonlinear confidence region at low confidence
-Calculate and test approximate linear confidence region at high confidence
-#Calculate and test approximate linear confidence region at low confidence
-See also: exp-17
+#Calculate and test approximate linear confidence region at low/high confidence
+See also: exp-18
 '''
 
 # WIP: 2015-06-28; extract from exp-14
-class TestExperiment21(unittest.TestCase):
+class TestExperiment23(unittest.TestCase):
 
 
     def __init__(self, *args, **kwargs):
-        super(TestExperiment21, self).__init__(*args, **kwargs)
+        super(TestExperiment23, self).__init__(*args, **kwargs)
         self.do_plotting = coen.get_doing_plotting()
         self.do_quick_tests_only = coen.get_doing_quick_tests_only()
         logging.basicConfig(filename=codi.get_name_logging_file(),level=codi.get_logging_level())
-        logging.info("exp-21: start")
+        logging.info("exp-23: start")
         logging.info(codi.get_date_and_time())
 
 
     def __del__(self):
-        logging.info("exp-21: finish")
+        logging.info("exp-23: finish")
         logging.info(codi.get_date_and_time())
 
 
     def get_baseline_nonlinear_confidence_region(self):
         baseline = dict(woex.calib_valid_baseline)
-        baseline["plotdata"] = dict(replda.plot_data)
+        baseline["plotdata"] = dict(replut.plda.plot_data)
         basepoint = baseline["calib"]
-        basepoint = exba.set_baseline_point_0_60_yesnoyes(basepoint)
-        basepoint = exba.set_baseline_eps_0_60_yesnoyes(basepoint)
-        baseline = exba.set_baseline_nonlinconfreg_0_60_yesnoyes(baseline)
-        baseline = replut.set_window_title(baseline, "Exp-21: NCR benchmark model (95%)")
+        basepoint = exba.set_baseline_point_0_60_yes10yes15no5(basepoint)
+        basepoint = exba.set_baseline_eps_0_60_yes10yes15no5(basepoint)
+        baseline = exba.set_baseline_nonlinconfreg_0_60_yes10yes15no5(baseline)
+        baseline = replut.set_window_title(baseline, "Exp-23: NCR benchmark model (95%)")
         return baseline
-        
-        
-    def test_nonlinear_confidence_region(self):
-        logging.debug("experiments.experiment_21.test_calibration_and_validation")
+
+    
+    def did_test_nonlinear_confidence_region(self):
+        logging.debug("experiments.experiment_23.test_calibration_and_validation")
         if self.do_quick_tests_only:
             codi.print_and_log_return_on_quick_tests_only()
             return
-        baseline = self.get_baseline_nonlinear_confidence_region()
-        experiment = sekrbitoo.do_protocol_setup_0_60_yesnoyes
+        experiment = sekrbitoo.do_protocol_setup_0_60_yes10yes15no5
+        baseline = self.get_baseline_nonlinear_confidence_region()        
         woex.test_calibration_with_nonlinear_confidence_region(experiment(), baseline, self)
 
 
@@ -67,17 +65,17 @@ class TestExperiment21(unittest.TestCase):
         baseline = dict(woex.calib_valid_baseline)
         baseline["plotdata"] = dict(replut.plda.plot_data)
         basepoint = baseline["calib"]
-        basepoint = exba.set_baseline_point_0_60_yesnoyes(basepoint)
-        basepoint = exba.set_baseline_eps_0_60_yesnoyes(basepoint)
-        baseline = exba.set_baseline_linconfreg_0_60_yesnoyes(baseline)
-        baseline = replut.set_window_title(baseline, "Exp-21: LCR benchmark model (95%)")
+        basepoint = exba.set_baseline_point_0_60_yes10yes15no5(basepoint)
+        basepoint = exba.set_baseline_eps_0_60_yes10yes15no5(basepoint)
+        baseline = exba.set_baseline_linconfreg_0_60_yes10yes15no5(baseline)
+        baseline = replut.set_window_title(baseline, "Exp-23: LCR benchmark model (95%)")
         return baseline
 
 
     def test_linearised_confidence_region(self):
-        logging.debug("experiments.experiment_21.test_linearised_confidence_region")
+        logging.debug("experiments.experiment_23.test_linearised_confidence_region")
+        experiment = sekrbi.do_experiment_setup_0_60_spliced_yes10yes15no5
         baseline = self.get_baseline_linearised_confidence_region()
-        experiment = sekrbi.do_experiment_setup_0_60_spliced_yesnoyes
         woex.test_calibration_with_linearised_confidence_region(experiment(), baseline, self)
 
 

@@ -213,7 +213,7 @@ def do_problem_setup_0_60_spliced_yesyesno(model_data, data_instance):
 def do_problem_setup_0_60_spliced_yes10yes15no5(model_data, data_instance):
     problem = do_base_problem_setup_0_60(model_data, data_instance)
     problem["output_filters"] = dict(momoda.output_filters)
-    problem["output_filters"]["measurement_splices"] = []
+    problem["output_filters"]["measurement_splices"] = [25]
     problem["output_filters"]["calibration_mask"] = [25]
     problem["output_filters"]["validation_mask"] = [0,25]
     return problem
@@ -222,7 +222,7 @@ def do_problem_setup_0_60_spliced_yes10yes15no5(model_data, data_instance):
 def do_problem_setup_0_60_spliced_yes15no5yes10(model_data, data_instance):
     problem = do_base_problem_setup_0_60(model_data, data_instance)
     problem["output_filters"] = dict(momoda.output_filters)
-    problem["output_filters"]["measurement_splices"] = []
+    problem["output_filters"]["measurement_splices"] = [15,20]
     problem["output_filters"]["calibration_mask"] = [15,20]
     problem["output_filters"]["validation_mask"] = [0,15,20]
     return problem

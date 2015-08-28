@@ -106,46 +106,62 @@ def test_baseline_calibration_and_validation(setup, baseline, unittester):
 
 
 def handle_test_objective_function_and_decision_variables(unittester, baseline, best_point):
+    did_test = False
     try:
         baseline["objective_function"]
+    except:
+        pass
+    else:
+        did_test = True
         unittester.assertAlmostEquals( \
             best_point["objective_function"], baseline["objective_function"])
         [unittester.assertAlmostEquals(act, exp, delta=eps) for act, exp, eps in zip( \
             numpy.asarray(best_point["decision_variables"]).flatten(), \
             numpy.asarray(baseline["decision_variables"]).flatten(), \
             numpy.asarray(baseline["decision_variables_eps"]).flatten())]
-    except:
-        pass
     
     try:
         baseline["point"]["objective_function"]
+    except:
+        pass
+    else:
+        did_test = True
         unittester.assertAlmostEquals( \
             best_point["objective_function"], baseline["point"]["objective_function"])
         [unittester.assertAlmostEquals(act, exp, delta=eps) for act, exp, eps in zip( \
             numpy.asarray(best_point["decision_variables"]).flatten(), \
             numpy.asarray(baseline["point"]["decision_variables"]).flatten(), \
             numpy.asarray(baseline["decision_variables_eps"]).flatten())]
-    except:
-        pass
+
+    if not did_test:
+        print(cd.unexpected_code_branch_message())
+        logging.warn(cd.unexpected_code_branch_message())
 
 
-# TODO: extract to protocol
-def test_calibration_with_nonlinear_confidence_region(protocol, baseline, unittester):
-    """
-    protocol setup_data.experiment_protocol
-    """
-    # pre-conditions
-    assert(len(protocol["steps"]) == 2)
-    
-    nlr = 0
-    mcs = 1
+def log_nonlinear_confidence_region_data( \
+    best_point, actual_intervals, problem, actual_points, wall_time, algorithm_mcs, number_of_points):
+    # logging
+    logging.info("best point: " + str(best_point))
+    logging.info("ncr intervals: " + str(actual_intervals))
+    logging.info("bounds: " + str(problem["bounds"]))
+    logging.info(endi.log_points(actual_points))
+    logging.info(endi.log_wall_time(wall_time))
+    logging.info(endi.log_number_of_trials(algorithm_mcs["number_of_trials"]))
+    logging.info(endi.log_number_of_points(number_of_points))
 
-    # do regression/calibration
-    best_point = wpr.do_calibration_and_compute_performance_measure(protocol["steps"][nlr])
-    
-    handle_test_objective_function_and_decision_variables(unittester, baseline, best_point)
 
-    # setup nonlin conf reg
+def test_nonlinear_confidence_region(actual_intervals, number_of_points, baseline, unittester):
+    # testing
+    if baseline is not None:
+        expected = baseline["intervals"]
+        [unittester.assertAlmostEquals(act, exp, 8) for act, exp in zip( \
+            numpy.asarray(actual_intervals).flatten(), numpy.asarray(expected).flatten())]
+        unittester.assertEquals(number_of_points, baseline["number_of_points"])
+    else:
+        cd.print_unexpected_code_branch_message()
+
+
+def setup_model_problem_and_algorithms(protocol, best_point, nlr, mcs):
     algorithm_nlr = protocol["steps"][nlr]["algorithm_setup"](None)
     model, problem, algorithm_mcs = ssdu.get_model_problem_algorithm_with_calib(protocol["steps"][mcs])
     if algorithm_mcs["solvers"] is not None:
@@ -156,33 +172,38 @@ def test_calibration_with_nonlinear_confidence_region(protocol, baseline, unitte
     if True:
         do_appy_bounds(best_point["decision_variables"], problem)
     problem["decision_variables"] = best_point["decision_variables"]
+    return model, problem, algorithm_nlr, algorithm_mcs
+
+
+# TODO: extract to protocol
+def test_calibration_with_nonlinear_confidence_region(protocol, baseline, unittester):
+    """
+    protocol    setup_data.experiment_protocol
+    return      does not
+    """
+    # pre-conditions
+    assert(len(protocol["steps"]) == 2)
     
+    # legacy-ish
+    nlr = 0
+    mcs = 1
+
+    # do regression/calibration
+    best_point = wpr.do_calibration_and_compute_performance_measure(protocol["steps"][nlr])
+    handle_test_objective_function_and_decision_variables(unittester, baseline["calib"], best_point)
+
     # do nonlin conf reg
+    model, problem, algorithm_nlr, algorithm_mcs = \
+        setup_model_problem_and_algorithms(protocol, best_point, nlr, mcs)
     wall_time0 = time.time()
     actual_intervals, actual_points = encore.compute_nonlinear_confidence_region_intervals_and_points_extremal( \
         model, problem, algorithm_nlr, algorithm_mcs, best_point)
     wall_time = time.time() - wall_time0
+    # TODO: 2015-08-23; to utility
     number_of_points = len(numpy.transpose(actual_points["objective_function"]))
-
-    # logging
-    logging.info("best point: " + str(best_point))
-    logging.info("ncr intervals: " + str(actual_intervals))
-    logging.info("bounds: " + str(problem["bounds"]))
-    logging.info(endi.log_points(actual_points))
-    logging.info(endi.log_wall_time(wall_time))
-    logging.info(endi.log_number_of_trials(algorithm_mcs["number_of_trials"]))
-    logging.info(endi.log_number_of_points(number_of_points))
+    log_nonlinear_confidence_region_data(best_point, actual_intervals, problem, actual_points, wall_time, algorithm_mcs, number_of_points)
+    test_nonlinear_confidence_region(actual_intervals, number_of_points, baseline, unittester)
     
-    # testing
-    if baseline is not None:
-        expected = baseline["intervals"]
-        [unittester.assertAlmostEquals(act, exp, 8) for act, exp in zip( \
-            numpy.asarray(actual_intervals).flatten(), numpy.asarray(expected).flatten())]
-        unittester.assertEquals(number_of_points, baseline["number_of_points"])
-    else:
-        cd.print_unexpected_code_branch_message()
-    
-    # plot nonlin conf reg
     if protocol["steps"][mcs]["local_setup"]["do_plotting"]:
         replco.plot_combinatorial_region_projections(numpy.transpose(actual_points["decision_variables"]))
 
@@ -200,31 +221,32 @@ def do_appy_bounds(nominal, problem):
 
 def test_best_point(unittester, baseline, best_point):
     unittester.assertAlmostEquals( \
-        best_point["objective_function"], baseline["objective_function"])
+        best_point["objective_function"], baseline["point"]["objective_function"])
     [unittester.assertAlmostEquals(act, exp, delta=eps) for act, exp, eps in zip( \
         numpy.asarray(best_point["decision_variables"]).flatten(), \
-        numpy.asarray(baseline["decision_variables"]).flatten(), \
+        numpy.asarray(baseline["point"]["decision_variables"]).flatten(), \
         numpy.asarray(baseline["decision_variables_eps"]).flatten())]
 
 
-def test_calibration_with_linearised_confidence_region(config, baseline, unittester):
-    best_point = wpr.do_calibration_and_compute_performance_measure(config)
-    assert(baseline is not None)
-
-    test_best_point(unittester, baseline, best_point)
-    
-    # intervals and ellipsoid
-    intervals = encore.compute_linearised_confidence_intervals(config, best_point)
-    ellipsoid = encore.compute_linearised_confidence_region_ellipsoid(config, best_point)
-
-    # testing
+def test_intervals_and_ellipsoid(intervals, ellipsoid, baseline, unittester):
     expected = baseline["intervals"]
-    [unittester.assertAlmostEquals(act, exp, 8) for act, exp in zip(numpy.asarray(intervals).flatten(), numpy.asarray(expected).flatten())]
+    [unittester.assertAlmostEquals(act, exp, 8) for act, exp in zip( \
+        numpy.asarray(intervals).flatten(), numpy.asarray(expected).flatten())]
     expected = baseline["ellipsoid"]
     diff = baseline["delta"]
     [unittester.assertAlmostEquals(act, exp, delta=eps) for act, exp, eps in zip( \
         numpy.asarray(ellipsoid).flatten(), numpy.asarray(expected).flatten(), numpy.asarray(diff).flatten())]
+
+
+def test_calibration_with_linearised_confidence_region(config, baseline, unittester):
+    assert(baseline is not None)
+
+    best_point = wpr.do_calibration_and_compute_performance_measure(config)
+    test_best_point(unittester, baseline["calib"], best_point)
     
-    # plot lin conf reg
+    intervals = encore.compute_linearised_confidence_intervals(config, best_point)
+    ellipsoid = encore.compute_linearised_confidence_region_ellipsoid(config, best_point)
+    test_intervals_and_ellipsoid(intervals, ellipsoid, baseline, unittester)
+    
     if config["local_setup"]["do_plotting"]:
         replco.plot_combinatorial_ellipsoid_projections(best_point['decision_variables'], ellipsoid)
