@@ -39,8 +39,8 @@ class TestExperiment16(unittest.TestCase):
     def get_baseline_calibration_and_validation(self):
         baseline = dict(woex.calib_valid_baseline)
         basepoint = baseline["calib"]
-        basepoint = exba.set_baseline_point_0_60(basepoint)
-        basepoint = exba.set_baseline_eps_0_60(basepoint)
+        basepoint = exba.set_baseline_point_0_60_yesyesno(basepoint)
+        basepoint = exba.set_baseline_eps_0_60_yesyesno(basepoint)
         baseline["valid"]["point"]["objective_function"] = exba.get_baseline_point_0_60_yesyesno() 
         return baseline
 
