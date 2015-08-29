@@ -1,4 +1,3 @@
-
 import unittest
 import setups.kremlingetal_bioreactor as sekrbi
 import setups.kremlingetal_bioreactor_unlegacy as sekrbitoo
@@ -11,21 +10,16 @@ import common.environment as coen
 import results.plot_utils as replut
 import workflows.experiments as woex
 
-
 '''
 Kremling bioreactor
 Multi-stage experiment 0-60hr interval
 No splicing
 Calculate and test nonlinear confidence region at high confidence
-#Calculate and test nonlinear confidence region at low confidence
 Calculate and test approximate linear confidence region at high confidence
-#Calculate and test approximate linear confidence region at low confidence
 See also: exp-15
 '''
 
-# WIP: 2015-06-28; extract from exp-14
 class TestExperiment20(unittest.TestCase):
-
 
     def __init__(self, *args, **kwargs):
         super(TestExperiment20, self).__init__(*args, **kwargs)
@@ -35,11 +29,9 @@ class TestExperiment20(unittest.TestCase):
         logging.info("exp-20: start")
         logging.info(codi.get_date_and_time())
 
-
     def __del__(self):
         logging.info("exp-20: finish")
         logging.info(codi.get_date_and_time())
-
 
     def get_baseline_nonlinear_confidence_region(self):
         baseline = dict(woex.calib_valid_baseline)
@@ -50,18 +42,7 @@ class TestExperiment20(unittest.TestCase):
         baseline = exba.set_baseline_nonlinconfreg_0_60(baseline)
         baseline = replut.set_window_title(baseline, "Exp-20: NCR benchmark model (95%)")
         return baseline
-
     
-    def test_nonlinear_confidence_region(self):
-        logging.debug("experiments.experiment_20.test_nonlinear_confidence_region")
-        if self.do_quick_tests_only:
-            codi.print_and_log_return_on_quick_tests_only()
-            return
-        baseline = self.get_baseline_nonlinear_confidence_region()
-        experiment = sekrbitoo.do_protocol_setup_0_60_default
-        woex.test_calibration_with_nonlinear_confidence_region(experiment(), baseline, self)
-
-
     def get_baseline_linearised_confidence_region(self):
         baseline = dict(woex.calib_valid_baseline)
         baseline["plotdata"] = dict(replut.plda.plot_data)
@@ -73,6 +54,16 @@ class TestExperiment20(unittest.TestCase):
         return baseline
 
 
+    def test_nonlinear_confidence_region(self):
+        logging.debug("experiments.experiment_20.test_nonlinear_confidence_region")
+        if self.do_quick_tests_only:
+            codi.print_and_log_return_on_quick_tests_only()
+            return
+        baseline = self.get_baseline_nonlinear_confidence_region()
+        experiment = sekrbitoo.do_protocol_setup_0_60_default
+        woex.test_calibration_with_nonlinear_confidence_region(experiment(), baseline, self)
+
+    
     def test_linearised_confidence_region(self):
         logging.debug("experiments.experiment_20.test_linearised_confidence_region")
         baseline = self.get_baseline_linearised_confidence_region()
