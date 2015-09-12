@@ -14,7 +14,10 @@ def plot_3d(data, indices):
    
 
 def plot_3d_combinatorial(data):
-    no_grid = 4
+    '''
+    data    numpy.array
+    '''
+    #no_grid = 4
     fig = pp.figure("NCR projections")
     sp = fig.add_subplot(2, 2, 1, projection='3d')
     indices = [0,1,2]
