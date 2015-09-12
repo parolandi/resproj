@@ -12,6 +12,7 @@ import time
 
 import engine.confidence_regions as encore
 import engine.diagnostics as endi
+import results.manager as rema
 import results.plot_combinatorial as replco
 
 
@@ -198,6 +199,7 @@ def test_calibration_with_nonlinear_confidence_region(protocol, baseline, unitte
     wall_time0 = time.time()
     actual_intervals, actual_points = encore.compute_nonlinear_confidence_region_intervals_and_points_extremal( \
         model, problem, algorithm_nlr, algorithm_mcs, best_point)
+    rema.report_nonlinear_confidence_region_intervals_and_points(actual_intervals, actual_points)
     wall_time = time.time() - wall_time0
     # TODO: 2015-08-23; to utility
     number_of_points = len(numpy.transpose(actual_points["objective_function"]))
