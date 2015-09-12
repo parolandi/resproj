@@ -144,6 +144,10 @@ def compute_nonlinear_confidence_intervals(model, problem, algorithm, best_point
 
 
 def compute_nonlinear_confidence_intervals_extremal(model, problem, algorithm, best_point):
+    '''
+    returns    hyperrectangle, list of list
+    returns    statuses
+    '''
     logging.debug("engine.confidence_regions.compute_nonlinear_confidence_intervals_extremal")
     wall_time0 = time.time()
     mmdu.apply_decision_variables_to_parameters(best_point, model, problem)
