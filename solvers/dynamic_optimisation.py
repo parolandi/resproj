@@ -2,6 +2,8 @@
 import numpy
 import scipy.optimize
 
+import logging
+
 import metrics.ordinary_differential as mod
 
 
@@ -30,6 +32,8 @@ def solve(model, problem, algorithm):
 
     settings = {}
     settings["maxiter"] = 100
+    #settings["maxiter"] = 500
+    #settings["eps"] = 1e-6
 
     result = scipy.optimize.minimize( \
         fun = problem["performance_measure"], \
@@ -38,6 +42,10 @@ def solve(model, problem, algorithm):
         method = algorithm["method"], \
         bounds = problem["bounds"], \
         options = settings)
+    
+    logging.debug("solvers.dynamic_optimisation.solve")
+    logging.info("algorithm :\n" + str(algorithm))
+    logging.info("result :\n" + str(result))
     return result
 
 
@@ -45,6 +53,8 @@ def solve_std(model, problem, algorithm):
     result = None
     settings = {}
     settings["maxiter"] = 100
+    #settings["maxiter"] = 500
+    #settings["eps"] = 1e-6
     
     if not has_obj_args(problem) and is_unconstrained(problem):
         result = scipy.optimize.minimize( \
@@ -87,6 +97,9 @@ def solve_std(model, problem, algorithm):
             options = settings)
 
     assert(result is not None)
+    logging.debug("solvers.dynamic_optimisation.solve")
+    logging.info("algorithm :\n" + str(algorithm))
+    logging.info("result :\n" + str(result))
     return result
 
 
