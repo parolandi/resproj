@@ -53,6 +53,19 @@ def do_algorithm_setup_default(instrumentation_data):
 
     return algorithm_data
 
+
+def do_algorithm_setup_compute_nonlinconfreg(instrumentation_data):
+    '''
+    solvers.parameter_confidence_estimation.region_estimation.nonlinear_programming.callback := 
+    solvers.parameter_confidence_estimation.region_estimation.monte_carlo_simulation.number_of_trials         := 
+    '''
+    algorithm_data = do_algorithm_setup_default(instrumentation_data)
+    algorithm_data["solvers"]["parameter_confidence_estimation"]["region_estimation"] \
+        ["monte_carlo_simulation"]["number_of_trials"] = 100000
+    algorithm_data["solvers"]["parameter_confidence_estimation"]["region_estimation"] \
+        ["monte_carlo_simulation"]["number_of_trials_to_skip"] = 0
+    return algorithm_data
+    
 # --------------------------------------------------------------------------- #
 # Protocol setup
 
@@ -92,6 +105,19 @@ def do_protocol_setup_0_60_default():
     setup = sekrbi.do_experiment_setup_0_60()
     setup["algorithm_setup"] = do_algorithm_setup_default
     setup["local_setup"]["do_plotting"] = False
+    protocol["steps"].append(copy.deepcopy(setup))
+    protocol["steps"].append(copy.deepcopy(setup))
+    return protocol
+
+
+def do_protocol_setup_0_60_any_compute():
+    protocol = copy.deepcopy(seseda.experiment_protocol)
+    protocol["steps"] = []
+    #setup = sekrbi.do_experiment_setup_0_60()
+    setup = sekrbi.do_experiment_setup_0_60_spliced_yesyesno()
+    #setup = sekrbi.do_experiment_setup_0_60_spliced_yesnoyes()
+    setup["algorithm_setup"] = do_algorithm_setup_compute_nonlinconfreg
+    setup["local_setup"]["do_plotting"] = True
     protocol["steps"].append(copy.deepcopy(setup))
     protocol["steps"].append(copy.deepcopy(setup))
     return protocol
