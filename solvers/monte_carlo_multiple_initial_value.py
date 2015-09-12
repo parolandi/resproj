@@ -5,6 +5,8 @@ import logging
 import numpy
 import time
 
+import common.environment as coen
+import common.io as coio
 import metrics.ordinary_differential as mod
 import models.model_data_utils as mmdu
 import solvers.initial_value as siv
@@ -86,6 +88,13 @@ def solve(model, problem, algorithm):
     return result
 
 
+def write_objective_function_and_decision_variables_to_csv(data):
+    pathfilename = \
+        coen.get_results_location() + coen.get_objective_function_and_decision_variables_file_name()
+    coio.write_to_csv(data["decision_variables"], pathfilename)
+    coio.write_to_csv(data["objective_function"], pathfilename)
+
+
 # TODO: total number of runs
 # TODO: 2015-07-09; parameterise constants
 def montecarlo_multiple_initial_value(model, problem, algorithm):
@@ -112,6 +121,7 @@ def montecarlo_multiple_initial_value(model, problem, algorithm):
         if ii % 1000 == 0:
             wall_time = time.time() - wall_time0
             logging.info("mcmiv heartbeat (iter - wall time): " + str(ii) + " - " + str(wall_time))
+            write_objective_function_and_decision_variables_to_csv(success)
         param_vals = []
         for jj in range(dv_count):
             param_vals.append(monte_carlo_points[jj][ii])
