@@ -22,8 +22,16 @@ def get_experimental_data_location():
     return "C:/workspace/resproj/experiments/"
 
 
+def get_experimental_data_0_20_file_name():
+    return "data_time_0_20.txt"
+
+
 def get_experimental_data_0_60_file_name():
     return "data_time_0_60.txt"
+
+
+def get_experimental_data_file_0_20():
+    return get_experimental_data_location() + get_experimental_data_0_20_file_name()
 
 
 def get_experimental_data_file_0_60():

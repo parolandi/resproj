@@ -3,6 +3,7 @@ import copy
 import numpy
 
 import algorithms.algorithm_data as alalda
+import common.environment as coen
 import common.utilities as cu
 import data.experimental_data_splicing as deds
 import workflows.protocol_data as wpd
@@ -60,7 +61,7 @@ def do_model_setup_model_B():
 
 def do_get_published_data_0_20():
     # TODO: handle gracefully
-    published_data = open("C:/documents/resproj/bench/data_time_0_20.txt", 'r')
+    published_data = open(coen.get_experimental_data_file_0_20(), 'r')
     data = numpy.loadtxt(published_data)
     trajectories_without_V = cu.sliceit_astrajectory(data)
     return trajectories_without_V
@@ -68,7 +69,7 @@ def do_get_published_data_0_20():
 
 def do_get_published_data_0_60():
     # TODO: handle gracefully
-    published_data = open("C:/documents/resproj/bench/data_time_0_60.txt", 'r')
+    published_data = open(coen.get_experimental_data_file_0_60(), 'r')
     data = numpy.loadtxt(published_data)
     trajectories_without_V = cu.sliceit_astrajectory(data)
     return trajectories_without_V

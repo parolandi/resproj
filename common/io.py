@@ -38,3 +38,10 @@ def write_to_txt(data, filepathname):
 def delete_file(filename):
     with open(filename, "w"):
         pass
+    
+    
+def open_file(filename, notfoundisfatal):
+    notfoundisnotfata = not notfoundisfatal
+    assert(notfoundisnotfata)
+    ff = open(filename, 'a')
+    return ff
