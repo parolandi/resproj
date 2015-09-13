@@ -147,7 +147,8 @@ config: experiments.experiment.experiment_setup
 baseline: workflows.workflow_data.workflow_results
     reference testing values
 return: None
-'''    
+'''
+# TODO: 2015-09-13, refactor, split-up in chunks! 
 def do_experiment(self, config, baseline):
     # TODO: user messages
 
