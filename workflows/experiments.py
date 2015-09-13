@@ -3,7 +3,6 @@ import common.diagnostics as cd
 import models.model_data as mmd
 import setups.setup_data_utils as ssdu
 import workflows.protocols as wpr
-import workflows.workflow_data_utils as wwdu
 
 import copy
 import logging
@@ -38,13 +37,13 @@ def test_baseline_calibration(setup, baseline, unittester):
     """
     config = setup()
     calibrated = wpr.do_calibration_and_compute_performance_measure(config)
-    # output
+    rema.report_date_and_time()
+    rema.report_decision_variables_and_objective_function(calibrated)
     if True:
-        cd.print_decision_variables_and_objective_function(calibrated)
         post_proc = wpr.do_basic_workflow_at_solution_point(config, calibrated)
-        wwdu.print_system_based_point_results(post_proc)
+        rema.report_system_based_point_results(post_proc)
         post_proc = wpr.do_sensitivity_based_workflow_at_solution_point(config, calibrated)
-        wwdu.print_sensitivity_based_point_results(post_proc)
+        rema.report_sensitivity_based_point_results(post_proc)
     # test
     if baseline is not None:
         actual = calibrated["objective_function"]
@@ -71,13 +70,13 @@ def test_baseline_validation(setup, baseline, unittester, point):
     # WIP 2015-06-20; this is buggy, it should be set higher up and or checked for correctness
     ssdu.set_next_protocol_step(config)
     validated = wpr.do_validation_and_compute_performance_measure_at_solution_point(config, point)
-    # output
+    rema.report_date_and_time()
+    rema.report_decision_variables_and_objective_function(point)
     if True:
-        cd.print_decision_variables_and_objective_function(validated)
         post_proc = wpr.do_basic_workflow_at_solution_point(config, validated)
-        wwdu.print_system_based_point_results(post_proc)
+        rema.report_system_based_point_results(post_proc)
         post_proc = wpr.do_sensitivity_based_workflow_at_solution_point(config, validated)
-        wwdu.print_sensitivity_based_point_results(post_proc)
+        rema.report_sensitivity_based_point_results(post_proc)
     # test
     if baseline is not None:
         actual = validated["objective_function"]
