@@ -33,3 +33,8 @@ def write_to_txt(data, filepathname):
         f.write("----------\n")
         f.writelines(data+"\n")
         f.write("----------\n")
+        
+        
+def delete_file(filename):
+    with open(filename, "w"):
+        pass
