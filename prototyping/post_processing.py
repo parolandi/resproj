@@ -89,5 +89,5 @@ def read_ncr_points_from_csv_and_plot():
 if __name__ == "__main__":
     #read_ncr_points_from_csv_and_plot()
     #read_points_and_get_interval_bounds()
-    #read_ncr_points_from_csv_and_plot_ND()
+    read_ncr_points_from_csv_and_plot_ND()
     #read_ncr_points_from_csv_and_plot_2D_and_hull()

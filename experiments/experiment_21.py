@@ -53,7 +53,7 @@ class TestExperiment21(unittest.TestCase):
         return baseline
         
         
-    def test_nonlinear_confidence_region(self):
+    def dn_test_nonlinear_confidence_region(self):
         logging.debug("experiments.experiment_21.test_calibration_and_validation")
         if self.do_quick_tests_only:
             codi.print_and_log_return_on_quick_tests_only()
@@ -74,7 +74,7 @@ class TestExperiment21(unittest.TestCase):
         return baseline
 
 
-    def dn_test_linearised_confidence_region(self):
+    def test_linearised_confidence_region(self):
         logging.debug("experiments.experiment_21.test_linearised_confidence_region")
         baseline = self.get_baseline_linearised_confidence_region()
         experiment = sekrbi.do_experiment_setup_0_60_spliced_yesnoyes

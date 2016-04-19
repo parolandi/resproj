@@ -54,7 +54,7 @@ class TestExperiment20(unittest.TestCase):
         return baseline
 
 
-    def test_nonlinear_confidence_region(self):
+    def dn_test_nonlinear_confidence_region(self):
         logging.debug("experiments.experiment_20.test_nonlinear_confidence_region")
         if self.do_quick_tests_only:
             codi.print_and_log_return_on_quick_tests_only()
