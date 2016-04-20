@@ -18,7 +18,7 @@ def get_date_and_time():
 
 
 def get_name_logging_file():
-    return "C:/workspace/resproj/app.log"
+    return "/Users/mamuts/code/resproj/app.log"
 
 
 def get_logging_level():
@@ -102,5 +102,5 @@ def print_ellipsoid(it):
     
     
 def write_info(data):
-    f = open('C:/workspace/resproj/diag.txt', 'a')
+    f = open('/Users/mamuts/code/resproj/diag.txt', 'a')
     f.write(str(data) + "\n")

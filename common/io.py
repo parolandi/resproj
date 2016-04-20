@@ -7,8 +7,8 @@ def read_from_csv(filepathname):
     return          numpy.array
     filepathnmae    string, e.g., "C:/workspace/resproj/test/common/test_read_from_csv.csv"
     '''
-    #df = pd.read_csv(filepathname, header=1, skipfooter=1)
-    df = pd.read_csv(filepathname, header=None, index_col=0)
+    df = pd.read_csv(filepathname, header=1, skipfooter=1)
+    #df = pd.read_csv(filepathname, header=None, index_col=0)
     data = df.as_matrix()
     return data
 

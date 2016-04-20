@@ -3,11 +3,15 @@ def get_doing_quick_tests_only():
 
 
 def get_doing_plotting():
-    return True
+    return False
+
+
+def get_src_location():
+    return "/Users/mamuts/code/resproj"
 
 
 def get_results_location():
-    return "C:/Users/mamuts/Desktop/"
+    return "/Users/mamuts/Desktop/"
 
 
 def get_objective_function_and_decision_variables_file_name():
@@ -31,7 +35,7 @@ def get_nonlinconfreg_ssr_values_file_name():
 
 
 def get_experimental_data_location():
-    return "C:/workspace/resproj/experiments/"
+    return "/Users/mamuts/code/resproj/experiments/"
 
 
 def get_experimental_data_0_20_file_name():
