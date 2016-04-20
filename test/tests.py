@@ -3,6 +3,8 @@ import unittest
 
 # TODO:I don't know why import does not work directly
 from test.common.utilities import *
+from test.common.diagnostics import *
+from test.common.io import *
 from test.data.data_splicing import *
 from test.data.generator import *
 from test.engine.confidence_regions import *
