@@ -154,6 +154,7 @@ def do_experiment():
     config["model_setup"] = do_model
     config["data_setup"] = do_data
     config["problem_setup"] = do_problem
+    config["protocol_setup"] = do_protocol
     return config
 
 
