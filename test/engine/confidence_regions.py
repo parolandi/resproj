@@ -89,7 +89,7 @@ class TestConfidenceRegions(unittest.TestCase):
         model, problem, algorithm = self.do_setup_lin()
         actual = testme.compute_nonlinear_confidence_interval(model, problem, algorithm, 0)
         expected = [1.01338741, 1.59365765]
-        [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(actual, expected)]
+        [self.assertAlmostEquals(act, exp, 6) for act, exp in zip(actual, expected)]
 
 
     def test_compute_nonlinear_confidence_interval_nonlin_in_params(self):
@@ -103,7 +103,7 @@ class TestConfidenceRegions(unittest.TestCase):
         model, problem, algorithm = self.do_setup_lin()
         actual = numpy.asarray(testme.compute_nonlinear_confidence_hyperrectangle(model, problem, algorithm))
         expected = numpy.asarray([[1.01338741, 1.59365765], [2.0040739383273261, 2.4877075291690458]])
-        [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(actual.flatten(), expected.flatten())]
+        [self.assertAlmostEquals(act, exp, 6) for act, exp in zip(actual.flatten(), expected.flatten())]
 
 
     def test_empihbnci_lin(self):
@@ -324,7 +324,7 @@ class TestConfidenceRegions(unittest.TestCase):
         actual = numpy.asarray(testme.compute_nonlinear_confidence_hyperrectangle_extremal(model, problem, algorithm))
         expected = numpy.asarray( \
             [[[ 1.13356755,  1.30357129], [ 1.72284648,  2.24589073]]])
-        [self.assertAlmostEquals(act, exp, 8) for act, exp in zip(actual.flatten(), expected.flatten())]
+        [self.assertAlmostEquals(act, exp, 5) for act, exp in zip(actual.flatten(), expected.flatten())]
 
 
 if __name__ == "__main__":
