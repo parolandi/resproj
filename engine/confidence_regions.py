@@ -66,6 +66,7 @@ def compute_nonlinear_confidence_region_extremal_internal(model, problem, algori
     # HACK 2015-09-14
     lc = 0.75
     uc = 1.25
+    '''
     # yesnoyes
     hyperrect = [ \
         [5.303839254978861e-05*lc, 6.7928643137517991e-05*uc], \
@@ -83,6 +84,7 @@ def compute_nonlinear_confidence_region_extremal_internal(model, problem, algori
         [5300000, 6800000], \
         [0.0062, 0.022], \
         [0.0063, 0.082]]
+    '''
     """
     hyperrect = [ \
         [7.1815198110426653e-05*lc, 7.2828378864918741e-05*uc], \
