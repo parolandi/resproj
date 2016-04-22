@@ -9,7 +9,7 @@ import scipy.spatial as scsp
 import matplotlib.pyplot as pp
 
 def read_points_and_get_interval_bounds():
-    pathfile = "C:/Users/mamuts/Desktop/ncr-param-vals.csv"
+    pathfile = "/Users/mamuts/code/Desktop/ncr-param-vals.csv"
     raw = coio.read_from_csv(pathfile)
     data = pd.DataFrame(raw)
     bounds = []
@@ -19,7 +19,7 @@ def read_points_and_get_interval_bounds():
     
 
 def read_ncr_points_from_csv_and_plot_ND():
-    pathfile = "C:/Users/mamuts/Desktop/ncr-param-vals.csv"
+    pathfile = "/Users/mamuts/code/Desktop/ncr-param-vals.csv"
     raw = coio.read_from_csv(pathfile)
     # remember to transpose
     replco.plot_combinatorial_region_projections(np.transpose(raw))
@@ -28,7 +28,7 @@ def read_ncr_points_from_csv_and_plot_ND():
 # -----------------------------------------------------------------------------
 # Fluxing
 def read_ncr_points_from_csv_and_plot_2D_and_hull():
-    pathfile = "C:/Users/mamuts/Desktop/ncr-param-vals.csv"
+    pathfile = "/Users/mamuts/code/Desktop/ncr-param-vals.csv"
     raw = coio.read_from_csv(pathfile)
     # remember to transpose
     pnts = np.transpose(np.transpose(raw)[0:2]) # 0-1
@@ -48,7 +48,7 @@ def read_ncr_points_from_csv_and_plot_2D_and_hull():
 # -----------------------------------------------------------------------------
 # Legacy
 def read_ncr_points_from_csv_and_plot():
-    pathfile = "C:/Users/mamuts/Desktop/pnts.txt"
+    pathfile = "/Users/mamuts/code/Desktop/pnts.txt"
     offset = 0
     nps = 1631
     # this gets rid of the header and footer, but intermediate sections need to be edited manually
