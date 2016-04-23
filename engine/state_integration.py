@@ -14,12 +14,16 @@ def compute_timecourse_trajectories(model, problem):
     return numpy.array with the trajectories (spliced or not)
     '''
     trajectories = soiv.compute_timecourse_trajectories(None, model, problem)
+    
+    # no splicing whatsoever
     if problem["output_filters"] is None or problem["output_filters"]["measurement_splices"] is None:
         return trajectories
-    
+
+    # some splicing is required    
     assert( \
         problem["output_filters"]["measurement_splices"] is not None \
         and len(problem["output_filters"]["measurement_splices"]) > 0)
+
     spliced_trajectories = []
     for ii in range(len(model["states"])):
         spliced_trajectories.append( \

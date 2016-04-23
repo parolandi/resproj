@@ -6,7 +6,7 @@ import scipy.stats
 
 def compute_confidence_ellipsoid_radius(no_params, no_meas, est_var, significance):
     """
-    Compute the confidence ellipsoid for the following assumptions:
+    Compute the confidence ellipsoid radius for the following assumptions:
     TODO:
     no_params: number of parameters estimated
     no_meas: number of measurement points
