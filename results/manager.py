@@ -19,9 +19,13 @@ def report_nonlinear_confidence_region_intervals_and_points(intervals, points):
     points    models.model_data.optimisation_problem_point
     """
     resfile = \
-        coen.get_results_location() + coen.get_nonlinconfreg_intervals_and_points_file_name()
+        coen.get_results_location() + coen.get_nonlinconfreg_intervals_file_name()
     coio.write_to_csv(intervals, resfile)
+    resfile = \
+        coen.get_results_location() + coen.get_nonlinconfreg_parameter_values_file_name()
     coio.write_to_csv(points["decision_variables"], resfile)
+    resfile = \
+        coen.get_results_location() + coen.get_nonlinconfreg_ssr_values_file_name()
     coio.write_to_csv(points["objective_function"], resfile)
     
 

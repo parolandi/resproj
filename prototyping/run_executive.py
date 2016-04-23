@@ -9,13 +9,16 @@ import common.diagnostics as codi
 import common.environment as coen
 import results.plot_utils as replut
 import workflows.experiments as woex
+import common.io as coio
 
+# 2015-09-24 may also call it "trial"
 class TestRunExecutive(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
         super(TestRunExecutive, self).__init__(*args, **kwargs)
         self.do_plotting = coen.get_doing_plotting()
         self.do_quick_tests_only = coen.get_doing_quick_tests_only()
+        coio.delete_file(codi.get_name_logging_file())
         logging.basicConfig(filename=codi.get_name_logging_file(),level=codi.get_logging_level())
         logging.info("run-executive: start")
         logging.info(codi.get_date_and_time())
@@ -28,9 +31,24 @@ class TestRunExecutive(unittest.TestCase):
         baseline = dict(woex.calib_valid_baseline)
         baseline["plotdata"] = dict(replut.plda.plot_data)
         basepoint = baseline["calib"]
-        basepoint = exba.set_baseline_point_0_60_yesyesno(basepoint)
-        basepoint = exba.set_baseline_eps_0_60_yesyesno(basepoint)
-        baseline = exba.set_baseline_nonlinconfreg_0_60_yesyesno(baseline)
+        #basepoint = exba.set_baseline_point_0_60(basepoint)
+        #basepoint = exba.set_baseline_eps_0_60(basepoint)
+        #baseline = exba.set_baseline_nonlinconfreg_0_60(baseline)
+        #basepoint = exba.set_baseline_point_0_60_yesnoyes(basepoint)
+        #basepoint = exba.set_baseline_eps_0_60_yesnoyes(basepoint)
+        #baseline = exba.set_baseline_nonlinconfreg_0_60_yesnoyes(baseline)
+        #basepoint = exba.set_baseline_point_0_60_yesyesno(basepoint)
+        #basepoint = exba.set_baseline_eps_0_60_yesyesno(basepoint)
+        #baseline = exba.set_baseline_nonlinconfreg_0_60_yesyesno(baseline)
+        """
+        basepoint = exba.set_baseline_point_0_60_yes10yes15no5(basepoint)
+        basepoint = exba.set_baseline_eps_0_60_yes10yes15no5(basepoint)
+        baseline = exba.set_baseline_nonlinconfreg_0_60_yes10yes15no5(baseline)
+        """
+        basepoint = exba.set_baseline_point_0_60_yes15no5yes10(basepoint)
+        basepoint = exba.set_baseline_eps_0_60_yes15no5yes10(basepoint)
+        baseline = exba.set_baseline_nonlinconfreg_0_60_yes15no5yes10(baseline)
+        
         baseline = replut.set_window_title(baseline, "Run-executive: NCR benchmark model (95%)")
         return baseline
     
