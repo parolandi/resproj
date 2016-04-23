@@ -7,10 +7,10 @@ class TestManager(unittest.TestCase):
 
 
     def test_report_nonlinear_confidence_region_intervals_and_points(self):
-        intervals = []
+        intervals = [[0,1],[0,1]]
         points = {}
-        points["decision_variables"] = None
-        points["objective_function"] = None
+        points["decision_variables"] = [[1,0],[0,1]]
+        points["objective_function"] = [2, 1]
         testme.report_nonlinear_confidence_region_intervals_and_points(intervals, points)
         self.assertTrue(True)
 
