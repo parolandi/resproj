@@ -101,6 +101,7 @@ def residuals_single_experiment(model, problem):
     for jj in range(len(problem["output_indices"])):
         measured_s = measured[jj]
         predicted_s = predicted[problem["output_indices"][jj]]
+        assert(len(measured_s) == len(predicted_s))
         res[jj] = numpy.subtract(measured_s, predicted_s) / cov[jj]
     return res
 

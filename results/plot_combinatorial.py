@@ -5,6 +5,10 @@ import numpy
 
 
 def plot_combinatorial_region_projections(region):
+    """
+    Plots the combination of 2D projections of the nonlinear confidence region
+    region    points
+    """
     no_grid = region.shape[0]
     fig = pp.figure("NCR projections")
     for cols in range(no_grid):
@@ -19,6 +23,11 @@ def plot_combinatorial_region_projections(region):
 
 
 def plot_combinatorial_ellipsoid_projections(center, ell):
+    """
+    Plots the combination of 2D projections (ellipsoids) of the quadratic confidence region
+    center    center of the ellipsoid
+    ell       ellipsoid, list of list 
+    """
     ellipsoid = numpy.asmatrix(ell)
     # TODO: preconditions
 
