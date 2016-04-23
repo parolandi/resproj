@@ -114,8 +114,10 @@ def do_protocol_setup_0_60_any_compute():
     protocol = copy.deepcopy(seseda.experiment_protocol)
     protocol["steps"] = []
     #setup = sekrbi.do_experiment_setup_0_60()
-    setup = sekrbi.do_experiment_setup_0_60_spliced_yesyesno()
     #setup = sekrbi.do_experiment_setup_0_60_spliced_yesnoyes()
+    #setup = sekrbi.do_experiment_setup_0_60_spliced_yesyesno()
+    #setup = sekrbi.do_experiment_setup_0_60_spliced_yes10yes15no5()
+    setup = sekrbi.do_experiment_setup_0_60_spliced_yes15no5yes10()
     setup["algorithm_setup"] = do_algorithm_setup_compute_nonlinconfreg
     setup["local_setup"]["do_plotting"] = True
     protocol["steps"].append(copy.deepcopy(setup))
