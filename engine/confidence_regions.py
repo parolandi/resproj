@@ -60,7 +60,66 @@ def compute_nonlinear_confidence_region_extremal_internal(model, problem, algori
     internal
     """
     logging.debug("engine.confidence_regions.compute_nonlinear_confidence_region_extremal_internal")
+    # HACK
     hyperrect, statuses = compute_nonlinear_confidence_intervals_extremal(model, problem, algorithm_rf, best_point)
+    
+    # HACK 2015-09-14
+    lc = 0.75
+    uc = 1.25
+    # yesnoyes
+    hyperrect = [ \
+        [5.303839254978861e-05*lc, 6.7928643137517991e-05*uc], \
+        [5900150.185800408*lc, 0.1*59065454.091839552*uc], \
+        [0.01009237303638489*lc, 0.01429891307608047*uc], \
+        [0.018628141421802392*lc, 0.033995558368361149*uc]]
+    # yesyesno
+    hyperrect = [ \
+        [0.000067, 0.000076], \
+        [5000000, 7100000], \
+        [0.0052, 0.022], \
+        [0.0063/3, 1.85e-01*3]]
+    hyperrect = [ \
+        [0.000068, 0.000076], \
+        [5300000, 6800000], \
+        [0.0062, 0.022], \
+        [0.0063, 0.082]]
+    """
+    hyperrect = [ \
+        [7.1815198110426653e-05*lc, 7.2828378864918741e-05*uc], \
+        [5927979.0165858017*lc, 5928271.2840146916*uc], \
+        [0.012124961140420856, 0.012124961140420856], \
+        [0.017173506980212713, 0.017173506980212713]]
+    hyperrect = [ \
+        [0.000069, 0.000075], \
+        [5553991, 6327361], \
+        [0.012124961140420856/2, 0.012124961140420856*2], \
+        [0.017173506980212713/2, 0.017173506980212713*2]]
+    hyperrect = [ \
+        [0.000059, 0.000085], \
+        [5053991, 6827361], \
+        [0.012124961140420856/5, 0.012124961140420856*5], \
+        [0.017173506980212713/5, 0.017173506980212713*5]]
+    hyperrect = [ \
+        [0.000069, 0.000075], \
+        [5400000, 6400000], \
+        [0.012124961140420856/5, 0.012124961140420856*5], \
+        [0.017173506980212713/5, 0.017173506980212713*5]]
+    """
+    """
+    # no-splicing
+    hyperrect = [ \
+        [0.000064, 0.000080], \
+        [4900000, 6900000], \
+        [0.012124961140420856/5, 0.012124961140420856*5], \
+        [0.017173506980212713/5, 0.017173506980212713*5]]
+    # no-splicing refined 151125
+    hyperrect = [ \
+        [0.000069, 0.000075], \
+        [5300000, 6400000], \
+        [0.0082, 0.021], \
+        [0.0064, 0.081]]
+    # no-splicing refined 151125
+    """
     
     hyperrect = trim_hyperrectangle_ranges(problem, hyperrect)
     
@@ -214,6 +273,7 @@ def compute_nonlinear_confidence_interval(model, problem, algorithm, index):
 
     if (upper.status > 0 or lower.status > 0):
         codi.print_warning_error_code_message()
+        # log as well
 
     model["parameters"] = opt_model_params
     problem["parameters"] = opt_problem_params
@@ -299,6 +359,7 @@ def compute_nonlinear_confidence_interval_extremal(model, problem, algorithm, in
     # TODO: think how best to lead with this situation
     if (upper.status > 0 or lower.status > 0):
         codi.print_warning_error_code_message()
+        # log as well
         # TODO: perhaps should ensure that SSR is correct
 
     model["parameters"] = opt_model_params
