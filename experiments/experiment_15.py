@@ -54,7 +54,7 @@ class TestExperiment15(unittest.TestCase):
             wore.plot_tiled_trajectories_at_point(experiment(), calibrated)
 
 
-    def test_calibration_workflow_local_slsqp(self):
+    def dn_test_calibration_workflow_local_slsqp(self):
         experiment = sekrbi.do_experiment_setup_0_60_with_slsqp_with_positivity
         basepoint = None
         calibrated = woex.test_baseline_calibration(experiment, basepoint, self)
@@ -63,7 +63,7 @@ class TestExperiment15(unittest.TestCase):
             wore.plot_tiled_trajectories_at_point(experiment(), calibrated)
 
     
-    def test_calibration_workflow_global(self):
+    def dn_test_calibration_workflow_global(self):
         if self.do_quick_tests_only:
             codi.print_and_log_return_on_quick_tests_only()
             return
