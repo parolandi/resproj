@@ -3,7 +3,7 @@ def get_doing_quick_tests_only():
 
 
 def get_doing_plotting():
-    return False
+    return True
 
 
 def get_results_location():
@@ -15,7 +15,19 @@ def get_objective_function_and_decision_variables_file_name():
 
 
 def get_nonlinconfreg_intervals_and_points_file_name():
-    return "resncriap.csv"
+    return "ncriap.csv"
+
+
+def get_nonlinconfreg_intervals_file_name():
+    return "ncr-intervals.csv"
+
+
+def get_nonlinconfreg_parameter_values_file_name():
+    return "ncr-param-vals.csv"
+
+
+def get_nonlinconfreg_ssr_values_file_name():
+    return "ncr-ssr-vals.csv"
 
 
 def get_experimental_data_location():
