@@ -1,8 +1,29 @@
 
-def read_trajectories_from_files(app):
-    return # [time_measured, time_predicted]
+import common.io as coio
+import results.plot_strips as replst
+import results.plot_data as replda
 
-def plot_tiled_calibration_and_validation_trajectories_at_record():
+import numpy as np
+
+def read_trajectories_from_files(loc):
+    raw = coio.read_from_headless_dataframe(loc)
+    data = np.transpose(raw)
+    time = data[0]
+    vals = data[1:]
+    return [time, vals]
+
+def plot_tiled_calibration_and_validation_trajectories_at_record( \
+    loc_measured, loc_predicted, config):
+    [time_measured, vals_measured] = read_trajectories_from_files(loc_measured)
+    # TODO: time_predicted
+    [_, vals_predicted] = read_trajectories_from_files(loc_predicted)
+    # TODO: from predicted to observed
+    data = replda.TimeCourseData()
+    data.independent = time_measured
+    data.measurements = vals_measured
+    data.predictions = vals_predicted
+    replst.plot_measurements_with_trajectories_with_errors(data, config)
+    #replst.show_all()
     # see reporting_unlegacy
     # for calib and valid
     # unfold time and trace

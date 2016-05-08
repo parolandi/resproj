@@ -24,12 +24,13 @@ def plot_measurements_with_trajectories_with_errors( \
     #plot_data["no_rows"] = dim_obs
     #plot_data["no_cols"] = 1
     #plot_colours = get_plot_colours(dim_obs)
-    errors_ii = None
+
     for ii in range(config.count):
         #plot_data["plot_count"] = ii+1
         #plot_data["colour"] = plot_colours[ii]      
         #plot_data["index"] = ii
         config.layout.index = ii
+        errors_ii = None
         if errors_provided:
             errors_ii = data.errors[ii]
         plot_measurements_with_trajectory_with_errors( \
