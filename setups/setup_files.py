@@ -10,5 +10,7 @@ class Figure01():
             set_measured_calibration(pathfile+"fig-01-measured-calib.csv"). \
             set_measured_validation(pathfile+"fig-01-measured-valid.csv"). \
             set_predicted_calibration(pathfile+"fig-01-predicted-calib.csv"). \
-            set_predicted_validation(pathfile+"fig-01-predicted-valid.csv")
+            set_predicted_validation(pathfile+"fig-01-predicted-valid.csv"). \
+            set_error_calibration(pathfile+"fig-01-error-calib.csv"). \
+            set_error_validation(pathfile+"fig-01-error-valid.csv")            
         return config
