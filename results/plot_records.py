@@ -18,18 +18,13 @@ def plot_tiled_calibration_and_validation_trajectories_at_record(config, locator
     # TODO: time_predicted
     [_, vals_predicted] = read_trajectories_from_files( \
         locator["locator"].get_predicted_calibration())
+    # TODO: time_error
     [_, vals_error] = read_trajectories_from_files( \
         locator["locator"].get_error_calibration())
     # TODO: from predicted to observed
-    data = replda.TimeCourseData()
-    data.independent = time_measured
-    data.measurements = vals_measured
-    data.predictions = vals_predicted
-    data.errors = vals_error
+    data = replda.TimeCourseData(). \
+        set_independent(time_measured). \
+        set_measurements(vals_measured). \
+        set_predictions(vals_predicted). \
+        set_errors(vals_error)
     replst.plot_measurements_with_trajectories_with_errors(data, config)
-    #replst.show_all()
-    # see reporting_unlegacy
-    # for calib and valid
-    # unfold time and trace
-    # plot
-    pass

@@ -2,6 +2,7 @@ from Cython.Compiler.Naming import self_cname
 
 import numpy as np
 
+
 plot_data = {
     "figure": None,
     "index": 0,
@@ -13,9 +14,11 @@ plot_data = {
     "ylabel": "",
     }
 
+
 def get_plot_colours(dim):
     assert(dim <= 6)
     return ['r', 'g', 'b', 'y', 'c', 'm']
+
 
 class TimeCourseData():
 
@@ -23,6 +26,23 @@ class TimeCourseData():
     measurements = None
     predictions = None
     errors = None
+    
+    def set_independent(self, values):
+        self.independent = values
+        return self
+    
+    def set_measurements(self, values):
+        self.measurements = values
+        return self
+    
+    def set_predictions(self, values):
+        self.predictions = values
+        return self
+    
+    def set_errors(self, values):
+        self.errors = values
+        return self
+
 
 class PlotAxisFormattingData():
     
@@ -36,6 +56,7 @@ class PlotAxisFormattingData():
         self.label = label
         return self
 
+
 class PlotTraceFormattingData():
     colour = 'r'
     mark = 'o'
@@ -44,6 +65,7 @@ class PlotTraceFormattingData():
         self.colour = colour
         self.mark = mark
         return self
+
 
 class SinglePlotFormattingData():
     
@@ -63,6 +85,7 @@ class SinglePlotFormattingData():
         self.trace = data
         return self 
 
+
 class MultiPlotLayoutData():
     no_cols = 0
     no_rows = 0
@@ -76,6 +99,7 @@ class MultiPlotLayoutData():
         self.no_rows = no_rows
         self.indices = indices
         return self
+
 
 class MultiPlotFormattingData():
     multi_plots = []
