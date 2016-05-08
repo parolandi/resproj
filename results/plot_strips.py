@@ -1,8 +1,10 @@
 
 import matplotlib.pyplot as pp
 
+
 def show_all():
     pp.show()
+
 
 def plot_measurements_with_trajectories_with_errors( \
     data, config):
@@ -36,21 +38,27 @@ def plot_measurements_with_trajectory_with_errors( \
     
     fig = config.figure
     index = config.layout.index
+    single_plot = config.multi_plots[index]
     sp = fig.add_subplot(config.layout.no_rows, config.layout.no_cols, index+1)
+    
     t = independent
     meas = measurements
     pred = predictions
     err = errors
-    legend = []
-    trace = config.multi_plots[index].trace
+    
+    trace = single_plot.trace
     colour = trace.colour
     mark = trace.mark
+    
     sp.errorbar(t, meas, fmt = colour+mark, yerr = err)
-    legend.append("m-" + str(index))
     sp.plot(t, pred, colour+'+')
-    legend.append("p-" + str(index))
+    
+#    legend = []
+#    legend.append("m-" + str(index))
+#    legend.append("p-" + str(index))
 #    sp.legend(legend)
-    sp.set_xlabel(config.multi_plots[index].x_axis.label)
-    sp.set_ylabel(config.multi_plots[index].y_axis.label)
-    sp.xaxis.set_ticks(config.multi_plots[index].x_axis.major_ticks)
-    sp.set_ylim(bottom=0)
+
+    sp.set_xlabel(single_plot.x_axis.label + single_plot.x_axis.eng_units)
+    sp.set_ylabel(single_plot.y_axis.label + single_plot.y_axis.eng_units)
+    sp.xaxis.set_ticks(single_plot.x_axis.major_ticks)
+    sp.set_ylim(bottom = 0)

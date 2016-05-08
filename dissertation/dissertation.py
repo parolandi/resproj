@@ -13,31 +13,31 @@ class Figure01():
         config.set_formatting_data( \
             replda.SinglePlotFormattingData(). \
                 set_x_axis(replda.PlotAxisFormattingData().set_min_max_label(0,0,"")). \
-                set_y_axis(replda.PlotAxisFormattingData().set_min_max_label(0,0,"X")). \
+                set_y_axis(replda.PlotAxisFormattingData().set_min_max_label_units(0,0,"X", " [g/L]")). \
                 set_trace(replda.PlotTraceFormattingData().set_colour_mark(replda.get_plot_colours(6)[0], 'o')), \
                 0)
         config.set_formatting_data( \
             replda.SinglePlotFormattingData(). \
                 set_x_axis(replda.PlotAxisFormattingData().set_min_max_label(0,0,"")). \
-                set_y_axis(replda.PlotAxisFormattingData().set_min_max_label(0,0,"S")). \
+                set_y_axis(replda.PlotAxisFormattingData().set_min_max_label_units(0,0,"S", " [g/L]")). \
                 set_trace(replda.PlotTraceFormattingData().set_colour_mark(replda.get_plot_colours(6)[1], 'o')), \
                 1)
         config.set_formatting_data( \
             replda.SinglePlotFormattingData(). \
                 set_x_axis(replda.PlotAxisFormattingData().set_min_max_label(0,0,"")). \
-                set_y_axis(replda.PlotAxisFormattingData().set_min_max_label(0,0,"M1")). \
+                set_y_axis(replda.PlotAxisFormattingData().set_min_max_label_units(0,0,"M1", " [umol/g]")). \
                 set_trace(replda.PlotTraceFormattingData().set_colour_mark(replda.get_plot_colours(6)[2], 'o')), \
                 2)
         config.set_formatting_data( \
             replda.SinglePlotFormattingData(). \
                 set_x_axis(replda.PlotAxisFormattingData().set_min_max_label(0,0,"")). \
-                set_y_axis(replda.PlotAxisFormattingData().set_min_max_label(0,0,"M2")). \
+                set_y_axis(replda.PlotAxisFormattingData().set_min_max_label_units(0,0,"M2", " [umol/g]")). \
                 set_trace(replda.PlotTraceFormattingData().set_colour_mark(replda.get_plot_colours(6)[3], 'o')), \
                 3)
         config.set_formatting_data( \
             replda.SinglePlotFormattingData(). \
-                set_x_axis(replda.PlotAxisFormattingData().set_min_max_label(0,0,"Time")). \
-                set_y_axis(replda.PlotAxisFormattingData().set_min_max_label(0,0,"E")). \
+                set_x_axis(replda.PlotAxisFormattingData().set_min_max_label_units(0,0,"Time", " [hr]")). \
+                set_y_axis(replda.PlotAxisFormattingData().set_min_max_label_units(0,0,"E", " [umol/g]")). \
                 set_trace(replda.PlotTraceFormattingData().set_colour_mark(replda.get_plot_colours(6)[4], 'o')), \
                 4)
         return config

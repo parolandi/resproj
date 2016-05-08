@@ -3,16 +3,9 @@ from Cython.Compiler.Naming import self_cname
 import numpy as np
 
 
-plot_data = {
-    "figure": None,
-    "index": 0,
-    "no_cols": 0,
-    "no_rows": 0,
-    "plot_count": 0,
-    "title": "",
-    "window_title": "",
-    "ylabel": "",
-    }
+class WindowPlotData():
+    
+    window_title = ""
 
 
 def get_plot_colours(dim):
@@ -49,15 +42,24 @@ class PlotAxisFormattingData():
     min_val = 0
     max_val = 0
     label = ""
+    # TODO hard-coded
     major_ticks = np.arange(0,60+1,2)
+    eng_units = ""
+    
     def set_min_max_label(self, min_val, max_val, label):
         self.min_val = min_val
         self.max_val = max_val
         self.label = label
         return self
 
+    def set_min_max_label_units(self, min_val, max_val, label, units):
+        self.set_min_max_label(min_val, max_val, label)
+        self.eng_units = units
+        return self
+    
 
 class PlotTraceFormattingData():
+    
     colour = 'r'
     mark = 'o'
     
@@ -87,6 +89,7 @@ class SinglePlotFormattingData():
 
 
 class MultiPlotLayoutData():
+    
     no_cols = 0
     no_rows = 0
     #count = 0
@@ -102,6 +105,7 @@ class MultiPlotLayoutData():
 
 
 class MultiPlotFormattingData():
+    
     multi_plots = []
     all_axis = PlotAxisFormattingData()
     main_plot = None
@@ -112,7 +116,6 @@ class MultiPlotFormattingData():
     def __init__(self, count):
         self.multi_plots = [SinglePlotFormattingData() for _ in range(count)]
         self.count = count
-        #return self
         
     def set_formatting_data(self, data, index):
         self.multi_plots[index] = data
