@@ -66,3 +66,4 @@ def plot_measurements_with_trajectory_with_errors( \
 #    sp.legend(legend)
     sp.set_xlabel(config.multi_plots[index].x_axis.label)
     sp.set_ylabel(config.multi_plots[index].y_axis.label)
+    sp.xaxis.set_ticks(config.multi_plots[index].x_axis.major_ticks)

@@ -1,5 +1,7 @@
 from Cython.Compiler.Naming import self_cname
 
+import numpy as np
+
 plot_data = {
     "figure": None,
     "index": 0,
@@ -27,7 +29,7 @@ class PlotAxisFormattingData():
     min_val = 0
     max_val = 0
     label = ""
-    #major_ticks = [0]
+    major_ticks = np.arange(0,60+1,2)
     def set_min_max_label(self, min_val, max_val, label):
         self.min_val = min_val
         self.max_val = max_val
