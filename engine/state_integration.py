@@ -3,6 +3,7 @@ import models.model_data as momoda
 import data.data_splicing as dadasp
 import solvers.initial_value as soiv
 
+import copy
 import numpy
 
 
@@ -56,7 +57,7 @@ def compute_calibration_and_validation_timecourse_trajectories(model, problem):
                     problem["output_filters"]["validation_mask"]),
                     trajectories[ii]))
     
-    calib_valid_trajectories = dict(momoda.calib_valid_experimental_dataset)
+    calib_valid_trajectories = copy.deepcopy(dict(momoda.calib_valid_experimental_dataset))
     
     calib_valid_trajectories["calib"]["time"] = dadasp.splice_data( \
         dadasp.convert_mask_to_index_expression( \
