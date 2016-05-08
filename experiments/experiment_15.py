@@ -8,8 +8,10 @@ import common.diagnostics as codi
 import common.environment as coen
 import workflows.experiments as woex
 import workflows.reporting as wore
+import workflows.recording as worc
 
 '''
+"Baseline"
 Kremling bioreactor
 Multi-stage experiment 0-60hr interval
 No splicing
@@ -50,6 +52,7 @@ class TestExperiment15(unittest.TestCase):
         experiment = sekrbi.do_experiment_setup_0_60
         baseline = self.get_calibration_baseline()
         calibrated = woex.test_baseline_calibration(experiment, baseline["calib"], self)
+        worc.record_calibration_and_validation_trajectories_at_point(experiment(), calibrated)
         if self.do_plotting:
             wore.plot_tiled_trajectories_at_point(experiment(), calibrated)
 
