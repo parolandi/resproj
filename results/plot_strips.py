@@ -1,8 +1,6 @@
 
 import matplotlib.pyplot as pp
 
-#import results.plot as rp
-
 def show_all():
     pp.show()
 
@@ -16,19 +14,8 @@ def plot_measurements_with_trajectories_with_errors( \
     if data.errors is None:
         errors_provided = False
     
-    #dim_obs = len(data.measurements)
-    fig = pp.figure(1)
-    config.figure = fig
-    #plot_data = {}
-    #plot_data["figure"] = fig
-    #plot_data["no_rows"] = dim_obs
-    #plot_data["no_cols"] = 1
-    #plot_colours = get_plot_colours(dim_obs)
-
+    config.figure = pp.figure(1)
     for ii in range(config.count):
-        #plot_data["plot_count"] = ii+1
-        #plot_data["colour"] = plot_colours[ii]      
-        #plot_data["index"] = ii
         config.layout.index = ii
         errors_ii = None
         if errors_provided:
@@ -45,8 +32,7 @@ def plot_measurements_with_trajectory_with_errors( \
     """
     errors can be None
     """
-    #assert(plot_data is not None)
-    # TODO assertions
+    # TODO: pre-conditions
     
     fig = config.figure
     index = config.layout.index
@@ -67,3 +53,4 @@ def plot_measurements_with_trajectory_with_errors( \
     sp.set_xlabel(config.multi_plots[index].x_axis.label)
     sp.set_ylabel(config.multi_plots[index].y_axis.label)
     sp.xaxis.set_ticks(config.multi_plots[index].x_axis.major_ticks)
+    sp.set_ylim(bottom=0)
