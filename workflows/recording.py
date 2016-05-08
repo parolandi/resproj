@@ -1,18 +1,14 @@
 
-import common.environment as coen
 import common.io as coio
 import common.results as core
 import engine.state_integration as enstin
 import models.model_data_utils as momodaut
 import setups.setup_data_utils as sesedaut
 
-def write_trajectories_to_files(time, measured, predicted, app):
+def write_trajectories_to_file(time, trajectories, url):
     coio.write_as_dataframe_to_csv(\
-        core.append_traces_to_time_and_transpose(time, measured), \
-        coen.get_results_location() + app + "_measured.csv")
-    coio.write_as_dataframe_to_csv(\
-        core.append_traces_to_time_and_transpose(time, predicted), \
-        coen.get_results_location() + app + "_predicted.csv")
+        core.append_traces_to_time_and_transpose(time, trajectories), \
+        url)
 
 
 def record_calibration_and_validation_trajectories_at_point(config, point):
@@ -32,13 +28,19 @@ def record_calibration_and_validation_trajectories_at_point(config, point):
     predictions = momodaut.get_observable_calibration_and_validation_trajectories(\
         trajectories, problem_data)
     
-    write_trajectories_to_files(\
+    write_trajectories_to_file(\
         data_instance["calib"]["time"], \
         data_instance["calib"]["observables"], \
+        config["locator"].get_measured_calibration())
+    write_trajectories_to_file(\
+        data_instance["calib"]["time"], \
         predictions["calib"]["observables"], \
-        "calib")
-    write_trajectories_to_files(
+        config["locator"].get_predicted_calibration())
+    write_trajectories_to_file(\
         data_instance["valid"]["time"], \
         data_instance["valid"]["observables"], \
+        config["locator"].get_measured_validation())
+    write_trajectories_to_file(\
+        data_instance["valid"]["time"], \
         predictions["valid"]["observables"], \
-        "valid")
+        config["locator"].get_predicted_validation())

@@ -6,6 +6,7 @@ import logging
 
 import common.diagnostics as codi
 import common.environment as coen
+import setups.setup_files as sesefi
 import workflows.experiments as woex
 import workflows.reporting as wore
 import workflows.recording as worc
@@ -46,13 +47,14 @@ class TestExperiment15(unittest.TestCase):
         basepoint = exba.set_baseline_eps_0_60_global(basepoint) 
         return baseline
 
-    
+
     def test_calibration_workflow(self):
         logging.debug("experiments.experiment_15.test_calibration_workflow")
         experiment = sekrbi.do_experiment_setup_0_60
         baseline = self.get_calibration_baseline()
         calibrated = woex.test_baseline_calibration(experiment, baseline["calib"], self)
-        worc.record_calibration_and_validation_trajectories_at_point(experiment(), calibrated)
+        worc.record_calibration_and_validation_trajectories_at_point( \
+            sesefi.Figure01().add_urls(experiment()), calibrated)
         if self.do_plotting:
             wore.plot_tiled_trajectories_at_point(experiment(), calibrated)
 

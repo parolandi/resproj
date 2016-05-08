@@ -26,6 +26,7 @@ def write_to_csv(data, filepathname):
     data            numpy.array
     filepathnmae    string, e.g., "C:/workspace/resproj/test/common/test_write_to_csv.csv"
     '''
+    assert(filepathname is not None)
     if data is None:
         with open(filepathname, 'w') as f:
             f.write("")
@@ -91,6 +92,69 @@ def open_file(filename, notfoundisfatal):
 
 class ResourceLocator():
     
-    url = ""
+    url = None
     read = False
     write = False
+
+    def set_read(self, flag):
+        self.read = flag
+        return self
+    
+    def set_write(self, flag):
+        self.write = flag
+        return self
+    
+    def set_url(self, value):
+        self.url = value
+        return self
+    
+class FileResources():
+    
+    predicted_calib = None
+    predicted_valid = None
+    measured_calib = None
+    measured_valid = None
+    error_calib = None
+    error_valid = None
+    
+    def set_predicted_calibration(self, locator):
+        self.predicted_calib = locator
+        return self
+    
+    def set_predicted_validation(self, locator):
+        self.predicted_valid = locator
+        return self
+    
+    def set_measured_calibration(self, locator):
+        self.measured_calib = locator
+        return self
+
+    def set_measured_validation(self, locator):
+        self.measured_valid = locator
+        return self
+
+    def set_error_calibration(self, locator):
+        self.error_calib = locator
+        return self
+
+    def set_error_validation(self, locator):
+        self.error_valid = locator
+        return self
+
+    def get_predicted_calibration(self):
+        return self.predicted_calib
+    
+    def get_predicted_validation(self):
+        return self.predicted_valid
+
+    def get_measured_calibration(self):
+        return self.measured_calib
+    
+    def get_measured_validation(self):
+        return self.measured_valid
+
+    def get_error_calibration(self):
+        return self.error_calib
+    
+    def get_error_validation(self):
+        return self.error_valid

@@ -14,6 +14,10 @@ def get_results_location():
     return "/Users/mamuts/Desktop/"
 
 
+def get_output_location():
+    return "/Users/mamuts/code/resproj/output/dissertation/"
+
+
 def get_objective_function_and_decision_variables_file_name():
     return "hpnts.csv"
 
