@@ -24,6 +24,9 @@ class TestIO(unittest.TestCase):
         vals = np.ones((4,5))
         testme.write_to_txt(np.array_str(vals), coen.get_src_location() + "/test/common/test_write_to_txt.txt")
         self.assertTrue(True)
+        
+    def test_write_to_csv_is_none(self):
+        testme.write_to_csv(None, coen.get_results_location() + "test_write_to_csv_none.csv")
 
 
 if __name__ == "__main__":
