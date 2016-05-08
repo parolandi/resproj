@@ -12,11 +12,12 @@ def read_trajectories_from_files(loc):
     vals = data[1:]
     return [time, vals]
 
-def plot_tiled_calibration_and_validation_trajectories_at_record( \
-    loc_measured, loc_predicted, config):
-    [time_measured, vals_measured] = read_trajectories_from_files(loc_measured)
+def plot_tiled_calibration_and_validation_trajectories_at_record(config, locator):
+    [time_measured, vals_measured] = read_trajectories_from_files( \
+        locator["locator"].get_measured_calibration())
     # TODO: time_predicted
-    [_, vals_predicted] = read_trajectories_from_files(loc_predicted)
+    [_, vals_predicted] = read_trajectories_from_files( \
+        locator["locator"].get_predicted_calibration())
     # TODO: from predicted to observed
     data = replda.TimeCourseData()
     data.independent = time_measured

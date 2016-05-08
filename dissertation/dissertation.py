@@ -2,8 +2,10 @@
 import common.environment as coen
 import results.plot_data as replda
 import results.plot_records as replre
+import setups.setup_files as sesefi
 
 class Figure01():
+
     def get_plot_config(self):
         count = 5
         config = replda.MultiPlotFormattingData(count).set_layout_data( \
@@ -41,11 +43,10 @@ class Figure01():
         return config
 
     def plot_it(self):
-        file_meas = coen.get_results_location()+"calib_measured.csv"
-        file_pred = coen.get_results_location()+"calib_predicted.csv"
         config = self.get_plot_config()
-        replre.plot_tiled_calibration_and_validation_trajectories_at_record( \
-            file_meas, file_pred, config)
+        locator = {}
+        sesefi.Figure01().add_urls(locator)
+        replre.plot_tiled_calibration_and_validation_trajectories_at_record(config, locator)
 
 if __name__ == '__main__':
     Figure01().plot_it()
