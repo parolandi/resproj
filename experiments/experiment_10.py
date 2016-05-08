@@ -60,9 +60,11 @@ class TestExperiment10(unittest.TestCase):
         basepoint["dv_deltas"] = numpy.array([0.00000001e-05, 0.00000001e+06, 0.00000001e-03, 0.00000001e-02])
         basepoint = baseline["valid"]
         basepoint["point"]["objective_function"] = 0.5163698707350677
-        calibrated = we.test_baseline_calibration_and_validation(self.do_experiment_setup_1, baseline, self)
+        calibrated = we.test_baseline_calibration_and_validation(
+            self.do_experiment_setup_1, baseline, self)
         if self.do_plotting:
-            wr.plot_tiled_calibration_and_validation_trajectories_at_point(self.do_experiment_setup_1(), calibrated)
+            wr.plot_tiled_calibration_and_validation_trajectories_at_point(
+                self.do_experiment_setup_1(), calibrated)
 
 
     # TODO: not a very good fit!
