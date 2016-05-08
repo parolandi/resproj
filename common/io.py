@@ -8,10 +8,17 @@ def read_from_csv(filepathname):
     filepathnmae    string, e.g., "C:/workspace/resproj/test/common/test_read_from_csv.csv"
     '''
     df = pd.read_csv(filepathname, header=1, skipfooter=1)
-    #df = pd.read_csv(filepathname, header=None, index_col=0)
     data = df.as_matrix()
     return data
 
+def read_from_headless_dataframe(filepathname):
+    '''
+    return          numpy.array
+    filepathnmae    string, e.g., "C:/workspace/resproj/test/common/test_read_from_csv.csv"
+    '''
+    df = pd.read_csv(filepathname, header=None, index_col=0)
+    data = df.as_matrix()
+    return data
 
 def write_to_csv(data, filepathname):
     '''
@@ -19,13 +26,20 @@ def write_to_csv(data, filepathname):
     data            numpy.array
     filepathnmae    string, e.g., "C:/workspace/resproj/test/common/test_write_to_csv.csv"
     '''
+    if data is None:
+        with open(filepathname, 'w') as f:
+            f.write("")
+            return
     df = pd.DataFrame(data)
     with open(filepathname, 'w') as f:
         #f.write("----------\n")
         df.to_csv(f, header=False)
         #f.write("----------\n")
         
-
+def write_as_dataframe_to_csv(data, filepathname):
+    write_to_csv(data, filepathname)
+    
+    
 def write_to_csv_append(data, filepathname):
     '''
     Appends
@@ -73,3 +87,10 @@ def open_file(filename, notfoundisfatal):
     assert(notfoundisnotfata)
     ff = open(filename, 'a')
     return ff
+
+
+class ResourceLocator():
+    
+    url = ""
+    read = False
+    write = False
