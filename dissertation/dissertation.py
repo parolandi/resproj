@@ -79,8 +79,18 @@ class Figure04():
         replre.plot_tiled_calibration_and_validation_trajectories_at_record(config, locator)
         
         
+class Figure05():
+    
+    def plot_it(self):
+        config = Figure00().get_plot_config()
+        locator = {}
+        sesefi.Figure05().add_urls(locator)
+        replre.plot_tiled_calibration_and_validation_trajectories_at_record(config, locator)
+        
+        
 if __name__ == '__main__':
     Figure01().plot_it()
     Figure02().plot_it()
     Figure03().plot_it()
     Figure04().plot_it()
+    Figure05().plot_it()
