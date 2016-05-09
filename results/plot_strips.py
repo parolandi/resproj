@@ -89,6 +89,7 @@ def plot_measurements_with_calibration_and_validation_trajectories_with_errors( 
             data_calib.independent, data_calib.measurements[ii], data_calib.predictions[ii], errors_ii, \
             data_valid.independent, data_valid.measurements[ii], data_valid.predictions[ii], errors_jj, \
             config)
+    pp.suptitle(config.window.title)
     pp.show()
     
     

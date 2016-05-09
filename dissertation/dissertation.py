@@ -47,6 +47,7 @@ class Figure01():
     
     def plot_it(self):
         config = Figure00().get_plot_config()
+        config.set_window_data(replda.WindowPlotData().set_title("Figure 01"))
         locator = {}
         sesefi.Figure01().add_urls(locator)
         replre.plot_tiled_calibration_and_validation_trajectories_at_record(config, locator)
@@ -56,6 +57,7 @@ class Figure02():
     
     def plot_it(self):
         config = Figure00().get_plot_config()
+        config.set_window_data(replda.WindowPlotData().set_title("Figure 02"))
         locator = {}
         sesefi.Figure02().add_urls(locator)
         replre.plot_tiled_calibration_and_validation_trajectories_at_record(config, locator)
@@ -65,6 +67,7 @@ class Figure03():
     
     def plot_it(self):
         config = Figure00().get_plot_config()
+        config.set_window_data(replda.WindowPlotData().set_title("Figure 03"))
         locator = {}
         sesefi.Figure03().add_urls(locator)
         replre.plot_tiled_calibration_and_validation_trajectories_at_record(config, locator)
@@ -74,6 +77,7 @@ class Figure04():
     
     def plot_it(self):
         config = Figure00().get_plot_config()
+        config.set_window_data(replda.WindowPlotData().set_title("Figure 04"))
         locator = {}
         sesefi.Figure04().add_urls(locator)
         replre.plot_tiled_calibration_and_validation_trajectories_at_record(config, locator)
@@ -83,6 +87,7 @@ class Figure05():
     
     def plot_it(self):
         config = Figure00().get_plot_config()
+        config.set_window_data(replda.WindowPlotData().set_title("Figure 05"))
         locator = {}
         sesefi.Figure05().add_urls(locator)
         replre.plot_tiled_calibration_and_validation_trajectories_at_record(config, locator)
@@ -94,3 +99,4 @@ if __name__ == '__main__':
     Figure03().plot_it()
     Figure04().plot_it()
     Figure05().plot_it()
+    # title

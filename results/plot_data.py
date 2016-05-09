@@ -5,7 +5,11 @@ import numpy as np
 
 class WindowPlotData():
     
-    window_title = ""
+    title = ""
+    
+    def set_title(self, value):
+        self.title = value
+        return self
 
 
 def get_plot_colours(dim):
@@ -69,6 +73,7 @@ class PlotTraceFormattingData():
         return self
 
 
+# SubplotFormattingData
 class SinglePlotFormattingData():
     
     x_axis = PlotAxisFormattingData()
@@ -112,6 +117,7 @@ class MultiPlotFormattingData():
     count = 0
     layout = MultiPlotLayoutData()
     multi_traces = []
+    window = WindowPlotData()
     
     def __init__(self, count):
         self.multi_plots = [SinglePlotFormattingData() for _ in range(count)]
@@ -124,4 +130,7 @@ class MultiPlotFormattingData():
     def set_layout_data(self, data):
         self.layout = data
         return self
-        
+
+    def set_window_data(self, data):
+        self.window = data
+        return self
