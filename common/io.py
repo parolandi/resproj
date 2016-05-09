@@ -107,7 +107,8 @@ class ResourceLocator():
     def set_url(self, value):
         self.url = value
         return self
-    
+
+   
 class FileResources():
     
     predicted_calib = None
