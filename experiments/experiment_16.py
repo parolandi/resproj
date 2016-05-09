@@ -8,7 +8,7 @@ import common.diagnostics as codi
 import common.environment as coen
 import setups.setup_files as sesefi
 import workflows.experiments as woex
-import workflows.reporting as wore
+import workflows.reporting_unlegacy as wore
 import workflows.recording as worc
 
 '''
@@ -69,7 +69,7 @@ class TestExperiment16(unittest.TestCase):
             wore.plot_tiled_calibration_and_validation_trajectories_at_point(experiment(), calibrated)
 
     
-    def donot_test_calibration_and_validation_global(self):
+    def test_calibration_and_validation_global(self):
         logging.debug("experiments.experiment_16.test_calibration_and_validation_global")
         if self.do_quick_tests_only:
             codi.print_and_log_return_on_quick_tests_only()
