@@ -4,7 +4,7 @@ import results.plot_records as replre
 import setups.setup_files as sesefi
 
 
-class Figure01():
+class Figure00():
 
     def get_plot_config(self):
         count = 5
@@ -42,11 +42,25 @@ class Figure01():
                 4)
         return config
 
+
+class Figure01():
+    
     def plot_it(self):
-        config = self.get_plot_config()
+        config = Figure00().get_plot_config()
         locator = {}
         sesefi.Figure01().add_urls(locator)
         replre.plot_tiled_calibration_and_validation_trajectories_at_record(config, locator)
 
+
+class Figure02():
+    
+    def plot_it(self):
+        config = Figure00().get_plot_config()
+        locator = {}
+        sesefi.Figure02().add_urls(locator)
+        replre.plot_tiled_calibration_and_validation_trajectories_at_record(config, locator)
+
+
 if __name__ == '__main__':
     Figure01().plot_it()
+    Figure02().plot_it()

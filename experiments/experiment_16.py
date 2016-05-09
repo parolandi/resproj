@@ -6,8 +6,10 @@ import logging
 
 import common.diagnostics as codi
 import common.environment as coen
+import setups.setup_files as sesefi
 import workflows.experiments as woex
-import workflows.reporting_unlegacy as wore
+import workflows.reporting as wore
+import workflows.recording as worc
 
 '''
 Kremling bioreactor
@@ -61,6 +63,8 @@ class TestExperiment16(unittest.TestCase):
         experiment = sekrbi.do_experiment_setup_0_60_spliced_yesyesno
         baseline = self.get_baseline_calibration_and_validation()
         calibrated = woex.test_baseline_calibration_and_validation(experiment, baseline, self)
+        worc.record_calibration_and_validation_trajectories_at_point( \
+            sesefi.Figure02().add_urls(experiment()), calibrated)
         if self.do_plotting:
             wore.plot_tiled_calibration_and_validation_trajectories_at_point(experiment(), calibrated)
 
