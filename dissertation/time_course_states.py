@@ -99,4 +99,3 @@ if __name__ == '__main__':
     Figure03().plot_it()
     Figure04().plot_it()
     Figure05().plot_it()
-    # title
