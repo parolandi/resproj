@@ -28,3 +28,17 @@ class Figure02():
             set_error_calibration(pathfile+"fig-02-error-calib.csv"). \
             set_error_validation(pathfile+"fig-02-error-valid.csv")            
         return config
+    
+    
+class Figure03():
+
+    def add_urls(self, config):
+        pathfile = coen.get_output_location()
+        config["locator"] = coio.FileResources(). \
+            set_measured_calibration(pathfile+"fig-03-measured-calib.csv"). \
+            set_measured_validation(pathfile+"fig-03-measured-valid.csv"). \
+            set_predicted_calibration(pathfile+"fig-03-predicted-calib.csv"). \
+            set_predicted_validation(pathfile+"fig-03-predicted-valid.csv"). \
+            set_error_calibration(pathfile+"fig-03-error-calib.csv"). \
+            set_error_validation(pathfile+"fig-03-error-valid.csv")            
+        return config
