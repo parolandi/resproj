@@ -41,6 +41,10 @@ def plot_qudratic_confidence_region_2D_projections_combinatorial(center, ellipse
                 width = numpy.sqrt(subell[1,1]) * sf
                 ax.set_xlim(center[rows]-height, center[rows]+height)
                 ax.set_ylim(center[cols]-width, center[cols]+width)
-                
+                squared = True
+                if squared:
+                    x0,x1 = ax.get_xlim()
+                    y0,y1 = ax.get_ylim()
+                    ax.set_aspect(abs(x1-x0)/abs(y1-y0))
                 ell.set_facecolor('none')
     pp.show()
