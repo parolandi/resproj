@@ -4,6 +4,15 @@ from matplotlib.patches import Ellipse
 import numpy
 
 
+def regularise_ellipsoid(subell, scale):
+    subell = numpy.asmatrix( \
+        [[subell[0,0]/scale[0]**2, \
+          subell[0,1]/scale[0]/scale[1]], \
+         [subell[1,0]/scale[0]/scale[1], \
+          subell[1,1]/scale[1]**2]])
+    return subell
+
+
 def plot_qudratic_confidence_region_2D_projections_combinatorial(center, ellipse):
     """
     Plots the combination of 2D projections (ellipsoids) of the quadratic confidence region
@@ -21,6 +30,10 @@ def plot_qudratic_confidence_region_2D_projections_combinatorial(center, ellipse
                 pass
             else:
                 subell = ellipsoid[numpy.ix_([rows,cols],[rows,cols])]
+                regularise = True
+                if regularise:
+                    scale = [1E7, 0.1, 10, 1E-5]
+                    subell = regularise_ellipsoid(subell, [scale[rows-1],scale[cols-1]])
                 eigenvals, eigenvecs = numpy.linalg.eig(subell)
                 # sign eigenvals
                 lambdaa = numpy.sqrt(eigenvals)
