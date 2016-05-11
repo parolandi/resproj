@@ -66,7 +66,7 @@ def plot_nonlinear_confidence_region_2D_projections_combinatorial_at_record(conf
         locator["locator"].get_multiple_realisations())
     
     replre.plot_nonlinear_confidence_region_2D_projections_combinatorial( \
-        config, np.transpose(realisations))
+        config, realisations)
 
 
 def plot_nonlinear_confidence_region_3D_projections_combinatorial_at_record(config, locator):

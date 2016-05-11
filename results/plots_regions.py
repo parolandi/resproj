@@ -65,10 +65,11 @@ def plot_qudratic_confidence_region_2D_projections_combinatorial(center, ellipse
 
 
 # remember to transpose
-def plot_nonlinear_confidence_region_2D_projections_combinatorial(config, region):
+def plot_nonlinear_confidence_region_2D_projections_combinatorial(config, realisations):
     """
     Plots the combination of 2D projections of the nonlinear confidence region
     """
+    region = numpy.transpose(realisations)
     no_grid = region.shape[0]
     fig = pp.figure("NCR projections")
     for cols in range(no_grid):
