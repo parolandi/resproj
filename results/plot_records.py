@@ -3,6 +3,7 @@ import common.io as coio
 import results.plot_strips as replst
 import results.plot_data as replda
 import results.plots_regions as replre
+import results.plot_3d as repl3d
 
 import numpy as np
 
@@ -66,3 +67,11 @@ def plot_nonlinear_confidence_region_2D_projections_combinatorial_at_record(conf
     
     replre.plot_nonlinear_confidence_region_2D_projections_combinatorial( \
         config, np.transpose(realisations))
+
+
+def plot_nonlinear_confidence_region_3D_projections_combinatorial_at_record(config, locator):
+    realisations = read_multiple_realisation_data_points_from_files( \
+        locator["locator"].get_multiple_realisations())
+    
+    repl3d.plot_nonlinear_confidence_region_3D_projections_combinatorial( \
+        config, realisations)
