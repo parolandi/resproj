@@ -126,7 +126,6 @@ class MultiPlotFormattingData():
     count = 0
     layout = MultiPlotLayoutData()
     multi_plots = []
-    multi_traces = []
     window = WindowPlotData()
     
     def __init__(self, count):
