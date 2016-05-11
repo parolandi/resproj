@@ -123,11 +123,9 @@ class MultiPlotLayoutData():
 
 class MultiPlotFormattingData():
     
-    multi_plots = []
-    all_axis = PlotAxisFormattingData()
-    main_plot = None
     count = 0
     layout = MultiPlotLayoutData()
+    multi_plots = []
     multi_traces = []
     window = WindowPlotData()
     
