@@ -70,3 +70,12 @@ class Figure05():
             set_error_calibration(pathfile+"fig-05-error-calib.csv"). \
             set_error_validation(pathfile+"fig-05-error-valid.csv")            
         return config
+    
+    
+class Figure0X():
+
+    def add_urls(self, config):
+        pathfile = coen.get_output_location()
+        config["locator"] = coio.FileResources(). \
+            set_multiple_realisations(pathfile+"fig-0X-ncr-points.csv")            
+        return config

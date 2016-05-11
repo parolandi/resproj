@@ -13,6 +13,7 @@ def regularise_ellipsoid(subell, scale):
     return subell
 
 
+# WIP: scale center as well, mark center of ellipsoid, add value
 def plot_qudratic_confidence_region_2D_projections_combinatorial(center, ellipse):
     """
     Plots the combination of 2D projections (ellipsoids) of the quadratic confidence region
@@ -60,4 +61,22 @@ def plot_qudratic_confidence_region_2D_projections_combinatorial(center, ellipse
                     y0,y1 = ax.get_ylim()
                     ax.set_aspect(abs(x1-x0)/abs(y1-y0))
                 ell.set_facecolor('none')
+    pp.show()
+
+
+# remember to transpose
+def plot_nonlinear_confidence_region_2D_projections_combinatorial(config, region):
+    """
+    Plots the combination of 2D projections of the nonlinear confidence region
+    """
+    no_grid = region.shape[0]
+    fig = pp.figure("NCR projections")
+    for cols in range(no_grid):
+        for rows in range(no_grid):
+            if cols == rows:
+                pass
+            else:
+                plot_no = no_grid*rows+cols+1
+                sp = fig.add_subplot(no_grid, no_grid, plot_no)
+                sp.plot(region[cols], region[rows], 'o')
     pp.show()

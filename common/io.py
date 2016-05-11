@@ -117,6 +117,7 @@ class FileResources():
     measured_valid = None
     error_calib = None
     error_valid = None
+    multiple_realisations = None
     
     def set_predicted_calibration(self, locator):
         self.predicted_calib = locator
@@ -141,6 +142,10 @@ class FileResources():
     def set_error_validation(self, locator):
         self.error_valid = locator
         return self
+    
+    def set_multiple_realisations(self, locator):
+        self.multiple_realisations = locator
+        return self
 
     def get_predicted_calibration(self):
         return self.predicted_calib
@@ -159,3 +164,6 @@ class FileResources():
     
     def get_error_validation(self):
         return self.error_valid
+
+    def get_multiple_realisations(self):
+        return self.multiple_realisations

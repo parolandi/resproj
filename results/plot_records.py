@@ -2,6 +2,7 @@
 import common.io as coio
 import results.plot_strips as replst
 import results.plot_data as replda
+import results.plots_regions as replre
 
 import numpy as np
 
@@ -15,6 +16,12 @@ def read_trajectories_from_files(loc):
     vals = data[1:]
     return [time, vals]
 
+
+def read_multiple_realisation_data_points_from_files(loc):
+    assert(loc is not None)
+    raw = coio.read_from_csv(loc)
+    return raw
+    
 
 def plot_tiled_calibration_and_validation_trajectories_at_record(config, locator):
     [time_measured, vals_measured] = read_trajectories_from_files( \
@@ -51,3 +58,11 @@ def plot_tiled_calibration_and_validation_trajectories_at_record(config, locator
 
     replst.plot_measurements_with_calibration_and_validation_trajectories_with_errors( \
         data_calib, data_valid, config)
+
+
+def plot_nonlinear_confidence_region_2D_projections_combinatorial_at_record(config, locator):
+    realisations = read_multiple_realisation_data_points_from_files( \
+        locator["locator"].get_multiple_realisations())
+    
+    replre.plot_nonlinear_confidence_region_2D_projections_combinatorial( \
+        config, np.transpose(realisations))
