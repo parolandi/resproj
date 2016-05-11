@@ -3,14 +3,28 @@ import results.plot_records as replre
 import setups.setup_files as sesefi
 
 
+class Figure2d():
+
+    def get_plot_config(self):
+        return None
+
+
+class Figure3d():
+
+    def get_plot_config(self):
+        return None
+
+
 class Figure0X():
     
     def plot_it(self):
-        config = None
         locator = {}
         locator = sesefi.Figure0X().add_urls(locator)
+        config = Figure2d().get_plot_config()
         replre.plot_nonlinear_confidence_region_2D_projections_combinatorial_at_record(config, locator)
+        config = Figure3d().get_plot_config()
         replre.plot_nonlinear_confidence_region_3D_projections_combinatorial_at_record(config, locator)
+
 
 if __name__ == '__main__':
     Figure0X().plot_it()
