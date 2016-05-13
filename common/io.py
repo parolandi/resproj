@@ -11,6 +11,15 @@ def read_from_csv(filepathname):
     data = df.as_matrix()
     return data
 
+def read_from_dataframe(filepathname):
+    '''
+    return          numpy.array
+    filepathnmae    string, e.g., "C:/workspace/resproj/test/common/test_read_from_csv.csv"
+    '''
+    df = pd.read_csv(filepathname, header=1, skipfooter=1, index_col=0)
+    data = df.as_matrix()
+    return data
+
 def read_from_headless_dataframe(filepathname):
     '''
     return          numpy.array
