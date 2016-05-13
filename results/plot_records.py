@@ -20,7 +20,7 @@ def read_trajectories_from_files(loc):
 
 def read_multiple_realisation_data_points_from_files(loc):
     assert(loc is not None)
-    raw = coio.read_from_csv(loc)
+    raw = coio.read_from_dataframe(loc)
     return raw
     
 
