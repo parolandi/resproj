@@ -22,7 +22,7 @@ class Figure2d():
 class Figure3d():
 
     def get_plot_config(self):
-        config = replda.TiledPlotFormattingData()
+        config = replda.TiledPlotFormattingData(4)
         return config
 
 
