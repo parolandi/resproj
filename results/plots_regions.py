@@ -44,7 +44,9 @@ def plot_qudratic_confidence_region_2D_ellipsoid( \
         y0,y1 = ax.get_ylim()
         ax.set_aspect(abs(x1-x0)/abs(y1-y0))
     ell.set_facecolor('none')
-    
+    ax.set_xlabel(config.axes[rows].label)
+    ax.set_ylabel(config.axes[cols].label)
+
     
 # WIP: scale center as well, mark center of ellipsoid, add value
 def plot_qudratic_confidence_region_2D_projections_combinatorial(config, center, ellipse):
@@ -72,6 +74,8 @@ def plot_nonlinear_confidence_region_2D_scatter( \
     plot_no = no_grid*rows+cols+1
     sp = fig.add_subplot(no_grid, no_grid, plot_no)
     sp.plot(region[cols], region[rows], 'o')
+    sp.set_xlabel(config.axes[cols].label)
+    sp.set_ylabel(config.axes[rows].label)
     
 
 # remember to transpose

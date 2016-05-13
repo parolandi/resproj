@@ -1,6 +1,9 @@
-from Cython.Compiler.Naming import self_cname
+#from Cython.Compiler.Naming import self_cname
 
 import numpy as np
+import data
+
+#from astropy.units import count
 
 
 plot_data = {
@@ -105,6 +108,12 @@ class SinglePlotFormattingData():
         return self 
 
 
+class TilePlotFormattingData():
+    
+    def __init__(self):
+        pass
+    
+
 class MultiPlotLayoutData():
     
     no_cols = 0
@@ -142,4 +151,24 @@ class MultiPlotFormattingData():
 
     def set_window_data(self, data):
         self.window = data
+        return self
+
+
+class TiledPlotFormattingData():
+    
+    count = 0
+    axes = []
+    tiles = []
+    
+    def __init__(self, count):
+        self.axes = [PlotAxisFormattingData() for _ in range(count)]
+        self.tiles = [TilePlotFormattingData() for _ in range(count)]
+        self.count = count
+
+    def set_axes_data(self, data, index):
+        self.axes[index] = data
+        return self
+
+    def set_tiles_data(self, data, index):
+        self.tiles[index] = data
         return self
