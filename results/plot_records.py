@@ -65,6 +65,9 @@ def plot_nonlinear_confidence_region_2D_projections_combinatorial_at_record(conf
     realisations = read_multiple_realisation_data_points_from_files( \
         locator["locator"].get_multiple_realisations())
     
+    center = np.asarray([  7.21144459e-05,  5.92826673e+06,  1.21249611e-02,  1.71735070e-02])
+    realisations = np.subtract(realisations, center)
+    realisations = np.divide(realisations, center)
     replre.plot_nonlinear_confidence_region_2D_projections_combinatorial( \
         config, realisations)
 

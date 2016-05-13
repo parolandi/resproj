@@ -26,6 +26,9 @@ def plot_qudratic_confidence_region_2D_ellipsoid( \
 
     plot_no = no_grid*cols+rows+1
     ax = fig.add_subplot(no_grid, no_grid, plot_no)
+    shift = True
+    if shift:
+        center = [0,0,0,0]
     ell = Ellipse(xy     = [center[rows],center[cols]], \
                   width  = lambdaa[0]*2, \
                   height = lambdaa[1]*2, \
