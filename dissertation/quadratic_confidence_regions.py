@@ -2,7 +2,7 @@
 import output.dissertation.confidence_regions as oucore
 import results.plot_data as replda
 import results.plots_regions as replre
-
+import utils.confidence_region as utcore
 
 class Figure00():
 
@@ -25,6 +25,7 @@ class Figure06():
         config = Figure00().get_plot_config()
         ellipse = oucore.Figure06().get_ellipsoid()
         center = oucore.Figure06().get_center()
+        [center, ellipse] = utcore.regularise_ellipsoid_standard(center, ellipse)
         replre.plot_qudratic_confidence_region_2D_projections_combinatorial(config, center, ellipse)
         
     
