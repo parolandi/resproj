@@ -18,8 +18,8 @@ def plot_qudratic_confidence_region_2D_ellipsoid( \
     subell = ellipsoid[numpy.ix_([rows,cols],[rows,cols])]
     regularise = True
     if regularise:
-        scale = [1E7, 0.1, 10, 1E-5]
-        subell = regularise_ellipsoid(subell, [scale[rows-1],scale[cols-1]])
+        scale = [numpy.sqrt(ii) for ii in numpy.asarray([1.46922103e-09, 2.43659568e+14, 2.29024568e-03, 1.17063124e-02])]
+        subell = regularise_ellipsoid(subell, [scale[rows],scale[cols]])
     eigenvals, eigenvecs = numpy.linalg.eig(subell)
     # sign eigenvals
     lambdaa = numpy.sqrt(eigenvals)
