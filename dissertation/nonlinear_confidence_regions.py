@@ -35,6 +35,8 @@ class Figure0X():
         replre.plot_nonlinear_confidence_region_2D_projections_combinatorial_at_record(config, locator)
         config = Figure3d().get_plot_config()
         replre.plot_nonlinear_confidence_region_3D_projections_combinatorial_at_record(config, locator)
+        # hack
+        replre.plot_confidence_regions_2D(config, locator)
 
 
 if __name__ == '__main__':

@@ -65,9 +65,11 @@ def plot_nonlinear_confidence_region_2D_projections_combinatorial_at_record(conf
     realisations = read_multiple_realisation_data_points_from_files( \
         locator["locator"].get_multiple_realisations())
     
+    # hack
     center = np.asarray([  7.21144459e-05,  5.92826673e+06,  1.21249611e-02,  1.71735070e-02])
     realisations = np.subtract(realisations, center)
     realisations = np.divide(realisations, center)
+    
     replre.plot_nonlinear_confidence_region_2D_projections_combinatorial( \
         config, realisations)
 
@@ -77,4 +79,18 @@ def plot_nonlinear_confidence_region_3D_projections_combinatorial_at_record(conf
         locator["locator"].get_multiple_realisations())
     
     repl3d.plot_nonlinear_confidence_region_3D_projections_combinatorial( \
+        config, realisations)
+
+
+def plot_confidence_regions_2D(config, locator):
+    realisations = read_multiple_realisation_data_points_from_files( \
+        locator["locator"].get_multiple_realisations())
+    
+    scale = True
+    if scale:
+        center = np.asarray([  7.21144459e-05,  5.92826673e+06,  1.21249611e-02,  1.71735070e-02])
+        realisations = np.subtract(realisations, center)
+        varz = [np.sqrt(ii) for ii in np.asarray([1.46922103e-09, 2.43659568e+14, 2.29024568e-03, 1.17063124e-02])]
+        realisations = np.divide(realisations, varz)
+    replre.plot_confidence_region_2D( \
         config, realisations)
