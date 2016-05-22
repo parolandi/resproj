@@ -109,39 +109,8 @@ def plot_confidence_region_2D(config, realisations, center, ellipsoid):
             if cols == rows:
                 pass
             else:
-                subell = ellipsoid[numpy.ix_([rows,cols],[rows,cols])]
-                
-                eigenvals, eigenvecs = numpy.linalg.eig(subell)
-                # sign eigenvals
-                lambdaa = numpy.sqrt(eigenvals)
-            
-                plot_no = no_grid*cols+rows+1
-                ax = fig.add_subplot(no_grid, no_grid, plot_no)
-                
-                ell = Ellipse(xy     = [center[rows],center[cols]], \
-                              width  = lambdaa[0]*2, \
-                              height = lambdaa[1]*2, \
-                              angle  = numpy.rad2deg(numpy.arccos(eigenvecs[0,0])))
-                ax.add_artist(ell)
-                ell.set_clip_box(ax.bbox)
-                plot_center = False
-                if plot_center:
-                    ax.plot(center[cols], center[rows], '+')
-                ax.plot(region[cols], region[rows], 'o')
-                
-                sf = 1.0
-                height = numpy.sqrt(subell[0,0]) * sf
-                width = numpy.sqrt(subell[1,1]) * sf
-                ax.set_xlim(center[rows]-height, center[rows]+height)
-                ax.set_ylim(center[cols]-width, center[cols]+width)
-                
-                squared = True
-                if squared:
-                    x0,x1 = ax.get_xlim()
-                    y0,y1 = ax.get_ylim()
-                    ax.set_aspect(abs(x1-x0)/abs(y1-y0))
-                
-                ell.set_facecolor('none')
-                ax.set_xlabel(config.axes[rows].label)
-                ax.set_ylabel(config.axes[cols].label)
+                plot_qudratic_confidence_region_2D_ellipsoid( \
+                    config, center, ellipsoid, no_grid, rows, cols, fig)
+                plot_nonlinear_confidence_region_2D_scatter( \
+                    config, region, no_grid, rows, cols, fig)
     pp.show()
