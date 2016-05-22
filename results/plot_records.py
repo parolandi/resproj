@@ -120,4 +120,3 @@ def plot_confidence_regions_2D_scaled_at_record(config, locator):
     replre.plot_confidence_region_2D( \
         config, realisations, center, ellipsoid)
     
-#def plot_confidence_regions_2D_regularised(config, locator):
