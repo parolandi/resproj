@@ -17,3 +17,8 @@ class Figure06():
     def get_center(self):
         center = np.asarray([  7.21144459e-05,   5.92826673e+06,   1.21249611e-02,   1.71735070e-02])
         return center
+
+    def get_variances(self):
+        ell = self.get_ellipsoid()
+        variance = [ell[ii,ii] for ii in range(len(ell))]
+        return variance

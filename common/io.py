@@ -127,6 +127,8 @@ class FileResources():
     error_calib = None
     error_valid = None
     multiple_realisations = None
+    # TODO call quad_conf_region
+    ellipse = None
     
     def set_predicted_calibration(self, locator):
         self.predicted_calib = locator
@@ -155,6 +157,10 @@ class FileResources():
     def set_multiple_realisations(self, locator):
         self.multiple_realisations = locator
         return self
+    
+    def set_ellipse(self, obj):
+        self.ellipse = obj
+        return self
 
     def get_predicted_calibration(self):
         return self.predicted_calib
@@ -176,3 +182,6 @@ class FileResources():
 
     def get_multiple_realisations(self):
         return self.multiple_realisations
+
+    def get_ellipse(self):
+        return self.ellipse

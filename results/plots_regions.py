@@ -95,7 +95,7 @@ def plot_nonlinear_confidence_region_2D_projections_combinatorial(config, realis
     pp.show()
 
 
-def plot_confidence_region_2D(config, realisations):
+def plot_confidence_region_2D(config, realisations, center, ellipsoid):
     """
     Plots the combination of 2D projections of the nonlinear confidence region
     """
@@ -104,7 +104,6 @@ def plot_confidence_region_2D(config, realisations):
     region = numpy.transpose(realisations)
     no_grid = region.shape[0]
     fig = pp.figure("ALL projections")
-    ellipsoid = hack.Figure06().get_ellipsoid()
     for cols in range(no_grid):
         for rows in range(no_grid):
             if cols == rows:
@@ -112,22 +111,12 @@ def plot_confidence_region_2D(config, realisations):
             else:
                 subell = ellipsoid[numpy.ix_([rows,cols],[rows,cols])]
                 
-                regularise = True
-                if regularise:
-                    scale = [numpy.sqrt(ii) for ii in numpy.asarray([1.46922103e-09, 2.43659568e+14, 2.29024568e-03, 1.17063124e-02])]
-                    subell = regularise_ellipsoid(subell, [scale[rows],scale[cols]])
-                
                 eigenvals, eigenvecs = numpy.linalg.eig(subell)
                 # sign eigenvals
                 lambdaa = numpy.sqrt(eigenvals)
             
                 plot_no = no_grid*cols+rows+1
                 ax = fig.add_subplot(no_grid, no_grid, plot_no)
-                center = numpy.asarray([  7.21144459e-05,  5.92826673e+06,  1.21249611e-02,  1.71735070e-02])
-                
-                shift = True
-                if shift:
-                    center = [0,0,0,0]
                 
                 ell = Ellipse(xy     = [center[rows],center[cols]], \
                               width  = lambdaa[0]*2, \

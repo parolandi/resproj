@@ -4,7 +4,7 @@ import results.plot_strips as replst
 import results.plot_data as replda
 import results.plots_regions as replre
 import results.plot_3d as repl3d
-
+import utils.confidence_region as utcore
 import numpy as np
 
 
@@ -65,15 +65,25 @@ def plot_nonlinear_confidence_region_2D_projections_combinatorial_at_record(conf
     realisations = read_multiple_realisation_data_points_from_files( \
         locator["locator"].get_multiple_realisations())
     
-    # hack
-    center = np.asarray([  7.21144459e-05,  5.92826673e+06,  1.21249611e-02,  1.71735070e-02])
-    realisations = np.subtract(realisations, center)
-    realisations = np.divide(realisations, center)
-    
     replre.plot_nonlinear_confidence_region_2D_projections_combinatorial( \
         config, realisations)
 
 
+def plot_nonlinear_confidence_region_2D_projections_combinatorial_scaled_at_record(config, locator):
+    if locator["locator"].get_ellipse() is None:
+        return plot_nonlinear_confidence_region_2D_projections_combinatorial_at_record(config, locator)
+
+    # duplicated
+    realisations = read_multiple_realisation_data_points_from_files( \
+        locator["locator"].get_multiple_realisations())
+    center = locator["locator"].get_ellipse().get_center()
+    scale = center
+    realisations = utcore.regularise_points(realisations, center, scale)
+    
+    replre.plot_nonlinear_confidence_region_2D_projections_combinatorial( \
+        config, realisations)
+    
+    
 def plot_nonlinear_confidence_region_3D_projections_combinatorial_at_record(config, locator):
     realisations = read_multiple_realisation_data_points_from_files( \
         locator["locator"].get_multiple_realisations())
@@ -82,15 +92,32 @@ def plot_nonlinear_confidence_region_3D_projections_combinatorial_at_record(conf
         config, realisations)
 
 
-def plot_confidence_regions_2D(config, locator):
+def plot_nonlinear_confidence_region_3D_projections_combinatorial_scaled_at_record(config, locator):
+    if locator["locator"].get_ellipse() is None:
+        return plot_nonlinear_confidence_region_3D_projections_combinatorial_at_record(config, locator)
+
+    # duplicated    
     realisations = read_multiple_realisation_data_points_from_files( \
         locator["locator"].get_multiple_realisations())
+    center = locator["locator"].get_ellipse().get_center()
+    scale = center
+    realisations = utcore.regularise_points(realisations, center, scale)
     
-    scale = True
-    if scale:
-        center = np.asarray([  7.21144459e-05,  5.92826673e+06,  1.21249611e-02,  1.71735070e-02])
-        realisations = np.subtract(realisations, center)
-        varz = [np.sqrt(ii) for ii in np.asarray([1.46922103e-09, 2.43659568e+14, 2.29024568e-03, 1.17063124e-02])]
-        realisations = np.divide(realisations, varz)
-    replre.plot_confidence_region_2D( \
+    repl3d.plot_nonlinear_confidence_region_3D_projections_combinatorial( \
         config, realisations)
+
+
+def plot_confidence_regions_2D_at_record(config, locator):
+    realisations = read_multiple_realisation_data_points_from_files( \
+        locator["locator"].get_multiple_realisations())
+    center = locator["locator"].get_ellipse().get_center()
+    scale = locator["locator"].get_ellipse().get_variances()
+    ellipsoid = locator["locator"].get_ellipse().get_ellipsoid()
+
+    realisations = utcore.regularise_points_standard(realisations, center, ellipsoid)
+    [center, ellipsoid] = utcore.regularise_ellipsoid_standard(center, ellipsoid)
+
+    replre.plot_confidence_region_2D( \
+        config, realisations, center, ellipsoid)
+    
+#def plot_confidence_regions_2D_regularised(config, locator):

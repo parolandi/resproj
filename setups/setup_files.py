@@ -1,6 +1,8 @@
 
 import common.io as coio
 import common.environment as coen
+import output.dissertation.confidence_regions as oudicore
+
 
 class Figure01():
 
@@ -77,5 +79,6 @@ class Figure0X():
     def add_urls(self, config):
         pathfile = coen.get_output_location()
         config["locator"] = coio.FileResources(). \
-            set_multiple_realisations(pathfile+"fig-0X-ncr-points.csv")            
+            set_multiple_realisations(pathfile+"fig-0X-ncr-points.csv"). \
+            set_ellipse(oudicore.Figure06())
         return config

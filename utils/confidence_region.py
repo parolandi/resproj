@@ -18,3 +18,15 @@ def regularise_ellipsoid_standard(center, varcov):
     shift = center
     scale = [varcov[ii,ii] for ii in range(len(varcov))]
     return regularise_ellipsoid(center, varcov, shift, scale)
+
+
+def regularise_points(points, shift, scale):
+    points = np.subtract(points, shift)
+    points = np.divide(points, scale)
+    return points
+
+
+def regularise_points_standard(points, center, varcov):
+    shift = center
+    scale = [np.sqrt(varcov[ii,ii]) for ii in range(len(varcov))]
+    return regularise_points(points, shift, scale)
