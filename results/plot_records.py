@@ -111,7 +111,6 @@ def plot_confidence_regions_2D_scaled_at_record(config, locator):
     realisations = read_multiple_realisation_data_points_from_files( \
         locator["locator"].get_multiple_realisations())
     center = locator["locator"].get_ellipse().get_center()
-    scale = locator["locator"].get_ellipse().get_variances()
     ellipsoid = locator["locator"].get_ellipse().get_ellipsoid()
 
     realisations = utcore.regularise_points_standard(realisations, center, ellipsoid)
