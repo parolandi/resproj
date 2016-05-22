@@ -107,7 +107,7 @@ def plot_nonlinear_confidence_region_3D_projections_combinatorial_scaled_at_reco
         config, realisations)
 
 
-def plot_confidence_regions_2D_at_record(config, locator):
+def plot_confidence_regions_2D_scaled_at_record(config, locator):
     realisations = read_multiple_realisation_data_points_from_files( \
         locator["locator"].get_multiple_realisations())
     center = locator["locator"].get_ellipse().get_center()
