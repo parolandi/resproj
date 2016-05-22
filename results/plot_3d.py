@@ -3,6 +3,7 @@ import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as pp
 
+import logging
 
 def plot_3d(data, indices):
     fig = pp.figure()
@@ -28,6 +29,12 @@ def plot_nonlinear_confidence_region_3D_projections_combinatorial(config, region
     data    numpy.array
     """
     # HACK
+    if len(region) >= 1000:
+        msg = "plotting; 3D projections: was hoping to plot" + str(len(region)) + " points; now only plotting 1000"
+    else:
+        msg = "plotting; 3D projections: was hoping to plot 1000 points; now only plotting " + str(len(region))
+    logging.info(msg)
+    print(msg)  
     data = region[0:1000]
     fig = pp.figure("3D NCR projections")
     
