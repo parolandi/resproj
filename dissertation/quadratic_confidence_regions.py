@@ -1,4 +1,5 @@
 
+import models.kremlingetal_bioreactor as mokrbi
 import output.dissertation.confidence_regions as oucore
 import results.plot_data as replda
 import results.plots_regions as replre
@@ -8,14 +9,11 @@ class Figure00():
 
     def get_plot_config(self):
         config = replda.TiledPlotFormattingData(4)
-        config.set_axes_data( \
-            replda.PlotAxisFormattingData().set_min_max_label(0,0,"p1"), 0). \
-        set_axes_data(
-            replda.PlotAxisFormattingData().set_min_max_label(0,0,"p2"), 1). \
-        set_axes_data(
-            replda.PlotAxisFormattingData().set_min_max_label(0,0,"p3"), 2). \
-        set_axes_data(
-            replda.PlotAxisFormattingData().set_min_max_label(0,0,"p4"), 3)
+        param_names = mokrbi.get_names_parameters_to_be_estimated()
+        for ii in range(4):
+            config.set_axes_data( \
+                replda.PlotAxisFormattingData(). \
+                    set_min_max_label(0,0,param_names[ii]), ii)
         return config
 
 
