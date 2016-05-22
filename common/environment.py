@@ -10,12 +10,17 @@ def get_src_location():
     return "/Users/mamuts/code/resproj"
 
 
+def get_test_mock_location():
+    return get_src_location() + "/test/mock/"
+
+
+# TODO: call get desktop
 def get_results_location():
     return "/Users/mamuts/Desktop/"
 
 
 def get_output_location():
-    return "/Users/mamuts/code/resproj/output/dissertation/"
+    return get_src_location() + "/output/dissertation/"
 
 
 def get_objective_function_and_decision_variables_file_name():
@@ -39,7 +44,7 @@ def get_nonlinconfreg_ssr_values_file_name():
 
 
 def get_experimental_data_location():
-    return "/Users/mamuts/code/resproj/experiments/"
+    return get_src_location() + "/experiments/"
 
 
 def get_experimental_data_0_20_file_name():
