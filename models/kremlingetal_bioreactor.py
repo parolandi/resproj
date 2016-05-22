@@ -35,6 +35,10 @@ pvec = {
     }
 
 
+def get_names_parameters_to_be_estimated():
+    return ["Yxs", "k2", "KIA", "ksynmax"]
+
+
 # Table 2 and Table 3; modelA
 pvec_table3_modelA = {
     "Yxs": 6.968E-5,   # g/umol      - Table 3
