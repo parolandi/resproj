@@ -50,18 +50,35 @@ class Figure2d_qcr_ncr():
         return config
     
     
-class Figure0X():
+class Figure07():
     
     def plot_it(self):
         locator = {}
         locator = sesefi.Figure0X().add_urls(locator)
         config = Figure2d().get_plot_config()
         replre.plot_nonlinear_confidence_region_2D_projections_combinatorial_scaled_at_record(config, locator)
+
+
+class Figure08():
+    
+    def plot_it(self):
+        locator = {}
+        locator = sesefi.Figure0X().add_urls(locator)        
         config = Figure3d().get_plot_config()
         replre.plot_nonlinear_confidence_region_3D_projections_combinatorial_scaled_at_record(config, locator)
+
+
+class Figure09():
+
+    def plot_it(self):
+        locator = {}
+        locator = sesefi.Figure0X().add_urls(locator)        
         config = Figure2d_qcr_ncr().get_plot_config()
         replre.plot_confidence_regions_2D_scaled_at_record(config, locator)
 
 
 if __name__ == '__main__':
-    Figure0X().plot_it()
+    Figure07().plot_it()
+    Figure08().plot_it()
+    Figure09().plot_it()
+
