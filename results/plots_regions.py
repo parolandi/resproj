@@ -3,8 +3,6 @@ import matplotlib.pyplot as pp
 from matplotlib.patches import Ellipse
 import numpy
 
-import output.dissertation.confidence_regions as hack
-
 
 def regularise_ellipsoid(subell, scale):
     subell = numpy.asmatrix( \
@@ -14,6 +12,24 @@ def regularise_ellipsoid(subell, scale):
           subell[1,1]/scale[1]**2]])
     return subell
 
+
+def handle_axes_labels(config, ax, rows, cols):
+    put_y_label = rows == 0 or rows == 1 and cols == 0
+    put_x_label = cols == 3 or cols == 2 and rows == 3
+    if put_y_label:
+        ax.set_ylabel(config.axes[cols].label)
+    if put_x_label:
+        ax.set_xlabel(config.axes[rows].label)        
+    
+    
+def handle_axes_labels_ok(config, ax, rows, cols):
+    put_y_label = cols == 0 or cols == 1 and rows == 0
+    put_x_label = rows == 3 or rows == 2 and cols == 3
+    if put_y_label:
+        ax.set_ylabel(config.axes[rows].label)
+    if put_x_label:
+        ax.set_xlabel(config.axes[cols].label) 
+        
 
 def plot_qudratic_confidence_region_2D_ellipsoid( \
     config, center, ellipsoid, no_grid, rows, cols, fig):
@@ -42,8 +58,24 @@ def plot_qudratic_confidence_region_2D_ellipsoid( \
         y0,y1 = ax.get_ylim()
         ax.set_aspect(abs(x1-x0)/abs(y1-y0))
     ell.set_facecolor('none')
-    ax.set_xlabel(config.axes[rows].label)
-    ax.set_ylabel(config.axes[cols].label)
+    ax.set_xticks(config.axes[cols].get_major_ticks())
+    ax.set_yticks(config.axes[rows].get_major_ticks())
+    handle_axes_labels(config, ax, rows, cols)
+
+
+def try_hack():
+    pass
+    '''
+    ax = fig.add_subplot(no_grid, no_grid, no_grid*cols+rows+1)
+    if rows == 0:
+        ax.set_ylabel(config.axes[cols].label)
+        ax.get_xaxis().set_ticks([])
+        ax.get_yaxis().set_ticks([])
+    if cols == 3:
+        ax.set_xlabel(config.axes[rows].label)
+        ax.get_xaxis().set_ticks([])
+        ax.get_yaxis().set_ticks([])
+    '''
 
     
 # WIP: scale center as well, mark center of ellipsoid, add value
@@ -56,14 +88,16 @@ def plot_qudratic_confidence_region_2D_projections_combinatorial(config, center,
     # TODO: preconditions
     ellipsoid = numpy.asmatrix(ellipse)
     no_grid = ellipsoid.shape[0]
-    fig = pp.figure("LCR projections")
+    fig = pp.figure("LCR projections", figsize=(8,8))
     for cols in range(no_grid):
         for rows in range(no_grid):
             if rows == cols:
-                pass
+                try_hack()
             else:
                 plot_qudratic_confidence_region_2D_ellipsoid( \
                     config, center, ellipsoid, no_grid, rows, cols, fig)
+    pp.subplots_adjust( \
+        left=0.1, bottom=0.1, right=0.95, top=0.95, wspace=0.35, hspace=0.35)
     pp.show()
 
 
@@ -72,8 +106,12 @@ def plot_nonlinear_confidence_region_2D_scatter( \
     plot_no = no_grid*rows+cols+1
     sp = fig.add_subplot(no_grid, no_grid, plot_no)
     sp.plot(region[cols], region[rows], 'o')
-    sp.set_xlabel(config.axes[cols].label)
-    sp.set_ylabel(config.axes[rows].label)
+    sp.set_xticks(config.axes[cols].get_major_ticks())
+    sp.set_yticks(config.axes[rows].get_major_ticks())
+    #sp.set_xticklabels(sp.xaxis.get_ticklabels(), rotation='vertical')
+    #sp.set_xlabel(config.axes[cols].label)
+    #sp.set_ylabel(config.axes[rows].label)
+    handle_axes_labels_ok(config, sp, rows, cols)
     
 
 # remember to transpose
@@ -84,7 +122,7 @@ def plot_nonlinear_confidence_region_2D_projections_combinatorial(config, realis
     # TODO: preconditions
     region = numpy.transpose(realisations)
     no_grid = region.shape[0]
-    fig = pp.figure("NCR projections")
+    fig = pp.figure("NCR projections", figsize=(8,8))
     for cols in range(no_grid):
         for rows in range(no_grid):
             if cols == rows:
@@ -92,6 +130,8 @@ def plot_nonlinear_confidence_region_2D_projections_combinatorial(config, realis
             else:
                 plot_nonlinear_confidence_region_2D_scatter( \
                     config, region, no_grid, rows, cols, fig)
+    pp.subplots_adjust( \
+        left=0.1, bottom=0.1, right=0.95, top=0.95, wspace=0.35, hspace=0.35)
     pp.show()
 
 
@@ -103,7 +143,7 @@ def plot_confidence_region_2D(config, realisations, center, ellipsoid):
     #assert(False)
     region = numpy.transpose(realisations)
     no_grid = region.shape[0]
-    fig = pp.figure("ALL projections")
+    fig = pp.figure("ALL projections", figsize=(8,8))
     for cols in range(no_grid):
         for rows in range(no_grid):
             if cols == rows:
@@ -113,4 +153,6 @@ def plot_confidence_region_2D(config, realisations, center, ellipsoid):
                     config, center, ellipsoid, no_grid, rows, cols, fig)
                 plot_nonlinear_confidence_region_2D_scatter( \
                     config, region, no_grid, rows, cols, fig)
+    pp.subplots_adjust( \
+        left=0.1, bottom=0.1, right=0.95, top=0.95, wspace=0.35, hspace=0.35)
     pp.show()

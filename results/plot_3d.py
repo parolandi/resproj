@@ -22,6 +22,14 @@ def set_labels(config, plot, indices):
     plot.set_zlabel(config.axes[indices[2]].label)
     
 
+def set_ticks(plot, config, indices):
+    if config is None:
+        return
+    plot.set_xticks(config.axes[indices[0]].get_major_ticks())
+    plot.set_yticks(config.axes[indices[1]].get_major_ticks())
+    plot.set_zticks(config.axes[indices[2]].get_major_ticks())
+    
+
 def plot_nonlinear_confidence_region_3D_projections_combinatorial(config, region):
     """
     Shows at the end
@@ -36,7 +44,7 @@ def plot_nonlinear_confidence_region_3D_projections_combinatorial(config, region
     logging.info(msg)
     print(msg)  
     data = region[0:1000]
-    fig = pp.figure("3D NCR projections")
+    fig = pp.figure("3D NCR projections", figsize=(8,8))
     
     sp = fig.add_subplot(2, 2, 1, projection='3d')
     indices = [0,1,2]
@@ -44,6 +52,7 @@ def plot_nonlinear_confidence_region_3D_projections_combinatorial(config, region
                     np.transpose(data)[indices[1]], \
                     np.transpose(data)[indices[2]])
     set_labels(config, sp, indices)
+    set_ticks(sp, config, indices)
     
     sp = fig.add_subplot(2, 2, 2, projection='3d')
     indices = [0,1,3]
@@ -51,6 +60,7 @@ def plot_nonlinear_confidence_region_3D_projections_combinatorial(config, region
                     np.transpose(data)[indices[1]], \
                     np.transpose(data)[indices[2]])
     set_labels(config, sp, indices)
+    set_ticks(sp, config, indices)
     
     sp = fig.add_subplot(2, 2, 3, projection='3d')
     indices = [0,2,3]
@@ -58,6 +68,7 @@ def plot_nonlinear_confidence_region_3D_projections_combinatorial(config, region
                     np.transpose(data)[indices[1]], \
                     np.transpose(data)[indices[2]])
     set_labels(config, sp, indices)
+    set_ticks(sp, config, indices)
     
     sp = fig.add_subplot(2, 2, 4, projection='3d')
     indices = [1,2,3]
@@ -65,7 +76,10 @@ def plot_nonlinear_confidence_region_3D_projections_combinatorial(config, region
                     np.transpose(data)[indices[1]], \
                     np.transpose(data)[indices[2]])
     set_labels(config, sp, indices)
+    set_ticks(sp, config, indices)
     
+    pp.subplots_adjust( \
+        left=0.05, bottom=0.05, right=0.95, top=0.95, wspace=0.10, hspace=0.10)
     pp.show()
     
     

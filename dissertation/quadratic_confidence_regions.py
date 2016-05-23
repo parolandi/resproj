@@ -13,7 +13,9 @@ class Figure00():
         for ii in range(4):
             config.set_axes_data( \
                 replda.PlotAxisFormattingData(). \
-                    set_min_max_label(0,0,param_names[ii]), ii)
+                    set_min_max_label(0,0,param_names[ii]). \
+                    set_major_ticks([-1,0,1]), \
+                ii)
         return config
 
 

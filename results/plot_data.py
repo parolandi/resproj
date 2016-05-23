@@ -76,6 +76,13 @@ class PlotAxisFormattingData():
         self.eng_units = units
         return self
     
+    def set_major_ticks(self, vals):
+        self.major_ticks = vals
+        return self
+    
+    def get_major_ticks(self):
+        return self.major_ticks
+    
 
 class PlotTraceFormattingData():
     
