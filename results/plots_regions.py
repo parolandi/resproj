@@ -108,9 +108,6 @@ def plot_nonlinear_confidence_region_2D_scatter( \
     sp.plot(region[cols], region[rows], 'o')
     sp.set_xticks(config.axes[cols].get_major_ticks())
     sp.set_yticks(config.axes[rows].get_major_ticks())
-    #sp.set_xticklabels(sp.xaxis.get_ticklabels(), rotation='vertical')
-    #sp.set_xlabel(config.axes[cols].label)
-    #sp.set_ylabel(config.axes[rows].label)
     handle_axes_labels_ok(config, sp, rows, cols)
     
 
