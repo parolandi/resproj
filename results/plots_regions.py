@@ -57,6 +57,8 @@ def plot_qudratic_confidence_region_2D_ellipsoid( \
         x0,x1 = ax.get_xlim()
         y0,y1 = ax.get_ylim()
         ax.set_aspect(abs(x1-x0)/abs(y1-y0))
+    ax.plot([0],[0], 'b+')
+    ell.set_color('b')
     ell.set_facecolor('none')
     ax.set_xticks(config.axes[cols].get_major_ticks())
     ax.set_yticks(config.axes[rows].get_major_ticks())
