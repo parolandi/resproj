@@ -85,3 +85,22 @@ class Figure18(Figure00):
     def get_center(self):
         center = np.asarray([  7.12884597e-05,   5.77667582e+06,   9.31968630e-03,   4.32751249e-02])
         return center
+
+
+class Figure22(Figure00):
+    """
+    Corresponds to exp-19
+    """
+    def get_ellipsoid(self):
+        cvm = np.asmatrix( \
+            [[  1.46096638e-09,  -2.38182097e+02,   2.03915684e-07,  -3.05287146e-07], \
+             [ -2.38182097e+02,   2.82174146e+14,  -1.32338368e+05,  -1.57971193e+06], \
+             [  2.03915684e-07,  -1.32338368e+05,   2.19391111e-03,  -9.06342686e-03], \
+             [ -3.05287146e-07,  -1.57971193e+06,  -9.06342686e-03,   5.55553268e-02]])
+        rad = 13.1646568318
+        ell = cvm * rad
+        return ell
+    
+    def get_center(self):
+        center = np.asarray([  7.22076277e-05,   6.00994312e+06,   1.11374646e-02,   2.03026444e-02])
+        return center
