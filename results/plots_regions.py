@@ -103,13 +103,21 @@ def plot_qudratic_confidence_region_2D_projections_combinatorial(config, center,
     pp.show()
 
 
+def handle_axes_ticks(plot, config, rows, cols):
+    xticks = config.axes[cols].get_major_ticks()
+    yticks = config.axes[rows].get_major_ticks()
+    if len(xticks) > 0:
+        plot.set_xticks(xticks)
+    if len(yticks) > 0:
+        plot.set_yticks(yticks)
+
+
 def plot_nonlinear_confidence_region_2D_scatter( \
     config, region, no_grid, rows, cols, fig):
     plot_no = no_grid*rows+cols+1
     sp = fig.add_subplot(no_grid, no_grid, plot_no)
     sp.plot(region[cols], region[rows], 'o')
-    sp.set_xticks(config.axes[cols].get_major_ticks())
-    sp.set_yticks(config.axes[rows].get_major_ticks())
+    handle_axes_ticks(sp, config, rows, cols)
     handle_axes_labels_ok(config, sp, rows, cols)
     
 
