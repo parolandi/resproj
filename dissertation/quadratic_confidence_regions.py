@@ -29,5 +29,16 @@ class Figure06():
         replre.plot_qudratic_confidence_region_2D_projections_combinatorial(config, center, ellipse)
         
     
+class Figure10():
+    
+    def plot_it(self):
+        config = Figure00().get_plot_config()
+        ellipse = oucore.Figure10().get_ellipsoid()
+        center = oucore.Figure10().get_center()
+        [center, ellipse] = utcore.regularise_ellipsoid_standard(center, ellipse)
+        replre.plot_qudratic_confidence_region_2D_projections_combinatorial(config, center, ellipse)
+
+
 if __name__ == '__main__':
     Figure06().plot_it()
+    Figure10().plot_it()

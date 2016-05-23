@@ -74,11 +74,21 @@ class Figure05():
         return config
     
     
-class Figure0X():
+class Figure070809():
 
     def add_urls(self, config):
         pathfile = coen.get_output_location()
         config["locator"] = coio.FileResources(). \
-            set_multiple_realisations(pathfile+"fig-0X-ncr-points.csv"). \
+            set_multiple_realisations(pathfile+"fig-070809-ncr-points.csv"). \
+            set_ellipse(oudicore.Figure06())
+        return config
+
+
+class Figure111213():
+
+    def add_urls(self, config):
+        pathfile = coen.get_output_location()
+        config["locator"] = coio.FileResources(). \
+            set_multiple_realisations(pathfile+"fig-111213-ncr-points.csv"). \
             set_ellipse(oudicore.Figure06())
         return config
