@@ -102,3 +102,13 @@ class Figure151617():
             set_multiple_realisations(pathfile+"fig-151617-ncr-points.csv"). \
             set_ellipse(oudicore.Figure06())
         return config
+
+
+class Figure192021():
+
+    def add_urls(self, config):
+        pathfile = coen.get_output_location()
+        config["locator"] = coio.FileResources(). \
+            set_multiple_realisations(pathfile+"fig-192021-ncr-points.csv"). \
+            set_ellipse(oudicore.Figure06())
+        return config

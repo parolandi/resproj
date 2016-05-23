@@ -66,6 +66,22 @@ class Figure1516Config():
         return config
 
 
+class Figure1920Config():
+
+    def get_plot_config(self):
+        config = replda.TiledPlotFormattingData(4)
+        param_names = mokrbi.get_names_parameters_to_be_estimated()
+        lbs = [-0.06, -0.15, -0.5, -1]
+        ubs = [0.03, 0.10, 0.4, 25]
+        for ii in range(4):
+            config.set_axes_data( \
+                replda.PlotAxisFormattingData(). \
+                    set_min_max_label(0,0,param_names[ii]). \
+                    set_major_ticks([lbs[ii],0,ubs[ii]]), \
+                ii)
+        return config
+    
+    
 class Figure07():
     
     def plot_it(self):
@@ -147,6 +163,33 @@ class Figure17():
         replre.plot_confidence_regions_2D_scaled_at_record(config, locator)
         
         
+class Figure19():
+    
+    def plot_it(self):
+        locator = {}
+        locator = sesefi.Figure192021().add_urls(locator)
+        config = Figure1920Config().get_plot_config()
+        replre.plot_nonlinear_confidence_region_2D_projections_combinatorial_scaled_at_record(config, locator)
+        
+        
+class Figure20():
+
+    def plot_it(self):
+        locator = {}
+        locator = sesefi.Figure192021().add_urls(locator)
+        config = Figure1920Config().get_plot_config()
+        replre.plot_nonlinear_confidence_region_3D_projections_combinatorial_scaled_at_record(config, locator)
+        
+        
+class Figure21():
+
+    def plot_it(self):
+        locator = {}
+        locator = sesefi.Figure192021().add_urls(locator)
+        config = Figure00Config().get_plot_config()
+        replre.plot_confidence_regions_2D_scaled_at_record(config, locator)
+        
+
 if __name__ == '__main__':
     Figure07().plot_it()
     Figure08().plot_it()
@@ -157,4 +200,6 @@ if __name__ == '__main__':
     Figure15().plot_it()
     Figure16().plot_it()
     Figure17().plot_it()
-    
+    Figure19().plot_it()
+    Figure20().plot_it()
+    Figure21().plot_it()
