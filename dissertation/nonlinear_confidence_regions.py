@@ -39,8 +39,8 @@ class Figure1112Config():
     def get_plot_config(self):
         config = replda.TiledPlotFormattingData(4)
         param_names = mokrbi.get_names_parameters_to_be_estimated()
-        lbs = [-0.03, -0.15, -0.4, -1]
-        ubs = [0.05, 0.15, 0.8, 2.5]
+        lbs = [-0.07, -0.15, -0.5, -1]
+        ubs = [0.04, 0.20, 0.1, 35]
         for ii in range(4):
             config.set_axes_data( \
                 replda.PlotAxisFormattingData(). \
@@ -55,8 +55,8 @@ class Figure1516Config():
     def get_plot_config(self):
         config = replda.TiledPlotFormattingData(4)
         param_names = mokrbi.get_names_parameters_to_be_estimated()
-        lbs = [-0.08, -0.15, -0.5, 0]
-        ubs = [0.04, 0.20, 0.1, 35]
+        lbs = [-0.03, -0.12, -0.4, -1]
+        ubs = [0.05, 0.15, 0.8, 2.5]
         for ii in range(4):
             config.set_axes_data( \
                 replda.PlotAxisFormattingData(). \
