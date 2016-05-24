@@ -9,7 +9,11 @@ import numpy as np
 
 
 def read_trajectories_from_files(loc):
-    raw = coio.read_from_headless_dataframe(loc)
+    raw = None
+    try:
+        raw = coio.read_from_headless_dataframe(loc)
+    except:
+        pass
     if raw is None:
         return [None, None]
     data = np.transpose(raw)
