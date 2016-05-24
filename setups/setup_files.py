@@ -88,7 +88,7 @@ class Figure070809():
 
 class Figure111213():
     """
-    Exp-21
+    Exp-22
     """
     def add_urls(self, config):
         pathfile = coen.get_output_location()
@@ -100,7 +100,7 @@ class Figure111213():
 
 class Figure151617():
     """
-    Exp-22
+    Exp-21
     """
     def add_urls(self, config):
         pathfile = coen.get_output_location()
