@@ -16,7 +16,7 @@ def plot_measurements_with_trajectories_with_errors( \
     if data.errors is None:
         errors_provided = False
     
-    config.figure = pp.figure(1)
+    config.figure = pp.figure("Time course", figsize=(8,8))
     for ii in range(config.count):
         config.layout.index = ii
         errors_ii = None
@@ -25,6 +25,10 @@ def plot_measurements_with_trajectories_with_errors( \
         plot_measurements_with_trajectory_with_errors( \
             data.independent, data.measurements[ii], data.predictions[ii], errors_ii, \
             config)
+        
+    handle_title(config)
+    pp.subplots_adjust( \
+        left=0.15, bottom=0.1, right=0.95, top=0.95, wspace=0.30, hspace=0.30)
     pp.show()
 
 
@@ -61,8 +65,14 @@ def plot_measurements_with_trajectory_with_errors( \
     sp.set_xlabel(single_plot.x_axis.label + single_plot.x_axis.eng_units)
     sp.set_ylabel(single_plot.y_axis.label + single_plot.y_axis.eng_units)
     sp.xaxis.set_ticks(single_plot.x_axis.major_ticks)
+    sp.yaxis.set_ticks(single_plot.y_axis.major_ticks)
     sp.set_ylim(bottom = 0)
-    
+
+
+def handle_title(config):
+    if config.window.title is not None:
+        pp.suptitle(config.window.title)
+
     
 def plot_measurements_with_calibration_and_validation_trajectories_with_errors( \
     data_calib, data_valid, config):
@@ -78,7 +88,7 @@ def plot_measurements_with_calibration_and_validation_trajectories_with_errors( 
         assert(data_calib.errors == data_valid.errors)
         errors_provided = False
     
-    config.figure = pp.figure(1)
+    config.figure = pp.figure("Time course", figsize=(8,8))
     for ii in range(config.count):
         config.layout.index = ii
         errors_ii = None
@@ -89,7 +99,10 @@ def plot_measurements_with_calibration_and_validation_trajectories_with_errors( 
             data_calib.independent, data_calib.measurements[ii], data_calib.predictions[ii], errors_ii, \
             data_valid.independent, data_valid.measurements[ii], data_valid.predictions[ii], errors_jj, \
             config)
-    pp.suptitle(config.window.title)
+
+    handle_title(config)
+    pp.subplots_adjust( \
+        left=0.15, bottom=0.1, right=0.95, top=0.95, wspace=0.30, hspace=0.30)
     pp.show()
     
     
@@ -139,4 +152,5 @@ def plot_measurements_with_calibration_and_validation_trajectories_with_errors_i
     sp.set_xlabel(single_plot.x_axis.label + single_plot.x_axis.eng_units)
     sp.set_ylabel(single_plot.y_axis.label + single_plot.y_axis.eng_units)
     sp.xaxis.set_ticks(single_plot.x_axis.major_ticks)
+    sp.yaxis.set_ticks(single_plot.y_axis.major_ticks)
     sp.set_ylim(bottom = 0)
