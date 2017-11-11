@@ -164,11 +164,12 @@ def evaluate(xx, t, p, u, model_form):
         if den <= eps:
             den = eps
         y[ymap["r2"]] = p[pmap["k2"]] * x[xmap["E"]] * x[xmap["M1"]] / den
+        # [umol/g/h DW] = [1/h]       * [umol/g DW]  * [adim]
         den = p[pmap["KIB"]] + x[xmap["M2"]]
         if den <= eps:
             den = eps
         y[ymap["rsyn"]] = p[pmap["ksynmax"]] * p[pmap["KIB"]] / den
-        # [umol/g/h DW] = [umol/g/h DW]
+        # [umol/g/h DW] = [umol/g/h DW]      * [adim]
     y[ymap["r3"]] = p[pmap["r3max"]] * x[xmap["M2"]] / (p[pmap["KM2"]] + x[xmap["M2"]])
 
     dx_dt = numpy.zeros(len(x)) 
