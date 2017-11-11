@@ -50,6 +50,21 @@ def set_baseline_eps_0_60(baseline):
     return baseline
 
 
+def set_baseline_point_0_60_global(baseline):
+    baseline["point"]["objective_function"] = 191.915901669
+    baseline["point"]["decision_variables"] = numpy.array( \
+        [  7.21063052228e-05, 5928238.02405, 0.0121129261722, 0.0172159895438])
+    return baseline
+
+
+def set_baseline_eps_0_60_global(baseline):
+    baseline["of_delta"] = 0.000000001
+    baseline["dv_deltas"] = numpy.array( \
+        [  0.00000001e-05,  0.00000001e+06,  0.00000001e-02,  0.00000001e-02])
+    baseline["decision_variables_eps"] = numpy.array( \
+        [  0.00000001e-05,  0.00000001e+06,  0.00000001e-02,  0.00000001e-02])
+    return baseline
+
 # --------------------------------------------------------------------------- #
 # Yes-no-yes 0-60 hr
 
@@ -106,6 +121,23 @@ def get_baseline_point_0_60_yesyesno():
     return 181.34162033753552
 
 
+def set_baseline_point_0_60_yesyesno_global(baseline):
+    baseline["point"]["objective_function"] = 91.4248295011284
+    baseline["point"]["decision_variables"] = numpy.array( \
+        [  7.08951868e-05,   6.01434666e+06,   7.70847783e-03, 1.85468424e-01])
+    return baseline
+
+
+def set_baseline_eps_0_60_yesyesno_global(baseline):
+    baseline["of_delta"] = 0.000000001
+    baseline["dv_deltas"] = numpy.array( \
+        [  0.00000001e-05,  0.00000001e+06,  0.00000001e-03,  0.00000001e-01])
+    return baseline
+
+
+def get_baseline_point_0_60_yesyesno_global():
+    return 181.34776433392548
+
 # --------------------------------------------------------------------------- #
 # Yes10-yes15-no5 0-60 hr
 
@@ -125,6 +157,20 @@ def set_baseline_eps_0_60_yes10yes15no5(baseline):
     return baseline
 
 
+def get_baseline_point_0_60_yes10yes15no5():
+    return 53.5921083595
+
+
+def set_baseline_point_0_60_yes10yes15no5_global(baseline):
+    baseline["point"]["objective_function"] = 149.20785325292013
+    baseline["point"]["decision_variables"] = numpy.array( \
+        [  7.12866349e-05, 5.77559492e+06, 9.31849303e-03, 4.33282246e-02])
+    return baseline
+
+
+def get_baseline_point_0_60_yes10yes15no5_global():
+    return 53.60188061455396
+
 # --------------------------------------------------------------------------- #
 # Yes15-no5-yes10 0-60 hr
 
@@ -135,6 +181,13 @@ def set_baseline_point_0_60_yes15no5yes10(baseline):
     return baseline
 
 
+def set_baseline_point_0_60_yes15no5yes10_global(baseline):
+    baseline["point"]["objective_function"] = 169.7037979392123
+    baseline["point"]["decision_variables"] = numpy.array( \
+        [  7.22075811e-05, 6.01049468e+06, 1.11079090e-02, 2.04245409e-02])
+    return baseline
+
+
 def set_baseline_eps_0_60_yes15no5yes10(baseline):
     baseline["of_delta"] = 0.000000001
     baseline["dv_deltas"] = numpy.array( \
@@ -142,6 +195,14 @@ def set_baseline_eps_0_60_yes15no5yes10(baseline):
     baseline["decision_variables_eps"] = numpy.array( \
         [  0.00000001e-05,  0.00000001e+06,  0.00000001e-02,  0.00000001e-02])
     return baseline
+
+
+def get_baseline_point_0_60_yes15no5yes10():
+    return 23.517155892719828
+
+
+def get_baseline_point_0_60_yes15no5yes10_global():
+    return 23.567425043126253
 
 # Nonlinear confidence regions
 # --------------------------------------------------------------------------- #

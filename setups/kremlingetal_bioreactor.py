@@ -3,6 +3,7 @@ import copy
 import numpy
 
 import algorithms.algorithm_data as alalda
+import common.environment as coen
 import common.utilities as cu
 import data.experimental_data_splicing as deds
 import workflows.protocol_data as wpd
@@ -60,7 +61,7 @@ def do_model_setup_model_B():
 
 def do_get_published_data_0_20():
     # TODO: handle gracefully
-    published_data = open("C:/documents/resproj/bench/data_time_0_20.txt", 'r')
+    published_data = open(coen.get_experimental_data_file_0_20(), 'r')
     data = numpy.loadtxt(published_data)
     trajectories_without_V = cu.sliceit_astrajectory(data)
     return trajectories_without_V
@@ -68,7 +69,7 @@ def do_get_published_data_0_20():
 
 def do_get_published_data_0_60():
     # TODO: handle gracefully
-    published_data = open("C:/documents/resproj/bench/data_time_0_60.txt", 'r')
+    published_data = open(coen.get_experimental_data_file_0_60(), 'r')
     data = numpy.loadtxt(published_data)
     trajectories_without_V = cu.sliceit_astrajectory(data)
     return trajectories_without_V
@@ -213,7 +214,8 @@ def do_problem_setup_0_60_spliced_yesyesno(model_data, data_instance):
 def do_problem_setup_0_60_spliced_yes10yes15no5(model_data, data_instance):
     problem = do_base_problem_setup_0_60(model_data, data_instance)
     problem["output_filters"] = dict(momoda.output_filters)
-    problem["output_filters"]["measurement_splices"] = [25]
+    #assert(False)
+    problem["output_filters"]["measurement_splices"] = [slice(0,25,1)]
     problem["output_filters"]["calibration_mask"] = [25]
     problem["output_filters"]["validation_mask"] = [0,25]
     return problem
@@ -222,7 +224,8 @@ def do_problem_setup_0_60_spliced_yes10yes15no5(model_data, data_instance):
 def do_problem_setup_0_60_spliced_yes15no5yes10(model_data, data_instance):
     problem = do_base_problem_setup_0_60(model_data, data_instance)
     problem["output_filters"] = dict(momoda.output_filters)
-    problem["output_filters"]["measurement_splices"] = [15,20]
+    #assert(False)
+    problem["output_filters"]["measurement_splices"] = [slice(0, 15, 1), slice(15, 20, 1), slice(20, None, 1)]
     problem["output_filters"]["calibration_mask"] = [15,20]
     problem["output_filters"]["validation_mask"] = [0,15,20]
     return problem
@@ -237,7 +240,9 @@ def do_problem_setup_0_60_spliced_yesnoyes(model_data, data_instance):
                                                    numpy.asarray([0.35,0.35,0.5])]
     problem["forcing_inputs"] = forcing_inputs
     problem["output_filters"] = dict(momoda.output_filters)
-    problem["output_filters"]["measurement_splices"] = [10,15]
+    #assert(False)
+    #problem["output_filters"]["measurement_splices"] = [10,15]
+    problem["output_filters"]["measurement_splices"] = [slice(0, 10, 1), slice(10, 15, 1), slice(15, None, 1)]
     problem["output_filters"]["calibration_mask"] = [10,15]
     problem["output_filters"]["validation_mask"] = [0,10,15]
     return problem

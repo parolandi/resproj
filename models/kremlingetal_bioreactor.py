@@ -7,16 +7,16 @@ import common.diagnostics as codi
 
 
 pmap = {
-    "Yxs": 0, #
+    "Yxs": 0,       # yield coefficient
     "r1max": 1,
     "KS": 2,
-    "k2": 3, #
+    "k2": 3,        # turnover number
     "KM1": 4,
-    "KIA": 5, # 
+    "KIA": 5,       # affinity of inhibitor to enzyme
     "r3max": 6,
     "KM2": 7,
-    "ksynmax": 8, #
-    "KIB": 9, #
+    "ksynmax": 8,   # enzyme synthesis rate constant (velocity)
+    "KIB": 9,       #
     }
 
 
@@ -33,6 +33,10 @@ pvec = {
     "ksynmax": 0.0168, # umol/g/h DW - Table 9
     "KIB": 0.01,       # umol/g DW   - Table 9
     }
+
+
+def get_names_parameters_to_be_estimated():
+    return ["Yxs", "k2", "KIA", "ksynmax"]
 
 
 # Table 2 and Table 3; modelA
@@ -160,11 +164,12 @@ def evaluate(xx, t, p, u, model_form):
         if den <= eps:
             den = eps
         y[ymap["r2"]] = p[pmap["k2"]] * x[xmap["E"]] * x[xmap["M1"]] / den
+        # [umol/g/h DW] = [1/h]       * [umol/g DW]  * [adim]
         den = p[pmap["KIB"]] + x[xmap["M2"]]
         if den <= eps:
             den = eps
         y[ymap["rsyn"]] = p[pmap["ksynmax"]] * p[pmap["KIB"]] / den
-        # [umol/g/h DW] = [umol/g/h DW]
+        # [umol/g/h DW] = [umol/g/h DW]      * [adim]
     y[ymap["r3"]] = p[pmap["r3max"]] * x[xmap["M2"]] / (p[pmap["KM2"]] + x[xmap["M2"]])
 
     dx_dt = numpy.zeros(len(x)) 

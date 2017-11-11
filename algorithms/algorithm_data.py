@@ -20,6 +20,7 @@ settings_and_numeric_data = {
     "integrator": dict(numerics_data_nonrecursive),
     "decision_variable_ranges": [()], # tuples
     "number_of_trials": 0,
+    "number_of_trials_to_skip": 0,
     "random_number_generator_seed": 117,
     "enable_trajectories": False,
     }

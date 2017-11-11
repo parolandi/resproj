@@ -89,7 +89,7 @@ def get_observable_calibration_and_validation_trajectories(calib_valid_trajector
         assert(False)
         raise
     
-    observables = dict(momoda.calib_valid_experimental_dataset)
+    observables = copy.deepcopy(dict(momoda.calib_valid_experimental_dataset))
     observables["id"] = calib_valid_trajectories["id"]
     observables["calib"]["time"] = calib_valid_trajectories["calib"]["time"]
     observables["valid"]["time"] = calib_valid_trajectories["valid"]["time"]

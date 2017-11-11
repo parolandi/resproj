@@ -1,14 +1,30 @@
 
 import math
 import numpy
+import numpy as np
 
 import common.diagnostics as cd
+import common.environment as coen
+import common.io as coio
+import common.results as core
 import common.utilities
 import models.model_data_utils as mmdu
 
 import engine.state_integration as enstin
 # legacy
 import solvers.initial_value
+
+
+def write_trajectories_to_files(time, measured, predicted, res):
+    coio.write_to_csv_append( \
+        core.append_traces_to_time_and_transpose(time, measured), \
+        coen.get_results_location()+"measured.csv")
+    coio.write_to_csv_append( \
+        core.append_traces_to_time_and_transpose(time, predicted), \
+        coen.get_results_location()+"predicted.csv")
+    coio.write_to_csv_append( \
+        core.append_traces_to_time_and_transpose(time, res), \
+        coen.get_results_location()+"residuals.csv")
 
 
 def handle_initial_point(values, problem_instance):
@@ -101,7 +117,11 @@ def residuals_single_experiment(model, problem):
     for jj in range(len(problem["output_indices"])):
         measured_s = measured[jj]
         predicted_s = predicted[problem["output_indices"][jj]]
+        assert(len(measured_s) == len(predicted_s))
         res[jj] = numpy.subtract(measured_s, predicted_s) / cov[jj]
+
+    write_trajectories_to_files(problem["time"], measured, predicted, res)
+   
     return res
 
 

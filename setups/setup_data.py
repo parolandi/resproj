@@ -14,7 +14,7 @@ protocol_step_data = {
 
 
 local_data = {
-    "do_plotting": False, 
+    "do_plotting": True, 
     }
 
 
